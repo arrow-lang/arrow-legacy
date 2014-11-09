@@ -6,77 +6,14 @@
 #include <memory>
 #include <cstdint>
 #include "arrow/buffer.hpp"
+#include "arrow/span.hpp"
+#include "arrow/token.hpp"
 
-using std::uint8_t;
 using arrow::Buffer;
-
-enum class Type {
-  End,
-};
-
-const char* type_name(Type type) {
-  switch (type) {
-    case Type::End:
-      return "end";
-
-    default:
-      return "unknown";
-  }
-}
-
-struct Position {
-  Position(uint row, uint column)
-    : row(row), column(column) {
-  }
-
-  uint row;
-  uint column;
-};
-
-/// [begin, end)
-struct Span {
-  Span(const std::string& filename, Position begin, Position end)
-    : filename(filename), begin(begin), end(end) {
-  }
-
-  std::string to_string() const noexcept {
-    std::stringstream fmt;
-
-    fmt << (this->begin.row + 1);
-    fmt << ',';
-    fmt << (this->begin.column + 1);
-    fmt << '-';
-
-    if (this->begin.row == this->end.row) {
-      // line,column-column
-      fmt << (this->end.column + 1);
-    } else {
-      // line,column-line,column
-      fmt << (this->end.row + 1);
-      fmt << ',';
-      fmt << (this->end.column + 1);
-    }
-
-    return fmt.str();
-  }
-
-  std::string filename;
-  Position begin;
-  Position end;
-};
-
-struct Token {
-  Token(Type type)
-    : type(type), span(nullptr) {
-  }
-
-  Token(Type type, Span span)
-    : type(type), span(new Span(span)) {
-  }
-
-  Type type;
-  std::unique_ptr<Span> span;
-};
+using arrow::Position;
+using arrow::Span;
+using arrow::Token;
+using arrow::Type;
 
 class Tokenizer {
 public:
@@ -110,10 +47,9 @@ int main() {
   for (;;) {
     auto tok = tokenizer.next();
 
-    std::printf("%s:", tok.span->filename.c_str());
-    std::printf("%s: ", tok.span->to_string().c_str());
+    std::printf("%s: ", tok.span.to_string().c_str());
     std::printf("note: ");
-    std::printf("%s\n", type_name(tok.type));
+    std::printf("%s\n", arrow::to_string(tok.type).c_str());
 
     if (tok.type == Type::End) { break; }
   }
