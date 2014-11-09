@@ -1,6 +1,8 @@
 #ifndef ARROW_SPAN_H
 #define ARROW_SPAN_H 1
 
+#include <string>
+
 namespace arrow {
 
   struct Position {

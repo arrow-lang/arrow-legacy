@@ -1,7 +1,6 @@
 #ifndef ARROW_TOKEN_H
 #define ARROW_TOKEN_H 1
 
-#include <string>
 #include "arrow/span.hpp"
 
 namespace arrow {

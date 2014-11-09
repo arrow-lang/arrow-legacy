@@ -19,7 +19,7 @@ namespace arrow {
 
     /// Peek (perserve) the byte `offset` bytes away from the current position
     /// in the input stream.
-    std::uint8_t peek(std::uint8_t offset = 0);
+    std::uint8_t peek(unsigned offset = 0);
 
     /// Get (consume) the next byte in the input stream.
     std::uint8_t next();
