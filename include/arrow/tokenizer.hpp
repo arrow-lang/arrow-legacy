@@ -23,8 +23,13 @@ namespace arrow {
     Token next();
 
   private:
+    Position _position() const;
+    Token _make(Type type, Position begin) const;
+
     Buffer _buffer;
     std::string _filename;
+    unsigned _row;
+    unsigned _column;
 
   };
 

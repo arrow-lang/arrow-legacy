@@ -6,6 +6,9 @@
 namespace arrow {
 
   enum class Type {
+    /// An 'unknown' token type
+    Unknown,
+
     /// The end-of-stream condition [no-value]
     End,
 

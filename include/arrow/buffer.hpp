@@ -4,6 +4,7 @@
 #include <memory>
 #include <istream>
 #include <string>
+#include <deque>
 
 namespace arrow {
 
@@ -21,11 +22,17 @@ namespace arrow {
     /// in the input stream.
     std::uint8_t peek(unsigned offset = 0);
 
+    /// Pop (dispose) of the next byte in the input stream.
+    void pop();
+
     /// Get (consume) the next byte in the input stream.
     std::uint8_t next();
 
   private:
+    bool _push();
+
     std::unique_ptr<std::istream> _stream;
+    std::deque<std::uint8_t> _queue;
 
   };
 
