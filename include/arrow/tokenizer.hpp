@@ -25,6 +25,7 @@ namespace arrow {
   private:
     Position _position() const;
     Token _make(Type type, Position begin) const;
+    std::uint8_t _buffer_next();
 
     Buffer _buffer;
     std::string _filename;
