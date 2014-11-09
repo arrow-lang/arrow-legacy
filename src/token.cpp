@@ -2,6 +2,7 @@
 
 using arrow::Type;
 using arrow::Token;
+using arrow::IntegerToken;
 
 std::string arrow::to_string(Type type) noexcept {
   switch (type) {
@@ -21,4 +22,12 @@ std::string arrow::to_string(Type type) noexcept {
 
 Token::Token(Type type, Span span)
   : type(type), span(span) {
+}
+
+IntegerToken::IntegerToken(unsigned base, const std::string& text, Span span)
+  : text(text), base(base), Token(Type::Integer, span) {
+}
+
+IntegerToken::IntegerToken(unsigned base, std::string&& text, Span span)
+  : text(text), base(base), Token(Type::Integer, span) {
 }

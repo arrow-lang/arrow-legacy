@@ -17,15 +17,15 @@ namespace arrow {
 
     /// Peek (perserve) the token `offset` tokens away from the current position
     /// in the input stream.
-    Token peek(unsigned offset = 0);
+    std::shared_ptr<Token> peek(unsigned offset = 0);
 
     /// Get (consume) the next token in the input stream.
-    Token next();
+    std::shared_ptr<Token> next();
 
   private:
     Position _position() const;
-    Token _make(Type type, Position begin) const;
     std::uint8_t _buffer_next();
+    std::shared_ptr<Token> _scan_numeric();
 
     Buffer _buffer;
     std::string _filename;

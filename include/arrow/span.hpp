@@ -8,6 +8,8 @@ namespace arrow {
   struct Position {
     Position(unsigned row, unsigned column);
 
+    Position operator +(unsigned offset);
+
     unsigned row;
     unsigned column;
   };

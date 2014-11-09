@@ -28,6 +28,14 @@ namespace arrow {
     Span span;
   };
 
+  struct IntegerToken : Token {
+    IntegerToken(unsigned base, const std::string& text, Span span);
+    IntegerToken(unsigned base, std::string&& text, Span span);
+
+    std::string text;
+    unsigned base;
+  };
+
 }
 
 #endif // ARROW_TOKEN_H

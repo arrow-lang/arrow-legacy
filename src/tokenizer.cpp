@@ -12,39 +12,32 @@ auto Tokenizer::_position() const -> Position {
   return Position(this->_row, this->_column);
 }
 
-auto Tokenizer::_make(Type type, Position begin) const -> Token {
-  return Token(type, Span(this->_filename, begin, this->_position()));
-}
-
 std::uint8_t Tokenizer::_buffer_next() {
   auto byte = this->_buffer.next();
   this->_column += 1;
   return byte;
 }
 
-auto Tokenizer::next() -> Token {
-  auto cur = this->_position();
-
-  // Request the next byte.
-  auto byte = this->_buffer_next();
-
+auto Tokenizer::next() -> std::shared_ptr<Token> {
   // Check for the end-of-stream condition ..
-  if (byte == 0) {
+  if (this->_buffer.empty()) {
     // Reached end-of-stream, signal and get out
-    return this->_make(Type::End, cur);
+    return std::make_shared<Token>(
+      Type::End, Span(
+        this->_filename, this->_position(), this->_position() + 1));
   }
 
   // Consume all whitespace
-  while (std::isblank(byte)) {
-    byte = this->_buffer_next();
-  }
+  while (std::isblank(this->_buffer.peek())) { this->_buffer_next(); }
 
   // Check for an end-of-line condition ..
   auto eol = false;
-  if (byte == 0x0a) {  // ASCII LF (Linux)
+  if (this->_buffer.peek() == 0x0a) {  // ASCII LF (Linux)
+    this->_buffer.pop();
     eol = true;
-  } else if (byte == 0x0d) {  // ASCII CR (Mac OS)
+  } else if (this->_buffer.peek() == 0x0d) {  // ASCII CR (Mac OS)
     eol = true;
+    this->_buffer.pop();
     if (this->_buffer.peek() == 0x0a) {  // ASCII CR + LF (Dos / Windows)
       this->_buffer.pop();
     }
@@ -58,25 +51,79 @@ auto Tokenizer::next() -> Token {
   }
 
   // Scan for a numeric ..
-  if (std::isdigit(byte)) {
-
-    // Iterate and consume the complete numeric.
-    std::stringstream number;
-    number << (char)byte;
-    while (std::isdigit(this->_buffer.peek())) {
-      number << (char)(this->_buffer_next());
-    }
-
-    return this->_make(Type::Integer, cur);
-
-    // if (byte == 0x30 and
-    //     ((this->_buffer.peek(0) == 0x78) or
-    //      (this->_buffer.peek(1) == 0x58))) {  // ASCII 0 + (x or X)
-    //   //
-    // }
-
-
+  if (std::isdigit(this->_buffer.peek())) {
+    return this->_scan_numeric();
   }
 
-  return this->_make(Type::Unknown, cur);
+  // Reached the end; report an unknown token.
+  auto pos = this->_position();
+  this->_buffer_next();
+  return std::make_shared<Token>(
+    Type::Unknown, Span(this->_filename, pos, this->_position()));
+}
+
+static bool in_range(std::uint8_t byte, std::uint8_t begin, std::uint8_t end) {
+  return (byte >= begin) and (byte <= end);
+}
+
+auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
+  // Initialize the text buffer.
+  std::stringstream text;
+
+  // Store the initial position.
+  auto pos = this->_position();
+
+  // Declare a var to store the inferred type.
+  auto type = Type::Integer;
+  auto base = 10;
+
+  // Check for a base-prefixed numeric ..
+  if (this->_buffer.peek(0) == 0x30) {  // ASCII 0
+    // Determine what our base is ..
+    auto byte = this->_buffer.peek(1);
+    auto prefix = true;
+    if (byte == 0x58 or byte == 0x78) {  // ASCII x OR X
+      // Hexadecimal
+      base = 16;
+    } else if (byte == 0x42 or byte == 0x62) {  // ASCII b OR B
+      // Binary
+      base = 2;
+    } else if (byte == 0x4F or byte == 0x6F) {  // ASCII o OR O
+      // Octal
+      base = 8;
+    } else {
+      // Not base-prefixed
+      prefix = false;
+    }
+
+    // Pop the two prefix characters (if prefixed)
+    if (prefix) {
+      this->_buffer_next();
+      this->_buffer_next();
+    }
+  }
+
+  for (;;) {
+    // Peek at the next digit
+    auto byte = this->_buffer.peek();
+
+    // Check if this is a valid digit (for our base)
+    if (base == 16) {
+      if (!std::isxdigit(byte)) {
+        break;
+      }
+    } else if (!in_range(byte, '0', '0' + (base - 1))) {
+      break;
+    }
+
+    // Push it into the buffer
+    text << (char)byte;
+
+    // Advance the input buffer
+    this->_buffer_next();
+  }
+
+  // Construct and return the token.
+  return std::make_shared<IntegerToken>(
+    base, text.str(), Span(this->_filename, pos, this->_position()));
 }

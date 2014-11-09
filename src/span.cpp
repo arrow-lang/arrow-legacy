@@ -36,3 +36,7 @@ std::string Span::to_string() const {
 
   return fmt.str();
 }
+
+auto Position::operator +(unsigned offset) -> Position {
+  return Position(this->row, this->column + offset);
+}
