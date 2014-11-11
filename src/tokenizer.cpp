@@ -30,6 +30,29 @@ auto Tokenizer::next() -> std::shared_ptr<Token> {
   // Consume all whitespace
   while (std::isblank(this->_buffer.peek())) { this->_buffer_next(); }
 
+  // Check if we are at a single-line comment indicator and
+  // consume the comment.
+  auto in_comment = false;
+  if (this->_buffer.peek(0) == 0x23) {
+    in_comment = true;
+    this->_buffer_next();
+  } else if (this->_buffer.peek(0) == 0x2f and this->_buffer.peek(1) == 0x2f) {
+    in_comment = true;
+    this->_buffer_next();
+    this->_buffer_next();
+  }
+
+  if (in_comment) {
+    for (;;) {
+      // Check if we are at an end-of-line and stop consumption
+      auto byte = this->_buffer.peek();
+      if (byte == 0x0a or byte == 0x0d) { break; }
+
+      // Consume this byte
+      this->_buffer_next();
+    }
+  }
+
   // Check for an end-of-line condition ..
   auto eol = false;
   if (this->_buffer.peek() == 0x0a) {  // ASCII LF (Linux)
@@ -164,9 +187,6 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
       consume_number();
     }
   }
-
-  // TODO: Check for an invalid suffix.
-  // Basically any character aside from a punctuator.
 
   // Construct and return the token.
   auto span = Span(this->_filename, pos, this->_position());
