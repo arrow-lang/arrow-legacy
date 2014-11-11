@@ -62,6 +62,7 @@ auto Tokenizer::next() -> std::shared_ptr<Token> {
     Type::Unknown, Span(this->_filename, pos, this->_position()));
 }
 
+/// Test `byte` and check if it is within the expected range
 static bool in_range(std::uint8_t byte, std::uint8_t begin, std::uint8_t end) {
   return (byte >= begin) and (byte <= end);
 }
@@ -103,27 +104,75 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
     }
   }
 
-  for (;;) {
-    // Peek at the next digit
-    auto byte = this->_buffer.peek();
+  // Build (and execute) the number consumption function to consume
+  // the integral part of the complete numeric.
+  auto consume_number = [&] {
+    for (;;) {
+      // Peek at the next digit
+      auto byte = this->_buffer.peek();
 
-    // Check if this is a valid digit (for our base)
-    if (base == 16) {
-      if (!std::isxdigit(byte)) {
+      // Check if this is a valid digit (for our base)
+      if (base == 16) {
+        if (!std::isxdigit(byte)) {
+          break;
+        }
+      } else if (!in_range(byte, '0', '0' + (base - 1))) {
         break;
       }
-    } else if (!in_range(byte, '0', '0' + (base - 1))) {
-      break;
+
+      // Push it into the buffer
+      text << (char)byte;
+
+      // Advance the input buffer
+      this->_buffer_next();
+    }
+  };
+
+  consume_number();
+
+  // We are no longer at a numeric (within range)
+  if (base == 10) {
+    if (this->_buffer.peek(0) == 0x2e  // ASCII .
+          and std::isdigit(this->_buffer.peek(1))) {
+      // We have at least `.#`, we will continue into
+      // a decimal numeric.
+      type = Type::Float;
+
+      // Push the `.` into the buffer.
+      text << (char)(this->_buffer_next());
+
+      // Consume the expected number (again).
+      consume_number();
     }
 
-    // Push it into the buffer
-    text << (char)byte;
+    // Now we /could/ continue into scientific notation
+    // with at least `[eE][+-]?[0-9]` matching.
+    auto p0 = this->_buffer.peek(0);
+    auto p1 = this->_buffer.peek(1);
+    auto p2 = this->_buffer.peek(2);
+    if ((p0 == 0x45 or p0 == 0x65)
+          and (std::isdigit(p1)
+            or ((p1 == 0x2b or p1 == 0x2d) and std::isdigit(p2)))) {
+      // We know we are a decimal numeric.
+      type = Type::Float;
 
-    // Advance the input buffer
-    this->_buffer_next();
+      // Push the first two characters.
+      text << (char)(this->_buffer_next());
+      text << (char)(this->_buffer_next());
+
+      // Consume the expected number (again).
+      consume_number();
+    }
   }
 
+  // TODO: Check for an invalid suffix.
+  // Basically any character aside from a punctuator.
+
   // Construct and return the token.
-  return std::make_shared<IntegerToken>(
-    base, text.str(), Span(this->_filename, pos, this->_position()));
+  auto span = Span(this->_filename, pos, this->_position());
+  if (type == Type::Float) {
+    return std::make_shared<FloatToken>(text.str(), span);
+  } else {
+    return std::make_shared<IntegerToken>(base, text.str(), span);
+  }
 }

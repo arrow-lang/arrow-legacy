@@ -36,6 +36,13 @@ namespace arrow {
     unsigned base;
   };
 
+  struct FloatToken : Token {
+    FloatToken(const std::string& text, Span span);
+    FloatToken(std::string&& text, Span span);
+
+    std::string text;
+  };
+
 }
 
 #endif // ARROW_TOKEN_H

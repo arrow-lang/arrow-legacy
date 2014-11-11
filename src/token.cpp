@@ -1,8 +1,6 @@
 #include "arrow/token.hpp"
 
-using arrow::Type;
-using arrow::Token;
-using arrow::IntegerToken;
+using namespace arrow;
 
 std::string arrow::to_string(Type type) noexcept {
   switch (type) {
@@ -30,4 +28,12 @@ IntegerToken::IntegerToken(unsigned base, const std::string& text, Span span)
 
 IntegerToken::IntegerToken(unsigned base, std::string&& text, Span span)
   : text(text), base(base), Token(Type::Integer, span) {
+}
+
+FloatToken::FloatToken(const std::string& text, Span span)
+  : text(text), Token(Type::Float, span) {
+}
+
+FloatToken::FloatToken(std::string&& text, Span span)
+  : text(text), Token(Type::Float, span) {
 }
