@@ -36,17 +36,13 @@ auto Tokenizer::next() -> std::shared_ptr<Token> {
   if (this->_buffer.peek(0) == 0x23) {
     in_comment = true;
     this->_buffer_next();
-  } else if (this->_buffer.peek(0) == 0x2f and this->_buffer.peek(1) == 0x2f) {
-    in_comment = true;
-    this->_buffer_next();
-    this->_buffer_next();
   }
 
   if (in_comment) {
     for (;;) {
       // Check if we are at an end-of-line and stop consumption
       auto byte = this->_buffer.peek();
-      if (byte == 0x0a or byte == 0x0d) { break; }
+      if (byte == 0x0a or byte == 0x0d) { break; }  // ASCII CR OR LF
 
       // Consume this byte
       this->_buffer_next();

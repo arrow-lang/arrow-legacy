@@ -27,8 +27,8 @@ namespace arrow {
     std::uint8_t _buffer_next();
     std::shared_ptr<Token> _scan_numeric();
 
-    Buffer _buffer;
     std::string _filename;
+    Buffer _buffer;
     unsigned _row;
     unsigned _column;
 

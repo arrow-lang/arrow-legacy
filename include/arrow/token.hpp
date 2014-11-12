@@ -32,8 +32,8 @@ namespace arrow {
     IntegerToken(unsigned base, const std::string& text, Span span);
     IntegerToken(unsigned base, std::string&& text, Span span);
 
-    std::string text;
     unsigned base;
+    std::string text;
   };
 
   struct FloatToken : Token {

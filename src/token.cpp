@@ -23,17 +23,17 @@ Token::Token(Type type, Span span)
 }
 
 IntegerToken::IntegerToken(unsigned base, const std::string& text, Span span)
-  : text(text), base(base), Token(Type::Integer, span) {
+  : Token(Type::Integer, span), base(base), text(text) {
 }
 
 IntegerToken::IntegerToken(unsigned base, std::string&& text, Span span)
-  : text(text), base(base), Token(Type::Integer, span) {
+  : Token(Type::Integer, span), base(base), text(text) {
 }
 
 FloatToken::FloatToken(const std::string& text, Span span)
-  : text(text), Token(Type::Float, span) {
+  : Token(Type::Float, span), text(text) {
 }
 
 FloatToken::FloatToken(std::string&& text, Span span)
-  : text(text), Token(Type::Float, span) {
+  : Token(Type::Float, span), text(text) {
 }
