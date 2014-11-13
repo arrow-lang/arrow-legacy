@@ -13,6 +13,78 @@ std::string arrow::to_string(Type type) noexcept {
     case Type::Float:
       return "float";
 
+    case Type::Plus:
+      return "punctuator: +";
+
+    case Type::Minus:
+      return "punctuator: -";
+
+    case Type::LSlash:
+      return "punctuator: /";
+
+    case Type::LSlash_LSlash:
+      return "punctuator: //";
+
+    case Type::Percent:
+      return "punctuator: %";
+
+    case Type::Plus_Equals:
+      return "punctuator: +=";
+
+    case Type::Minus_Equals:
+      return "punctuator: -=";
+
+    case Type::LSlash_Equals:
+      return "punctuator: /=";
+
+    case Type::LSlash_LSlash_Equals:
+      return "punctuator: //=";
+
+    case Type::Percent_Equals:
+      return "punctuator: %=";
+
+    case Type::Ampersand:
+      return "punctuator: &";
+
+    case Type::Ampersand_Equals:
+      return "punctuator: &=";
+
+    case Type::Pipe:
+      return "punctuator: |";
+
+    case Type::Pipe_Equals:
+      return "punctuator: |=";
+
+    case Type::Caret:
+      return "punctuator: ^";
+
+    case Type::Caret_Equals:
+      return "punctuator: ^=";
+
+    case Type::ExclamationMark:
+      return "punctuator: !";
+
+    case Type::Equals:
+      return "punctuator: =";
+
+    case Type::Equals_Equals:
+      return "punctuator: ==";
+
+    case Type::ExclamationMark_Equals:
+      return "punctuator: !=";
+
+    case Type::GreaterThan:
+      return "punctuator: >";
+
+    case Type::GreaterThan_Equals:
+      return "punctuator: >=";
+
+    case Type::LessThan:
+      return "punctuator: <";
+
+    case Type::LessThan_Equals:
+      return "punctuator: <=";
+
     default:
       return "unknown";
   }

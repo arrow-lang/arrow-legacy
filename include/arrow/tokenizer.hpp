@@ -26,6 +26,7 @@ namespace arrow {
     Position _position() const;
     std::uint8_t _buffer_next();
     std::shared_ptr<Token> _scan_numeric();
+    std::shared_ptr<Token> _scan_punctuator();
 
     std::string _filename;
     Buffer _buffer;

@@ -74,6 +74,10 @@ auto Tokenizer::next() -> std::shared_ptr<Token> {
     return this->_scan_numeric();
   }
 
+  // Scan for a punctuator ..
+  auto punc_tok = this->_scan_punctuator();
+  if (punc_tok) { return punc_tok; }
+
   // Reached the end; report an unknown token.
   auto pos = this->_position();
   this->_buffer_next();
@@ -84,6 +88,120 @@ auto Tokenizer::next() -> std::shared_ptr<Token> {
 /// Test `byte` and check if it is within the expected range
 static bool in_range(std::uint8_t byte, std::uint8_t begin, std::uint8_t end) {
   return (byte >= begin) and (byte <= end);
+}
+
+auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token> {
+  // Peek 3 bytes ahead
+  auto p0 = this->_buffer.peek(0);
+  auto p1 = this->_buffer.peek(1);
+  auto p2 = this->_buffer.peek(2);
+
+  // Check for defined punctuators
+  // Check for the leading byte then narrow it down, etc.
+  auto type = Type::Unknown;
+  auto len = 1;
+  if (p0 == 0x2b) {  // ASCII `+`
+    type = Type::Plus;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::Plus_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x2d) {  // ASCII `-`
+    type = Type::Minus;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::Minus_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x2f) {  // ASCII `/`
+    type = Type::LSlash;
+
+    if (p1 == 0x2f) {  // ASCII `/`
+      type = Type::LSlash_LSlash;
+      len = 2;
+
+      if (p2 == 0x3d) {  // ASCII `=`
+        type = Type::LSlash_LSlash_Equals;
+        len = 3;
+      }
+    } else if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::LSlash_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x25) {  // ASCII `%`
+    type = Type::Percent;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::Percent_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x7c) {  // ASCII `|`
+    type = Type::Pipe;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::Pipe_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x5e) {  // ASCII `^`
+    type = Type::Caret;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::Caret_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x26) {  // ASCII `&`
+    type = Type::Ampersand;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::Ampersand_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x3c) {  // ASCII `<`
+    type = Type::LessThan;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::LessThan_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x3e) {  // ASCII `>`
+    type = Type::GreaterThan;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::GreaterThan_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x3d) {  // ASCII `=`
+    type = Type::Equals;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::Equals_Equals;
+      len = 2;
+    }
+  } else if (p0 == 0x21) {  // ASCII `!`
+    type = Type::ExclamationMark;
+
+    if (p1 == 0x3d) {  // ASCII `=`
+      type = Type::ExclamationMark_Equals;
+      len = 2;
+    }
+  }
+
+  // Did we find one ..
+  if (type == Type::Unknown) {
+    // No punctuator detected; get out
+    return nullptr;
+  }
+
+  // Build and return the punctuator token.
+  auto pos = this->_position();
+
+  for (auto i = 0; i < len; ++i) {
+    this->_buffer_next();
+  }
+
+  return std::make_shared<Token>(
+    type, Span(this->_filename, pos, this->_position()));
 }
 
 auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
