@@ -19,24 +19,24 @@ Span::Span(std::string&& filename, Position begin, Position end)
 std::string Span::to_string() const {
   std::stringstream fmt;
 
-  fmt << (this->begin.row + 1);
+  fmt << (begin.row + 1);
   fmt << ',';
-  fmt << (this->begin.column + 1);
+  fmt << (begin.column + 1);
   fmt << '-';
 
-  if (this->begin.row == this->end.row) {
+  if (begin.row == end.row) {
     // line,column-column
-    fmt << (this->end.column + 1);
+    fmt << (end.column + 1);
   } else {
     // line,column-line,column
-    fmt << (this->end.row + 1);
+    fmt << (end.row + 1);
     fmt << ',';
-    fmt << (this->end.column + 1);
+    fmt << (end.column + 1);
   }
 
   return fmt.str();
 }
 
 auto Position::operator +(unsigned offset) -> Position {
-  return Position(this->row, this->column + offset);
+  return Position(row, column + offset);
 }

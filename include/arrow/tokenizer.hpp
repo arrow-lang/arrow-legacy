@@ -23,10 +23,16 @@ namespace arrow {
     std::shared_ptr<Token> next();
 
   private:
-    Position _position() const;
+    Position _pos() const;
     std::uint8_t _buffer_next();
+
+    std::shared_ptr<Token> _make_token(
+      Type type, Position begin, Position end) const;
+
     std::shared_ptr<Token> _scan_numeric();
     std::shared_ptr<Token> _scan_punctuator();
+
+    bool _is_eol(bool consume = false);
 
     std::string _filename;
     Buffer _buffer;

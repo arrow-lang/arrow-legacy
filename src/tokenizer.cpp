@@ -5,96 +5,118 @@
 using arrow::Tokenizer;
 
 Tokenizer::Tokenizer(const std::string& filename)
-  : _filename(filename), _buffer(filename), _row(0), _column(0) {
+  : _filename(filename), _buffer(filename), _row(0), _column(0)
+{
 }
 
-auto Tokenizer::_position() const -> Position {
-  return Position(this->_row, this->_column);
+auto Tokenizer::_pos() const -> Position
+{
+  return Position(_row, _column);
 }
 
-std::uint8_t Tokenizer::_buffer_next() {
-  auto byte = this->_buffer.next();
-  this->_column += 1;
+auto Tokenizer::_make_token(Type type, Position begin, Position end) const
+  -> std::shared_ptr<Token>
+{
+  return std::make_shared<Token>(
+    type, Span(_filename, begin, end)
+  );
+}
+
+bool Tokenizer::_is_eol(bool consume)
+{
+  auto eol = 0;
+  if (_buffer.peek(0) == 0x0a) {  // ASCII LF (Linux)
+    eol = 1;
+  } else if (_buffer.peek(0) == 0x0d) {  // ASCII CR (Mac OS)
+    eol = 1;
+    if (_buffer.peek(1) == 0x0a) {  // ASCII CR + LF (Dos / Windows)
+      eol += 1;
+    }
+  }
+
+  auto test = !!eol;
+  while (consume && eol > 0) {
+    _buffer.pop();
+    eol -= 1;
+  }
+
+  return test;
+}
+
+std::uint8_t Tokenizer::_buffer_next()
+{
+  // Get the next byte from the buffer ..
+  auto byte = _buffer.next();
+
+  // .. increment our column counter
+  _column += 1;
+
+  // .. and return the byte
   return byte;
 }
 
-auto Tokenizer::next() -> std::shared_ptr<Token> {
+auto Tokenizer::next() -> std::shared_ptr<Token>
+{
   // Check for the end-of-stream condition ..
-  if (this->_buffer.empty()) {
+  if (_buffer.empty()) {
     // Reached end-of-stream, signal and get out
-    return std::make_shared<Token>(
-      Type::End, Span(
-        this->_filename, this->_position(), this->_position() + 1));
+    return _make_token(Type::End, _pos(), _pos() + 1);
   }
 
   // Consume all whitespace
-  while (std::isblank(this->_buffer.peek())) { this->_buffer_next(); }
+  while (std::isblank(_buffer.peek())) { _buffer_next(); }
 
   // Check if we are at a single-line comment indicator and
   // consume the comment.
   auto in_comment = false;
-  if (this->_buffer.peek(0) == 0x23) {
+  if (_buffer.peek(0) == 0x23) {
     in_comment = true;
-    this->_buffer_next();
+    _buffer_next();
   }
 
   if (in_comment) {
     for (;;) {
       // Check if we are at an end-of-line and stop consumption
-      auto byte = this->_buffer.peek();
-      if (byte == 0x0a or byte == 0x0d) { break; }  // ASCII CR OR LF
+      if (_is_eol()) { break; }
 
       // Consume this byte
-      this->_buffer_next();
+      _buffer_next();
     }
   }
 
   // Check for an end-of-line condition ..
-  auto eol = false;
-  if (this->_buffer.peek() == 0x0a) {  // ASCII LF (Linux)
-    this->_buffer.pop();
-    eol = true;
-  } else if (this->_buffer.peek() == 0x0d) {  // ASCII CR (Mac OS)
-    eol = true;
-    this->_buffer.pop();
-    if (this->_buffer.peek() == 0x0a) {  // ASCII CR + LF (Dos / Windows)
-      this->_buffer.pop();
-    }
+  if (_is_eol(/*consume=*/true)) {
+    _column = 0;
+    _row += 1;
+
+    return next();
   }
 
-  if (eol) {
-    this->_column = 0;
-    this->_row += 1;
+  // Scan for a numeric (if we are on a digit) ..
+  if (std::isdigit(_buffer.peek())) { return _scan_numeric(); }
 
-    return this->next();
-  }
-
-  // Scan for a numeric ..
-  if (std::isdigit(this->_buffer.peek())) {
-    return this->_scan_numeric();
-  }
-
-  // Scan for a punctuator ..
-  auto punc_tok = this->_scan_punctuator();
+  // Scan for a punctuator (and return the token if we match one) ..
+  auto punc_tok = _scan_punctuator();
   if (punc_tok) { return punc_tok; }
 
-  // Reached the end; report an unknown token.
-  auto pos = this->_position();
-  this->_buffer_next();
-  return std::make_shared<Token>(
-    Type::Unknown, Span(this->_filename, pos, this->_position()));
+  // Reached the end; report an unknown token (and consume it).
+  auto cur = _pos();
+  _buffer_next();
+  return _make_token(Type::Unknown, cur, _pos());
 }
 
 /// Test `byte` and check if it is within the expected range
-static bool in_range(std::uint8_t byte, std::uint8_t begin, std::uint8_t end) {
+static bool in_range(std::uint8_t byte, std::uint8_t begin, std::uint8_t end)
+{
   return (byte >= begin) and (byte <= end);
 }
 
-auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token> {
+auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
+{
   // Peek 3 bytes ahead
-  auto p0 = this->_buffer.peek(0);
-  auto p1 = this->_buffer.peek(1);
-  auto p2 = this->_buffer.peek(2);
+  auto p0 = _buffer.peek(0);
+  auto p1 = _buffer.peek(1);
+  auto p2 = _buffer.peek(2);
 
   // Check for defined punctuators
   // Check for the leading byte then narrow it down, etc.
@@ -194,31 +216,31 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token> {
   }
 
   // Build and return the punctuator token.
-  auto pos = this->_position();
+  auto begin = _pos();
 
   for (auto i = 0; i < len; ++i) {
-    this->_buffer_next();
+    _buffer_next();
   }
 
-  return std::make_shared<Token>(
-    type, Span(this->_filename, pos, this->_position()));
+  return _make_token(type, begin, _pos());
 }
 
-auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
+auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
+{
   // Initialize the text buffer.
   std::stringstream text;
 
   // Store the initial position.
-  auto pos = this->_position();
+  auto begin = _pos();
 
   // Declare a var to store the inferred type.
   auto type = Type::Integer;
   auto base = 10;
 
   // Check for a base-prefixed numeric ..
-  if (this->_buffer.peek(0) == 0x30) {  // ASCII 0
+  if (_buffer.peek(0) == 0x30) {  // ASCII 0
     // Determine what our base is ..
-    auto byte = this->_buffer.peek(1);
+    auto byte = _buffer.peek(1);
     auto prefix = true;
     if (byte == 0x58 or byte == 0x78) {  // ASCII x OR X
       // Hexadecimal
@@ -236,8 +258,8 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
 
     // Pop the two prefix characters (if prefixed)
     if (prefix) {
-      this->_buffer_next();
-      this->_buffer_next();
+      _buffer_next();
+      _buffer_next();
     }
   }
 
@@ -246,7 +268,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
   auto consume_number = [&] {
     for (;;) {
       // Peek at the next digit
-      auto byte = this->_buffer.peek();
+      auto byte = _buffer.peek();
 
       // Check if this is a valid digit (for our base)
       if (base == 16) {
@@ -261,7 +283,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
       text << (char)byte;
 
       // Advance the input buffer
-      this->_buffer_next();
+      _buffer_next();
     }
   };
 
@@ -269,14 +291,14 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
 
   // We are no longer at a numeric (within range)
   if (base == 10) {
-    if (this->_buffer.peek(0) == 0x2e  // ASCII .
-          and std::isdigit(this->_buffer.peek(1))) {
+    if (_buffer.peek(0) == 0x2e  // ASCII .
+          and std::isdigit(_buffer.peek(1))) {
       // We have at least `.#`, we will continue into
       // a decimal numeric.
       type = Type::Float;
 
       // Push the `.` into the buffer.
-      text << (char)(this->_buffer_next());
+      text << (char)(_buffer_next());
 
       // Consume the expected number (again).
       consume_number();
@@ -284,9 +306,9 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
 
     // Now we /could/ continue into scientific notation
     // with at least `[eE][+-]?[0-9]` matching.
-    auto p0 = this->_buffer.peek(0);
-    auto p1 = this->_buffer.peek(1);
-    auto p2 = this->_buffer.peek(2);
+    auto p0 = _buffer.peek(0);
+    auto p1 = _buffer.peek(1);
+    auto p2 = _buffer.peek(2);
     if ((p0 == 0x45 or p0 == 0x65)
           and (std::isdigit(p1)
             or ((p1 == 0x2b or p1 == 0x2d) and std::isdigit(p2)))) {
@@ -294,8 +316,8 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
       type = Type::Float;
 
       // Push the first two characters.
-      text << (char)(this->_buffer_next());
-      text << (char)(this->_buffer_next());
+      text << (char)(_buffer_next());
+      text << (char)(_buffer_next());
 
       // Consume the expected number (again).
       consume_number();
@@ -303,7 +325,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
   }
 
   // Construct and return the token.
-  auto span = Span(this->_filename, pos, this->_position());
+  auto span = Span(_filename, begin, _pos());
   if (type == Type::Float) {
     return std::make_shared<FloatToken>(text.str(), span);
   } else {
