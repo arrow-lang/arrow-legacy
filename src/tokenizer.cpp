@@ -1,6 +1,9 @@
+#include <vector>
+#include <iterator>
 #include <cctype>
 #include <sstream>
 #include "arrow/tokenizer.hpp"
+#include "utf8.h"
 
 using arrow::Tokenizer;
 
@@ -98,6 +101,10 @@ auto Tokenizer::next() -> std::shared_ptr<Token>
   // Scan for a punctuator (and return the token if we match one) ..
   auto punc_tok = _scan_punctuator();
   if (punc_tok) { return punc_tok; }
+
+  // Scan for an identifier (or a token) ..
+  auto ident_tok = _scan_identifier();
+  if (ident_tok) { return ident_tok; }
 
   // Reached the end; report an unknown token (and consume it).
   auto cur = _pos();
@@ -404,4 +411,166 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
   } else {
     return std::make_shared<IntegerToken>(base, text.str(), span);
   }
+}
+
+std::uint32_t Tokenizer::_buffer_peek_utf32(unsigned offset, unsigned* count) {
+  // The basic idea here is to peek bytes until we have an entire
+  // valid UTF-32
+  auto cnt = 0;
+  auto valid = false;
+  std::vector<std::uint8_t> bytes;
+
+  while (!valid && cnt < 4) {
+    bytes.push_back(_buffer.peek(offset + cnt));
+    cnt += 1;
+    valid = utf8::is_valid(bytes.begin(), bytes.end());
+  }
+
+  if (valid) {
+    std::vector<std::uint32_t> res;
+    utf8::utf8to32(bytes.begin(), bytes.end(), std::back_inserter(res));
+
+    if (count) {
+      *count = cnt;
+    }
+
+    return res[0];
+
+  } else {
+    return 0;
+  }
+}
+
+static bool in_ranges(
+  std::uint32_t value, std::vector<std::vector<std::uint32_t>>& ranges)
+{
+  for (auto& range : ranges) {
+    auto min = range[0];
+    auto max = range[1];
+
+    if ((value >= min) && (value <= max)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token>
+{
+  // REF: http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1518.htm
+
+  // An identifier can contain ..
+  static std::vector<std::vector<std::uint32_t>> can_contain = {
+    {0x30, 0x39},
+    {0x41, 0x5A},
+    {0x5F, 0x5F},
+    {0x61, 0x7A},
+
+    {0x00A8, 0x00A8},
+    {0x00AA, 0x00AA},
+    {0x00AD, 0x00AD},
+    {0x00AF, 0x00AF},
+    {0x00B2, 0x00B5},
+    {0x00B7, 0x00BA},
+    {0x00BC, 0x00BE},
+    {0x00C0, 0x00D6},
+    {0x00D8, 0x00F6},
+    {0x00F8, 0x00FF},
+
+    {0x0100, 0x167F},
+    {0x1681, 0x180D},
+    {0x180F, 0x1FFF},
+    {0x200B, 0x200D},
+    {0x202A, 0x202E},
+    {0x203F, 0x2040},
+    {0x2054, 0x2054},
+    {0x2060, 0x206F},
+
+    {0x2070, 0x218F},
+    {0x2460, 0x24FF},
+    {0x2776, 0x2793},
+    {0x2C00, 0x2DFF},
+    {0x2E80, 0x2FFF},
+
+    {0x3004, 0x3007},
+    {0x3021, 0x302F},
+    {0x3031, 0x303F},
+
+    {0x3040, 0xD7FF},
+
+    {0xF900, 0xFD3D},
+    {0xFD40, 0xFDCF},
+    {0xFDF0, 0xFE44},
+    {0xFE47, 0xFFFD},
+
+    {0x10000, 0x1FFFD},
+    {0x20000, 0x2FFFD},
+    {0x30000, 0x3FFFD},
+    {0x40000, 0x4FFFD},
+    {0x50000, 0x5FFFD},
+    {0x60000, 0x6FFFD},
+    {0x70000, 0x7FFFD},
+    {0x80000, 0x8FFFD},
+    {0x90000, 0x9FFFD},
+    {0xA0000, 0xAFFFD},
+    {0xB0000, 0xBFFFD},
+    {0xC0000, 0xCFFFD},
+    {0xD0000, 0xDFFFD},
+    {0xE0000, 0xEFFFD},
+  };
+
+  // An identifier must not start with (of those sets) ..
+  static std::vector<std::vector<std::uint32_t>> not_start_with = {
+    {0x30, 0x39},
+    {0x0300, 0x036F},
+    {0x1DC0, 0x1DFF},
+    {0x20D0, 0x20FF},
+    {0xFE20, 0xFE2F},
+  };
+
+  // Mark our current position
+  auto begin = _pos();
+
+  // Build our UTF8 identifier
+  std::vector<std::uint8_t> bytes;
+  unsigned total_count = 0;
+  unsigned count = 0;
+
+  for (;;) {
+    // Peek the next UTF-32 character
+    auto ch = _buffer_peek_utf32(total_count, &count);
+    if (ch == 0) { break; }
+
+    // Is this one of our "can-contain" characters
+    if (!in_ranges(ch, can_contain)) {
+      // No.. tough luck
+      break;
+    }
+
+    // Are we at the beginning and is this one of our "must-not-start-with"
+    // characters
+    if (total_count == 0 && in_ranges(ch, not_start_with)) {
+      // Yep.. tough luck
+      break;
+    }
+
+    // Increment total counter and append our character
+    total_count += count;
+    utf8::append(ch, std::back_inserter(bytes));
+  }
+
+  if (total_count == 0) {
+    // Got nothing
+    return nullptr;
+  }
+
+  // We found something.. pop the consumed bytes
+  for (unsigned i = 0; i < total_count; ++i) { _buffer_next(); }
+
+  // Create our token
+  auto span = Span(_filename, begin, _pos());
+  return std::make_shared<IdentifierToken>(
+    std::string(reinterpret_cast<const char*>(bytes.data()), bytes.size()),
+    span);
 }

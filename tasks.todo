@@ -1,0 +1,27 @@
+  ☐ Buffer
+    ☐ Should work with and return UTF-32 by default
+
+  ☐ Tokenizer
+    ✔ Identifiers (Unicode) @done(2015-02-20 00:00)
+    ☐ Keywords
+    ✔ Punctuators (complex) @done(2015-02-19 10:52)
+    ✔ Punctuators (simple) @done(2015-02-19 17:18)
+    ☐ Strings (double-quote) / Characters (single-quote)
+      ☐ Escape sequences
+    ☐ Allow numbers to contain '_'
+    ☐ Additional punctuators
+      ☐ arrow `->`
+      ☐ fat-arrow `=>`
+      ☐ comma `,`
+
+  ☐ Parser
+    ☐ Function
+    ☐ Return
+    ☐ Integer
+    ☐ Float
+    ☐ Variables (`let _ = ..`)
+    ☐ Binary Expression (`+`, `-`, `*`, `/`, `//`)
+    ☐ Error checking / reporting
+
+  ☐ Fold (constant expressions)
+  ☐ Contextual type inference

@@ -14,6 +14,9 @@ std::string arrow::to_string(Type type) noexcept
     case Type::Float:
       return "float";
 
+    case Type::Identifier:
+      return "identifier";
+
     case Type::Plus:
       return "punctuator: +";
 

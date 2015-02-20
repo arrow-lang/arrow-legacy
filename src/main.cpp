@@ -63,6 +63,9 @@ int main(int argc, char** argv) {
     } else if (tok->type == Type::Float) {
       auto tok_ = std::static_pointer_cast<FloatToken>(tok);
       printf("float: %s\n", tok_->text.c_str());
+    } else if (tok->type == Type::Identifier) {
+      auto tok_ = std::static_pointer_cast<IdentifierToken>(tok);
+      printf("identifier: %s\n", tok_->text.c_str());
     } else {
       printf("%s\n", arrow::to_string(tok->type).c_str());
     }
