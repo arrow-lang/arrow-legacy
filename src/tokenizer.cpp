@@ -1,4 +1,5 @@
 #include <vector>
+#include <unordered_map>
 #include <iterator>
 #include <cctype>
 #include <sstream>
@@ -568,9 +569,28 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token>
   // We found something.. pop the consumed bytes
   for (unsigned i = 0; i < total_count; ++i) { _buffer_next(); }
 
-  // Create our token
+  // Make a string out of it
+  auto text = std::string(
+    reinterpret_cast<const char*>(bytes.data()), bytes.size());
   auto span = Span(_filename, begin, _pos());
-  return std::make_shared<IdentifierToken>(
-    std::string(reinterpret_cast<const char*>(bytes.data()), bytes.size()),
-    span);
+
+  // Check for a valid keyword
+  static std::unordered_map<std::string, Type> keywords = {
+    {"and", Type::And},
+    {"or",  Type::Or},
+    {"xor", Type::Xor},
+    {"not", Type::Not},
+    {"def", Type::Def},
+    {"let", Type::Let},
+    {"mut", Type::Mut},
+  };
+
+  auto kw = keywords.find(text);
+  if (kw != keywords.end()) {
+    // Found a keyword; create keyword token
+    return std::make_shared<Token>(kw->second, span);
+  }
+
+  // No keyword; create identifier token
+  return std::make_shared<IdentifierToken>(text, span);
 }

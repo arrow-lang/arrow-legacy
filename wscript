@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 from subprocess import Popen, PIPE
 from os import path
@@ -33,7 +34,7 @@ def _get_expected_stdout(filename):
     fn = path.splitext(filename)[0] + ".stdout"
     if path.exists(fn):
         with open(fn, "rb") as stream:
-            return stream.read().decode()
+            return stream.read().decode('utf-8')
 
     return ""
 
@@ -97,7 +98,7 @@ def test(ctx):
 
         # Check against the expected output
         expected = _get_expected_stdout(filename)
-        test = expected == stdout.decode()
+        test = expected == stdout.decode('utf-8')
 
         # Print result
         _test_print(file_, test)

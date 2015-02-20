@@ -21,6 +21,27 @@ namespace arrow {
     /// A number with a fraction part expressed as a floating-point [value]
     Float,
 
+    /// And
+    And,
+
+    /// Or
+    Or,
+
+    /// Xor
+    Xor,
+
+    /// Not
+    Not,
+
+    /// Let
+    Let,
+
+    /// Mut
+    Mut,
+
+    /// Def
+    Def,
+
     /// Plus `+`
     /// Binary addition
     Plus,

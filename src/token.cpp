@@ -17,6 +17,27 @@ std::string arrow::to_string(Type type) noexcept
     case Type::Identifier:
       return "identifier";
 
+    case Type::And:
+      return "keyword: and";
+
+    case Type::Or:
+      return "keyword: or";
+
+    case Type::Not:
+      return "keyword: not";
+
+    case Type::Xor:
+      return "keyword: xor";
+
+    case Type::Def:
+      return "keyword: def";
+
+    case Type::Let:
+      return "keyword: let";
+
+    case Type::Mut:
+      return "keyword: mut";
+
     case Type::Plus:
       return "punctuator: +";
 
