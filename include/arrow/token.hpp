@@ -12,6 +12,9 @@ namespace arrow {
     /// The end-of-stream condition [no-value]
     End,
 
+    /// A symbolic identifier
+    Identifier,
+
     /// An number with no fractional part [value]
     Integer,
 
@@ -166,13 +169,20 @@ namespace arrow {
     IntegerToken(unsigned base, const std::string& text, Span span);
     IntegerToken(unsigned base, std::string&& text, Span span);
 
-    unsigned base;
     std::string text;
+    unsigned base;
   };
 
   struct FloatToken : Token {
     FloatToken(const std::string& text, Span span);
     FloatToken(std::string&& text, Span span);
+
+    std::string text;
+  };
+
+  struct IdentifierToken : Token {
+    IdentifierToken(const std::string& text, Span span);
+    IdentifierToken(std::string&& text, Span span);
 
     std::string text;
   };
