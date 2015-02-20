@@ -3,7 +3,7 @@
 
   ☐ Tokenizer
     ✔ Identifiers (Unicode) @done(2015-02-20 00:00)
-    ☐ Keywords
+    ✔ Keywords @done(2015-02-20 07:30)
     ✔ Punctuators (complex) @done(2015-02-19 10:52)
     ✔ Punctuators (simple) @done(2015-02-19 17:18)
     ☐ Strings (double-quote) / Characters (single-quote)
@@ -13,6 +13,16 @@
       ☐ arrow `->`
       ☐ fat-arrow `=>`
       ☐ comma `,`
+    ☐ Additional keywords
+      ☐ true
+      ☐ false
+      ☐ if
+      ☐ while
+      ☐ break
+      ☐ continue
+      ☐ return
+      ☐ global
+    ☐ Error reporting (unknown token [both ASCII and unicode])
 
   ☐ Parser
     ☐ Function
