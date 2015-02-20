@@ -26,6 +26,9 @@ std::string arrow::to_string(Type type) noexcept
     case Type::LSlash_LSlash:
       return "punctuator: //";
 
+    case Type::Asterisk:
+      return "punctuator: *";
+
     case Type::Percent:
       return "punctuator: %";
 
@@ -40,6 +43,9 @@ std::string arrow::to_string(Type type) noexcept
 
     case Type::LSlash_LSlash_Equals:
       return "punctuator: //=";
+
+    case Type::Asterisk_Equals:
+      return "punctuator: *=";
 
     case Type::Percent_Equals:
       return "punctuator: %=";
@@ -85,6 +91,30 @@ std::string arrow::to_string(Type type) noexcept
 
     case Type::LessThan_Equals:
       return "punctuator: <=";
+
+    case Type::Colon:
+      return "punctuator: :";
+
+    case Type::Semicolon:
+      return "punctuator: ;";
+
+    case Type::LeftBrace:
+      return "punctuator: {";
+
+    case Type::RightBrace:
+      return "punctuator: }";
+
+    case Type::LeftBracket:
+      return "punctuator: [";
+
+    case Type::RightBracket:
+      return "punctuator: ]";
+
+    case Type::LeftParenthesis:
+      return "punctuator: (";
+
+    case Type::RightParenthesis:
+      return "punctuator: )";
 
     default:
       return "unknown";

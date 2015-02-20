@@ -122,97 +122,170 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
   // Check for the leading byte then narrow it down, etc.
   auto type = Type::Unknown;
   auto len = 1;
-  if (p0 == 0x2b) {  // ASCII `+`
-    type = Type::Plus;
+  switch (p0) {
+    case 0x3a:  // ASCII `:`
+      type = Type::Colon;
+      break;
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::Plus_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x2d) {  // ASCII `-`
-    type = Type::Minus;
+    case 0x3b:  // ASCII `;`
+      type = Type::Semicolon;
+      break;
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::Minus_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x2f) {  // ASCII `/`
-    type = Type::LSlash;
+    case 0x28:  // ASCII `(`
+      type = Type::LeftParenthesis;
+      break;
 
-    if (p1 == 0x2f) {  // ASCII `/`
-      type = Type::LSlash_LSlash;
-      len = 2;
+    case 0x29:  // ASCII `)`
+      type = Type::RightParenthesis;
+      break;
 
-      if (p2 == 0x3d) {  // ASCII `=`
-        type = Type::LSlash_LSlash_Equals;
-        len = 3;
+    case 0x5b:  // ASCII `[`
+      type = Type::LeftBracket;
+      break;
+
+    case 0x5d:  // ASCII `]`
+      type = Type::RightBracket;
+      break;
+
+    case 0x7b:  // ASCII `{`
+      type = Type::LeftBrace;
+      break;
+
+    case 0x7d:  // ASCII `}`
+      type = Type::RightBrace;
+      break;
+
+    case 0x2b:  // ASCII `+`
+      type = Type::Plus;
+
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::Plus_Equals;
+        len = 2;
       }
-    } else if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::LSlash_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x25) {  // ASCII `%`
-    type = Type::Percent;
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::Percent_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x7c) {  // ASCII `|`
-    type = Type::Pipe;
+      break;
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::Pipe_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x5e) {  // ASCII `^`
-    type = Type::Caret;
+    case 0x2d:  // ASCII `-`
+      type = Type::Minus;
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::Caret_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x26) {  // ASCII `&`
-    type = Type::Ampersand;
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::Minus_Equals;
+        len = 2;
+      }
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::Ampersand_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x3c) {  // ASCII `<`
-    type = Type::LessThan;
+      break;
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::LessThan_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x3e) {  // ASCII `>`
-    type = Type::GreaterThan;
+    case 0x2a:  // ASCII `*`
+      type = Type::Asterisk;
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::GreaterThan_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x3d) {  // ASCII `=`
-    type = Type::Equals;
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::Asterisk_Equals;
+        len = 2;
+      }
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::Equals_Equals;
-      len = 2;
-    }
-  } else if (p0 == 0x21) {  // ASCII `!`
-    type = Type::ExclamationMark;
+      break;
 
-    if (p1 == 0x3d) {  // ASCII `=`
-      type = Type::ExclamationMark_Equals;
-      len = 2;
-    }
-  }
+    case 0x25:  // ASCII `%`
+      type = Type::Percent;
 
-  // Did we find one ..
-  if (type == Type::Unknown) {
-    // No punctuator detected; get out
-    return nullptr;
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::Percent_Equals;
+        len = 2;
+      }
+
+      break;
+
+    case 0x2f:  // ASCII `/`
+      type = Type::LSlash;
+
+      if (p1 == 0x2f) {  // ASCII `/`
+        type = Type::LSlash_LSlash;
+        len = 2;
+
+        if (p2 == 0x3d) {  // ASCII `=`
+          type = Type::LSlash_LSlash_Equals;
+          len = 3;
+        }
+      } else if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::LSlash_Equals;
+        len = 2;
+      }
+
+      break;
+
+    case 0x7c:  // ASCII `|`
+      type = Type::Pipe;
+
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::Pipe_Equals;
+        len = 2;
+      }
+
+      break;
+
+    case 0x5e:  // ASCII `^`
+      type = Type::Caret;
+
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::Caret_Equals;
+        len = 2;
+      }
+
+      break;
+
+    case 0x26:  // ASCII `&`
+      type = Type::Ampersand;
+
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::Ampersand_Equals;
+        len = 2;
+      }
+
+      break;
+
+    case 0x3c:  // ASCII `<`
+      type = Type::LessThan;
+
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::LessThan_Equals;
+        len = 2;
+      }
+
+      break;
+
+    case 0x3e:  // ASCII `>`
+      type = Type::GreaterThan;
+
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::GreaterThan_Equals;
+        len = 2;
+      }
+
+      break;
+
+    case 0x3d:  // ASCII `=`
+      type = Type::Equals;
+
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::Equals_Equals;
+        len = 2;
+      }
+
+      break;
+
+    case 0x21:  // ASCII `!`
+      type = Type::ExclamationMark;
+
+      if (p1 == 0x3d) {  // ASCII `=`
+        type = Type::ExclamationMark_Equals;
+        len = 2;
+      }
+
+      break;
+
+    default:
+      // Nothing found; get out
+      return nullptr;
   }
 
   // Build and return the punctuator token.

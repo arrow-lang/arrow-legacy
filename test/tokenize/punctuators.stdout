@@ -22,4 +22,14 @@
 22,1-3: punctuator: >=
 23,1-2: punctuator: <
 24,1-3: punctuator: <=
-25,1-2: end
+25,1-2: punctuator: {
+26,1-2: punctuator: }
+27,1-2: punctuator: [
+28,1-2: punctuator: ]
+29,1-2: punctuator: (
+30,1-2: punctuator: )
+31,1-2: punctuator: ;
+32,1-2: punctuator: :
+33,1-2: punctuator: *
+34,1-3: punctuator: *=
+35,1-2: end

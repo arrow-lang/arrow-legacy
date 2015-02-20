@@ -35,6 +35,14 @@ namespace arrow {
     /// Binary integral division
     LSlash_LSlash,
 
+    /// Asterisk `*`
+    /// Binary multiplication or pointer derefernce
+    Asterisk,
+
+    /// Asterisk > equals `*=`
+    /// Compound assignment with multiplication
+    Asterisk_Equals,
+
     /// Percent-sign `%`
     /// Binary modulo
     Percent,
@@ -118,6 +126,30 @@ namespace arrow {
     /// Less-than > equals `<=`
     /// Binary less-than-or-equal-to relation
     LessThan_Equals,
+
+    /// Colon `:`
+    Colon,
+
+    /// Semi-colon `;`
+    Semicolon,
+
+    /// Left-brace `{`
+    LeftBrace,
+
+    /// Right-brace `}`
+    RightBrace,
+
+    /// Left-parenethis `(`
+    LeftParenthesis,
+
+    /// Right-parenethis `)`
+    RightParenthesis,
+
+    /// Left-parenethis `[`
+    LeftBracket,
+
+    /// Right-parenethis `]`
+    RightBracket,
 
   };
 
