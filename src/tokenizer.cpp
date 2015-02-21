@@ -47,16 +47,16 @@ bool Tokenizer::_is_eol(bool consume)
   return test;
 }
 
-std::uint8_t Tokenizer::_buffer_next()
+std::uint32_t Tokenizer::_buffer_next()
 {
-  // Get the next byte from the buffer ..
-  auto byte = _buffer.next();
+  // Get the next character from the buffer ..
+  auto ch = _buffer.pop();
 
   // .. increment our column counter
   _column += 1;
 
-  // .. and return the byte
-  return byte;
+  // .. and return the character
+  return ch;
 }
 
 auto Tokenizer::next() -> std::shared_ptr<Token>
@@ -414,34 +414,6 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
   }
 }
 
-std::uint32_t Tokenizer::_buffer_peek_utf32(unsigned offset, unsigned* count) {
-  // The basic idea here is to peek bytes until we have an entire
-  // valid UTF-32
-  auto cnt = 0;
-  auto valid = false;
-  std::vector<std::uint8_t> bytes;
-
-  while (!valid && cnt < 4) {
-    bytes.push_back(_buffer.peek(offset + cnt));
-    cnt += 1;
-    valid = utf8::is_valid(bytes.begin(), bytes.end());
-  }
-
-  if (valid) {
-    std::vector<std::uint32_t> res;
-    utf8::utf8to32(bytes.begin(), bytes.end(), std::back_inserter(res));
-
-    if (count) {
-      *count = cnt;
-    }
-
-    return res[0];
-
-  } else {
-    return 0;
-  }
-}
-
 static bool in_ranges(
   std::uint32_t value, std::vector<std::vector<std::uint32_t>>& ranges)
 {
@@ -535,12 +507,11 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token>
 
   // Build our UTF8 identifier
   std::vector<std::uint8_t> bytes;
-  unsigned total_count = 0;
   unsigned count = 0;
 
   for (;;) {
     // Peek the next UTF-32 character
-    auto ch = _buffer_peek_utf32(total_count, &count);
+    auto ch = _buffer.peek(count);
     if (ch == 0) { break; }
 
     // Is this one of our "can-contain" characters
@@ -551,23 +522,23 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token>
 
     // Are we at the beginning and is this one of our "must-not-start-with"
     // characters
-    if (total_count == 0 && in_ranges(ch, not_start_with)) {
+    if (count == 0 && in_ranges(ch, not_start_with)) {
       // Yep.. tough luck
       break;
     }
 
     // Increment total counter and append our character
-    total_count += count;
+    count += 1;
     utf8::append(ch, std::back_inserter(bytes));
   }
 
-  if (total_count == 0) {
+  if (count == 0) {
     // Got nothing
     return nullptr;
   }
 
   // We found something.. pop the consumed bytes
-  for (unsigned i = 0; i < total_count; ++i) { _buffer_next(); }
+  for (unsigned i = 0; i < count; ++i) { _buffer_next(); }
 
   // Make a string out of it
   auto text = std::string(

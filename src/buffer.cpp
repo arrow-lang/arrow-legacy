@@ -1,5 +1,7 @@
 #include <fstream>
+#include <iterator>
 #include "arrow/buffer.hpp"
+#include "utf8.h"
 
 using arrow::Buffer;
 
@@ -8,19 +10,24 @@ Buffer::Buffer(const std::string& filename)
 }
 
 bool Buffer::_push() {
-  uint8_t ch;
-  _stream->read(reinterpret_cast<char*>(&ch), 1);
-  if (_stream->gcount() == 1) {
+  std::istreambuf_iterator<char> beg(*_stream);
+  std::istreambuf_iterator<char> end;
+  if (beg == end) {
+    return false;
+  }
+
+  auto ch = utf8::next(beg, end);
+  if (ch == 0) {
+    return false;
+  } else {
     _queue.push_back(ch);
     return true;
-  } else {
-    return false;
   }
 }
 
-uint8_t Buffer::next() {
+std::uint32_t Buffer::pop() {
   if (_queue.size() == 0) {
-    // Ask for another byte.
+    // Ask for another character.
     if (!_push()) {
       // Reached end-of-stream.
       return 0;
@@ -33,13 +40,8 @@ uint8_t Buffer::next() {
   return front;
 }
 
-void Buffer::pop() {
-  // Get and don't return
-  next();
-}
-
-uint8_t Buffer::peek(unsigned offset) {
-  // Ask for more bytes until we can fulfill the request
+std::uint32_t Buffer::peek(unsigned offset) {
+  // Ask for more characters until we can fulfill the request
   while (_queue.size() <= offset) {
     if (!_push()) {
       // Reached end-of-stream.
@@ -47,7 +49,7 @@ uint8_t Buffer::peek(unsigned offset) {
     }
   }
 
-  // Peek (and perserve) the `offset` byte.
+  // Peek (and perserve) the `offset` character.
   return _queue.at(offset);
 }
 

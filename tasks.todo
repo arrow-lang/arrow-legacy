@@ -1,5 +1,5 @@
-  ☐ Buffer
-    ☐ Should work with and return UTF-32 by default
+  ✔ Buffer @done(2015-02-21 14:15)
+    ✔ Should work with and return UTF-32 by default @done(2015-02-21 14:15)
 
   ☐ Tokenizer
     ✔ Identifiers (Unicode) @done(2015-02-20 00:00)

@@ -24,9 +24,7 @@ namespace arrow {
 
   private:
     Position _pos() const;
-    std::uint8_t _buffer_next();
-    std::uint32_t _buffer_peek_utf32(
-      unsigned offset, unsigned* count = nullptr);
+    std::uint32_t _buffer_next();
 
     std::shared_ptr<Token> _make_token(
       Type type, Position begin, Position end) const;
