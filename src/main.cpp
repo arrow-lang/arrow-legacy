@@ -1,5 +1,6 @@
 // #include <cstdio>
 #include "arrow/tokenizer.hpp"
+#include "arrow/log.hpp"
 #include "boost/program_options.hpp"
 
 namespace po = boost::program_options;
@@ -9,7 +10,7 @@ using std::printf;
 void print_help(const char* binary_path) {
   printf("Usage: ");
   printf("\x1b[36m%s\x1b[0m", binary_path);
-  printf(" [<options>] <file>\n");
+  printf(" [options] <file>\n");
 
   printf("Options:\n");
 
@@ -41,9 +42,14 @@ int main(int argc, char** argv) {
             options(desc).positional(p).run(), vm);
   po::notify(vm);
 
-  if (vm.count("help")) {
+  if (vm.count("help") or argc <= 1) {
     print_help(argv[0]);
     return 0;
+  }
+
+  if (!vm.count("input-file")) {
+    Log::get().error("no input filename given");
+    return EXIT_FAILURE;
   }
 
   // Tokenize!
