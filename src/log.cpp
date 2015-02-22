@@ -27,8 +27,14 @@ void Log::error(const char* format, ...)
 
 void Log::error(const char* format, va_list arguments)
 {
+  _counters["error"] += 1;
+
   std::fprintf(stderr, "\x1b[1;37m%s", "arrow: ");
   std::fprintf(stderr, "\x1b[1;31m%s\x1b[1;37m", "error: ");
   std::vfprintf(stderr, format, arguments);
   std::fprintf(stderr, "\x1b[0m\n");
+}
+
+unsigned Log::count(const std::string& level) {
+  return _counters[level];
 }

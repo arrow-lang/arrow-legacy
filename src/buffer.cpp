@@ -1,12 +1,21 @@
 #include <fstream>
 #include <iterator>
 #include "arrow/buffer.hpp"
+#include "arrow/log.hpp"
 #include "utf8.h"
 
 using arrow::Buffer;
 
 Buffer::Buffer(const std::string& filename)
-  : _stream(new std::ifstream(filename, std::ios::in|std::ios::binary)) {
+  : _stream(nullptr)
+{
+  auto handle = new std::ifstream(filename, std::ios::in|std::ios::binary);
+  _stream.reset(handle);
+
+  if (!handle->is_open()) {
+    Log::get().error(
+      "couldn't read \"%s\"; couldn't open path as file", filename.c_str());
+  }
 }
 
 bool Buffer::_push() {

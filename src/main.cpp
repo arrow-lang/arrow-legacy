@@ -67,6 +67,10 @@ int main(int argc, char** argv) {
 
   auto tokenizer = Tokenizer(vm["input-file"].as<std::string>());
 
+  if (Log::get().count("error") > 0) {
+    return EXIT_FAILURE;
+  }
+
   for (;;) {
     auto tok = tokenizer.next();
 
