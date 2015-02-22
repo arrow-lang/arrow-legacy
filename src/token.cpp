@@ -38,6 +38,39 @@ std::string arrow::to_string(Type type) noexcept
     case Type::Mut:
       return "keyword: mut";
 
+    case Type::True:
+      return "keyword: true";
+
+    case Type::False:
+      return "keyword: false";
+
+    case Type::If:
+      return "keyword: if";
+
+    case Type::While:
+      return "keyword: while";
+
+    case Type::Break:
+      return "keyword: break";
+
+    case Type::Continue:
+      return "keyword: continue";
+
+    case Type::Return:
+      return "keyword: return";
+
+    case Type::Global:
+      return "keyword: global";
+
+    case Type::Arrow:
+      return "punctuator: ->";
+
+    case Type::FatArrow:
+      return "punctuator: =>";
+
+    case Type::Comma:
+      return "punctuator: ,";
+
     case Type::Plus:
       return "punctuator: +";
 

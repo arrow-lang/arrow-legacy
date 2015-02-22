@@ -131,6 +131,10 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
   auto type = Type::Unknown;
   auto len = 1;
   switch (p0) {
+    case 0x2c:  // ASCII `,`
+      type = Type::Comma;
+      break;
+
     case 0x3a:  // ASCII `:`
       type = Type::Colon;
       break;
@@ -178,6 +182,9 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
 
       if (p1 == 0x3d) {  // ASCII `=`
         type = Type::Minus_Equals;
+        len = 2;
+      } else if (p1 == 0x3e) {  // ASCII `>`
+        type = Type::Arrow;
         len = 2;
       }
 
@@ -276,6 +283,9 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
 
       if (p1 == 0x3d) {  // ASCII `=`
         type = Type::Equals_Equals;
+        len = 2;
+      } else if (p1 == 0x3e) {  // ASCII `>`
+        type = Type::FatArrow;
         len = 2;
       }
 
@@ -554,6 +564,14 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token>
     {"def", Type::Def},
     {"let", Type::Let},
     {"mut", Type::Mut},
+    {"true", Type::True},
+    {"false", Type::False},
+    {"if", Type::If},
+    {"while", Type::While},
+    {"break", Type::Break},
+    {"continue", Type::Continue},
+    {"return", Type::Return},
+    {"global", Type::Global},
   };
 
   auto kw = keywords.find(text);

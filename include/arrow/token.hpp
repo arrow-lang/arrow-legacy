@@ -175,6 +175,39 @@ namespace arrow {
     /// Right-parenethis `]`
     RightBracket,
 
+    /// Arrow `->`
+    Arrow,
+
+    /// Fat arrow `=>`
+    FatArrow,
+
+    /// Comma `,`
+    Comma,
+
+    /// True
+    True,
+
+    /// False
+    False,
+
+    /// If
+    If,
+
+    /// While
+    While,
+
+    /// Break
+    Break,
+
+    /// Continue
+    Continue,
+
+    /// Return
+    Return,
+
+    /// Global
+    Global
+
   };
 
   extern std::string to_string(Type type) noexcept;

@@ -5,3 +5,11 @@ not
 let
 def
 mut
+true
+false
+if
+while
+break
+continue
+return
+global

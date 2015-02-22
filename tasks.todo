@@ -9,19 +9,19 @@
     ☐ Strings (double-quote) / Characters (single-quote)
       ☐ Escape sequences
     ☐ Allow numbers to contain '_'
-    ☐ Additional punctuators
-      ☐ arrow `->`
-      ☐ fat-arrow `=>`
-      ☐ comma `,`
-    ☐ Additional keywords
-      ☐ true
-      ☐ false
-      ☐ if
-      ☐ while
-      ☐ break
-      ☐ continue
-      ☐ return
-      ☐ global
+    ✔ Additional punctuators @done(2015-02-21 16:00)
+      ✔ arrow `->` @done(2015-02-21 16:00)
+      ✔ fat-arrow `=>` @done(2015-02-21 16:00)
+      ✔ comma `,` @done(2015-02-21 16:00)
+    ✔ Additional keywords @done(2015-02-21 16:01)
+      ✔ true @done(2015-02-21 16:00)
+      ✔ false @done(2015-02-21 16:00)
+      ✔ if @done(2015-02-21 16:00)
+      ✔ while @done(2015-02-21 16:00)
+      ✔ break @done(2015-02-21 16:00)
+      ✔ continue @done(2015-02-21 16:00)
+      ✔ return @done(2015-02-21 16:00)
+      ✔ global @done(2015-02-21 16:00)
     ☐ Error reporting (unknown token [both ASCII and unicode])
 
   ☐ Parser
