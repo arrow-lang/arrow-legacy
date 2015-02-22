@@ -22,7 +22,7 @@
       ✔ continue @done(2015-02-21 16:00)
       ✔ return @done(2015-02-21 16:00)
       ✔ global @done(2015-02-21 16:00)
-    ☐ Error reporting (unknown token [both ASCII and unicode])
+    ✔ Error reporting (unknown token [both ASCII and unicode]) @done(2015-02-21 17:16)
 
   ☐ Parser
     ☐ Function
