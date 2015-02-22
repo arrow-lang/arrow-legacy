@@ -18,6 +18,7 @@ namespace arrow {
   private:
     bool parse_module_statement();
     bool parse_statement();
+    bool parse_break();
 
     Tokenizer& _t;
 

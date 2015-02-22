@@ -13,18 +13,42 @@ using namespace arrow::ast;
 
 IMPL(Node);
 IMPL(Module);
+IMPL(Break);
 
 Show::Show()
-  : _tree(), _el(_tree)
+  : _tree()
 {
 }
 
 void Show::show(std::ostream& os)
 {
-  write_xml(os, _tree);
+  boost::property_tree::xml_writer_settings<char> settings(' ', 1);
+  write_xml(os, _tree, settings);
 }
 
-void Show::visit(Module&)
+boost::property_tree::ptree& Show::_el()
 {
-  _el.add("Module", "");
+  if (_ctx.size() == 0) {
+    return _tree;
+  } else {
+    return *(_ctx.top());
+  }
+}
+
+void Show::visit(Module& x)
+{
+  auto& node = _tree.add("Module", "");
+
+  _ctx.push(&node);
+
+  for (auto& node : x.sequence) {
+    node->accept(*this);
+  }
+
+  _ctx.pop();
+}
+
+void Show::visit(Break&)
+{
+  _el().add("Break", "");
 }

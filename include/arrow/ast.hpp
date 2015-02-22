@@ -4,6 +4,7 @@
 #include <deque>
 #include <memory>
 #include <iostream>
+#include <stack>
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -22,9 +23,14 @@ namespace arrow {
       std::deque<std::shared_ptr<Node>> sequence;
     };
 
+    struct Break : Node {
+      virtual void accept(Visitor& v);
+    };
+
     struct Visitor {
       virtual void visit(Node&) { }
       virtual void visit(Module&) { }
+      virtual void visit(Break&) { }
     };
 
     struct Show : Visitor {
@@ -34,10 +40,13 @@ namespace arrow {
       void show(std::ostream& os);
 
       virtual void visit(Module& x);
+      virtual void visit(Break& x);
 
     private:
+      boost::property_tree::ptree& _el();
+
       boost::property_tree::ptree _tree;
-      boost::property_tree::ptree& _el;
+      std::stack<boost::property_tree::ptree*> _ctx;
 
     };
 

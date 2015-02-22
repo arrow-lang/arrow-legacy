@@ -1,4 +1,5 @@
 #include "arrow/parser.hpp"
+#include "arrow/log.hpp"
 
 using arrow::Parser;
 using arrow::Type;
@@ -45,9 +46,44 @@ bool Parser::parse_module_statement()
 
 // Statement
 // ----------------------------------------------------------------------------
-// statement = ;
+// statement = break;
 // ----------------------------------------------------------------------------
 bool Parser::parse_statement()
 {
-  return false;
+  return parse_break();
+}
+
+// Break
+// ----------------------------------------------------------------------------
+// break = "break" ";";
+// ----------------------------------------------------------------------------
+bool Parser::parse_break()
+{
+  // Expect `break`
+  if (_t.peek(0)->type != Type::Break) {
+    return false;
+  }
+
+  // Pop the token
+  _t.pop();
+
+  // Construct the node
+  auto node = make_shared<ast::Break>();
+
+  // Expect `;`
+  auto tok = _t.peek(0);
+  if (tok->type != Type::Semicolon) {
+    Log::get().error(
+      "unexpected %s (expected `;`)", to_string(tok->type).c_str());
+
+    return false;
+  }
+
+  // Pop the token
+  _t.pop();
+
+  // Push the node
+  _stack.push_back(node);
+
+  return true;
 }

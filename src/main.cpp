@@ -106,6 +106,5 @@ int main(int argc, char** argv) {
     ast::Show show;
     module->accept(show);
     show.show(std::cout);
-    std::cout << std::endl;
   }
 }

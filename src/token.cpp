@@ -18,160 +18,160 @@ std::string arrow::to_string(Type type) noexcept
       return "identifier";
 
     case Type::And:
-      return "keyword: and";
+      return "`and`";
 
     case Type::Or:
-      return "keyword: or";
+      return "`or`";
 
     case Type::Not:
-      return "keyword: not";
+      return "`not`";
 
     case Type::Xor:
-      return "keyword: xor";
+      return "`xor`";
 
     case Type::Def:
-      return "keyword: def";
+      return "`def`";
 
     case Type::Let:
-      return "keyword: let";
+      return "`let`";
 
     case Type::Mut:
-      return "keyword: mut";
+      return "`mut`";
 
     case Type::True:
-      return "keyword: true";
+      return "`true`";
 
     case Type::False:
-      return "keyword: false";
+      return "`false`";
 
     case Type::If:
-      return "keyword: if";
+      return "`if`";
 
     case Type::While:
-      return "keyword: while";
+      return "`while`";
 
     case Type::Break:
-      return "keyword: break";
+      return "`break`";
 
     case Type::Continue:
-      return "keyword: continue";
+      return "`continue`";
 
     case Type::Return:
-      return "keyword: return";
+      return "`return`";
 
     case Type::Global:
-      return "keyword: global";
+      return "`global`";
 
     case Type::Arrow:
-      return "punctuator: ->";
+      return "`->`";
 
     case Type::FatArrow:
-      return "punctuator: =>";
+      return "`=>`";
 
     case Type::Comma:
-      return "punctuator: ,";
+      return "`,`";
 
     case Type::Plus:
-      return "punctuator: +";
+      return "`+`";
 
     case Type::Minus:
-      return "punctuator: -";
+      return "`-`";
 
     case Type::LSlash:
-      return "punctuator: /";
+      return "`/`";
 
     case Type::LSlash_LSlash:
-      return "punctuator: //";
+      return "`//`";
 
     case Type::Asterisk:
-      return "punctuator: *";
+      return "`*`";
 
     case Type::Percent:
-      return "punctuator: %";
+      return "`%`";
 
     case Type::Plus_Equals:
-      return "punctuator: +=";
+      return "`+=`";
 
     case Type::Minus_Equals:
-      return "punctuator: -=";
+      return "`-=`";
 
     case Type::LSlash_Equals:
-      return "punctuator: /=";
+      return "`/=`";
 
     case Type::LSlash_LSlash_Equals:
-      return "punctuator: //=";
+      return "`//=`";
 
     case Type::Asterisk_Equals:
-      return "punctuator: *=";
+      return "`*=`";
 
     case Type::Percent_Equals:
-      return "punctuator: %=";
+      return "`%=`";
 
     case Type::Ampersand:
-      return "punctuator: &";
+      return "`&`";
 
     case Type::Ampersand_Equals:
-      return "punctuator: &=";
+      return "`&=`";
 
     case Type::Pipe:
-      return "punctuator: |";
+      return "`|`";
 
     case Type::Pipe_Equals:
-      return "punctuator: |=";
+      return "`|=`";
 
     case Type::Caret:
-      return "punctuator: ^";
+      return "`^`";
 
     case Type::Caret_Equals:
-      return "punctuator: ^=";
+      return "`^=`";
 
     case Type::ExclamationMark:
-      return "punctuator: !";
+      return "`!`";
 
     case Type::Equals:
-      return "punctuator: =";
+      return "`=`";
 
     case Type::Equals_Equals:
-      return "punctuator: ==";
+      return "`==`";
 
     case Type::ExclamationMark_Equals:
-      return "punctuator: !=";
+      return "`!=`";
 
     case Type::GreaterThan:
-      return "punctuator: >";
+      return "`>`";
 
     case Type::GreaterThan_Equals:
-      return "punctuator: >=";
+      return "`>=`";
 
     case Type::LessThan:
-      return "punctuator: <";
+      return "`<`";
 
     case Type::LessThan_Equals:
-      return "punctuator: <=";
+      return "`<=`";
 
     case Type::Colon:
-      return "punctuator: :";
+      return "`:`";
 
     case Type::Semicolon:
-      return "punctuator: ;";
+      return "`;`";
 
     case Type::LeftBrace:
-      return "punctuator: {";
+      return "`{`";
 
     case Type::RightBrace:
-      return "punctuator: }";
+      return "`}`";
 
     case Type::LeftBracket:
-      return "punctuator: [";
+      return "`[`";
 
     case Type::RightBracket:
-      return "punctuator: ]";
+      return "`]`";
 
     case Type::LeftParenthesis:
-      return "punctuator: (";
+      return "`(`";
 
     case Type::RightParenthesis:
-      return "punctuator: )";
+      return "`)`";
 
     default:
       return "unknown";
