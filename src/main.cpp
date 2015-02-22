@@ -47,6 +47,15 @@ int main(int argc, char** argv) {
     return 0;
   }
 
+  if (vm.count("version")) {
+    // TODO: Should reference a library value for the version
+    // TODO: Should include a git sha / tag (git describe)
+    // TODO: Should include build platform
+    // TODO: Should include build date
+    printf("Arrow 0.1.0-pre\n");
+    return 0;
+  }
+
   if (!vm.count("input-file")) {
     Log::get().error("no input filename given");
     return EXIT_FAILURE;
