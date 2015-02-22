@@ -93,7 +93,10 @@ def test(ctx):
     for file_ in ctx.path.ant_glob("test/tokenize/*.as"):
         # Run the test
         filename = file_.abspath()
-        process = Popen([binary, filename], stdout=PIPE, stderr=PIPE)
+        process = Popen(
+            [binary, '--tokenize', filename], stdout=PIPE, stderr=PIPE
+        )
+
         stdout, _ = process.communicate()
 
         # Check against the expected output

@@ -1,6 +1,7 @@
 #ifndef ARROW_TOKENIZER_H
 #define ARROW_TOKENIZER_H 1
 
+#include <queue>
 #include "arrow/token.hpp"
 #include "arrow/buffer.hpp"
 
@@ -20,9 +21,16 @@ namespace arrow {
     std::shared_ptr<Token> peek(unsigned offset = 0);
 
     /// Get (consume) the next token in the input stream.
-    std::shared_ptr<Token> next();
+    std::shared_ptr<Token> pop();
+
+    /// Get the filename that was used to bind the file handle.
+    const std::string& filename() const noexcept {
+      return _filename;
+    }
 
   private:
+    void _push();
+
     Position _pos() const;
     std::uint32_t _buffer_next();
 
@@ -39,6 +47,7 @@ namespace arrow {
     Buffer _buffer;
     unsigned _row;
     unsigned _column;
+    std::deque<std::shared_ptr<Token>> _queue;
 
   };
 

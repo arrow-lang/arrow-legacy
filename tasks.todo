@@ -35,3 +35,5 @@
 
   ☐ Fold (constant expressions)
   ☐ Contextual type inference
+
+  ☐ Rename "arrow::Type" to "arrow::Token::Type"

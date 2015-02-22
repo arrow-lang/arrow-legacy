@@ -13,6 +13,30 @@ Tokenizer::Tokenizer(const std::string& filename)
 {
 }
 
+auto Tokenizer::pop() -> std::shared_ptr<Token>
+{
+  if (_queue.size() == 0) {
+    // Ask for another token.
+    _push();
+  }
+
+  // Pop and return the next token.
+  auto front = _queue.front();
+  _queue.pop_front();
+  return front;
+}
+
+auto Tokenizer::peek(unsigned offset) -> std::shared_ptr<Token>
+{
+  // Ask for more tokens until we can fulfill the request
+  while (_queue.size() <= offset) {
+    _push();
+  }
+
+  // Peek (and perserve) the `offset` token.
+  return _queue.at(offset);
+}
+
 auto Tokenizer::_pos() const -> Position
 {
   return Position(_row, _column);
@@ -59,12 +83,13 @@ std::uint32_t Tokenizer::_buffer_next()
   return ch;
 }
 
-auto Tokenizer::next() -> std::shared_ptr<Token>
+void Tokenizer::_push()
 {
   // Check for the end-of-stream condition ..
   if (_buffer.empty()) {
     // Reached end-of-stream, signal and get out
-    return _make_token(Type::End, _pos(), _pos() + 1);
+    _queue.push_back(_make_token(Type::End, _pos(), _pos() + 1));
+    return;
   }
 
   // Consume all whitespace
@@ -93,24 +118,34 @@ auto Tokenizer::next() -> std::shared_ptr<Token>
     _column = 0;
     _row += 1;
 
-    return next();
+    _push();
+    return;
   }
 
   // Scan for a numeric (if we are on a digit) ..
-  if (std::isdigit(_buffer.peek())) { return _scan_numeric(); }
+  if (std::isdigit(_buffer.peek())) {
+    _queue.push_back(_scan_numeric());
+    return;
+  }
 
   // Scan for a punctuator (and return the token if we match one) ..
   auto punc_tok = _scan_punctuator();
-  if (punc_tok) { return punc_tok; }
+  if (punc_tok) {
+    _queue.push_back(punc_tok);
+    return;
+  }
 
   // Scan for an identifier (or a token) ..
   auto ident_tok = _scan_identifier();
-  if (ident_tok) { return ident_tok; }
+  if (ident_tok) {
+    _queue.push_back(ident_tok);
+    return;
+  }
 
   // Reached the end; report an unknown token (and consume it).
   auto cur = _pos();
   _buffer_next();
-  return _make_token(Type::Unknown, cur, _pos());
+  _queue.push_back(_make_token(Type::Unknown, cur, _pos()));
 }
 
 /// Test `byte` and check if it is within the expected range

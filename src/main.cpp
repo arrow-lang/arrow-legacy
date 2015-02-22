@@ -1,5 +1,6 @@
-// #include <cstdio>
+#include <iostream>
 #include "arrow/tokenizer.hpp"
+#include "arrow/parser.hpp"
 #include "arrow/log.hpp"
 #include "boost/program_options.hpp"
 
@@ -17,6 +18,8 @@ void print_help(const char* binary_path) {
   static const auto fmt = "    \x1b[33m%-20s\x1b[0m %s\n";
   printf(fmt, "-h, --help", "Display help information");
   printf(fmt, "-V, --version", "Output version");
+  printf(fmt, "--tokenize", "Tokenize the input file and print the tokens");
+  printf(fmt, "--parse", "Parse the input file and print the AST");
 
   printf("\n");
 }
@@ -29,6 +32,8 @@ int main(int argc, char** argv) {
   desc.add_options()
       ("help,h", "")
       ("version,V", "")
+      ("tokenize", "")
+      ("parse", "")
       ("input-file", po::value<std::string>(), "")
   ;
 
@@ -61,34 +66,46 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  // Tokenize!
-  // FIXME: This should be inside a parser inside a compiler .. etc.
-  //    We'll get to that
-
+  // Construct the tokenizer
   auto tokenizer = Tokenizer(vm["input-file"].as<std::string>());
-
   if (Log::get().count("error") > 0) {
     return EXIT_FAILURE;
   }
 
-  for (;;) {
-    auto tok = tokenizer.next();
+  if (vm.count("tokenize")) {
+    for (;;) {
+      auto tok = tokenizer.pop();
 
-    printf("%s: ", tok->span.to_string().c_str());
+      printf("%s: ", tok->span.to_string().c_str());
 
-    if (tok->type == Type::Integer) {
-      auto tok_ = std::static_pointer_cast<IntegerToken>(tok);
-      printf("integer: %s (%d)\n", tok_->text.c_str(), tok_->base);
-    } else if (tok->type == Type::Float) {
-      auto tok_ = std::static_pointer_cast<FloatToken>(tok);
-      printf("float: %s\n", tok_->text.c_str());
-    } else if (tok->type == Type::Identifier) {
-      auto tok_ = std::static_pointer_cast<IdentifierToken>(tok);
-      printf("identifier: %s\n", tok_->text.c_str());
-    } else {
-      printf("%s\n", arrow::to_string(tok->type).c_str());
+      if (tok->type == Type::Integer) {
+        auto tok_ = std::static_pointer_cast<IntegerToken>(tok);
+        printf("integer: %s (%d)\n", tok_->text.c_str(), tok_->base);
+      } else if (tok->type == Type::Float) {
+        auto tok_ = std::static_pointer_cast<FloatToken>(tok);
+        printf("float: %s\n", tok_->text.c_str());
+      } else if (tok->type == Type::Identifier) {
+        auto tok_ = std::static_pointer_cast<IdentifierToken>(tok);
+        printf("identifier: %s\n", tok_->text.c_str());
+      } else {
+        printf("%s\n", arrow::to_string(tok->type).c_str());
+      }
+
+      if (tok->type == arrow::Type::End) { break; }
     }
+  }
 
-    if (tok->type == arrow::Type::End) { break; }
+  // Construct the parser
+  auto parser = Parser(tokenizer);
+
+  if (vm.count("parse")) {
+    // Parse into a module node
+    auto module = parser.parse();
+
+    // Show the AST
+    ast::Show show;
+    module->accept(show);
+    show.show(std::cout);
+    std::cout << std::endl;
   }
 }
