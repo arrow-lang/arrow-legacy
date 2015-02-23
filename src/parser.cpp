@@ -135,14 +135,19 @@ bool Parser::parse_expression()
     case Type::Integer:
       return parse_integer();
 
+    case Type::Float:
+      return parse_float();
+
     case Type::True:
     case Type::False:
       return parse_boolean();
 
     default:
       // Unknown expression
+      // TODO: Should we really report failure like this here?
       expect({
         Type::Integer,
+        Type::Float,
         Type::True,
         Type::False,
       });
@@ -163,6 +168,25 @@ bool Parser::parse_integer()
 
   // Declare the node
   auto node = make_shared<ast::Integer>(tok->text, tok->base);
+
+  // Push the node
+  _stack.push_front(node);
+
+  return true;
+}
+
+// Float
+// ----------------------------------------------------------------------------
+// float = FLOAT ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_float()
+{
+  // Expect FLOAT
+  auto tok = expect<FloatToken>(Type::Float);
+  if (!tok) { return false; }
+
+  // Declare the node
+  auto node = make_shared<ast::Float>(tok->text);
 
   // Push the node
   _stack.push_front(node);

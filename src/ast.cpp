@@ -15,6 +15,7 @@ IMPL(Node);
 IMPL(Module);
 IMPL(Break);
 IMPL(Integer);
+IMPL(Float);
 IMPL(Boolean);
 IMPL(Promote);
 IMPL(NegateNumeric);
@@ -28,6 +29,11 @@ Unary::Unary(std::shared_ptr<Node> operand)
 
 Integer::Integer(const std::string& text, unsigned base)
   : text(text), base(base)
+{
+}
+
+Float::Float(const std::string& text)
+  : text(text)
 {
 }
 
@@ -78,6 +84,11 @@ void Show::visit(Integer& x)
 {
   auto& node = _el().add("Integer", x.text.c_str());
   node.add("<xmlattr>.base", std::to_string(x.base).c_str());
+}
+
+void Show::visit(Float& x)
+{
+  _el().add("Float", x.text.c_str());
 }
 
 void Show::visit(Boolean& x)

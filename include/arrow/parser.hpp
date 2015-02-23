@@ -37,6 +37,7 @@ namespace arrow {
     bool parse_postfix_expression();
     bool parse_unary_expression();
     bool parse_integer();
+    bool parse_float();
     bool parse_boolean();
     bool parse_break();
 

@@ -32,6 +32,14 @@ namespace arrow {
       unsigned base;
     };
 
+    struct Float : Node {
+      Float(const std::string& text);
+
+      virtual void accept(Visitor& v);
+
+      std::string text;
+    };
+
     struct Boolean : Node {
       Boolean(bool value);
 
@@ -79,6 +87,7 @@ namespace arrow {
       virtual void visit(Module&) { }
       virtual void visit(Break&) { }
       virtual void visit(Integer&) { }
+      virtual void visit(Float&) { }
       virtual void visit(Boolean&) { }
       virtual void visit(Promote&) { }
       virtual void visit(NegateLogical&) { }
@@ -95,6 +104,7 @@ namespace arrow {
       virtual void visit(Module&);
       virtual void visit(Break&);
       virtual void visit(Integer&);
+      virtual void visit(Float&);
       virtual void visit(Boolean&);
       virtual void visit(Promote&);
       virtual void visit(NegateLogical&);
