@@ -166,11 +166,8 @@ bool Parser::parse_integer()
   auto tok = expect<IntegerToken>(Type::Integer);
   if (!tok) { return false; }
 
-  // Declare the node
-  auto node = make_shared<ast::Integer>(tok->text, tok->base);
-
-  // Push the node
-  _stack.push_front(node);
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::Integer>(tok->text, tok->base));
 
   return true;
 }
@@ -185,11 +182,8 @@ bool Parser::parse_float()
   auto tok = expect<FloatToken>(Type::Float);
   if (!tok) { return false; }
 
-  // Declare the node
-  auto node = make_shared<ast::Float>(tok->text);
-
-  // Push the node
-  _stack.push_front(node);
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::Float>(tok->text));
 
   return true;
 }
@@ -204,11 +198,8 @@ bool Parser::parse_boolean()
   auto tok = expect({Type::True, Type::False});
   if (!tok) { return false; }
 
-  // Declare the node
-  auto node = make_shared<ast::Boolean>(tok->type == Type::True);
-
-  // Push the node
-  _stack.push_front(node);
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::Boolean>(tok->type == Type::True));
 
   return true;
 }
