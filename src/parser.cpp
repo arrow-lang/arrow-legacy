@@ -275,17 +275,11 @@ bool Parser::parse_postfix_expression()
 // ----------------------------------------------------------------------------
 bool Parser::parse_break()
 {
-  // Expect `break`
-  if (!expect(Type::Break)) { return false; }
+  // Expect `break` `;`
+  if (!expect(Type::Break) || !expect(Type::Semicolon)) { return false; }
 
-  // Declare node
-  auto node = make_shared<ast::Break>();
-
-  // Expect `;`
-  if (!expect(Type::Semicolon)) { return false; }
-
-  // Push node
-  _stack.push_front(node);
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::Break>());
 
   return true;
 }
