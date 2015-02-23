@@ -72,7 +72,7 @@ std::shared_ptr<arrow::Token> Parser::do_expect(const std::vector<Type>& types)
 
     stream << ")";
 
-    Log::get().error(stream.str());
+    Log::get().error(tok->span, stream.str());
 
     return nullptr;
   }
@@ -141,7 +141,12 @@ bool Parser::parse_expression()
 
     default:
       // Unknown expression
-      // TODO: Report unexpected ?
+      expect({
+        Type::Integer,
+        Type::True,
+        Type::False,
+      });
+
       return false;
   }
 }
@@ -205,7 +210,7 @@ bool Parser::parse_unary_expression()
   _t.pop();
 
   // Parse the operand
-  if (!parse_expression()) { return false; }
+  if (!parse_unary_expression()) { return false; }
   auto operand = _stack.front();
   _stack.pop_front();
 

@@ -12,7 +12,7 @@ def options(ctx):
 def configure(ctx):
     ctx.load(" ".join(WAF_TOOLS))
 
-    ctx.check_boost(lib="system program_options")
+    ctx.check_boost(lib="system program_options filesystem")
 
     if ctx.env["CXX_NAME"] == "gcc":
         ctx.env.append_unique("CXXFLAGS", "-std=c++14")

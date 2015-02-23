@@ -11,3 +11,4 @@
 
 # Negate (Logical)
 not false;
+not not true;

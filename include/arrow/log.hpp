@@ -5,6 +5,8 @@
 #include <string>
 #include <map>
 
+#include "arrow/span.hpp"
+
 namespace arrow {
 
   class Log {
@@ -14,10 +16,11 @@ namespace arrow {
     unsigned count(const std::string& level);
 
     void error(const std::string& format, ...);
-    void error(const char* format, ...);
+    void error(Span span, const std::string& format, ...);
 
   private:
     void error(const char* format, va_list arguments);
+    void error(Span, const char* format, va_list arguments);
 
     std::map<std::string, unsigned> _counters;
 

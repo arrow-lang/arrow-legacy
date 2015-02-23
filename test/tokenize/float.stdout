@@ -1,6 +1,6 @@
-2,1-8: float: 21.1521
-3,1-10: float: 612.41e10
-4,1-6: float: 32e50
-5,1-7: float: 31e+30
-6,1-10: float: 11.24e-30
-7,1-2: end
+float:2,1-8: float: 21.1521
+float:3,1-10: float: 612.41e10
+float:4,1-6: float: 32e50
+float:5,1-7: float: 31e+30
+float:6,1-10: float: 11.24e-30
+float:7,1-2: end

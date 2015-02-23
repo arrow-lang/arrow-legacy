@@ -1,8 +1,11 @@
 #include <sstream>
+#include <boost/filesystem.hpp>
 #include "arrow/span.hpp"
 
 using arrow::Position;
 using arrow::Span;
+
+namespace fs = boost::filesystem;
 
 Position::Position(unsigned row, unsigned column)
   : row(row), column(column) {
@@ -18,6 +21,9 @@ Span::Span(std::string&& filename, Position begin, Position end)
 
 std::string Span::to_string() const {
   std::stringstream fmt;
+
+  fmt << fs::basename(filename);
+  fmt << ':';
 
   fmt << (begin.row + 1);
   fmt << ',';

@@ -4,18 +4,29 @@
   <Integer base="10">32</Integer>
  </Promote>
  <Promote>
-  <Integer base="10">643</Integer>
+  <Promote>
+   <Promote>
+    <Integer base="10">643</Integer>
+   </Promote>
+  </Promote>
  </Promote>
  <NegateNumeric>
   <Integer base="10">32</Integer>
  </NegateNumeric>
  <NegateNumeric>
-  <Integer base="16">afe</Integer>
+  <NegateNumeric>
+   <Integer base="16">afe</Integer>
+  </NegateNumeric>
  </NegateNumeric>
  <NegateBitwise>
   <Integer base="10">6</Integer>
  </NegateBitwise>
  <NegateLogical>
   <Boolean>false</Boolean>
+ </NegateLogical>
+ <NegateLogical>
+  <NegateLogical>
+   <Boolean>true</Boolean>
+  </NegateLogical>
  </NegateLogical>
 </Module>

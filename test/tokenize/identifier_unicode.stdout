@@ -1,13 +1,13 @@
-1,1-8: identifier: welcome
-2,2-9: identifier: ъеблагъ
-3,1-7: identifier: Welkom
-4,1-13: identifier: Mirë_se_vjen
-5,1-10: identifier: Wellkumma
-6,1-13: identifier: Բարի_գալուստ
-7,1-11: identifier: Прывiтанне
-8,1-8: identifier: স্বাগতম
-9,1-13: identifier: ကြိုဆိုပါတယ်
-10,1-5: identifier: 歡迎光臨
-11,2-13: identifier: ินดีต้อนรับ
-12,1-5: identifier: ようこそ
-13,1-2: end
+identifier_unicode:1,1-8: identifier: welcome
+identifier_unicode:2,2-9: identifier: ъеблагъ
+identifier_unicode:3,1-7: identifier: Welkom
+identifier_unicode:4,1-13: identifier: Mirë_se_vjen
+identifier_unicode:5,1-10: identifier: Wellkumma
+identifier_unicode:6,1-13: identifier: Բարի_գալուստ
+identifier_unicode:7,1-11: identifier: Прывiтанне
+identifier_unicode:8,1-8: identifier: স্বাগতম
+identifier_unicode:9,1-13: identifier: ကြိုဆိုပါတယ်
+identifier_unicode:10,1-5: identifier: 歡迎光臨
+identifier_unicode:11,2-13: identifier: ินดีต้อนรับ
+identifier_unicode:12,1-5: identifier: ようこそ
+identifier_unicode:13,1-2: end
