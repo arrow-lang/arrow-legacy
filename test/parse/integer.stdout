@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <Integer base="10">10</Integer>
+ <Integer base="10">51325239578032572</Integer>
+ <Integer base="10">86</Integer>
+ <Integer base="16">aafa</Integer>
+ <Integer base="16">deeda</Integer>
+ <Integer base="16">AEDA</Integer>
+ <Integer base="8">0210</Integer>
+ <Integer base="8">4356</Integer>
+ <Integer base="8">755</Integer>
+ <Integer base="2">01000100101</Integer>
+ <Integer base="2">0100101</Integer>
+ <Integer base="2">0101010</Integer>
+</Module>

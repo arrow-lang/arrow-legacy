@@ -14,6 +14,27 @@ using namespace arrow::ast;
 IMPL(Node);
 IMPL(Module);
 IMPL(Break);
+IMPL(Integer);
+IMPL(Boolean);
+IMPL(Promote);
+IMPL(NegateNumeric);
+IMPL(NegateLogical);
+IMPL(NegateBitwise);
+
+Unary::Unary(std::shared_ptr<Node> operand)
+  : operand(operand)
+{
+}
+
+Integer::Integer(const std::string& text, unsigned base)
+  : text(text), base(base)
+{
+}
+
+Boolean::Boolean(bool value)
+  : value(value)
+{
+}
 
 Show::Show()
   : _tree()
@@ -51,4 +72,55 @@ void Show::visit(Module& x)
 void Show::visit(Break&)
 {
   _el().add("Break", "");
+}
+
+void Show::visit(Integer& x)
+{
+  auto& node = _el().add("Integer", x.text.c_str());
+  node.add("<xmlattr>.base", std::to_string(x.base).c_str());
+}
+
+void Show::visit(Boolean& x)
+{
+  _el().add("Boolean", x.value ? "true" : "false");
+}
+
+void Show::visit(Promote& x)
+{
+  auto& node = _el().add("Promote", "");
+  _ctx.push(&node);
+
+  x.operand->accept(*this);
+
+  _ctx.pop();
+}
+
+void Show::visit(NegateNumeric& x)
+{
+  auto& node = _el().add("NegateNumeric", "");
+  _ctx.push(&node);
+
+  x.operand->accept(*this);
+
+  _ctx.pop();
+}
+
+void Show::visit(NegateLogical& x)
+{
+  auto& node = _el().add("NegateLogical", "");
+  _ctx.push(&node);
+
+  x.operand->accept(*this);
+
+  _ctx.pop();
+}
+
+void Show::visit(NegateBitwise& x)
+{
+  auto& node = _el().add("NegateBitwise", "");
+  _ctx.push(&node);
+
+  x.operand->accept(*this);
+
+  _ctx.pop();
 }

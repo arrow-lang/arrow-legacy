@@ -68,9 +68,7 @@ int main(int argc, char** argv) {
 
   // Construct the tokenizer
   auto tokenizer = Tokenizer(vm["input-file"].as<std::string>());
-  if (Log::get().count("error") > 0) {
-    return EXIT_FAILURE;
-  }
+  if (Log::get().count("error") > 0) { return EXIT_FAILURE; }
 
   if (vm.count("tokenize")) {
     for (;;) {
@@ -101,6 +99,7 @@ int main(int argc, char** argv) {
   if (vm.count("parse")) {
     // Parse into a module node
     auto module = parser.parse();
+    if (Log::get().count("error") > 0) { return EXIT_FAILURE; }
 
     // Show the AST
     ast::Show show;

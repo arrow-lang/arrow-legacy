@@ -23,6 +23,53 @@ namespace arrow {
       std::deque<std::shared_ptr<Node>> sequence;
     };
 
+    struct Integer : Node {
+      Integer(const std::string& text, unsigned base);
+
+      virtual void accept(Visitor& v);
+
+      std::string text;
+      unsigned base;
+    };
+
+    struct Boolean : Node {
+      Boolean(bool value);
+
+      virtual void accept(Visitor& v);
+
+      bool value;
+    };
+
+    struct Unary : Node {
+      Unary(std::shared_ptr<Node> operand);
+
+      std::shared_ptr<Node> operand;
+    };
+
+    struct Promote : Unary {
+      using Unary::Unary;
+
+      virtual void accept(Visitor& v);
+    };
+
+    struct NegateNumeric : Unary {
+      using Unary::Unary;
+
+      virtual void accept(Visitor& v);
+    };
+
+    struct NegateLogical : Unary {
+      using Unary::Unary;
+
+      virtual void accept(Visitor& v);
+    };
+
+    struct NegateBitwise : Unary {
+      using Unary::Unary;
+
+      virtual void accept(Visitor& v);
+    };
+
     struct Break : Node {
       virtual void accept(Visitor& v);
     };
@@ -31,6 +78,12 @@ namespace arrow {
       virtual void visit(Node&) { }
       virtual void visit(Module&) { }
       virtual void visit(Break&) { }
+      virtual void visit(Integer&) { }
+      virtual void visit(Boolean&) { }
+      virtual void visit(Promote&) { }
+      virtual void visit(NegateLogical&) { }
+      virtual void visit(NegateBitwise&) { }
+      virtual void visit(NegateNumeric&) { }
     };
 
     struct Show : Visitor {
@@ -39,8 +92,14 @@ namespace arrow {
 
       void show(std::ostream& os);
 
-      virtual void visit(Module& x);
-      virtual void visit(Break& x);
+      virtual void visit(Module&);
+      virtual void visit(Break&);
+      virtual void visit(Integer&);
+      virtual void visit(Boolean&);
+      virtual void visit(Promote&);
+      virtual void visit(NegateLogical&);
+      virtual void visit(NegateBitwise&);
+      virtual void visit(NegateNumeric&);
 
     private:
       boost::property_tree::ptree& _el();
