@@ -22,7 +22,7 @@ Span::Span(std::string&& filename, Position begin, Position end)
 std::string Span::to_string() const {
   std::stringstream fmt;
 
-  fmt << fs::basename(filename);
+  fmt << fs::path(filename).filename().string();
   fmt << ':';
 
   fmt << (begin.row + 1);
