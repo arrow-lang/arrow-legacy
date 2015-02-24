@@ -4,7 +4,13 @@
 
 using arrow::Log;
 
-Log& Log::get() noexcept {
+Log::Log()
+  : _counters()
+{
+}
+
+Log& Log::get() noexcept
+{
   static Log instance;
   return instance;
 }

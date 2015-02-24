@@ -8,42 +8,16 @@ using boost::property_tree::xml_writer_settings;
 using std::shared_ptr;
 using namespace arrow::ast;
 
-#define IMPL(N) \
-  void N::accept(Visitor& v) { v.visit(*this); }
-
-IMPL(Node);
-IMPL(Module);
-IMPL(Break);
-IMPL(Integer);
-IMPL(Float);
-IMPL(Boolean);
-IMPL(Promote);
-IMPL(NegateNumeric);
-IMPL(NegateLogical);
-IMPL(NegateBitwise);
-
-Unary::Unary(std::shared_ptr<Node> operand)
-  : operand(operand)
+Visitor::~Visitor()
 {
 }
 
-Integer::Integer(const std::string& text, unsigned base)
-  : text(text), base(base)
-{
-}
-
-Float::Float(const std::string& text)
-  : text(text)
-{
-}
-
-Boolean::Boolean(bool value)
-  : value(value)
+Show::~Show()
 {
 }
 
 Show::Show()
-  : _tree()
+  : _tree(), _ctx()
 {
 }
 

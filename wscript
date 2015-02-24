@@ -16,8 +16,19 @@ def configure(ctx):
 
     if ctx.env["CXX_NAME"] == "gcc":
         ctx.env.append_unique("CXXFLAGS", "-std=c++14")
+        ctx.env.append_unique("CXXFLAGS", "-Ofast")
         ctx.env.append_unique("CXXFLAGS", "-Wall")
         ctx.env.append_unique("CXXFLAGS", "-Wextra")
+        ctx.env.append_unique("CXXFLAGS", "-Wfatal-errors")
+        # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-final-types")
+        # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-final-methods")
+        # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-override")
+        # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=pure")
+        # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=const")
+        # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=noreturn")
+        ctx.env.append_unique("CXXFLAGS", "-Weffc++")
+        ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
+        ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
 
 
 def build(ctx):

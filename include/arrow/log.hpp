@@ -13,6 +13,8 @@ namespace arrow {
   public:
     static Log& get() noexcept;
 
+    Log();
+
     unsigned count(const std::string& level);
 
     void error(const std::string& format, ...);

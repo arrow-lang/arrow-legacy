@@ -7,7 +7,7 @@
 using arrow::Buffer;
 
 Buffer::Buffer(const std::string& filename)
-  : _stream(nullptr)
+  : _stream(nullptr), _queue()
 {
   auto handle = new std::ifstream(filename, std::ios::in|std::ios::binary);
   _stream.reset(handle);
