@@ -51,13 +51,13 @@ namespace arrow {
     /// Binary subtraction
     Minus,
 
-    /// Left-slash `/`
+    /// Slash `/`
     /// Binary floating-point division
-    LSlash,
+    Slash,
 
-    /// Left-slash > left-slash `//`
+    /// Slash > slash `//`
     /// Binary integral division
-    LSlash_LSlash,
+    Slash_Slash,
 
     /// Asterisk `*`
     /// Binary multiplication or pointer derefernce
@@ -79,13 +79,13 @@ namespace arrow {
     /// Compound assignment with subtraction
     Minus_Equals,
 
-    /// Left-slash > equals `/=`
+    /// Slash > equals `/=`
     /// Compound assignment with floating-point division
-    LSlash_Equals,
+    Slash_Equals,
 
-    /// Left-slash > left-slash > equals `//=`
+    /// Slash > slash > equals `//=`
     /// Compound assignment with integral division
-    LSlash_LSlash_Equals,
+    Slash_Slash_Equals,
 
     /// Percent-sign > equals `%=`
     /// Compound assignment with modulo

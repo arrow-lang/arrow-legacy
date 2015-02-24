@@ -246,18 +246,18 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
       break;
 
     case 0x2f:  // ASCII `/`
-      type = Type::LSlash;
+      type = Type::Slash;
 
       if (p1 == 0x2f) {  // ASCII `/`
-        type = Type::LSlash_LSlash;
+        type = Type::Slash_Slash;
         len = 2;
 
         if (p2 == 0x3d) {  // ASCII `=`
-          type = Type::LSlash_LSlash_Equals;
+          type = Type::Slash_Slash_Equals;
           len = 3;
         }
       } else if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::LSlash_Equals;
+        type = Type::Slash_Equals;
         len = 2;
       }
 

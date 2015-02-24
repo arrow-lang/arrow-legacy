@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <Assign>
+  <Add>
+   <Integer base="10">4</Integer>
+   <Integer base="10">32</Integer>
+  </Add>
+  <Integer base="10">10</Integer>
+ </Assign>
+ <AssignAdd>
+  <Integer base="10">15</Integer>
+  <Integer base="10">3</Integer>
+ </AssignAdd>
+ <AssignSub>
+  <Integer base="10">400</Integer>
+  <Boolean>false</Boolean>
+ </AssignSub>
+ <AssignMul>
+  <Integer base="10">400</Integer>
+  <Boolean>false</Boolean>
+ </AssignMul>
+ <AssignDiv>
+  <Boolean>false</Boolean>
+  <Boolean>true</Boolean>
+ </AssignDiv>
+ <AssignMod>
+  <Integer base="10">314</Integer>
+  <Integer base="10">593</Integer>
+ </AssignMod>
+ <AssignIntDiv>
+  <Integer base="10">231</Integer>
+  <Float>3.123</Float>
+ </AssignIntDiv>
+ <AssignBitAnd>
+  <Integer base="10">32</Integer>
+  <NegateBitwise>
+   <Integer base="10">34</Integer>
+  </NegateBitwise>
+ </AssignBitAnd>
+ <AssignBitXor>
+  <Integer base="10">42</Integer>
+  <NegateBitwise>
+   <Boolean>false</Boolean>
+  </NegateBitwise>
+ </AssignBitXor>
+ <AssignBitOr>
+  <Integer base="10">24</Integer>
+  <NegateBitwise>
+   <Boolean>true</Boolean>
+  </NegateBitwise>
+ </AssignBitOr>
+ <And>
+  <Boolean>false</Boolean>
+  <NegateLogical>
+   <Boolean>true</Boolean>
+  </NegateLogical>
+ </And>
+ <Or>
+  <NegateLogical>
+   <Boolean>true</Boolean>
+  </NegateLogical>
+  <Boolean>false</Boolean>
+ </Or>
+ <EqualTo>
+  <Integer base="10">54</Integer>
+  <Integer base="10">20</Integer>
+ </EqualTo>
+ <NotEqualTo>
+  <Integer base="10">20</Integer>
+  <Integer base="10">20</Integer>
+ </NotEqualTo>
+ <LessThan>
+  <Integer base="10">50</Integer>
+  <Boolean>false</Boolean>
+ </LessThan>
+ <LessThanOrEqualTo>
+  <Boolean>true</Boolean>
+  <Boolean>false</Boolean>
+ </LessThanOrEqualTo>
+ <GreaterThanOrEqualTo>
+  <Boolean>false</Boolean>
+  <Boolean>true</Boolean>
+ </GreaterThanOrEqualTo>
+ <GreaterThan>
+  <Boolean>false</Boolean>
+  <Integer base="10">30</Integer>
+ </GreaterThan>
+ <BitAnd>
+  <Integer base="10">4093</Integer>
+  <Integer base="10">39</Integer>
+ </BitAnd>
+ <BitXor>
+  <Integer base="10">32</Integer>
+  <Integer base="10">328</Integer>
+ </BitXor>
+ <BitXor>
+  <Boolean>true</Boolean>
+  <Boolean>false</Boolean>
+ </BitXor>
+ <BitOr>
+  <Integer base="10">40</Integer>
+  <Integer base="10">20</Integer>
+ </BitOr>
+ <Add>
+  <Integer base="10">32</Integer>
+  <Integer base="10">3295</Integer>
+ </Add>
+ <Sub>
+  <Integer base="10">320</Integer>
+  <Integer base="10">3209</Integer>
+ </Sub>
+ <Mul>
+  <Integer base="10">523</Integer>
+  <Integer base="10">230</Integer>
+ </Mul>
+ <Sub>
+  <Add>
+   <Integer base="10">32</Integer>
+   <Mul>
+    <Integer base="10">320</Integer>
+    <Integer base="10">32</Integer>
+   </Mul>
+  </Add>
+  <Mod>
+   <Integer base="10">30</Integer>
+   <Integer base="10">32</Integer>
+  </Mod>
+ </Sub>
+ <Div>
+  <Integer base="10">32</Integer>
+  <Integer base="10">321</Integer>
+ </Div>
+ <Mod>
+  <Integer base="10">532</Integer>
+  <Integer base="10">320</Integer>
+ </Mod>
+ <Add>
+  <Sub>
+   <Integer base="10">52</Integer>
+   <IntDiv>
+    <Integer base="10">532</Integer>
+    <Integer base="10">320</Integer>
+   </IntDiv>
+  </Sub>
+  <Integer base="10">30</Integer>
+ </Add>
+</Module>

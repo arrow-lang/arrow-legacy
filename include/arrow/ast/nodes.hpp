@@ -67,43 +67,73 @@ namespace arrow {
       std::shared_ptr<Node> operand;
     };
 
-    struct Promote : Unary {
-      using Unary::Unary;
+    #define UNARY_DEFINE(N) \
+      struct N : Unary { \
+        using Unary::Unary; \
+        virtual ~N() noexcept; \
+        virtual void accept(Visitor& v); \
+      }
 
-      virtual ~Promote() noexcept;
+    UNARY_DEFINE(Promote);
+    UNARY_DEFINE(NegateNumeric);
+    UNARY_DEFINE(NegateLogical);
+    UNARY_DEFINE(NegateBitwise);
 
-      virtual void accept(Visitor& v);
-    };
-
-    struct NegateNumeric : Unary {
-      using Unary::Unary;
-
-      virtual ~NegateNumeric() noexcept;
-
-      virtual void accept(Visitor& v);
-    };
-
-    struct NegateLogical : Unary {
-      using Unary::Unary;
-
-      virtual ~NegateLogical() noexcept;
-
-      virtual void accept(Visitor& v);
-    };
-
-    struct NegateBitwise : Unary {
-      using Unary::Unary;
-
-      virtual ~NegateBitwise() noexcept;
-
-      virtual void accept(Visitor& v);
-    };
+    #undef UNARY_DEFINE
 
     struct Break : Node {
       virtual ~Break() noexcept;
 
       virtual void accept(Visitor& v);
     };
+
+    struct Binary : Node {
+      Binary(std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs);
+
+      virtual ~Binary() noexcept;
+
+      virtual void accept(Visitor& v);
+
+      std::shared_ptr<Node> lhs;
+      std::shared_ptr<Node> rhs;
+    };
+
+    #define BINARY_DEFINE(N) \
+      struct N : Binary { \
+        using Binary::Binary; \
+        virtual ~N() noexcept; \
+        virtual void accept(Visitor& v); \
+      }
+
+    BINARY_DEFINE(Assign);
+    BINARY_DEFINE(AssignAdd);
+    BINARY_DEFINE(AssignSub);
+    BINARY_DEFINE(AssignMul);
+    BINARY_DEFINE(AssignDiv);
+    BINARY_DEFINE(AssignMod);
+    BINARY_DEFINE(AssignIntDiv);
+    BINARY_DEFINE(AssignBitAnd);
+    BINARY_DEFINE(AssignBitXor);
+    BINARY_DEFINE(AssignBitOr);
+    BINARY_DEFINE(And);
+    BINARY_DEFINE(Or);
+    BINARY_DEFINE(EqualTo);
+    BINARY_DEFINE(NotEqualTo);
+    BINARY_DEFINE(LessThan);
+    BINARY_DEFINE(LessThanOrEqualTo);
+    BINARY_DEFINE(GreaterThanOrEqualTo);
+    BINARY_DEFINE(GreaterThan);
+    BINARY_DEFINE(BitAnd);
+    BINARY_DEFINE(BitXor);
+    BINARY_DEFINE(BitOr);
+    BINARY_DEFINE(Add);
+    BINARY_DEFINE(Sub);
+    BINARY_DEFINE(Mul);
+    BINARY_DEFINE(Div);
+    BINARY_DEFINE(Mod);
+    BINARY_DEFINE(IntDiv);
+
+    #undef BINARY_DEFINE
 
   }
 }

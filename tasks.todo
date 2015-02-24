@@ -28,9 +28,10 @@
     ✔ Unary Expression @done(2015-02-22 23:40)
     ✔ Integer @done(2015-02-22 23:40)
     ✔ Float @done(2015-02-23 16:15)
-    ☐ Binary Expression (`+`, `-`, `*`, `/`, `//`)
+    ✔ Binary Expression (`+`, `-`, `*`, `/`, `//`) @done(2015-02-23 21:52)
     ☐ Function Definition
     ☐ Function Call
+    ☐ Location tracking
     ☐ Return
     ☐ Variables (`let _ = ..`)
     ☐ Error checking / reporting

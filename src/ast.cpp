@@ -70,9 +70,9 @@ void Show::visit(Boolean& x)
   _el().add("Boolean", x.value ? "true" : "false");
 }
 
-void Show::visit(Promote& x)
+void Show::visit_unary(const std::string& name, Unary& x)
 {
-  auto& node = _el().add("Promote", "");
+  auto& node = _el().add(name.c_str(), "");
   _ctx.push(&node);
 
   x.operand->accept(*this);
@@ -80,32 +80,52 @@ void Show::visit(Promote& x)
   _ctx.pop();
 }
 
-void Show::visit(NegateNumeric& x)
+#define SHOW_UNARY(N) \
+  void Show::visit(N& x) { visit_unary(#N, x); }
+
+SHOW_UNARY(Promote)
+SHOW_UNARY(NegateNumeric)
+SHOW_UNARY(NegateLogical)
+SHOW_UNARY(NegateBitwise)
+
+void Show::visit_binary(const std::string& name, Binary& x)
 {
-  auto& node = _el().add("NegateNumeric", "");
+  auto& node = _el().add(name.c_str(), "");
   _ctx.push(&node);
 
-  x.operand->accept(*this);
+  x.lhs->accept(*this);
+  x.rhs->accept(*this);
 
   _ctx.pop();
 }
 
-void Show::visit(NegateLogical& x)
-{
-  auto& node = _el().add("NegateLogical", "");
-  _ctx.push(&node);
+#define SHOW_BINARY(N) \
+  void Show::visit(N& x) { visit_binary(#N, x); }
 
-  x.operand->accept(*this);
-
-  _ctx.pop();
-}
-
-void Show::visit(NegateBitwise& x)
-{
-  auto& node = _el().add("NegateBitwise", "");
-  _ctx.push(&node);
-
-  x.operand->accept(*this);
-
-  _ctx.pop();
-}
+SHOW_BINARY(Assign)
+SHOW_BINARY(AssignAdd)
+SHOW_BINARY(AssignSub)
+SHOW_BINARY(AssignMul)
+SHOW_BINARY(AssignDiv)
+SHOW_BINARY(AssignMod)
+SHOW_BINARY(AssignIntDiv)
+SHOW_BINARY(AssignBitAnd)
+SHOW_BINARY(AssignBitXor)
+SHOW_BINARY(AssignBitOr)
+SHOW_BINARY(And)
+SHOW_BINARY(Or)
+SHOW_BINARY(EqualTo)
+SHOW_BINARY(NotEqualTo)
+SHOW_BINARY(LessThan)
+SHOW_BINARY(LessThanOrEqualTo)
+SHOW_BINARY(GreaterThanOrEqualTo)
+SHOW_BINARY(GreaterThan)
+SHOW_BINARY(BitAnd)
+SHOW_BINARY(BitXor)
+SHOW_BINARY(BitOr)
+SHOW_BINARY(Add)
+SHOW_BINARY(Sub)
+SHOW_BINARY(Mul)
+SHOW_BINARY(Div)
+SHOW_BINARY(Mod)
+SHOW_BINARY(IntDiv)

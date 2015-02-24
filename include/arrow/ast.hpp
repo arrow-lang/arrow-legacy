@@ -26,6 +26,33 @@ namespace arrow {
       virtual void visit(NegateLogical&) { }
       virtual void visit(NegateBitwise&) { }
       virtual void visit(NegateNumeric&) { }
+      virtual void visit(Assign&) { }
+      virtual void visit(AssignAdd&) { }
+      virtual void visit(AssignSub&) { }
+      virtual void visit(AssignMul&) { }
+      virtual void visit(AssignDiv&) { }
+      virtual void visit(AssignMod&) { }
+      virtual void visit(AssignIntDiv&) { }
+      virtual void visit(AssignBitAnd&) { }
+      virtual void visit(AssignBitXor&) { }
+      virtual void visit(AssignBitOr&) { }
+      virtual void visit(And&) { }
+      virtual void visit(Or&) { }
+      virtual void visit(EqualTo&) { }
+      virtual void visit(NotEqualTo&) { }
+      virtual void visit(LessThan&) { }
+      virtual void visit(LessThanOrEqualTo&) { }
+      virtual void visit(GreaterThanOrEqualTo&) { }
+      virtual void visit(GreaterThan&) { }
+      virtual void visit(BitAnd&) { }
+      virtual void visit(BitXor&) { }
+      virtual void visit(BitOr&) { }
+      virtual void visit(Add&) { }
+      virtual void visit(Sub&) { }
+      virtual void visit(Mul&) { }
+      virtual void visit(Div&) { }
+      virtual void visit(Mod&) { }
+      virtual void visit(IntDiv&) { }
     };
 
     struct Show : Visitor {
@@ -35,6 +62,9 @@ namespace arrow {
       virtual ~Show() noexcept;
 
       void show(std::ostream& os);
+
+      void visit_unary(const std::string& name, Unary&);
+      void visit_binary(const std::string& name, Binary&);
 
       virtual void visit(Node&) { }
       virtual void visit(Module&);
@@ -46,6 +76,33 @@ namespace arrow {
       virtual void visit(NegateLogical&);
       virtual void visit(NegateBitwise&);
       virtual void visit(NegateNumeric&);
+      virtual void visit(Assign&);
+      virtual void visit(AssignAdd&);
+      virtual void visit(AssignSub&);
+      virtual void visit(AssignMul&);
+      virtual void visit(AssignDiv&);
+      virtual void visit(AssignMod&);
+      virtual void visit(AssignIntDiv&);
+      virtual void visit(AssignBitAnd&);
+      virtual void visit(AssignBitXor&);
+      virtual void visit(AssignBitOr&);
+      virtual void visit(And&);
+      virtual void visit(Or&);
+      virtual void visit(EqualTo&);
+      virtual void visit(NotEqualTo&);
+      virtual void visit(LessThan&);
+      virtual void visit(LessThanOrEqualTo&);
+      virtual void visit(GreaterThanOrEqualTo&);
+      virtual void visit(GreaterThan&);
+      virtual void visit(BitAnd&);
+      virtual void visit(BitXor&);
+      virtual void visit(BitOr&);
+      virtual void visit(Add&);
+      virtual void visit(Sub&);
+      virtual void visit(Mul&);
+      virtual void visit(Div&);
+      virtual void visit(Mod&);
+      virtual void visit(IntDiv&);
 
     private:
       boost::property_tree::ptree& _el();

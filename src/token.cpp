@@ -77,10 +77,10 @@ std::string arrow::to_string(Type type) noexcept
     case Type::Minus:
       return "`-`";
 
-    case Type::LSlash:
+    case Type::Slash:
       return "`/`";
 
-    case Type::LSlash_LSlash:
+    case Type::Slash_Slash:
       return "`//`";
 
     case Type::Asterisk:
@@ -95,10 +95,10 @@ std::string arrow::to_string(Type type) noexcept
     case Type::Minus_Equals:
       return "`-=`";
 
-    case Type::LSlash_Equals:
+    case Type::Slash_Equals:
       return "`/=`";
 
-    case Type::LSlash_LSlash_Equals:
+    case Type::Slash_Slash_Equals:
       return "`//=`";
 
     case Type::Asterisk_Equals:

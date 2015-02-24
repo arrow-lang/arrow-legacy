@@ -1,3 +1,4 @@
+#include <map>
 #include "arrow/parser.hpp"
 #include "arrow/log.hpp"
 
@@ -112,7 +113,7 @@ bool Parser::parse_statement()
 // ----------------------------------------------------------------------------
 bool Parser::parse_expression_statement()
 {
-  if (!parse_unary_expression()) { return false; }
+  if (!parse_expression()) { return false; }
 
   // Expect `;`
   if (!expect(Type::Semicolon)) {
@@ -127,9 +128,24 @@ bool Parser::parse_expression_statement()
 
 // Expression
 // ----------------------------------------------------------------------------
-// expression = integer ;
+// expression = unary-expression | binary-expression ;
 // ----------------------------------------------------------------------------
 bool Parser::parse_expression()
+{
+  // Attempt to parse the [..] expression
+  if (!parse_unary_expression()) { return false; }
+
+  // Attempt to continue the parsed [..] expression into a binary expression
+  if (!parse_binary_expression()) { return false; }
+
+  return true;
+}
+
+// Primary Expression
+// ----------------------------------------------------------------------------
+// primary-expression = integer | float | boolean ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_primary_expression()
 {
   switch (_t.peek()->type) {
     case Type::Integer:
@@ -261,12 +277,12 @@ bool Parser::parse_unary_expression()
 
 // Postfix Expression
 // ----------------------------------------------------------------------------
-// postfix-expression = expression ;
+// postfix-expression = primary-expression ;
 // ----------------------------------------------------------------------------
 bool Parser::parse_postfix_expression()
 {
   // NOTE: There are no postfix expressions defined at this time.
-  return parse_expression();
+  return parse_primary_expression();
 }
 
 // Break
@@ -282,4 +298,253 @@ bool Parser::parse_break()
   _stack.push_front(make_shared<ast::Break>());
 
   return true;
+}
+
+// Binary Expression
+// ----------------------------------------------------------------------------
+// binary-expression = expression binary-operator expression ;
+// binary-operator = "+" | "-" | "*" | "/" | "%" | "//" | "^" | "&" | "|"
+//                 | "==" | "!=" | "<" | "<=" | ">" | ">="
+//                 | "and" | "or"
+//                 | "=" | "+=" | "-=" | "*=" | "/=" | "%=" | "//="
+//                 | "^=" | "&=" | "|="
+//                 ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
+{
+  // NOTE: This method is not normal. This is intended to be called
+  //  directly after parsing a `unary-expression`. This is not LR parsing
+  //  but instead a precedence parser.
+
+  static const std::map<arrow::Type, unsigned> PREC = {
+    {Type::Equals,                   30},
+    {Type::Plus_Equals,              30},
+    {Type::Minus_Equals,             30},
+    {Type::Asterisk_Equals,          30},
+    {Type::Slash_Equals,             30},
+    {Type::Percent_Equals,           30},
+    {Type::Slash_Slash_Equals,       30},
+    {Type::Ampersand_Equals,         30},
+    {Type::Caret_Equals,             30},
+    {Type::Pipe_Equals,              30},
+
+    {Type::And,                      60},
+    {Type::Or,                       60},
+
+    {Type::Equals_Equals,            90},
+    {Type::ExclamationMark_Equals,   90},
+    {Type::LessThan,                 90},
+    {Type::LessThan_Equals,          90},
+    {Type::GreaterThan_Equals,       90},
+    {Type::GreaterThan,              90},
+
+    {Type::Ampersand,               110},
+    {Type::Caret,                   110},
+    {Type::Pipe,                    110},
+
+    {Type::Plus,                    120},
+    {Type::Minus,                   120},
+
+    {Type::Asterisk,                150},
+    {Type::Slash,                   150},
+    {Type::Percent,                 150},
+    {Type::Slash_Slash,             150},
+  };
+
+  // 0 => Left / 1 => Right
+  static const std::map<arrow::Type, unsigned> ASSOC = {
+    {Type::Equals,                  1},
+    {Type::Plus_Equals,             1},
+    {Type::Minus_Equals,            1},
+    {Type::Asterisk_Equals,         1},
+    {Type::Slash_Equals,            1},
+    {Type::Percent_Equals,          1},
+    {Type::Slash_Slash_Equals,      1},
+    {Type::Ampersand_Equals,        1},
+    {Type::Caret_Equals,            1},
+    {Type::Pipe_Equals,             1},
+
+    {Type::And,                     0},
+    {Type::Or,                      0},
+
+    {Type::Equals_Equals,           0},
+    {Type::ExclamationMark_Equals,  0},
+    {Type::LessThan,                0},
+    {Type::LessThan_Equals,         0},
+    {Type::GreaterThan_Equals,      0},
+    {Type::GreaterThan,             0},
+
+    {Type::Ampersand,               0},
+    {Type::Caret,                   0},
+    {Type::Pipe,                    0},
+
+    {Type::Plus,                    0},
+    {Type::Minus,                   0},
+
+    {Type::Asterisk,                0},
+    {Type::Slash,                   0},
+    {Type::Percent,                 0},
+    {Type::Slash_Slash,             0},
+  };
+
+  for (;;) {
+
+    // Get the token and its precedence and associativity
+    auto tok = _t.peek(0);
+    auto tok_prec = PREC.find(tok->type);
+    auto tok_assoc = ASSOC.find(tok->type);
+
+    // If the next token is not a binary operator token
+    // or the token binds less tightly and is left-associative,
+    // get out of the precedence parser.
+    if (tok_prec == PREC.end()) { return true; }
+    if ((tok_prec->second < prec) && assoc == 0) { return true; }
+
+    // Get the LHS
+    auto lhs = _stack.front();
+    _stack.pop_front();
+
+    // Pop the operand token
+    _t.pop();
+
+    // Parse the RHS
+    if (!parse_unary_expression()) { return false; }
+
+    // If the binary operator binds less tightly with RHS than the
+    // operator after RHS, let the pending operator take RHS as its LHS.
+    auto next_prec = PREC.find(_t.peek(0)->type);
+    if (next_prec != PREC.end() && (
+        (tok_prec->second < next_prec->second) ||
+        (tok_assoc->second == 1 && (tok_prec->second == next_prec->second)))) {
+      if (!parse_binary_expression((tok_prec->second) + 1, tok_assoc->second)) {
+        return false;
+      }
+    }
+
+    // Get the RHS
+    auto rhs = _stack.front();
+    _stack.pop_front();
+
+    // Declare the node
+    std::shared_ptr<ast::Node> node;
+    switch (tok->type) {
+      case Type::Equals:
+        node = make_shared<ast::Assign>(lhs, rhs);
+        break;
+
+      case Type::Plus_Equals:
+        node = make_shared<ast::AssignAdd>(lhs, rhs);
+        break;
+
+      case Type::Minus_Equals:
+        node = make_shared<ast::AssignSub>(lhs, rhs);
+        break;
+
+      case Type::Asterisk_Equals:
+        node = make_shared<ast::AssignMul>(lhs, rhs);
+        break;
+
+      case Type::Slash_Equals:
+        node = make_shared<ast::AssignDiv>(lhs, rhs);
+        break;
+
+      case Type::Percent_Equals:
+        node = make_shared<ast::AssignMod>(lhs, rhs);
+        break;
+
+      case Type::Slash_Slash_Equals:
+        node = make_shared<ast::AssignIntDiv>(lhs, rhs);
+        break;
+
+      case Type::Ampersand_Equals:
+        node = make_shared<ast::AssignBitAnd>(lhs, rhs);
+        break;
+
+      case Type::Caret_Equals:
+        node = make_shared<ast::AssignBitXor>(lhs, rhs);
+        break;
+
+      case Type::Pipe_Equals:
+        node = make_shared<ast::AssignBitOr>(lhs, rhs);
+        break;
+
+      case Type::And:
+        node = make_shared<ast::And>(lhs, rhs);
+        break;
+
+      case Type::Or:
+        node = make_shared<ast::Or>(lhs, rhs);
+        break;
+
+      case Type::Equals_Equals:
+        node = make_shared<ast::EqualTo>(lhs, rhs);
+        break;
+
+      case Type::ExclamationMark_Equals:
+        node = make_shared<ast::NotEqualTo>(lhs, rhs);
+        break;
+
+      case Type::LessThan:
+        node = make_shared<ast::LessThan>(lhs, rhs);
+        break;
+
+      case Type::LessThan_Equals:
+        node = make_shared<ast::LessThanOrEqualTo>(lhs, rhs);
+        break;
+
+      case Type::GreaterThan_Equals:
+        node = make_shared<ast::GreaterThanOrEqualTo>(lhs, rhs);
+        break;
+
+      case Type::GreaterThan:
+        node = make_shared<ast::GreaterThan>(lhs, rhs);
+        break;
+
+      case Type::Ampersand:
+        node = make_shared<ast::BitAnd>(lhs, rhs);
+        break;
+
+      case Type::Caret:
+        node = make_shared<ast::BitXor>(lhs, rhs);
+        break;
+
+      case Type::Pipe:
+        node = make_shared<ast::BitOr>(lhs, rhs);
+        break;
+
+      case Type::Plus:
+        node = make_shared<ast::Add>(lhs, rhs);
+        break;
+
+      case Type::Minus:
+        node = make_shared<ast::Sub>(lhs, rhs);
+        break;
+
+      case Type::Asterisk:
+        node = make_shared<ast::Mul>(lhs, rhs);
+        break;
+
+      case Type::Slash:
+        node = make_shared<ast::Div>(lhs, rhs);
+        break;
+
+      case Type::Percent:
+        node = make_shared<ast::Mod>(lhs, rhs);
+        break;
+
+      case Type::Slash_Slash:
+        node = make_shared<ast::IntDiv>(lhs, rhs);
+        break;
+
+      default:
+        // Unreachable
+        return false;
+    }
+
+    // Push the node
+    _stack.push_front(node);
+  }
+
+  // Unreachable
+  return false;
 }
