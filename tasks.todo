@@ -25,13 +25,14 @@
     ✔ Error reporting (unknown token [both ASCII and unicode]) @done(2015-02-21 17:16)
 
   ☐ Parser
-    ☐ Function
-    ☐ Return
+    ✔ Unary Expression @done(2015-02-22 23:40)
     ✔ Integer @done(2015-02-22 23:40)
     ✔ Float @done(2015-02-23 16:15)
-    ☐ Variables (`let _ = ..`)
-    ✔ Unary Expression @done(2015-02-22 23:40)
     ☐ Binary Expression (`+`, `-`, `*`, `/`, `//`)
+    ☐ Function Definition
+    ☐ Function Call
+    ☐ Return
+    ☐ Variables (`let _ = ..`)
     ☐ Error checking / reporting
 
   ☐ Fold (constant expressions)
