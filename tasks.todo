@@ -28,7 +28,7 @@
     ☐ Function
     ☐ Return
     ✔ Integer @done(2015-02-22 23:40)
-    ☐ Float
+    ✔ Float @done(2015-02-23 16:15)
     ☐ Variables (`let _ = ..`)
     ✔ Unary Expression @done(2015-02-22 23:40)
     ☐ Binary Expression (`+`, `-`, `*`, `/`, `//`)
