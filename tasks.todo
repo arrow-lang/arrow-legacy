@@ -30,8 +30,8 @@
     ✔ Float @done(2015-02-23 16:15)
     ✔ Binary Expression (`+`, `-`, `*`, `/`, `//`) @done(2015-02-23 21:52)
     ☐ Function Definition
-    ☐ Function Call
     ☐ Location tracking
+    ☐ Function Call
     ☐ Return
     ☐ Variables (`let _ = ..`)
     ☐ Error checking / reporting
