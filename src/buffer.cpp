@@ -2,7 +2,7 @@
 #include <iterator>
 #include "arrow/buffer.hpp"
 #include "arrow/log.hpp"
-#include "utf8.h"
+#include "utfcpp/utf8.h"
 
 using arrow::Buffer;
 

@@ -33,7 +33,7 @@ def configure(ctx):
 
 def build(ctx):
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),
-                includes=["include", "lib/utfcpp"],
+                includes=["include", "lib"],
                 target="arrow",
                 use="BOOST")
 

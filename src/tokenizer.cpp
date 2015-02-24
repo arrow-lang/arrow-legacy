@@ -4,12 +4,12 @@
 #include <cctype>
 #include <sstream>
 #include "arrow/tokenizer.hpp"
-#include "utf8.h"
+#include "utfcpp/utf8.h"
 
 using arrow::Tokenizer;
 
 Tokenizer::Tokenizer(const std::string& filename)
-  : _filename(filename), _buffer(filename), _row(0), _column(0)
+  : _filename(filename), _buffer(filename), _row(0), _column(0), _queue()
 {
 }
 
