@@ -26,25 +26,40 @@ namespace arrow {
       std::deque<std::shared_ptr<Node>> sequence;
     };
 
-    struct Integer : Node {
+    struct TextNode : Node {
+      TextNode(const std::string& text);
+
+      virtual ~TextNode() noexcept;
+
+      virtual void accept(Visitor& v);
+
+      std::string text;
+    };
+
+    struct Identifier : TextNode {
+      using TextNode::TextNode;
+
+      virtual ~Identifier() noexcept;
+
+      virtual void accept(Visitor& v);
+    };
+
+    struct Integer : TextNode {
       Integer(const std::string& text, unsigned base);
 
       virtual ~Integer() noexcept;
 
       virtual void accept(Visitor& v);
 
-      std::string text;
       unsigned base;
     };
 
-    struct Float : Node {
-      Float(const std::string& text);
+    struct Float : TextNode {
+      using TextNode::TextNode;
 
       virtual ~Float() noexcept;
 
       virtual void accept(Visitor& v);
-
-      std::string text;
     };
 
     struct Boolean : Node {
@@ -55,6 +70,16 @@ namespace arrow {
       virtual void accept(Visitor& v);
 
       bool value;
+    };
+
+    struct Return : Node {
+      Return(std::shared_ptr<Node> expression);
+
+      virtual ~Return() noexcept;
+
+      virtual void accept(Visitor& v);
+
+      std::shared_ptr<Node> expression;
     };
 
     struct Unary : Node {
@@ -77,7 +102,7 @@ namespace arrow {
     UNARY_DEFINE(Promote);
     UNARY_DEFINE(NegateNumeric);
     UNARY_DEFINE(NegateLogical);
-    UNARY_DEFINE(NegateBitwise);
+    UNARY_DEFINE(NegateBit);
 
     #undef UNARY_DEFINE
 

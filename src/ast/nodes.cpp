@@ -8,8 +8,11 @@ using namespace arrow::ast;
   void N::accept(Visitor& v) { v.visit(*this); }
 
 IMPL(Node)
+IMPL(TextNode)
+IMPL(Identifier)
 IMPL(Module)
 IMPL(Break)
+IMPL(Return)
 IMPL(Integer)
 IMPL(Float)
 IMPL(Boolean)
@@ -18,7 +21,7 @@ IMPL(Binary)
 IMPL(Promote)
 IMPL(NegateNumeric)
 IMPL(NegateLogical)
-IMPL(NegateBitwise)
+IMPL(NegateBit)
 IMPL(Assign)
 IMPL(AssignAdd)
 IMPL(AssignSub)
@@ -57,17 +60,22 @@ Unary::Unary(std::shared_ptr<Node> operand)
 {
 }
 
+Return::Return(std::shared_ptr<Node> expression)
+  : expression(expression)
+{
+}
+
 Binary::Binary(std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs)
   : lhs(lhs), rhs(rhs)
 {
 }
 
 Integer::Integer(const std::string& text, unsigned base)
-  : text(text), base(base)
+  : TextNode(text), base(base)
 {
 }
 
-Float::Float(const std::string& text)
+TextNode::TextNode(const std::string& text)
   : text(text)
 {
 }

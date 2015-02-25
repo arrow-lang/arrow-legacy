@@ -33,21 +33,21 @@
  </AssignIntDiv>
  <AssignBitAnd>
   <Integer base="10">32</Integer>
-  <NegateBitwise>
+  <NegateBit>
    <Integer base="10">34</Integer>
-  </NegateBitwise>
+  </NegateBit>
  </AssignBitAnd>
  <AssignBitXor>
   <Integer base="10">42</Integer>
-  <NegateBitwise>
+  <NegateBit>
    <Boolean>false</Boolean>
-  </NegateBitwise>
+  </NegateBit>
  </AssignBitXor>
  <AssignBitOr>
   <Integer base="10">24</Integer>
-  <NegateBitwise>
+  <NegateBit>
    <Boolean>true</Boolean>
-  </NegateBitwise>
+  </NegateBit>
  </AssignBitOr>
  <And>
   <Boolean>false</Boolean>

@@ -38,13 +38,24 @@ boost::property_tree::ptree& Show::_el()
 
 void Show::visit(Module& x)
 {
-  auto& node = _tree.add("Module", "");
+  auto& node = _el().add("Module", "");
 
   _ctx.push(&node);
 
-  for (auto& node : x.sequence) {
-    node->accept(*this);
+  for (auto& item : x.sequence) {
+    item->accept(*this);
   }
+
+  _ctx.pop();
+}
+
+void Show::visit(Return& x)
+{
+  auto& node = _el().add("Return", "");
+
+  _ctx.push(&node);
+
+  x.expression->accept(*this);
 
   _ctx.pop();
 }
@@ -63,6 +74,11 @@ void Show::visit(Integer& x)
 void Show::visit(Float& x)
 {
   _el().add("Float", x.text.c_str());
+}
+
+void Show::visit(Identifier& x)
+{
+  _el().add("Identifier", x.text.c_str());
 }
 
 void Show::visit(Boolean& x)
@@ -86,7 +102,7 @@ void Show::visit_unary(const std::string& name, Unary& x)
 SHOW_UNARY(Promote)
 SHOW_UNARY(NegateNumeric)
 SHOW_UNARY(NegateLogical)
-SHOW_UNARY(NegateBitwise)
+SHOW_UNARY(NegateBit)
 
 void Show::visit_binary(const std::string& name, Binary& x)
 {

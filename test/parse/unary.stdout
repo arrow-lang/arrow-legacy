@@ -18,9 +18,9 @@
    <Integer base="16">afe</Integer>
   </NegateNumeric>
  </NegateNumeric>
- <NegateBitwise>
+ <NegateBit>
   <Integer base="10">6</Integer>
- </NegateBitwise>
+ </NegateBit>
  <NegateLogical>
   <Boolean>false</Boolean>
  </NegateLogical>

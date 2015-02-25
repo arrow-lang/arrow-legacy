@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <Return>
+  <Integer base="10">40</Integer>
+ </Return>
+ <Return>
+  <NegateNumeric>
+   <Integer base="10">40</Integer>
+  </NegateNumeric>
+ </Return>
+ <Return>
+  <Or>
+   <NegateLogical>
+    <Boolean>false</Boolean>
+   </NegateLogical>
+   <NegateLogical>
+    <Boolean>true</Boolean>
+   </NegateLogical>
+  </Or>
+ </Return>
+ <Return>
+  <Add>
+   <Integer base="10">430</Integer>
+   <Integer base="10">302</Integer>
+  </Add>
+ </Return>
+</Module>

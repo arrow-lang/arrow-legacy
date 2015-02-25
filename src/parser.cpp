@@ -101,6 +101,9 @@ bool Parser::parse_statement()
     case Type::Break:
       return parse_break();
 
+    case Type::Return:
+      return parse_return();
+
     default:
       // We must be an `expression statement`
       return parse_expression_statement();
@@ -154,20 +157,15 @@ bool Parser::parse_primary_expression()
     case Type::Float:
       return parse_float();
 
+    case Type::Identifier:
+      return parse_identifier();
+
     case Type::True:
     case Type::False:
       return parse_boolean();
 
     default:
       // Unknown expression
-      // TODO: Should we really report failure like this here?
-      expect({
-        Type::Integer,
-        Type::Float,
-        Type::True,
-        Type::False,
-      });
-
       return false;
   }
 }
@@ -261,7 +259,7 @@ bool Parser::parse_unary_expression()
       break;
 
     case Type::ExclamationMark:
-      node = make_shared<ast::NegateBitwise>(operand);
+      node = make_shared<ast::NegateBit>(operand);
       break;
 
     default:
@@ -296,6 +294,45 @@ bool Parser::parse_break()
 
   // Declare (and push) the node
   _stack.push_front(make_shared<ast::Break>());
+
+  return true;
+}
+
+// Identifier
+// ----------------------------------------------------------------------------
+// identifier = IDENTIFIER ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_identifier()
+{
+  // Expect IDENTIFIER
+  auto tok = expect<IdentifierToken>(Type::Identifier);
+  if (!tok) { return false; }
+
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::Identifier>(tok->text));
+
+  return true;
+}
+
+// Return
+// ----------------------------------------------------------------------------
+// return = "return" expression ";" ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_return()
+{
+  // Expect `return`
+  if (!expect(Type::Return)) { return false; }
+
+  // Attempt to parse the returned expression
+  if (!parse_expression()) { return false; }
+  auto expr = _stack.front();
+  _stack.pop_front();
+
+  // Expect `;`
+  if (!expect(Type::Semicolon)) { return false; }
+
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::Return>(expr));
 
   return true;
 }

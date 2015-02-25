@@ -39,8 +39,10 @@ namespace arrow {
     bool parse_unary_expression();
     bool parse_integer();
     bool parse_float();
+    bool parse_identifier();
     bool parse_boolean();
     bool parse_break();
+    bool parse_return();
 
     bool parse_binary_expression(unsigned prec = 0, unsigned assoc = 0);
 

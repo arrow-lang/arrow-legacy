@@ -17,14 +17,17 @@ namespace arrow {
       virtual ~Visitor() noexcept;
 
       virtual void visit(Node&) { }
+      virtual void visit(TextNode&) { }
+      virtual void visit(Identifier&) { }
       virtual void visit(Module&) { }
       virtual void visit(Break&) { }
+      virtual void visit(Return&) { }
       virtual void visit(Integer&) { }
       virtual void visit(Float&) { }
       virtual void visit(Boolean&) { }
       virtual void visit(Promote&) { }
       virtual void visit(NegateLogical&) { }
-      virtual void visit(NegateBitwise&) { }
+      virtual void visit(NegateBit&) { }
       virtual void visit(NegateNumeric&) { }
       virtual void visit(Assign&) { }
       virtual void visit(AssignAdd&) { }
@@ -67,14 +70,17 @@ namespace arrow {
       void visit_binary(const std::string& name, Binary&);
 
       virtual void visit(Node&) { }
+      virtual void visit(TextNode&) { }
+      virtual void visit(Identifier&);
       virtual void visit(Module&);
       virtual void visit(Break&);
+      virtual void visit(Return&);
       virtual void visit(Integer&);
       virtual void visit(Float&);
       virtual void visit(Boolean&);
       virtual void visit(Promote&);
       virtual void visit(NegateLogical&);
-      virtual void visit(NegateBitwise&);
+      virtual void visit(NegateBit&);
       virtual void visit(NegateNumeric&);
       virtual void visit(Assign&);
       virtual void visit(AssignAdd&);

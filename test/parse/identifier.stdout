@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <Identifier>index</Identifier>
+ <Assign>
+  <Identifier>index</Identifier>
+  <Integer base="10">430</Integer>
+ </Assign>
+ <Add>
+  <Identifier>index</Identifier>
+  <Integer base="10">40</Integer>
+ </Add>
+ <Add>
+  <Identifier>ようこそ</Identifier>
+  <IntDiv>
+   <Identifier>index</Identifier>
+   <Integer base="10">23</Integer>
+  </IntDiv>
+ </Add>
+</Module>
