@@ -145,3 +145,21 @@ SHOW_BINARY(Mul)
 SHOW_BINARY(Div)
 SHOW_BINARY(Mod)
 SHOW_BINARY(IntDiv)
+
+void Show::visit(Function& x)
+{
+  auto& fn = _el().add("Function", "");
+  _ctx.push(&fn);
+
+  fn.add("<xmlattr>.name", x.name->text.c_str());
+
+  auto& seq = _el().add("Sequence", "");
+  _ctx.push(&seq);
+
+  for (auto& item : x.sequence) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
+  _ctx.pop();
+}

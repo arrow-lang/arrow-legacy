@@ -160,6 +160,17 @@ namespace arrow {
 
     #undef BINARY_DEFINE
 
+    struct Function : Node {
+      Function(std::shared_ptr<Identifier> name);
+
+      virtual ~Function() noexcept;
+
+      virtual void accept(Visitor& v);
+
+      std::shared_ptr<Identifier> name;
+      std::deque<std::shared_ptr<Node>> sequence;
+    };
+
   }
 }
 

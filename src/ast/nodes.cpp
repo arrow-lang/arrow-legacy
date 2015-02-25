@@ -11,6 +11,7 @@ IMPL(Node)
 IMPL(TextNode)
 IMPL(Identifier)
 IMPL(Module)
+IMPL(Function)
 IMPL(Break)
 IMPL(Return)
 IMPL(Integer)
@@ -67,6 +68,11 @@ Return::Return(std::shared_ptr<Node> expression)
 
 Binary::Binary(std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs)
   : lhs(lhs), rhs(rhs)
+{
+}
+
+Function::Function(std::shared_ptr<Identifier> name)
+  : name(name), sequence()
 {
 }
 

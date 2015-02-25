@@ -20,6 +20,7 @@ namespace arrow {
       virtual void visit(TextNode&) { }
       virtual void visit(Identifier&) { }
       virtual void visit(Module&) { }
+      virtual void visit(Function&) { }
       virtual void visit(Break&) { }
       virtual void visit(Return&) { }
       virtual void visit(Integer&) { }
@@ -73,6 +74,7 @@ namespace arrow {
       virtual void visit(TextNode&) { }
       virtual void visit(Identifier&);
       virtual void visit(Module&);
+      virtual void visit(Function&);
       virtual void visit(Break&);
       virtual void visit(Return&);
       virtual void visit(Integer&);

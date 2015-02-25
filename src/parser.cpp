@@ -104,6 +104,9 @@ bool Parser::parse_statement()
     case Type::Return:
       return parse_return();
 
+    case Type::Def:
+      return parse_function();
+
     default:
       // We must be an `expression statement`
       return parse_expression_statement();
@@ -584,4 +587,53 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
 
   // Unreachable
   return false;
+}
+
+// Function (Declaration)
+// ----------------------------------------------------------------------------
+// function = "def" identifier "(" ")" block ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_function()
+{
+  // Expect `def`
+  if (!expect(Type::Def)) { return false; }
+
+  // Parse identifier
+  if (!parse_identifier()) { return false; }
+  auto name = std::static_pointer_cast<ast::Identifier>(_stack.front());
+  _stack.pop_front();
+
+  // Expect `(`
+  if (!expect(Type::LeftParenthesis)) { return false; }
+
+  // Expect `)`
+  if (!expect(Type::RightParenthesis)) { return false; }
+
+  // Expect `{`
+  if (!expect(Type::LeftBrace)) { return false; }
+
+  // Declare the node
+  auto fn = make_shared<ast::Function>(name);
+
+  // Enumerate and attempt to match rules until we reach
+  // `}` or the end of stream (which would be an error)
+  while ((_t.peek()->type != Type::End) &&
+         (_t.peek()->type != Type::RightBrace)) {
+    // Try and parse a statement ..
+    if (parse_statement()) {
+      // Consume the parsed stack
+      fn->sequence.insert(fn->sequence.end(), _stack.begin(), _stack.end());
+    }
+
+    // Clear the (parsed) stack
+    _stack.clear();
+  }
+
+  // Expect `}`
+  if (!expect(Type::RightBrace)) { return false; }
+
+  // Push the node
+  _stack.push_front(fn);
+
+  return true;
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <Function name="main">
+  <Sequence/>
+ </Function>
+ <Function name="ようこそ">
+  <Sequence/>
+ </Function>
+ <Function name="main">
+  <Sequence>
+   <Return>
+    <Integer base="10">10</Integer>
+   </Return>
+  </Sequence>
+ </Function>
+ <Function name="ようこそ">
+  <Sequence>
+   <Return>
+    <Integer base="10">60</Integer>
+   </Return>
+  </Sequence>
+ </Function>
+</Module>
