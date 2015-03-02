@@ -29,18 +29,19 @@
     ✔ Integer @done(2015-02-22 23:40)
     ✔ Float @done(2015-02-23 16:15)
     ✔ Binary Expression (`+`, `-`, `*`, `/`, `//`) @done(2015-02-23 21:52)
-    ☐ Function Definition
-    ☐ Return
+    ✔ Return @done(2015-02-24 16:25)
+    ☐ Function
+      ✔ Declare (Identifier & Name) @done(2015-02-24 16:26)
+      ☐ Parameters `def add(a, b)`
+      ☐ Parameter Type Annotation `def add(a: int, b: int)`
+      ☐ Return Type Annotation `def add(a: int, b: int) -> int`
+    ☐ Variables (`let _ = ..`)
+    ☐ Type Annotations (for variables)
     ☐ Location tracking
     ☐ Function Call
-    ☐ Variables (`let _ = ..`)
     ☐ Error checking / reporting
 
   ☐ Fold (constant expressions)
   ☐ Contextual type inference
 
   ☐ Rename "arrow::Type" to "arrow::Token::Type"
-
-  ☐ Use error logging to report unknown tokens in tokenizer
-
-  ☐ Break out ast into ast/nodes, ast/visitor, and ast/show

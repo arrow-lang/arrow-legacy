@@ -8,11 +8,28 @@ WAF_TOOLS = ["compiler_cxx", "boost"]
 def options(ctx):
     ctx.load(" ".join(WAF_TOOLS))
 
+    ctx.add_option(
+        '--with-llvm-config',
+        action='store',
+        default='llvm-config'
+    )
+
 
 def configure(ctx):
     ctx.load(" ".join(WAF_TOOLS))
 
+    ctx.check(lib='pthread', mandatory=True, uselib_store='PTHREAD')
+    ctx.check(lib='dl', mandatory=True, uselib_store='DL')
+    ctx.check(lib='tinfo', mandatory=True, uselib_store='TINFO')
+    ctx.check(lib='z', mandatory=True, uselib_store='Z')
+
     ctx.check_boost(lib="system program_options filesystem")
+
+    ctx.check_cfg(
+        path=ctx.options.with_llvm_config, package='',
+        args='--ldflags --cflags --libs',
+        uselib_store='LLVM'
+    )
 
     if ctx.env["CXX_NAME"] == "gcc":
         ctx.env.append_unique("CXXFLAGS", "-std=c++14")
@@ -35,7 +52,7 @@ def build(ctx):
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),
                 includes=["include", "lib"],
                 target="arrow",
-                use="BOOST")
+                use=["BOOST", "LLVM", "PTHREAD", "DL", "TINFO", "Z"])
 
 
 def test(ctx):

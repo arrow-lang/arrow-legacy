@@ -1,6 +1,7 @@
 #include <iostream>
 #include "arrow/tokenizer.hpp"
 #include "arrow/parser.hpp"
+#include "arrow/generator.hpp"
 #include "arrow/log.hpp"
 #include "boost/program_options.hpp"
 
@@ -91,19 +92,36 @@ int main(int argc, char** argv) {
 
       if (tok->type == arrow::Type::End) { break; }
     }
+
+    return EXIT_SUCCESS;
   }
 
   // Construct the parser
-  auto parser = Parser(tokenizer);
+  Parser parser{tokenizer};
+
+  // Parse into a module node
+  auto module = parser.parse();
+  if (Log::get().count("error") > 0) { return EXIT_FAILURE; }
 
   if (vm.count("parse")) {
-    // Parse into a module node
-    auto module = parser.parse();
-    if (Log::get().count("error") > 0) { return EXIT_FAILURE; }
-
     // Show the AST
     ast::Show show;
     module->accept(show);
     show.show(std::cout);
+
+    return EXIT_SUCCESS;
   }
+
+  // Construct the generator
+  Generator generator{};
+
+  // Generate the IR
+  // TODO: Get the correct module name
+  generator.generate("_", module);
+  if (Log::get().count("error") > 0) { return EXIT_FAILURE; }
+
+  // Print the IR
+  generator.print(std::cout);
+
+  return EXIT_SUCCESS;
 }
