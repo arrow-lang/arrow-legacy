@@ -98,8 +98,12 @@ void Tokenizer::_push()
   // Check if we are at a single-line comment indicator and
   // consume the comment.
   auto in_comment = false;
-  if (_buffer.peek(0) == 0x23) {
+  if (_buffer.peek(0) == 0x23) {  // '#'
     in_comment = true;
+    _buffer_next();
+  } else if (_buffer.peek(0) == 0x2f && _buffer.peek(1) == 0x2f) {  // '//'
+    in_comment = true;
+    _buffer_next();
     _buffer_next();
   }
 
