@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from itertools import chain
 import ws.test
 
 
@@ -57,3 +58,16 @@ def build(ctx):
 
 def test(ctx):
     ws.test.run(ctx)
+
+def lint(ctx):
+    import cpplint
+
+    include = ctx.path.ant_glob("include/**/*.hpp")
+    source = ctx.path.ant_glob("src/**/*.cpp")
+
+    cpplint._cpplint_state.ResetErrorCounts()
+
+    for filename in chain(source, include):
+        cpplint.ProcessFile(filename.abspath(), 0)
+
+    cpplint._cpplint_state.PrintErrorCounts()
