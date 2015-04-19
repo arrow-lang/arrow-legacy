@@ -26,8 +26,6 @@ Generator::~Generator() noexcept
     // Dispose of the target machine.
     LLVMDisposeTargetMachine(_target_machine);
   }
-
-  // FIXME: Do we need to dispose of the target data (layout) ?
 }
 
 void Generator::generate(

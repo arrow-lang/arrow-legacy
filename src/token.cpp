@@ -2,169 +2,169 @@
 
 using namespace arrow;
 
-std::string arrow::to_string(Type type) noexcept
+std::string arrow::to_string(Token::Type type) noexcept
 {
   switch (type) {
-    case Type::End:
+    case Token::Type::End:
       return "end";
 
-    case Type::Integer:
+    case Token::Type::Integer:
       return "integer";
 
-    case Type::Float:
+    case Token::Type::Float:
       return "float";
 
-    case Type::Identifier:
+    case Token::Type::Identifier:
       return "identifier";
 
-    case Type::And:
+    case Token::Type::And:
       return "`and`";
 
-    case Type::Or:
+    case Token::Type::Or:
       return "`or`";
 
-    case Type::Not:
+    case Token::Type::Not:
       return "`not`";
 
-    case Type::Xor:
+    case Token::Type::Xor:
       return "`xor`";
 
-    case Type::Def:
+    case Token::Type::Def:
       return "`def`";
 
-    case Type::Let:
+    case Token::Type::Let:
       return "`let`";
 
-    case Type::Mut:
+    case Token::Type::Mut:
       return "`mut`";
 
-    case Type::True:
+    case Token::Type::True:
       return "`true`";
 
-    case Type::False:
+    case Token::Type::False:
       return "`false`";
 
-    case Type::If:
+    case Token::Type::If:
       return "`if`";
 
-    case Type::While:
+    case Token::Type::While:
       return "`while`";
 
-    case Type::Break:
+    case Token::Type::Break:
       return "`break`";
 
-    case Type::Continue:
+    case Token::Type::Continue:
       return "`continue`";
 
-    case Type::Return:
+    case Token::Type::Return:
       return "`return`";
 
-    case Type::Global:
+    case Token::Type::Global:
       return "`global`";
 
-    case Type::Arrow:
+    case Token::Type::Arrow:
       return "`->`";
 
-    case Type::FatArrow:
+    case Token::Type::FatArrow:
       return "`=>`";
 
-    case Type::Comma:
+    case Token::Type::Comma:
       return "`,`";
 
-    case Type::Plus:
+    case Token::Type::Plus:
       return "`+`";
 
-    case Type::Minus:
+    case Token::Type::Minus:
       return "`-`";
 
-    case Type::Slash:
+    case Token::Type::Slash:
       return "`/`";
 
-    case Type::Asterisk:
+    case Token::Type::Asterisk:
       return "`*`";
 
-    case Type::Percent:
+    case Token::Type::Percent:
       return "`%`";
 
-    case Type::Plus_Equals:
+    case Token::Type::Plus_Equals:
       return "`+=`";
 
-    case Type::Minus_Equals:
+    case Token::Type::Minus_Equals:
       return "`-=`";
 
-    case Type::Slash_Equals:
+    case Token::Type::Slash_Equals:
       return "`/=`";
 
-    case Type::Asterisk_Equals:
+    case Token::Type::Asterisk_Equals:
       return "`*=`";
 
-    case Type::Percent_Equals:
+    case Token::Type::Percent_Equals:
       return "`%=`";
 
-    case Type::Ampersand:
+    case Token::Type::Ampersand:
       return "`&`";
 
-    case Type::Ampersand_Equals:
+    case Token::Type::Ampersand_Equals:
       return "`&=`";
 
-    case Type::Pipe:
+    case Token::Type::Pipe:
       return "`|`";
 
-    case Type::Pipe_Equals:
+    case Token::Type::Pipe_Equals:
       return "`|=`";
 
-    case Type::Caret:
+    case Token::Type::Caret:
       return "`^`";
 
-    case Type::Caret_Equals:
+    case Token::Type::Caret_Equals:
       return "`^=`";
 
-    case Type::ExclamationMark:
+    case Token::Type::ExclamationMark:
       return "`!`";
 
-    case Type::Equals:
+    case Token::Type::Equals:
       return "`=`";
 
-    case Type::Equals_Equals:
+    case Token::Type::Equals_Equals:
       return "`==`";
 
-    case Type::ExclamationMark_Equals:
+    case Token::Type::ExclamationMark_Equals:
       return "`!=`";
 
-    case Type::GreaterThan:
+    case Token::Type::GreaterThan:
       return "`>`";
 
-    case Type::GreaterThan_Equals:
+    case Token::Type::GreaterThan_Equals:
       return "`>=`";
 
-    case Type::LessThan:
+    case Token::Type::LessThan:
       return "`<`";
 
-    case Type::LessThan_Equals:
+    case Token::Type::LessThan_Equals:
       return "`<=`";
 
-    case Type::Colon:
+    case Token::Type::Colon:
       return "`:`";
 
-    case Type::Semicolon:
+    case Token::Type::Semicolon:
       return "`;`";
 
-    case Type::LeftBrace:
+    case Token::Type::LeftBrace:
       return "`{`";
 
-    case Type::RightBrace:
+    case Token::Type::RightBrace:
       return "`}`";
 
-    case Type::LeftBracket:
+    case Token::Type::LeftBracket:
       return "`[`";
 
-    case Type::RightBracket:
+    case Token::Type::RightBracket:
       return "`]`";
 
-    case Type::LeftParenthesis:
+    case Token::Type::LeftParenthesis:
       return "`(`";
 
-    case Type::RightParenthesis:
+    case Token::Type::RightParenthesis:
       return "`)`";
 
     default:

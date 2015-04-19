@@ -18,17 +18,17 @@ namespace arrow {
 
   private:
     template <typename T = arrow::Token>
-    std::shared_ptr<T> expect(arrow::Type type) {
+    std::shared_ptr<T> expect(arrow::Token::Type type) {
       return std::static_pointer_cast<T>(do_expect({type}));
     }
 
     template <typename T = arrow::Token>
-    std::shared_ptr<T> expect(const std::vector<arrow::Type>& types) {
+    std::shared_ptr<T> expect(const std::vector<arrow::Token::Type>& types) {
       return std::static_pointer_cast<T>(do_expect(types));
     }
 
     std::shared_ptr<arrow::Token> do_expect(
-      const std::vector<arrow::Type>& types);
+      const std::vector<arrow::Token::Type>& types);
 
     bool parse_module_statement();
     bool parse_statement();

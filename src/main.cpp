@@ -77,20 +77,20 @@ int main(int argc, char** argv) {
 
       printf("%s: ", tok->span.to_string().c_str());
 
-      if (tok->type == Type::Integer) {
+      if (tok->type == Token::Type::Integer) {
         auto tok_ = std::static_pointer_cast<IntegerToken>(tok);
         printf("integer: %s (%d)\n", tok_->text.c_str(), tok_->base);
-      } else if (tok->type == Type::Float) {
+      } else if (tok->type == Token::Type::Float) {
         auto tok_ = std::static_pointer_cast<FloatToken>(tok);
         printf("float: %s\n", tok_->text.c_str());
-      } else if (tok->type == Type::Identifier) {
+      } else if (tok->type == Token::Type::Identifier) {
         auto tok_ = std::static_pointer_cast<IdentifierToken>(tok);
         printf("identifier: %s\n", tok_->text.c_str());
       } else {
         printf("%s\n", arrow::to_string(tok->type).c_str());
       }
 
-      if (tok->type == arrow::Type::End) { break; }
+      if (tok->type == arrow::Token::Type::End) { break; }
     }
 
     return EXIT_SUCCESS;

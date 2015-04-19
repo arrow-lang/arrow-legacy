@@ -42,8 +42,9 @@ auto Tokenizer::_pos() const -> Position
   return Position(_row, _column);
 }
 
-auto Tokenizer::_make_token(Type type, Position begin, Position end) const
-  -> std::shared_ptr<Token>
+auto Tokenizer::_make_token(
+  Token::Type type, Position begin,
+  Position end) const -> std::shared_ptr<Token>
 {
   return std::make_shared<Token>(
     type, Span(_filename, begin, end)
@@ -88,7 +89,7 @@ void Tokenizer::_push()
   // Check for the end-of-stream condition ..
   if (_buffer.empty()) {
     // Reached end-of-stream, signal and get out
-    _queue.push_back(_make_token(Type::End, _pos(), _pos() + 1));
+    _queue.push_back(_make_token(Token::Type::End, _pos(), _pos() + 1));
     return;
   }
 
@@ -149,7 +150,7 @@ void Tokenizer::_push()
   // Reached the end; report an unknown token (and consume it).
   auto cur = _pos();
   _buffer_next();
-  _queue.push_back(_make_token(Type::Unknown, cur, _pos()));
+  _queue.push_back(_make_token(Token::Type::Unknown, cur, _pos()));
 }
 
 /// Test `byte` and check if it is within the expected range
@@ -166,166 +167,166 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
 
   // Check for defined punctuators
   // Check for the leading byte then narrow it down, etc.
-  auto type = Type::Unknown;
+  auto type = Token::Type::Unknown;
   auto len = 1;
   switch (p0) {
     case 0x2c:  // ASCII `,`
-      type = Type::Comma;
+      type = Token::Type::Comma;
       break;
 
     case 0x3a:  // ASCII `:`
-      type = Type::Colon;
+      type = Token::Type::Colon;
       break;
 
     case 0x3b:  // ASCII `;`
-      type = Type::Semicolon;
+      type = Token::Type::Semicolon;
       break;
 
     case 0x28:  // ASCII `(`
-      type = Type::LeftParenthesis;
+      type = Token::Type::LeftParenthesis;
       break;
 
     case 0x29:  // ASCII `)`
-      type = Type::RightParenthesis;
+      type = Token::Type::RightParenthesis;
       break;
 
     case 0x5b:  // ASCII `[`
-      type = Type::LeftBracket;
+      type = Token::Type::LeftBracket;
       break;
 
     case 0x5d:  // ASCII `]`
-      type = Type::RightBracket;
+      type = Token::Type::RightBracket;
       break;
 
     case 0x7b:  // ASCII `{`
-      type = Type::LeftBrace;
+      type = Token::Type::LeftBrace;
       break;
 
     case 0x7d:  // ASCII `}`
-      type = Type::RightBrace;
+      type = Token::Type::RightBrace;
       break;
 
     case 0x2b:  // ASCII `+`
-      type = Type::Plus;
+      type = Token::Type::Plus;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Plus_Equals;
+        type = Token::Type::Plus_Equals;
         len = 2;
       }
 
       break;
 
     case 0x2d:  // ASCII `-`
-      type = Type::Minus;
+      type = Token::Type::Minus;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Minus_Equals;
+        type = Token::Type::Minus_Equals;
         len = 2;
       } else if (p1 == 0x3e) {  // ASCII `>`
-        type = Type::Arrow;
+        type = Token::Type::Arrow;
         len = 2;
       }
 
       break;
 
     case 0x2a:  // ASCII `*`
-      type = Type::Asterisk;
+      type = Token::Type::Asterisk;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Asterisk_Equals;
+        type = Token::Type::Asterisk_Equals;
         len = 2;
       }
 
       break;
 
     case 0x25:  // ASCII `%`
-      type = Type::Percent;
+      type = Token::Type::Percent;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Percent_Equals;
+        type = Token::Type::Percent_Equals;
         len = 2;
       }
 
       break;
 
     case 0x2f:  // ASCII `/`
-      type = Type::Slash;
+      type = Token::Type::Slash;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Slash_Equals;
+        type = Token::Type::Slash_Equals;
         len = 2;
       }
 
       break;
 
     case 0x7c:  // ASCII `|`
-      type = Type::Pipe;
+      type = Token::Type::Pipe;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Pipe_Equals;
+        type = Token::Type::Pipe_Equals;
         len = 2;
       }
 
       break;
 
     case 0x5e:  // ASCII `^`
-      type = Type::Caret;
+      type = Token::Type::Caret;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Caret_Equals;
+        type = Token::Type::Caret_Equals;
         len = 2;
       }
 
       break;
 
     case 0x26:  // ASCII `&`
-      type = Type::Ampersand;
+      type = Token::Type::Ampersand;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Ampersand_Equals;
+        type = Token::Type::Ampersand_Equals;
         len = 2;
       }
 
       break;
 
     case 0x3c:  // ASCII `<`
-      type = Type::LessThan;
+      type = Token::Type::LessThan;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::LessThan_Equals;
+        type = Token::Type::LessThan_Equals;
         len = 2;
       }
 
       break;
 
     case 0x3e:  // ASCII `>`
-      type = Type::GreaterThan;
+      type = Token::Type::GreaterThan;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::GreaterThan_Equals;
+        type = Token::Type::GreaterThan_Equals;
         len = 2;
       }
 
       break;
 
     case 0x3d:  // ASCII `=`
-      type = Type::Equals;
+      type = Token::Type::Equals;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::Equals_Equals;
+        type = Token::Type::Equals_Equals;
         len = 2;
       } else if (p1 == 0x3e) {  // ASCII `>`
-        type = Type::FatArrow;
+        type = Token::Type::FatArrow;
         len = 2;
       }
 
       break;
 
     case 0x21:  // ASCII `!`
-      type = Type::ExclamationMark;
+      type = Token::Type::ExclamationMark;
 
       if (p1 == 0x3d) {  // ASCII `=`
-        type = Type::ExclamationMark_Equals;
+        type = Token::Type::ExclamationMark_Equals;
         len = 2;
       }
 
@@ -355,7 +356,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
   auto begin = _pos();
 
   // Declare a var to store the inferred type.
-  auto type = Type::Integer;
+  auto type = Token::Type::Integer;
   auto base = 10;
 
   // Check for a base-prefixed numeric ..
@@ -416,7 +417,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
           and std::isdigit(_buffer.peek(1))) {
       // We have at least `.#`, we will continue into
       // a decimal numeric.
-      type = Type::Float;
+      type = Token::Type::Float;
 
       // Push the `.` into the buffer.
       text << (char)(_buffer_next());
@@ -434,7 +435,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
           and (std::isdigit(p1)
             or ((p1 == 0x2b or p1 == 0x2d) and std::isdigit(p2)))) {
       // We know we are a decimal numeric.
-      type = Type::Float;
+      type = Token::Type::Float;
 
       // Push the first two characters.
       text << (char)(_buffer_next());
@@ -447,7 +448,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
 
   // Construct and return the token.
   auto span = Span(_filename, begin, _pos());
-  if (type == Type::Float) {
+  if (type == Token::Type::Float) {
     return std::make_shared<FloatToken>(text.str(), span);
   } else {
     return std::make_shared<IntegerToken>(base, text.str(), span);
@@ -586,22 +587,22 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token>
   auto span = Span(_filename, begin, _pos());
 
   // Check for a valid keyword
-  static std::unordered_map<std::string, Type> keywords = {
-    {"and", Type::And},
-    {"or",  Type::Or},
-    {"xor", Type::Xor},
-    {"not", Type::Not},
-    {"def", Type::Def},
-    {"let", Type::Let},
-    {"mut", Type::Mut},
-    {"true", Type::True},
-    {"false", Type::False},
-    {"if", Type::If},
-    {"while", Type::While},
-    {"break", Type::Break},
-    {"continue", Type::Continue},
-    {"return", Type::Return},
-    {"global", Type::Global},
+  static std::unordered_map<std::string, Token::Type> keywords = {
+    {"and", Token::Type::And},
+    {"or",  Token::Type::Or},
+    {"xor", Token::Type::Xor},
+    {"not", Token::Type::Not},
+    {"def", Token::Type::Def},
+    {"let", Token::Type::Let},
+    {"mut", Token::Type::Mut},
+    {"true", Token::Type::True},
+    {"false", Token::Type::False},
+    {"if", Token::Type::If},
+    {"while", Token::Type::While},
+    {"break", Token::Type::Break},
+    {"continue", Token::Type::Continue},
+    {"return", Token::Type::Return},
+    {"global", Token::Type::Global},
   };
 
   auto kw = keywords.find(text);

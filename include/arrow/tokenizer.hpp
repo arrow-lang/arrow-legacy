@@ -35,7 +35,7 @@ namespace arrow {
     std::uint32_t _buffer_next();
 
     std::shared_ptr<Token> _make_token(
-      Type type, Position begin, Position end) const;
+      Token::Type type, Position begin, Position end) const;
 
     std::shared_ptr<Token> _scan_numeric();
     std::shared_ptr<Token> _scan_punctuator();
