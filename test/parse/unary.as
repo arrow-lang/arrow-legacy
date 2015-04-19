@@ -8,6 +8,7 @@
 
 # Negate (Bitwise)
 !6;
+!false;
 
 # Negate (Logical)
 not false;

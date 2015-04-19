@@ -36,7 +36,6 @@ namespace arrow {
       virtual void visit(AssignMul&) { }
       virtual void visit(AssignDiv&) { }
       virtual void visit(AssignMod&) { }
-      virtual void visit(AssignIntDiv&) { }
       virtual void visit(AssignBitAnd&) { }
       virtual void visit(AssignBitXor&) { }
       virtual void visit(AssignBitOr&) { }
@@ -56,7 +55,6 @@ namespace arrow {
       virtual void visit(Mul&) { }
       virtual void visit(Div&) { }
       virtual void visit(Mod&) { }
-      virtual void visit(IntDiv&) { }
     };
 
     struct Show : Visitor {
@@ -90,7 +88,6 @@ namespace arrow {
       virtual void visit(AssignMul&);
       virtual void visit(AssignDiv&);
       virtual void visit(AssignMod&);
-      virtual void visit(AssignIntDiv&);
       virtual void visit(AssignBitAnd&);
       virtual void visit(AssignBitXor&);
       virtual void visit(AssignBitOr&);
@@ -110,7 +107,6 @@ namespace arrow {
       virtual void visit(Mul&);
       virtual void visit(Div&);
       virtual void visit(Mod&);
-      virtual void visit(IntDiv&);
 
     private:
       boost::property_tree::ptree& _el();

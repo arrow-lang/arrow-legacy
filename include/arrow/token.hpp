@@ -55,10 +55,6 @@ namespace arrow {
     /// Binary floating-point division
     Slash,
 
-    /// Slash > slash `//`
-    /// Binary integral division
-    Slash_Slash,
-
     /// Asterisk `*`
     /// Binary multiplication or pointer derefernce
     Asterisk,
@@ -82,10 +78,6 @@ namespace arrow {
     /// Slash > equals `/=`
     /// Compound assignment with floating-point division
     Slash_Equals,
-
-    /// Slash > slash > equals `//=`
-    /// Compound assignment with integral division
-    Slash_Slash_Equals,
 
     /// Percent-sign > equals `%=`
     /// Compound assignment with modulo

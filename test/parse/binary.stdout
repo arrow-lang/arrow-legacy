@@ -27,10 +27,6 @@
   <Integer base="10">314</Integer>
   <Integer base="10">593</Integer>
  </AssignMod>
- <AssignIntDiv>
-  <Integer base="10">231</Integer>
-  <Float>3.123</Float>
- </AssignIntDiv>
  <AssignBitAnd>
   <Integer base="10">32</Integer>
   <NegateBit>
@@ -134,14 +130,4 @@
   <Integer base="10">532</Integer>
   <Integer base="10">320</Integer>
  </Mod>
- <Add>
-  <Sub>
-   <Integer base="10">52</Integer>
-   <IntDiv>
-    <Integer base="10">532</Integer>
-    <Integer base="10">320</Integer>
-   </IntDiv>
-  </Sub>
-  <Integer base="10">30</Integer>
- </Add>
 </Module>

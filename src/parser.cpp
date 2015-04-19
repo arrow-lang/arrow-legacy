@@ -363,7 +363,6 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
     {Type::Asterisk_Equals,          30},
     {Type::Slash_Equals,             30},
     {Type::Percent_Equals,           30},
-    {Type::Slash_Slash_Equals,       30},
     {Type::Ampersand_Equals,         30},
     {Type::Caret_Equals,             30},
     {Type::Pipe_Equals,              30},
@@ -388,7 +387,6 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
     {Type::Asterisk,                150},
     {Type::Slash,                   150},
     {Type::Percent,                 150},
-    {Type::Slash_Slash,             150},
   };
 
   // 0 => Left / 1 => Right
@@ -399,7 +397,6 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
     {Type::Asterisk_Equals,         1},
     {Type::Slash_Equals,            1},
     {Type::Percent_Equals,          1},
-    {Type::Slash_Slash_Equals,      1},
     {Type::Ampersand_Equals,        1},
     {Type::Caret_Equals,            1},
     {Type::Pipe_Equals,             1},
@@ -424,7 +421,6 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
     {Type::Asterisk,                0},
     {Type::Slash,                   0},
     {Type::Percent,                 0},
-    {Type::Slash_Slash,             0},
   };
 
   for (;;) {
@@ -490,10 +486,6 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
 
       case Type::Percent_Equals:
         node = make_shared<ast::AssignMod>(lhs, rhs);
-        break;
-
-      case Type::Slash_Slash_Equals:
-        node = make_shared<ast::AssignIntDiv>(lhs, rhs);
         break;
 
       case Type::Ampersand_Equals:
@@ -570,10 +562,6 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
 
       case Type::Percent:
         node = make_shared<ast::Mod>(lhs, rhs);
-        break;
-
-      case Type::Slash_Slash:
-        node = make_shared<ast::IntDiv>(lhs, rhs);
         break;
 
       default:

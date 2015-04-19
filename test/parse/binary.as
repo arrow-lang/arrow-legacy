@@ -16,9 +16,6 @@ false /= true;
 # AssignMod
 314 %= 593;
 
-# AssignIntDiv
-231 //= 3.123;
-
 # AssignBitAnd
 32 &= !34;
 
@@ -77,6 +74,3 @@ true ^ false;
 
 # Mod
 532 % 320;
-
-# IntDiv
-52 - 532 // 320 + 30;

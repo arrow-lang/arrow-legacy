@@ -156,10 +156,9 @@ static bool in_range(std::uint8_t byte, std::uint8_t begin, std::uint8_t end)
 
 auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
 {
-  // Peek 3 bytes ahead
+  // Peek N bytes ahead
   auto p0 = _buffer.peek(0);
   auto p1 = _buffer.peek(1);
-  auto p2 = _buffer.peek(2);
 
   // Check for defined punctuators
   // Check for the leading byte then narrow it down, etc.
@@ -248,15 +247,7 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
     case 0x2f:  // ASCII `/`
       type = Type::Slash;
 
-      if (p1 == 0x2f) {  // ASCII `/`
-        type = Type::Slash_Slash;
-        len = 2;
-
-        if (p2 == 0x3d) {  // ASCII `=`
-          type = Type::Slash_Slash_Equals;
-          len = 3;
-        }
-      } else if (p1 == 0x3d) {  // ASCII `=`
+      if (p1 == 0x3d) {  // ASCII `=`
         type = Type::Slash_Equals;
         len = 2;
       }

@@ -11,9 +11,6 @@
  </Add>
  <Add>
   <Identifier>ようこそ</Identifier>
-  <IntDiv>
-   <Identifier>index</Identifier>
-   <Integer base="10">23</Integer>
-  </IntDiv>
+  <Identifier>index</Identifier>
  </Add>
 </Module>

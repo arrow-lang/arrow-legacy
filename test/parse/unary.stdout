@@ -21,6 +21,9 @@
  <NegateBit>
   <Integer base="10">6</Integer>
  </NegateBit>
+ <NegateBit>
+  <Boolean>false</Boolean>
+ </NegateBit>
  <NegateLogical>
   <Boolean>false</Boolean>
  </NegateLogical>

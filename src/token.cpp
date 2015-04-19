@@ -80,9 +80,6 @@ std::string arrow::to_string(Type type) noexcept
     case Type::Slash:
       return "`/`";
 
-    case Type::Slash_Slash:
-      return "`//`";
-
     case Type::Asterisk:
       return "`*`";
 
@@ -97,9 +94,6 @@ std::string arrow::to_string(Type type) noexcept
 
     case Type::Slash_Equals:
       return "`/=`";
-
-    case Type::Slash_Slash_Equals:
-      return "`//=`";
 
     case Type::Asterisk_Equals:
       return "`*=`";

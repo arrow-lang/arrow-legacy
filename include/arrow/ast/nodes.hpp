@@ -136,7 +136,6 @@ namespace arrow {
     BINARY_DEFINE(AssignMul);
     BINARY_DEFINE(AssignDiv);
     BINARY_DEFINE(AssignMod);
-    BINARY_DEFINE(AssignIntDiv);
     BINARY_DEFINE(AssignBitAnd);
     BINARY_DEFINE(AssignBitXor);
     BINARY_DEFINE(AssignBitOr);
@@ -156,7 +155,6 @@ namespace arrow {
     BINARY_DEFINE(Mul);
     BINARY_DEFINE(Div);
     BINARY_DEFINE(Mod);
-    BINARY_DEFINE(IntDiv);
 
     #undef BINARY_DEFINE
 
