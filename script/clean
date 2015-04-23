@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# Resolve base directory
-DIR=$(readlink -f -- $(dirname $0)/..)
-
-# Build
-(cd $DIR; ./waf distclean)
