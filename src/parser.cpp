@@ -279,22 +279,66 @@ bool Parser::parse_unary_expression()
 
 // Postfix Expression
 // ----------------------------------------------------------------------------
-// postfix-expression = primary-expression ;
+// postfix-expression = primary-expression
+//                    | call-expression
+//                    ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_postfix_expression()
-{
-  // NOTE: There are no postfix expressions defined at this time.
-  return parse_primary_expression();
+bool Parser::parse_postfix_expression() {
+  // Parse the operand expression as a primary expression.
+  if (!parse_primary_expression()) { return false; }
+
+  // Look for a possible postfix expressions.
+  // Continue consumption (left-to-right) until we run out of postfix
+  // expressions.
+  auto continue_ = true;
+  while (continue_) {
+    auto tok = _t.peek(0);
+    switch (tok->type) {
+      case Token::Type::LeftParenthesis:
+        if (!parse_call_expression()) { return false; }
+        break;
+
+      default:
+        continue_ = false;
+        break;
+    }
+  }
+
+  return true;
+}
+
+// Call Expression
+// ----------------------------------------------------------------------------
+// call-expression = postfix-expression "(" ")" ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_call_expression() {
+  // Pull the awaiting operand expression
+  auto expr = _stack.front();
+  _stack.pop_front();
+
+  // Expect `(`
+  if (!expect(Token::Type::LeftParenthesis)) { return false; }
+
+  // TODO: Iterate and parse parameters
+
+  // Expect `)`
+  if (!expect(Token::Type::RightParenthesis)) { return false; }
+
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::Call>(expr));
+
+  return true;
 }
 
 // Break
 // ----------------------------------------------------------------------------
 // break = "break" ";";
 // ----------------------------------------------------------------------------
-bool Parser::parse_break()
-{
+bool Parser::parse_break() {
   // Expect `break` `;`
-  if (!expect(Token::Type::Break) || !expect(Token::Type::Semicolon)) { return false; }
+  if (!expect(Token::Type::Break) || !expect(Token::Type::Semicolon)) {
+    return false;
+  }
 
   // Declare (and push) the node
   _stack.push_front(make_shared<ast::Break>());

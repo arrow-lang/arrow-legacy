@@ -161,3 +161,13 @@ void Show::visit(Function& x)
   _ctx.pop();
   _ctx.pop();
 }
+
+void Show::visit(Call& x)
+{
+  auto& item = _el().add("Call", "");
+  _ctx.push(&item);
+
+  x.expression->accept(*this);
+
+  _ctx.pop();
+}

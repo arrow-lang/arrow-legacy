@@ -12,6 +12,7 @@ IMPL(TextNode)
 IMPL(Identifier)
 IMPL(Module)
 IMPL(Function)
+IMPL(Call)
 IMPL(Break)
 IMPL(Return)
 IMPL(Integer)
@@ -50,41 +51,37 @@ IMPL(Div)
 IMPL(Mod)
 
 Module::Module()
-  : sequence()
-{
+  : sequence() {
 }
 
 Unary::Unary(std::shared_ptr<Node> operand)
-  : operand(operand)
-{
+  : operand(operand) {
 }
 
 Return::Return(std::shared_ptr<Node> expression)
-  : expression(expression)
-{
+  : expression(expression) {
 }
 
 Binary::Binary(std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs)
-  : lhs(lhs), rhs(rhs)
-{
+  : lhs(lhs), rhs(rhs) {
 }
 
 Function::Function(std::shared_ptr<Identifier> name)
-  : name(name), sequence()
-{
+  : name(name), sequence() {
+}
+
+Call::Call(std::shared_ptr<Node> expression)
+  : expression(expression) {
 }
 
 Integer::Integer(const std::string& text, unsigned base)
-  : TextNode(text), base(base)
-{
+  : TextNode(text), base(base) {
 }
 
 TextNode::TextNode(const std::string& text)
-  : text(text)
-{
+  : text(text) {
 }
 
 Boolean::Boolean(bool value)
-  : value(value)
-{
+  : value(value) {
 }

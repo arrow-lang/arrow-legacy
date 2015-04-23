@@ -169,6 +169,17 @@ namespace arrow {
       std::deque<std::shared_ptr<Node>> sequence;
     };
 
+    struct Call : Node {
+      Call(std::shared_ptr<Node> expression);
+
+      virtual ~Call();
+
+      virtual void accept(Visitor& v);
+
+      std::shared_ptr<Node> expression;
+
+    };
+
   }
 }
 
