@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <Function name="main">
+  <Sequence>
+   <Call>
+    <Identifier>main</Identifier>
+   </Call>
+  </Sequence>
+ </Function>
+</Module>
