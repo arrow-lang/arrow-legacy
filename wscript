@@ -44,7 +44,7 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=pure")
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=const")
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=noreturn")
-        ctx.env.append_unique("CXXFLAGS", "-Weffc++")
+        # ctx.env.append_unique("CXXFLAGS", "-Weffc++")
         ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
 
