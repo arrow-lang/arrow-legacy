@@ -657,39 +657,18 @@ auto Tokenizer::_scan_string() -> std::shared_ptr<Token> {
         case 0x58:  // `X`
         case 0x78:  // `x`
           in_byte_escape = true;
-          break;
+          // fallthrough
 
         case 0x27:  // `'`
         case 0x22:  // `"`
-          bytes.push_back(byte);
-          break;
-
         case 0x61:  // `a`
-          bytes.push_back('\a');  // ASCII Bell (BEL)
-          break;
-
         case 0x62:  // `b`
-          bytes.push_back('\b');  // ASCII Backspace (BS)
-          break;
-
         case 0x66:  // `f`
-          bytes.push_back('\b');  // ASCII Formfeed (FF)
-          break;
-
         case 0x6e:  // `n`
-          bytes.push_back('\b');  // ASCII Linefeed (LF)
-          break;
-
         case 0x72:  // `r`
-          bytes.push_back('\b');  // ASCII Carriage Return (CR)
-          break;
-
         case 0x74:  // `t`
-          bytes.push_back('\b');  // ASCII Tab (TAB)
-          break;
-
         case 0x76:  // `v`
-          bytes.push_back('\b');  // ASCII Vertical Tab (VT)
+          bytes.push_back(byte);
           break;
 
         default:
@@ -700,26 +679,17 @@ auto Tokenizer::_scan_string() -> std::shared_ptr<Token> {
       // No longer in an escape sequence.
       in_escape = false;
     } else if (in_byte_escape) {
-      // TODO: Validate
-      // TODO: Comment on operation
-
-      std::stringstream buffer;
-      buffer << std::hex;
-      buffer << static_cast<char>(_buffer_next());
-      buffer << static_cast<char>(_buffer_next());
-
-      std::uint8_t value;
-      std::printf("%d\n", value);
-      buffer >> value;
-
-      bytes.push_back(value);
+      bytes.push_back(_buffer_next());
+      bytes.push_back(_buffer_next());
 
       // No longer in an byte escape sequence.
       in_byte_escape = false;
     } else {
       auto byte = _buffer_next();
+
       if (byte == 0x5c) {
         in_escape = true;
+        bytes.push_back(byte);
       } else if (byte == 0x22) {
         // Found the matching double-quote; we're done with the string
         break;

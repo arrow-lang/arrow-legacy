@@ -7,7 +7,7 @@ identifier_unicode:6,1-13: identifier: Բարի_գալուստ
 identifier_unicode:7,1-11: identifier: Прывiтанне
 identifier_unicode:8,1-8: identifier: স্বাগতম
 identifier_unicode:9,1-13: identifier: ကြိုဆိုပါတယ်
-identifier_unicode:10,1-5: identifier: 歡迎光臨
+identifier_unicode:10,3-5: identifier: 光臨
 identifier_unicode:11,2-13: identifier: ินดีต้อนรับ
 identifier_unicode:12,1-5: identifier: ようこそ
 identifier_unicode:13,1-2: end
