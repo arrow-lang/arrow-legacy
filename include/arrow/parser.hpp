@@ -45,6 +45,7 @@ namespace arrow {
     bool parse_break();
     bool parse_return();
     bool parse_call_expression();
+    bool parse_slot();
 
     bool parse_binary_expression(unsigned prec = 0, unsigned assoc = 0);
 

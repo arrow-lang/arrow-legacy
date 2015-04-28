@@ -171,3 +171,20 @@ void Show::visit(Call& x)
 
   _ctx.pop();
 }
+
+void Show::visit(Slot& x)
+{
+  auto& item = _el().add("Slot", "");
+  _ctx.push(&item);
+
+  item.add("<xmlattr>.name", x.name->text.c_str());
+
+  auto& init = _el().add("Initializer", "");
+  _ctx.push(&init);
+
+  x.initializer->accept(*this);
+
+  _ctx.pop();
+
+  _ctx.pop();
+}

@@ -29,6 +29,7 @@ class Extractor : public ast::Visitor {
   virtual void visit(ast::Module&) override;
   virtual void visit(ast::Function&) override;
   virtual void visit(ast::Call&) { };
+  virtual void visit(ast::Slot&) { }
   virtual void visit(ast::Break&) { };
   virtual void visit(ast::Return&) { };
   virtual void visit(ast::Integer&) { };

@@ -108,6 +108,9 @@ bool Parser::parse_statement()
     case Token::Type::Def:
       return parse_function();
 
+    case Token::Type::Let:
+      return parse_slot();
+
     default:
       // We must be an `expression statement`
       return parse_expression_statement();
@@ -667,6 +670,36 @@ bool Parser::parse_function()
 
   // Push the node
   _stack.push_front(fn);
+
+  return true;
+}
+
+// Slot (Declaration)
+// ----------------------------------------------------------------------------
+// slot = "let" identifier "=" expression ";" ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_slot() {
+  // Expect `let`
+  if (!expect(Token::Type::Let)) { return false; }
+
+  // Parse identifier
+  if (!parse_identifier()) { return false; }
+  auto name = std::static_pointer_cast<ast::Identifier>(_stack.front());
+  _stack.pop_front();
+
+  // Expect `=`
+  if (!expect(Token::Type::Equals)) { return false; }
+
+  // Parse initializer (expression)
+  if (!parse_expression()) { return false; }
+  auto initializer = _stack.front();
+  _stack.pop_front();
+
+  // Expect `;`
+  if (!expect(Token::Type::Semicolon)) { return false; }
+
+  // Declare and push the node
+  _stack.push_front(make_shared<ast::Slot>(name, initializer));
 
   return true;
 }

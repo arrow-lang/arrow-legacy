@@ -27,6 +27,7 @@ class Builder : public ast::Visitor {
   virtual void visit(ast::Function&) override;
   virtual void visit(ast::Call&) override;
   virtual void visit(ast::Break&) { }
+  virtual void visit(ast::Slot&) override;
   virtual void visit(ast::Return&) { }
   virtual void visit(ast::Integer&) { }
   virtual void visit(ast::Float&) { }
