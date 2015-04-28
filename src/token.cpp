@@ -1,9 +1,22 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
+#include <string>
 #include "arrow/token.hpp"
 
-using namespace arrow;
+using arrow::Token;
+using arrow::TextToken;
+using arrow::IntegerToken;
+using arrow::FloatToken;
+using arrow::IdentifierToken;
+using arrow::CharacterToken;
+using arrow::ByteToken;
+using arrow::StringToken;
+using arrow::ByteStringToken;
 
-std::string arrow::to_string(Token::Type type) noexcept
-{
+std::string arrow::to_string(Token::Type type) noexcept {
   switch (type) {
     case Token::Type::End:
       return "end";
@@ -16,6 +29,18 @@ std::string arrow::to_string(Token::Type type) noexcept
 
     case Token::Type::Identifier:
       return "identifier";
+
+    case Token::Type::Byte:
+      return "byte";
+
+    case Token::Type::Character:
+      return "character";
+
+    case Token::Type::String:
+      return "string";
+
+    case Token::Type::ByteString:
+      return "byte-string";
 
     case Token::Type::And:
       return "`and`";
@@ -173,36 +198,39 @@ std::string arrow::to_string(Token::Type type) noexcept
 }
 
 Token::Token(Type type, Span span)
-  : type(type), span(span)
-{
+  : type(type), span(span) {
 }
 
 IntegerToken::IntegerToken(unsigned base, const std::string& text, Span span)
-  : Token(Type::Integer, span), text(text), base(base)
-{
+  : TextToken(Type::Integer, span, text), base(base) {
 }
 
-IntegerToken::IntegerToken(unsigned base, std::string&& text, Span span)
-  : Token(Type::Integer, span), text(text), base(base)
-{
+TextToken::TextToken(Type type, Span span, const std::string& text)
+  : Token(type, span), text(text) {
 }
 
 FloatToken::FloatToken(const std::string& text, Span span)
-  : Token(Type::Float, span), text(text)
-{
-}
-
-FloatToken::FloatToken(std::string&& text, Span span)
-  : Token(Type::Float, span), text(text)
-{
+  : TextToken(Type::Float, span, text) {
 }
 
 IdentifierToken::IdentifierToken(const std::string& text, Span span)
-  : Token(Type::Identifier, span), text(text)
-{
+  : TextToken(Type::Identifier, span, text) {
 }
 
-IdentifierToken::IdentifierToken(std::string&& text, Span span)
-  : Token(Type::Identifier, span), text(text)
-{
+CharacterToken::CharacterToken(std::uint32_t ch, Span span)
+  : Token(Type::Character, span), character{ch} {
+}
+
+ByteToken::ByteToken(std::uint8_t by, Span span)
+  : Token(Type::Byte, span), byte{by} {
+}
+
+StringToken::StringToken(const std::vector<std::uint8_t>& bytes, Span span)
+  : Token(Type::String, span), bytes(bytes) {
+}
+
+ByteStringToken::ByteStringToken(
+  const std::vector<std::uint8_t>& bytes, Span span
+)
+  : Token(Type::ByteString, span), bytes(bytes) {
 }

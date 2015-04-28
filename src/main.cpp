@@ -86,6 +86,9 @@ int main(int argc, char** argv) {
       } else if (tok->type == Token::Type::Identifier) {
         auto tok_ = std::static_pointer_cast<IdentifierToken>(tok);
         printf("identifier: %s\n", tok_->text.c_str());
+      } else if (tok->type == Token::Type::ByteString) {
+        auto tok_ = std::static_pointer_cast<ByteStringToken>(tok);
+        printf("byte-string: %s\n", &(tok_->bytes[0]));
       } else {
         printf("%s\n", arrow::to_string(tok->type).c_str());
       }

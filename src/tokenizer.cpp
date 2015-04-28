@@ -1,20 +1,25 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
 #include <vector>
+#include <string>
 #include <unordered_map>
 #include <iterator>
 #include <cctype>
 #include <sstream>
 #include "arrow/tokenizer.hpp"
+#include "arrow/log.hpp"
 #include "utfcpp/utf8.h"
 
 using arrow::Tokenizer;
 
 Tokenizer::Tokenizer(const std::string& filename)
-  : _filename(filename), _buffer(filename), _row(0), _column(0), _queue()
-{
+  : _filename(filename), _buffer(filename), _row(0), _column(0), _queue() {
 }
 
-auto Tokenizer::pop() -> std::shared_ptr<Token>
-{
+auto Tokenizer::pop() -> std::shared_ptr<Token> {
   if (_queue.size() == 0) {
     // Ask for another token.
     _push();
@@ -26,8 +31,7 @@ auto Tokenizer::pop() -> std::shared_ptr<Token>
   return front;
 }
 
-auto Tokenizer::peek(unsigned offset) -> std::shared_ptr<Token>
-{
+auto Tokenizer::peek(unsigned offset) -> std::shared_ptr<Token> {
   // Ask for more tokens until we can fulfill the request
   while (_queue.size() <= offset) {
     _push();
@@ -37,22 +41,19 @@ auto Tokenizer::peek(unsigned offset) -> std::shared_ptr<Token>
   return _queue.at(offset);
 }
 
-auto Tokenizer::_pos() const -> Position
-{
+auto Tokenizer::_pos() const -> Position {
   return Position(_row, _column);
 }
 
 auto Tokenizer::_make_token(
   Token::Type type, Position begin,
-  Position end) const -> std::shared_ptr<Token>
-{
+  Position end
+) const -> std::shared_ptr<Token> {
   return std::make_shared<Token>(
-    type, Span(_filename, begin, end)
-  );
+    type, Span(_filename, begin, end));
 }
 
-bool Tokenizer::_is_eol(bool consume)
-{
+bool Tokenizer::_is_eol(bool consume) {
   auto eol = 0;
   if (_buffer.peek(0) == 0x0a) {  // ASCII LF (Linux)
     eol = 1;
@@ -72,8 +73,7 @@ bool Tokenizer::_is_eol(bool consume)
   return test;
 }
 
-std::uint32_t Tokenizer::_buffer_next()
-{
+std::uint32_t Tokenizer::_buffer_next() {
   // Get the next character from the buffer ..
   auto ch = _buffer.pop();
 
@@ -84,8 +84,7 @@ std::uint32_t Tokenizer::_buffer_next()
   return ch;
 }
 
-void Tokenizer::_push()
-{
+void Tokenizer::_push() {
   // Check for the end-of-stream condition ..
   if (_buffer.empty()) {
     // Reached end-of-stream, signal and get out
@@ -140,6 +139,13 @@ void Tokenizer::_push()
     return;
   }
 
+  // Scan for a single or double-quoted string ..
+  auto st_tok = _scan_string();
+  if (st_tok) {
+    _queue.push_back(st_tok);
+    return;
+  }
+
   // Scan for an identifier (or a token) ..
   auto ident_tok = _scan_identifier();
   if (ident_tok) {
@@ -154,13 +160,11 @@ void Tokenizer::_push()
 }
 
 /// Test `byte` and check if it is within the expected range
-static bool in_range(std::uint8_t byte, std::uint8_t begin, std::uint8_t end)
-{
-  return (byte >= begin) and (byte <= end);
+static bool in_range(std::uint8_t byte, std::uint8_t begin, std::uint8_t end) {
+  return (byte >= begin) && (byte <= end);
 }
 
-auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
-{
+auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token> {
   // Peek N bytes ahead
   auto p0 = _buffer.peek(0);
   auto p1 = _buffer.peek(1);
@@ -347,8 +351,7 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token>
   return _make_token(type, begin, _pos());
 }
 
-auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
-{
+auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
   // Initialize the text buffer.
   std::stringstream text;
 
@@ -364,13 +367,13 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
     // Determine what our base is ..
     auto byte = _buffer.peek(1);
     auto prefix = true;
-    if (byte == 0x58 or byte == 0x78) {  // ASCII x OR X
+    if (byte == 0x58 || byte == 0x78) {  // ASCII x OR X
       // Hexadecimal
       base = 16;
-    } else if (byte == 0x42 or byte == 0x62) {  // ASCII b OR B
+    } else if (byte == 0x42 || byte == 0x62) {  // ASCII b OR B
       // Binary
       base = 2;
-    } else if (byte == 0x4F or byte == 0x6F) {  // ASCII o OR O
+    } else if (byte == 0x4F || byte == 0x6F) {  // ASCII o OR O
       // Octal
       base = 8;
     } else {
@@ -387,7 +390,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
 
   // Build (and execute) the number consumption function to consume
   // the integral part of the complete numeric.
-  auto consume_number = [&] {
+  auto consume_number = [&text, this, &base] {
     for (;;) {
       // Peek at the next digit
       auto byte = _buffer.peek();
@@ -402,7 +405,7 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
       }
 
       // Push it into the buffer
-      text << (char)byte;
+      text << static_cast<char>(byte);
 
       // Advance the input buffer
       _buffer_next();
@@ -414,13 +417,13 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
   // We are no longer at a numeric (within range)
   if (base == 10) {
     if (_buffer.peek(0) == 0x2e  // ASCII .
-          and std::isdigit(_buffer.peek(1))) {
+          && std::isdigit(_buffer.peek(1))) {
       // We have at least `.#`, we will continue into
       // a decimal numeric.
       type = Token::Type::Float;
 
       // Push the `.` into the buffer.
-      text << (char)(_buffer_next());
+      text << static_cast<char>(_buffer_next());
 
       // Consume the expected number (again).
       consume_number();
@@ -431,15 +434,15 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
     auto p0 = _buffer.peek(0);
     auto p1 = _buffer.peek(1);
     auto p2 = _buffer.peek(2);
-    if ((p0 == 0x45 or p0 == 0x65)
-          and (std::isdigit(p1)
-            or ((p1 == 0x2b or p1 == 0x2d) and std::isdigit(p2)))) {
+    if ((p0 == 0x45 || p0 == 0x65)
+          && (std::isdigit(p1)
+            || ((p1 == 0x2b || p1 == 0x2d) && std::isdigit(p2)))) {
       // We know we are a decimal numeric.
       type = Token::Type::Float;
 
       // Push the first two characters.
-      text << (char)(_buffer_next());
-      text << (char)(_buffer_next());
+      text << static_cast<char>(_buffer_next());
+      text << static_cast<char>(_buffer_next());
 
       // Consume the expected number (again).
       consume_number();
@@ -456,8 +459,8 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token>
 }
 
 static bool in_ranges(
-  std::uint32_t value, std::vector<std::vector<std::uint32_t>>& ranges)
-{
+  std::uint32_t value, const std::vector<std::vector<std::uint32_t>>& ranges
+) {
   for (auto& range : ranges) {
     auto min = range[0];
     auto max = range[1];
@@ -470,8 +473,7 @@ static bool in_ranges(
   return false;
 }
 
-auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token>
-{
+auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
   // REF: http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1518.htm
 
   // An identifier can contain ..
@@ -613,4 +615,125 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token>
 
   // No keyword; create identifier token
   return std::make_shared<IdentifierToken>(text, span);
+}
+
+auto Tokenizer::_scan_string() -> std::shared_ptr<Token> {
+  auto begin = _pos();
+
+  // Peek and see if we are a double-quoted string
+  auto p0 = _buffer.peek(0);
+  auto p1 = _buffer.peek(1);
+  bool binary;
+  if (p0 == 0x22) {
+    // Unicode string
+    binary = false;
+  } else if ((p0 == 0x42 || p0 == 0x62) && p1 == 0x22) {
+    // Byte string
+    binary = true;
+  } else {
+    // Not a string
+    return nullptr;
+  }
+
+  // Drop the quote character(s)
+  _buffer_next();
+  if (binary) _buffer_next();
+
+  // Declare a buffer for bytes
+  std::vector<std::uint8_t> bytes;
+
+  // Iterate through the string token
+  // Keep in mind escape sequences; the token text stores the
+  // unescaped version (so the rest of the compiler can ignore
+  // escapes)
+  auto in_escape = false;
+  auto in_byte_escape = false;
+  // TODO: auto in_unicode_escape = false;
+  for (;;) {
+    if (in_escape) {
+      // Check if we have an extension control character.
+      auto byte = _buffer_next();
+      switch (byte) {
+        case 0x58:  // `X`
+        case 0x78:  // `x`
+          in_byte_escape = true;
+          break;
+
+        case 0x27:  // `'`
+        case 0x22:  // `"`
+          bytes.push_back(byte);
+          break;
+
+        case 0x61:  // `a`
+          bytes.push_back('\a');  // ASCII Bell (BEL)
+          break;
+
+        case 0x62:  // `b`
+          bytes.push_back('\b');  // ASCII Backspace (BS)
+          break;
+
+        case 0x66:  // `f`
+          bytes.push_back('\b');  // ASCII Formfeed (FF)
+          break;
+
+        case 0x6e:  // `n`
+          bytes.push_back('\b');  // ASCII Linefeed (LF)
+          break;
+
+        case 0x72:  // `r`
+          bytes.push_back('\b');  // ASCII Carriage Return (CR)
+          break;
+
+        case 0x74:  // `t`
+          bytes.push_back('\b');  // ASCII Tab (TAB)
+          break;
+
+        case 0x76:  // `v`
+          bytes.push_back('\b');  // ASCII Vertical Tab (VT)
+          break;
+
+        default:
+          Log::get().error("unknown character escape: %c", byte);
+          break;
+      }
+
+      // No longer in an escape sequence.
+      in_escape = false;
+    } else if (in_byte_escape) {
+      // TODO: Validate
+      // TODO: Comment on operation
+
+      std::stringstream buffer;
+      buffer << std::hex;
+      buffer << static_cast<char>(_buffer_next());
+      buffer << static_cast<char>(_buffer_next());
+
+      std::uint8_t value;
+      std::printf("%d\n", value);
+      buffer >> value;
+
+      bytes.push_back(value);
+
+      // No longer in an byte escape sequence.
+      in_byte_escape = false;
+    } else {
+      auto byte = _buffer_next();
+      if (byte == 0x5c) {
+        in_escape = true;
+      } else if (byte == 0x22) {
+        // Found the matching double-quote; we're done with the string
+        break;
+      } else {
+        bytes.push_back(byte);
+      }
+    }
+  }
+
+  auto span = Span(_filename, begin, _pos());
+
+  if (binary) {
+    return std::make_shared<ByteStringToken>(bytes, span);
+  } else {
+    return std::make_shared<StringToken>(bytes, span);
+  }
 }

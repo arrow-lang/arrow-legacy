@@ -1,9 +1,5 @@
-def main() {
-  main();
-  factorial();
-}
+// def main() {
+//   printf("Hello World");
+// }
 
-def factorial() {
-  factorial();
-  main();
-}
+b"AA\x41A";
