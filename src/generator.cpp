@@ -1,12 +1,14 @@
 #include "arrow/generator.hpp"
+#include "arrow/builder.hpp"
 
 using arrow::Generator;
 
 Generator::Generator()
-  : _mod(nullptr),
-    _irb(nullptr),
-    _target_machine(nullptr),
-    _data_layout(nullptr)
+  : _mod{nullptr},
+    _irb{nullptr},
+    _target_machine{nullptr},
+    _data_layout{nullptr},
+    _scope{}
 {
 }
 
@@ -29,7 +31,7 @@ Generator::~Generator() noexcept
 }
 
 void Generator::generate(
-  const std::string& name, std::shared_ptr<ast::Node> /*node*/)
+  const std::string& name, std::shared_ptr<ast::Node> node)
 {
   // Ensure the x86 target is initialized.
   // NOTE: We should first ask configuration what our target is
@@ -72,6 +74,14 @@ void Generator::generate(
   // Dispose of the used messages
   LLVMDisposeMessage(triple);
   LLVMDisposeMessage(data_layout_text);
+
+  // Construct the instruction builder
+  _irb = LLVMCreateBuilder();
+
+  // Construct a intermediate builder and begin the code generation
+  // process on the passed node
+  Builder builder{*this, _scope};
+  node->accept(builder);
 }
 
 void Generator::print(std::ostream& os) const

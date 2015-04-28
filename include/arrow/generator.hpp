@@ -3,14 +3,13 @@
 
 #include "arrow/tokenizer.hpp"
 #include "arrow/parser.hpp"
-
-extern "C" {
-#include "llvm-c/Core.h"
-#include "llvm-c/Target.h"
-#include "llvm-c/TargetMachine.h"
-}
+#include "arrow/code.hpp"
+#include "arrow/llvm.hpp"
 
 namespace arrow {
+
+  class Builder;
+  class Extractor;
 
   class Generator {
   public:
@@ -27,6 +26,9 @@ namespace arrow {
     void print(std::ostream& os) const;
 
   private:
+    friend class Builder;
+    friend class Extractor;
+
     /// LLVM module that contains the LLVM IR
     LLVMModuleRef _mod;
 
@@ -39,6 +41,9 @@ namespace arrow {
 
     /// LLVM target data (layout)
     LLVMTargetDataRef _data_layout;
+
+    /// The builtin (above top-level) scope
+    code::Scope _scope;
 
   };
 

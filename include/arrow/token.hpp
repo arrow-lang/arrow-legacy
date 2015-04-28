@@ -1,239 +1,278 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
 #ifndef ARROW_TOKEN_H
 #define ARROW_TOKEN_H 1
 
+#include <string>
+#include <vector>
 #include "arrow/span.hpp"
 
 namespace arrow {
 
-  struct Token {
-    enum class Type {
-      /// An 'unknown' token type
-      Unknown,
+struct Token {
+  enum class Type {
+    /// An 'unknown' token type
+    Unknown,
 
-      /// The end-of-stream condition [no-value]
-      End,
+    /// The end-of-stream condition [no-value]
+    End,
 
-      /// A symbolic identifier
-      Identifier,
+    /// A symbolic identifier
+    Identifier,
 
-      /// An number with no fractional part [value]
-      Integer,
+    /// An number with no fractional part [value]
+    Integer,
 
-      /// A number with a fraction part expressed as a floating-point [value]
-      Float,
+    /// A number with a fraction part expressed as a floating-point [value]
+    Float,
 
-      /// And
-      And,
+    /// An UTF-8 character
+    Character,
 
-      /// Or
-      Or,
+    /// An ASCII character
+    Byte,
 
-      /// Xor
-      Xor,
+    /// An UTF-8 string
+    String,
 
-      /// Not
-      Not,
+    /// An ASCII string
+    ByteString,
 
-      /// Let
-      Let,
+    /// And
+    And,
 
-      /// Mut
-      Mut,
+    /// Or
+    Or,
 
-      /// Def
-      Def,
+    /// Xor
+    Xor,
 
-      /// Plus `+`
-      /// Binary addition
-      Plus,
+    /// Not
+    Not,
 
-      /// Minus `-`
-      /// Unary integral negation
-      /// Binary subtraction
-      Minus,
+    /// Let
+    Let,
 
-      /// Slash `/`
-      /// Binary floating-point division
-      Slash,
+    /// Mut
+    Mut,
 
-      /// Asterisk `*`
-      /// Binary multiplication or pointer derefernce
-      Asterisk,
+    /// Def
+    Def,
 
-      /// Asterisk > equals `*=`
-      /// Compound assignment with multiplication
-      Asterisk_Equals,
+    /// Plus `+`
+    /// Binary addition
+    Plus,
 
-      /// Percent-sign `%`
-      /// Binary modulo
-      Percent,
+    /// Minus `-`
+    /// Unary integral negation
+    /// Binary subtraction
+    Minus,
 
-      /// Plus > equals `+=`
-      /// Compound assignment with addition
-      Plus_Equals,
+    /// Slash `/`
+    /// Binary floating-point division
+    Slash,
 
-      /// Minus > equals `-=`
-      /// Compound assignment with subtraction
-      Minus_Equals,
+    /// Asterisk `*`
+    /// Binary multiplication or pointer derefernce
+    Asterisk,
 
-      /// Slash > equals `/=`
-      /// Compound assignment with floating-point division
-      Slash_Equals,
+    /// Asterisk > equals `*=`
+    /// Compound assignment with multiplication
+    Asterisk_Equals,
 
-      /// Percent-sign > equals `%=`
-      /// Compound assignment with modulo
-      Percent_Equals,
+    /// Percent-sign `%`
+    /// Binary modulo
+    Percent,
 
-      /// Ampersand `&`
-      /// Unary address-of (unsafe operation)
-      /// Binary bitwise-AND or logical-AND (depending on operand types)
-      Ampersand,
+    /// Plus > equals `+=`
+    /// Compound assignment with addition
+    Plus_Equals,
 
-      /// Amerspand > equals `&=`
-      /// Compound assignment with bitwise-AND or logical-AND (
-      ///   depending on operand types)
-      Ampersand_Equals,
+    /// Minus > equals `-=`
+    /// Compound assignment with subtraction
+    Minus_Equals,
 
-      /// Pipe `|`
-      /// Binary bitwise-OR or logical-OR (depending on operand types)
-      Pipe,
+    /// Slash > equals `/=`
+    /// Compound assignment with floating-point division
+    Slash_Equals,
 
-      /// Pipe > equals `|=`
-      /// Compound assignment with bitwise-OR or logical-OR (
-      ///   depending on operand types)
-      Pipe_Equals,
+    /// Percent-sign > equals `%=`
+    /// Compound assignment with modulo
+    Percent_Equals,
 
-      /// Caret `^`
-      /// Binary bitwise-XOR or logical-XOR (depending on operand types)
-      Caret,
+    /// Ampersand `&`
+    /// Unary address-of (unsafe operation)
+    /// Binary bitwise-AND or logical-AND (depending on operand types)
+    Ampersand,
 
-      /// Caret > equals `^=`
-      /// Compound assignment with bitwise-XOR or logical-XOR (
-      ///   depending on operand types)
-      Caret_Equals,
+    /// Amerspand > equals `&=`
+    /// Compound assignment with bitwise-AND or logical-AND (
+    ///   depending on operand types)
+    Ampersand_Equals,
 
-      /// Exclamation-mark `!`
-      /// Unary bitwise-NOT or logical-NOT (depending on operand types)
-      ExclamationMark,
+    /// Pipe `|`
+    /// Binary bitwise-OR or logical-OR (depending on operand types)
+    Pipe,
 
-      /// Equals `=`
-      /// Assignment
-      Equals,
+    /// Pipe > equals `|=`
+    /// Compound assignment with bitwise-OR or logical-OR (
+    ///   depending on operand types)
+    Pipe_Equals,
 
-      /// Equals > Equals `==`
-      /// Binary equality relation
-      Equals_Equals,
+    /// Caret `^`
+    /// Binary bitwise-XOR or logical-XOR (depending on operand types)
+    Caret,
 
-      /// Exclamation-mark > Equals `!=`
-      /// Binary in-equality relation
-      ExclamationMark_Equals,
+    /// Caret > equals `^=`
+    /// Compound assignment with bitwise-XOR or logical-XOR (
+    ///   depending on operand types)
+    Caret_Equals,
 
-      /// Greater-than `>`
-      /// Binary greater-than relation
-      GreaterThan,
+    /// Exclamation-mark `!`
+    /// Unary bitwise-NOT or logical-NOT (depending on operand types)
+    ExclamationMark,
 
-      /// Greater-than > equals `>=`
-      /// Binary greater-than-or-equal-to relation
-      GreaterThan_Equals,
+    /// Equals `=`
+    /// Assignment
+    Equals,
 
-      /// Less-than `<`
-      /// Binary less-than relation
-      LessThan,
+    /// Equals > Equals `==`
+    /// Binary equality relation
+    Equals_Equals,
 
-      /// Less-than > equals `<=`
-      /// Binary less-than-or-equal-to relation
-      LessThan_Equals,
+    /// Exclamation-mark > Equals `!=`
+    /// Binary in-equality relation
+    ExclamationMark_Equals,
 
-      /// Colon `:`
-      Colon,
+    /// Greater-than `>`
+    /// Binary greater-than relation
+    GreaterThan,
 
-      /// Semi-colon `;`
-      Semicolon,
+    /// Greater-than > equals `>=`
+    /// Binary greater-than-or-equal-to relation
+    GreaterThan_Equals,
 
-      /// Left-brace `{`
-      LeftBrace,
+    /// Less-than `<`
+    /// Binary less-than relation
+    LessThan,
 
-      /// Right-brace `}`
-      RightBrace,
+    /// Less-than > equals `<=`
+    /// Binary less-than-or-equal-to relation
+    LessThan_Equals,
 
-      /// Left-parenethis `(`
-      LeftParenthesis,
+    /// Colon `:`
+    Colon,
 
-      /// Right-parenethis `)`
-      RightParenthesis,
+    /// Semi-colon `;`
+    Semicolon,
 
-      /// Left-parenethis `[`
-      LeftBracket,
+    /// Left-brace `{`
+    LeftBrace,
 
-      /// Right-parenethis `]`
-      RightBracket,
+    /// Right-brace `}`
+    RightBrace,
 
-      /// Arrow `->`
-      Arrow,
+    /// Left-parenethis `(`
+    LeftParenthesis,
 
-      /// Fat arrow `=>`
-      FatArrow,
+    /// Right-parenethis `)`
+    RightParenthesis,
 
-      /// Comma `,`
-      Comma,
+    /// Left-parenethis `[`
+    LeftBracket,
 
-      /// True
-      True,
+    /// Right-parenethis `]`
+    RightBracket,
 
-      /// False
-      False,
+    /// Arrow `->`
+    Arrow,
 
-      /// If
-      If,
+    /// Fat arrow `=>`
+    FatArrow,
 
-      /// While
-      While,
+    /// Comma `,`
+    Comma,
 
-      /// Break
-      Break,
+    /// True
+    True,
 
-      /// Continue
-      Continue,
+    /// False
+    False,
 
-      /// Return
-      Return,
+    /// If
+    If,
 
-      /// Global
-      Global
+    /// While
+    While,
 
-    };
+    /// Break
+    Break,
 
-    Token(Type type, Span span);
+    /// Continue
+    Continue,
 
-    Type type;
-    Span span;
+    /// Return
+    Return,
+
+    /// Global
+    Global
   };
 
+  Token(Type type, Span span);
 
-  extern std::string to_string(Token::Type type) noexcept;
+  Type type;
+  Span span;
+};
 
-  struct IntegerToken : Token {
-    IntegerToken(unsigned base, const std::string& text, Span span);
-    IntegerToken(unsigned base, std::string&& text, Span span);
+extern std::string to_string(Token::Type type) noexcept;
 
-    std::string text;
-    unsigned base;
-  };
+struct TextToken : Token {
+  TextToken(Token::Type type, Span span, const std::string& text);
 
-  struct FloatToken : Token {
-    FloatToken(const std::string& text, Span span);
-    FloatToken(std::string&& text, Span span);
+  std::string text;
+};
 
-    std::string text;
-  };
+struct IntegerToken : TextToken {
+  IntegerToken(unsigned base, const std::string& text, Span span);
 
-  struct IdentifierToken : Token {
-    IdentifierToken(const std::string& text, Span span);
-    IdentifierToken(std::string&& text, Span span);
+  unsigned base;
+};
 
-    std::string text;
-  };
+struct FloatToken : TextToken {
+  FloatToken(const std::string& text, Span span);
+};
 
-}
+struct IdentifierToken : TextToken {
+  IdentifierToken(const std::string& text, Span span);
+};
 
-#endif // ARROW_TOKEN_H
+struct CharacterToken : Token {
+  CharacterToken(std::uint32_t character, Span span);
+
+  std::uint32_t character;
+};
+
+struct ByteToken : Token {
+  ByteToken(std::uint8_t byte, Span span);
+
+  std::uint8_t byte;
+};
+
+struct StringToken : Token {
+  StringToken(const std::vector<std::uint8_t>& bytes, Span span);
+
+  std::vector<std::uint8_t> bytes;
+};
+
+struct ByteStringToken : Token {
+  ByteStringToken(const std::vector<std::uint8_t>& bytes, Span span);
+
+  std::vector<std::uint8_t> bytes;
+};
+
+}  // namespace arrow
+
+#endif  // ARROW_TOKEN_H
