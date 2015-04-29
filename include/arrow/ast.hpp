@@ -27,6 +27,7 @@ namespace arrow {
       virtual void visit(Integer&) { }
       virtual void visit(Float&) { }
       virtual void visit(Boolean&) { }
+      virtual void visit(String&) { }
       virtual void visit(Promote&) { }
       virtual void visit(NegateLogical&) { }
       virtual void visit(NegateBit&) { }
@@ -80,6 +81,7 @@ namespace arrow {
       virtual void visit(Integer&);
       virtual void visit(Float&);
       virtual void visit(Boolean&);
+      virtual void visit(String&);
       virtual void visit(Promote&);
       virtual void visit(NegateLogical&);
       virtual void visit(NegateBit&);

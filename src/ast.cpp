@@ -86,6 +86,11 @@ void Show::visit(Boolean& x)
   _el().add("Boolean", x.value ? "true" : "false");
 }
 
+void Show::visit(String& x)
+{
+  _el().add("String", x.text());
+}
+
 void Show::visit_unary(const std::string& name, Unary& x)
 {
   auto& node = _el().add(name.c_str(), "");

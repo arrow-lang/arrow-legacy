@@ -164,6 +164,9 @@ bool Parser::parse_primary_expression()
     case Token::Type::Identifier:
       return parse_identifier();
 
+    case Token::Type::String:
+      return parse_string();
+
     case Token::Type::True:
     case Token::Type::False:
       return parse_boolean();
@@ -186,6 +189,22 @@ bool Parser::parse_integer()
 
   // Declare (and push) the node
   _stack.push_front(make_shared<ast::Integer>(tok->text, tok->base));
+
+  return true;
+}
+
+// String
+// ----------------------------------------------------------------------------
+// string = STRING ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_string()
+{
+  // Expect STRING
+  auto tok = expect<StringToken>(Token::Type::String);
+  if (!tok) { return false; }
+
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::String>(tok->bytes));
 
   return true;
 }

@@ -42,6 +42,7 @@ namespace arrow {
     bool parse_function();
     bool parse_identifier();
     bool parse_boolean();
+    bool parse_string();
     bool parse_break();
     bool parse_return();
     bool parse_call_expression();

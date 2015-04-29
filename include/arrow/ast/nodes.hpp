@@ -72,6 +72,22 @@ namespace arrow {
       bool value;
     };
 
+    struct String : Node {
+      String(const std::vector<std::uint8_t>& bytes);
+
+      virtual ~String() noexcept;
+
+      virtual void accept(Visitor& v);
+
+      std::string text() {
+        return std::string(
+          reinterpret_cast<char*>(bytes.data()),
+          bytes.size());
+      }
+
+      std::vector<std::uint8_t> bytes;
+    };
+
     struct Return : Node {
       Return(std::shared_ptr<Node> expression);
 

@@ -31,6 +31,7 @@ class Builder : public ast::Visitor {
   virtual void visit(ast::Integer&) { }
   virtual void visit(ast::Float&) { }
   virtual void visit(ast::Boolean&) { }
+  virtual void visit(ast::String&) { }
   virtual void visit(ast::Promote&) { }
   virtual void visit(ast::NegateLogical&) { }
   virtual void visit(ast::NegateBit&) { }

@@ -622,22 +622,13 @@ auto Tokenizer::_scan_string() -> std::shared_ptr<Token> {
 
   // Peek and see if we are a double-quoted string
   auto p0 = _buffer.peek(0);
-  auto p1 = _buffer.peek(1);
-  bool binary;
-  if (p0 == 0x22) {
-    // Unicode string
-    binary = false;
-  } else if ((p0 == 0x42 || p0 == 0x62) && p1 == 0x22) {
-    // Byte string
-    binary = true;
-  } else {
+  if (p0 != 0x22) {
     // Not a string
     return nullptr;
   }
 
   // Drop the quote character(s)
   _buffer_next();
-  if (binary) _buffer_next();
 
   // Declare a buffer for bytes
   std::vector<std::uint8_t> bytes;
@@ -701,9 +692,5 @@ auto Tokenizer::_scan_string() -> std::shared_ptr<Token> {
 
   auto span = Span(_filename, begin, _pos());
 
-  if (binary) {
-    return std::make_shared<ByteStringToken>(bytes, span);
-  } else {
-    return std::make_shared<StringToken>(bytes, span);
-  }
+  return std::make_shared<StringToken>(bytes, span);
 }

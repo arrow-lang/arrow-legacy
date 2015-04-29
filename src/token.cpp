@@ -39,9 +39,6 @@ std::string arrow::to_string(Token::Type type) noexcept {
     case Token::Type::String:
       return "string";
 
-    case Token::Type::ByteString:
-      return "byte-string";
-
     case Token::Type::And:
       return "`and`";
 
@@ -227,10 +224,4 @@ ByteToken::ByteToken(std::uint8_t by, Span span)
 
 StringToken::StringToken(const std::vector<std::uint8_t>& bytes, Span span)
   : Token(Type::String, span), bytes(bytes) {
-}
-
-ByteStringToken::ByteStringToken(
-  const std::vector<std::uint8_t>& bytes, Span span
-)
-  : Token(Type::ByteString, span), bytes(bytes) {
 }

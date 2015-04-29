@@ -18,6 +18,7 @@ IMPL(Return)
 IMPL(Integer)
 IMPL(Float)
 IMPL(Boolean)
+IMPL(String)
 IMPL(Unary)
 IMPL(Binary)
 IMPL(Promote)
@@ -84,4 +85,8 @@ TextNode::TextNode(const std::string& text)
 
 Boolean::Boolean(bool value)
   : value(value) {
+}
+
+String::String(const std::vector<std::uint8_t>& bytes)
+  : bytes(bytes) {
 }
