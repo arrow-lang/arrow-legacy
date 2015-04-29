@@ -65,11 +65,23 @@ void Builder::visit(ast::Identifier& node) {
 void Builder::visit(ast::Slot& node) {
   auto& name = node.name->text;
 
-  // FIXME: auto type = resolve(node)
-  auto type = LLVMInt32Type();
+  // Ensure that we are not overwriting an item in the current scope
+  if (_cs->exists(name, false)) {
+    Log::get().warning("redefinition of '%s'", name.c_str());
+  }
+
+  auto type_item = build_scalar(*node.type);
+  if (!type_item) return;
+  if (!type_item->is_type()) {
+    // TODO: Report location
+    Log::get().error("expected type name");
+    return;
+  }
+
 
   // Build the slot decl with the code generator
-  auto handle = LLVMBuildAlloca(_g._irb, type, name.c_str());
+  auto type = std::static_pointer_cast<code::Type>(type_item);
+  auto handle = LLVMBuildAlloca(_g._irb, type->handle(), name.c_str());
 
   // Create and set the new slot decl in
   // the current scope

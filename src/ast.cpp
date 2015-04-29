@@ -184,12 +184,23 @@ void Show::visit(Slot& x)
 
   item.add("<xmlattr>.name", x.name->text.c_str());
 
-  auto& init = _el().add("Initializer", "");
-  _ctx.push(&init);
+  if (x.type != nullptr) {
+    auto& type = _el().add("Type", "");
+    _ctx.push(&type);
 
-  x.initializer->accept(*this);
+    x.type->accept(*this);
 
-  _ctx.pop();
+    _ctx.pop();
+  }
+
+  if (x.initializer != nullptr) {
+    auto& init = _el().add("Initializer", "");
+    _ctx.push(&init);
+
+    x.initializer->accept(*this);
+
+    _ctx.pop();
+  }
 
   _ctx.pop();
 }

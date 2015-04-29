@@ -6,9 +6,11 @@
 #ifndef ARROW_CODE_H
 #define ARROW_CODE_H 1
 
+#include "arrow/llvm.hpp"
+
 #include "arrow/code/item.hpp"
 #include "arrow/code/scope.hpp"
-#include "arrow/llvm.hpp"
+#include "arrow/code/type.hpp"
 
 namespace arrow {
 namespace code {
@@ -16,7 +18,7 @@ namespace code {
 /// A module, either top-level (a file) or a sub-module block inside
 /// the file
 struct Module : Item {
-  explicit Module(const std::string& name);
+  explicit Module(const std::string& name, Scope* parent);
 
   virtual ~Module() noexcept;
 

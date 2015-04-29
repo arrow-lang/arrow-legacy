@@ -198,13 +198,16 @@ namespace arrow {
 
     struct Slot : Node {
       Slot(
-        std::shared_ptr<Identifier> name, std::shared_ptr<Node> initializer);
+        std::shared_ptr<Identifier> name,
+        std::shared_ptr<Node> type,
+        std::shared_ptr<Node> initializer = nullptr);
 
       virtual ~Slot() noexcept;
 
       virtual void accept(Visitor& v);
 
       std::shared_ptr<Identifier> name;
+      std::shared_ptr<Node> type;
       std::shared_ptr<Node> initializer;
     };
 

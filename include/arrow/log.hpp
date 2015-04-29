@@ -15,14 +15,22 @@ namespace arrow {
 
     Log();
 
+    // FIXME: This shouldn't be so many functions
+
     unsigned count(const std::string& level);
 
     void error(const std::string& format, ...);
     void error(Span span, const std::string& format, ...);
 
+    void warning(const std::string& format, ...);
+    void warning(Span span, const std::string& format, ...);
+
   private:
     void error(const char* format, va_list arguments);
     void error(Span, const char* format, va_list arguments);
+
+    void warning(const char* format, va_list arguments);
+    void warning(Span, const char* format, va_list arguments);
 
     std::map<std::string, unsigned> _counters;
 

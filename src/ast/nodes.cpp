@@ -76,8 +76,11 @@ Call::Call(std::shared_ptr<Node> expression)
   : expression(expression) {
 }
 
-Slot::Slot(std::shared_ptr<Identifier> name, std::shared_ptr<Node> initializer)
-  : name(name), initializer(initializer) {
+Slot::Slot(
+  std::shared_ptr<Identifier> name,
+  std::shared_ptr<Node> type,
+  std::shared_ptr<Node> initializer
+) : name(name), type(type), initializer(initializer) {
 }
 
 Integer::Integer(const std::string& text, unsigned base)

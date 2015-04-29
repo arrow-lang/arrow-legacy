@@ -706,19 +706,41 @@ bool Parser::parse_slot() {
   auto name = std::static_pointer_cast<ast::Identifier>(_stack.front());
   _stack.pop_front();
 
-  // Expect `=`
-  if (!expect(Token::Type::Equals)) { return false; }
+  // Expect `:`
+  if (!expect(Token::Type::Colon)) { return false; }
 
-  // Parse initializer (expression)
-  if (!parse_expression()) { return false; }
-  auto initializer = _stack.front();
+  // Parse type
+  if (!parse_type()) { return false; }
+  auto type = _stack.front();
   _stack.pop_front();
+
+  // Declare node
+  auto node = make_shared<ast::Slot>(name, type);
+
+  // Check for `=` (to indicate an initializer)
+  if (_t.peek(0)->type == Token::Type::Equals) {
+    if (!expect(Token::Type::Equals)) { return false; }
+
+    // Parse initializer (expression)
+    if (!parse_expression()) { return false; }
+    node->initializer = _stack.front();
+    _stack.pop_front();
+  }
 
   // Expect `;`
   if (!expect(Token::Type::Semicolon)) { return false; }
 
   // Declare and push the node
-  _stack.push_front(make_shared<ast::Slot>(name, initializer));
+  _stack.push_front(node);
 
   return true;
+}
+
+// Type
+// ----------------------------------------------------------------------------
+// type = identifier ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_type() {
+  // TODO: tuple type
+  return parse_identifier();
 }

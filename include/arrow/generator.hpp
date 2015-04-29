@@ -29,6 +29,8 @@ namespace arrow {
     friend class Builder;
     friend class Extractor;
 
+    void _declare_basic_types();
+
     /// LLVM module that contains the LLVM IR
     LLVMModuleRef _mod;
 

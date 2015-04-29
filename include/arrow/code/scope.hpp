@@ -25,10 +25,10 @@ class Scope {
   Scope& operator=(const Scope& x);
 
   /// Check if the passed name exists in this scope (or any parent scopes)
-  bool exists(const std::string& name) const;
+  bool exists(const std::string& name, bool traverse = true) const;
 
   /// Get the passed name (returns nullptr if it doesn't exist)
-  std::shared_ptr<Item> get(const std::string& name) const;
+  std::shared_ptr<Item> get(const std::string& name, bool traverse = true) const;
 
   /// Set an item in this scope with the passed name
   void set(const std::string& name, std::shared_ptr<Item> item);

@@ -14,8 +14,8 @@ IMPL(Module)
 IMPL(Function)
 IMPL(Slot)
 
-code::Module::Module(const std::string& name)
-  : scope{}, name{name} {
+code::Module::Module(const std::string& name, Scope* parent)
+  : scope{parent}, name{name} {
 }
 
 code::Function::Function(LLVMValueRef handle, const std::string& name)

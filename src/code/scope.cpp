@@ -20,17 +20,17 @@ auto Scope::operator=(const Scope& x) -> Scope& {
   return *this;
 }
 
-bool Scope::exists(const std::string& name) const {
-  return get(name) != nullptr;
+bool Scope::exists(const std::string& name, bool traverse) const {
+  return get(name, traverse) != nullptr;
 }
 
-auto Scope::get(const std::string& name) const -> std::shared_ptr<Item> {
+auto Scope::get(const std::string& name, bool traverse) const -> std::shared_ptr<Item> {
   auto ref = _items.find(name);
-  if (ref == _items.end()) return nullptr;
+  if (ref != _items.end()) return ref->second;
 
-  if (_parent != nullptr) return _parent->get(name);
+  if (traverse && _parent != nullptr) return _parent->get(name);
 
-  return ref->second;
+  return nullptr;
 }
 
 void Scope::set(const std::string& name, std::shared_ptr<Item> item) {

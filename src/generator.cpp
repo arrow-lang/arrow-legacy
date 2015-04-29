@@ -1,5 +1,6 @@
 #include "arrow/generator.hpp"
 #include "arrow/builder.hpp"
+#include "arrow/code.hpp"
 
 using arrow::Generator;
 
@@ -78,6 +79,9 @@ void Generator::generate(
   // Construct the instruction builder
   _irb = LLVMCreateBuilder();
 
+  // Declare the basic (built-in) types
+  _declare_basic_types();
+
   // Construct a intermediate builder and begin the code generation
   // process on the passed node
   Builder builder{*this, _scope};
@@ -92,4 +96,32 @@ void Generator::print(std::ostream& os) const
   os << bytes;
 
   LLVMDisposeMessage(bytes);
+}
+
+void Generator::_declare_basic_types() {
+  // Boolean type
+  _scope.set("bool", std::make_shared<code::BooleanType>());
+
+  // Signed, machine-independent integer types
+  _scope.set("int8", std::make_shared<code::IntegerType>(8, true));
+  _scope.set("int16", std::make_shared<code::IntegerType>(16, true));
+  _scope.set("int32", std::make_shared<code::IntegerType>(32, true));
+  _scope.set("int64", std::make_shared<code::IntegerType>(64, true));
+  _scope.set("int128", std::make_shared<code::IntegerType>(128, true));
+
+  // Unsigned, machine-independent integer types
+  _scope.set("uint8", std::make_shared<code::IntegerType>(8, false));
+  _scope.set("uint16", std::make_shared<code::IntegerType>(16, false));
+  _scope.set("uint32", std::make_shared<code::IntegerType>(32, false));
+  _scope.set("uint64", std::make_shared<code::IntegerType>(64, false));
+  _scope.set("uint128", std::make_shared<code::IntegerType>(128, false));
+
+  // Floating-point types
+  _scope.set("float32", std::make_shared<code::FloatType>(32));
+  _scope.set("float64", std::make_shared<code::FloatType>(64));
+
+  // TODO: Machine-dependent integer types
+  // TODO: UTF-32 character type
+  // TODO: UTF-8 string type
+  // TODO: Byte string type
 }

@@ -11,6 +11,10 @@ namespace code {
 
 struct Item {
   virtual ~Item() noexcept;
+
+  virtual bool is_type() const noexcept {
+    return false;
+  }
 };
 
 } // namespace code {
