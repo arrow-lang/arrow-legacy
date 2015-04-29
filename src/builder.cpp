@@ -61,3 +61,20 @@ void Builder::visit(ast::Identifier& node) {
 
   _stack.push(item);
 }
+
+void Builder::visit(ast::Slot& node) {
+  auto& name = node.name->text;
+
+  // FIXME: auto type = resolve(node)
+  auto type = LLVMInt32Type();
+
+  // Build the slot decl with the code generator
+  auto handle = LLVMBuildAlloca(_g._irb, type, name.c_str());
+
+  // Create and set the new slot decl in
+  // the current scope
+  _cs->set(name, std::make_shared<code::Slot>(
+    handle,
+    name
+  ));
+}

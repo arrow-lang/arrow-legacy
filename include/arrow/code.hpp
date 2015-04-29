@@ -40,6 +40,22 @@ private:
   LLVMValueRef _handle;
 };
 
+/// A named slot declaration
+struct Slot : Item {
+  explicit Slot(LLVMValueRef handle, const std::string& name);
+
+  virtual ~Slot() noexcept;
+
+  virtual LLVMValueRef handle() noexcept {
+    return _handle;
+  }
+
+  std::string name;
+
+private:
+  LLVMValueRef _handle;
+};
+
 } // namespace code {
 } // namespace arrow {
 

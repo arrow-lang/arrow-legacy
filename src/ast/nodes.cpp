@@ -13,6 +13,7 @@ IMPL(Identifier)
 IMPL(Module)
 IMPL(Function)
 IMPL(Call)
+IMPL(Slot)
 IMPL(Break)
 IMPL(Return)
 IMPL(Integer)
@@ -73,6 +74,10 @@ Function::Function(std::shared_ptr<Identifier> name)
 
 Call::Call(std::shared_ptr<Node> expression)
   : expression(expression) {
+}
+
+Slot::Slot(std::shared_ptr<Identifier> name, std::shared_ptr<Node> initializer)
+  : name(name), initializer(initializer) {
 }
 
 Integer::Integer(const std::string& text, unsigned base)

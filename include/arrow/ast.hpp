@@ -22,6 +22,7 @@ namespace arrow {
       virtual void visit(Module&) { }
       virtual void visit(Function&) { }
       virtual void visit(Call&) { }
+      virtual void visit(Slot&) { }
       virtual void visit(Break&) { }
       virtual void visit(Return&) { }
       virtual void visit(Integer&) { }
@@ -76,6 +77,7 @@ namespace arrow {
       virtual void visit(Module&);
       virtual void visit(Function&);
       virtual void visit(Call&);
+      virtual void visit(Slot&);
       virtual void visit(Break&);
       virtual void visit(Return&);
       virtual void visit(Integer&);

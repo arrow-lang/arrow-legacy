@@ -196,6 +196,18 @@ namespace arrow {
 
     };
 
+    struct Slot : Node {
+      Slot(
+        std::shared_ptr<Identifier> name, std::shared_ptr<Node> initializer);
+
+      virtual ~Slot() noexcept;
+
+      virtual void accept(Visitor& v);
+
+      std::shared_ptr<Identifier> name;
+      std::shared_ptr<Node> initializer;
+    };
+
   }
 }
 

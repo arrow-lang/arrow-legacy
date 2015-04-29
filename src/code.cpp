@@ -12,11 +12,16 @@ namespace code = arrow::code;
 
 IMPL(Module)
 IMPL(Function)
+IMPL(Slot)
 
 code::Module::Module(const std::string& name)
   : scope{}, name{name} {
 }
 
 code::Function::Function(LLVMValueRef handle, const std::string& name)
+  : name{name}, _handle{handle} {
+}
+
+code::Slot::Slot(LLVMValueRef handle, const std::string& name)
   : name{name}, _handle{handle} {
 }
