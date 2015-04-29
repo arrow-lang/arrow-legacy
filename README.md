@@ -1,4 +1,5 @@
 # Arrow
+[![Stories in Ready](https://badge.waffle.io/arrowlang/arrow.svg?label=ready&title=Ready)](http://waffle.io/arrowlang/arrow)
 
 ## Prerequisites
 
