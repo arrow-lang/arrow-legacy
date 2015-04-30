@@ -5,11 +5,11 @@ python:
 
 # Install any testing or build dependencies
 install:
-  - apt-get install -y llvm-dev libboost-all-dev
+  - sudo apt-get install -y llvm-dev libboost-all-dev clang
   - pip install -r requirements.txt
 
 # Command to build project
-before_script: ./waf clean configure build
+before_script: ./waf configure --check-cxx-compiler="clang++" build
 
 # Command to run tests
 script: ./waf test

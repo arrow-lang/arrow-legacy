@@ -34,8 +34,8 @@ def configure(ctx):
         uselib_store='LLVM'
     )
 
-    if ctx.env["CXX_NAME"] == "gcc":
-        ctx.env.append_unique("CXXFLAGS", "-std=c++14")
+    if ctx.env["CXX_NAME"] in ("gcc", "clang"):
+        ctx.env.append_unique("CXXFLAGS", "-std=c++11")
         ctx.env.append_unique("CXXFLAGS", "-Ofast")
         ctx.env.append_unique("CXXFLAGS", "-Wall")
         ctx.env.append_unique("CXXFLAGS", "-Wextra")
@@ -47,7 +47,7 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=const")
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=noreturn")
         # ctx.env.append_unique("CXXFLAGS", "-Weffc++")
-        ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
+        # ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
 
 
