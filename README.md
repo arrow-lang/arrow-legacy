@@ -7,7 +7,7 @@
 ### Ubuntu 14.10
 
 ```bash
-$ sudo apt-get install llvm-dev libboost-all-dev
+$ sudo apt-get install build-essential clang llvm-dev libboost-all-dev
 ```
 
 ## Build

@@ -65,7 +65,10 @@ void Builder::visit(ast::Identifier& node) {
 void Builder::visit(ast::Slot& node) {
   auto& name = node.name->text;
 
-  // Ensure that we are not overwriting an item in the current scope
+  // Check if we are overwriting an item in the current scope
+  // NOTE: We need to eventually decide if we will allow this or not
+  //  I'm leaning towards allowing as long as we output a warning for
+  //  an unsued variable
   if (_cs->exists(name, false)) {
     Log::get().warning(node.name->span, "redefinition of '%s'", name.c_str());
   }
@@ -74,10 +77,9 @@ void Builder::visit(ast::Slot& node) {
   if (!type_item) return;
   if (!type_item->is_type()) {
     // TODO: Report location
-    Log::get().error(node.type->span, "expected type name");
+    Log::get().error(node.type->span, "expected typename");
     return;
   }
-
 
   // Build the slot decl with the code generator
   auto type = std::static_pointer_cast<code::Type>(type_item);
