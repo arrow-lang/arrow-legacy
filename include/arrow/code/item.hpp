@@ -17,7 +17,7 @@ struct Item {
   }
 };
 
-} // namespace code {
-} // namespace arrow {
+}  // namespace code
+}  // namespace arrow
 
-#endif // ARROW_CODE_ITEM_H
+#endif  // ARROW_CODE_ITEM_H

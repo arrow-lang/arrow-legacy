@@ -6,8 +6,9 @@
 #ifndef ARROW_CODE_H
 #define ARROW_CODE_H 1
 
-#include "arrow/llvm.hpp"
+#include <string>
 
+#include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
 #include "arrow/code/scope.hpp"
 #include "arrow/code/type.hpp"
@@ -18,7 +19,7 @@ namespace code {
 /// A module, either top-level (a file) or a sub-module block inside
 /// the file
 struct Module : Item {
-  explicit Module(const std::string& name, Scope* parent);
+  Module(const std::string& name, Scope* parent);
 
   virtual ~Module() noexcept;
 
@@ -28,7 +29,7 @@ struct Module : Item {
 
 /// A named function definition
 struct Function : Item {
-  explicit Function(LLVMValueRef handle, const std::string& name);
+  Function(LLVMValueRef handle, const std::string& name);
 
   virtual ~Function() noexcept;
 
@@ -38,13 +39,13 @@ struct Function : Item {
 
   std::string name;
 
-private:
+ private:
   LLVMValueRef _handle;
 };
 
 /// A named slot declaration
 struct Slot : Item {
-  explicit Slot(LLVMValueRef handle, const std::string& name);
+  Slot(LLVMValueRef handle, const std::string& name);
 
   virtual ~Slot() noexcept;
 
@@ -54,11 +55,11 @@ struct Slot : Item {
 
   std::string name;
 
-private:
+ private:
   LLVMValueRef _handle;
 };
 
-} // namespace code {
-} // namespace arrow {
+}  // namespace code
+}  // namespace arrow
 
-#endif // ARROW_CODE_H
+#endif  // ARROW_CODE_H

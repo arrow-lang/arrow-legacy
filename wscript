@@ -65,9 +65,14 @@ def lint(ctx):
     include = ctx.path.ant_glob("include/**/*.hpp")
     source = ctx.path.ant_glob("src/**/*.cpp")
 
+    filenames = [x.abspath() for x in chain(source, include)]
+
+    cpplint.ParseArguments(
+      ["--filter=-runtime/references"] + filenames)
+
     cpplint._cpplint_state.ResetErrorCounts()
 
-    for filename in chain(source, include):
-        cpplint.ProcessFile(filename.abspath(), 0)
+    for filename in filenames:
+        cpplint.ProcessFile(filename, 0)
 
     cpplint._cpplint_state.PrintErrorCounts()

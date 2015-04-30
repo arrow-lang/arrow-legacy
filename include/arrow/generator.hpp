@@ -1,5 +1,12 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
 #ifndef ARROW_GENERATOR_H
 #define ARROW_GENERATOR_H 1
+
+#include <string>
 
 #include "arrow/tokenizer.hpp"
 #include "arrow/parser.hpp"
@@ -8,47 +15,46 @@
 
 namespace arrow {
 
-  class Builder;
-  class Extractor;
+class Builder;
+class Extractor;
 
-  class Generator {
-  public:
-    Generator();
+class Generator {
+ public:
+  Generator();
 
-    Generator(const Generator&) = delete;
+  Generator(const Generator&) = delete;
 
-    ~Generator() noexcept;
+  ~Generator() noexcept;
 
-    void operator=(const Generator&) = delete;
+  void operator=(const Generator&) = delete;
 
-    void generate(const std::string& name, std::shared_ptr<ast::Node> node);
+  void generate(const std::string& name, std::shared_ptr<ast::Node> node);
 
-    void print(std::ostream& os) const;
+  void print(std::ostream& os) const;
 
-  private:
-    friend class Builder;
-    friend class Extractor;
+ private:
+  friend class Builder;
+  friend class Extractor;
 
-    void _declare_basic_types();
+  void _declare_basic_types();
 
-    /// LLVM module that contains the LLVM IR
-    LLVMModuleRef _mod;
+  /// LLVM module that contains the LLVM IR
+  LLVMModuleRef _mod;
 
-    /// LLVM instruction builder that greatly simplifies
-    /// IR generation with LLVM
-    LLVMBuilderRef _irb;
+  /// LLVM instruction builder that greatly simplifies
+  /// IR generation with LLVM
+  LLVMBuilderRef _irb;
 
-    /// LLVM target machine
-    LLVMTargetMachineRef _target_machine;
+  /// LLVM target machine
+  LLVMTargetMachineRef _target_machine;
 
-    /// LLVM target data (layout)
-    LLVMTargetDataRef _data_layout;
+  /// LLVM target data (layout)
+  LLVMTargetDataRef _data_layout;
 
-    /// The builtin (above top-level) scope
-    code::Scope _scope;
+  /// The builtin (above top-level) scope
+  code::Scope _scope;
+};
 
-  };
+}  // namespace arrow
 
-}
-
-#endif // ARROW_GENERATOR_H
+#endif  // ARROW_GENERATOR_H

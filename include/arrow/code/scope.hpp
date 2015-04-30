@@ -28,18 +28,18 @@ class Scope {
   bool exists(const std::string& name, bool traverse = true) const;
 
   /// Get the passed name (returns nullptr if it doesn't exist)
-  std::shared_ptr<Item> get(const std::string& name, bool traverse = true) const;
+  std::shared_ptr<Item> get(const std::string& name, bool traverse = true)
+    const;
 
   /// Set an item in this scope with the passed name
   void set(const std::string& name, std::shared_ptr<Item> item);
 
  private:
-   Scope* _parent;
-   std::unordered_map<std::string, std::shared_ptr<Item>> _items;
-
+  Scope* _parent;
+  std::unordered_map<std::string, std::shared_ptr<Item>> _items;
 };
 
-} // namespace code {
-} // namespace arrow {
+}  // namespace code
+}  // namespace arrow
 
-#endif // ARROW_SCOPE_H
+#endif  // ARROW_SCOPE_H

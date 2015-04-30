@@ -40,7 +40,7 @@ struct BooleanType : Type {
 };
 
 struct FloatType : Type {
-  FloatType(unsigned bits);
+  explicit FloatType(unsigned bits);
 
   virtual ~FloatType() noexcept;
 
@@ -49,7 +49,7 @@ struct FloatType : Type {
   unsigned bits;
 };
 
-} // namespace code {
-} // namespace arrow {
+}  // namespace code
+}  // namespace arrow
 
-#endif // ARROW_CODE_TYPE_H
+#endif  // ARROW_CODE_TYPE_H

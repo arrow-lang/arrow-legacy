@@ -16,18 +16,18 @@ class Generator;
 
 class Builder : public ast::Visitor {
  public:
-  explicit Builder(Generator& g, code::Scope& _scope);
+  Builder(Generator& g, code::Scope& _scope);
 
   virtual ~Builder() noexcept;
 
   virtual void visit(ast::Node&) { }
   virtual void visit(ast::TextNode&) { }
-  virtual void visit(ast::Identifier&) override;
-  virtual void visit(ast::Module&) override;
-  virtual void visit(ast::Function&) override;
-  virtual void visit(ast::Call&) override;
+  virtual void visit(ast::Identifier&);
+  virtual void visit(ast::Function&);
+  virtual void visit(ast::Module&);
+  virtual void visit(ast::Call&);
   virtual void visit(ast::Break&) { }
-  virtual void visit(ast::Slot&) override;
+  virtual void visit(ast::Slot&);
   virtual void visit(ast::Return&) { }
   virtual void visit(ast::Integer&) { }
   virtual void visit(ast::Float&) { }
@@ -74,9 +74,8 @@ class Builder : public ast::Visitor {
 
   std::shared_ptr<code::Item> build_scalar(
     ast::Node& node, code::Scope* scope = nullptr);
-
 };
 
-} // namespace arrow {
+}  // namespace arrow
 
-#endif // ARROW_BUILDER_H
+#endif  // ARROW_BUILDER_H
