@@ -77,8 +77,11 @@ def run_(name, ctx, binary_path):
 
 
 def handle_(binary_path, filename, *args):
+    filename = path.relpath(filename)
     process = Popen(
-        [binary_path, filename] + list(args), stdout=PIPE, stderr=PIPE
+        [binary_path, filename] + list(args), stdout=PIPE, stderr=PIPE,
+        cwd=path.join(path.dirname(__file__), ".."),
+        # shell=True
     )
 
     stdout, _ = process.communicate()
@@ -106,3 +109,5 @@ def run(ctx):
     run_("parse", ctx, binary_path)
 
     print_report()
+
+    return _failed == 0

@@ -1,5 +1,5 @@
-/home/ryan/Workspace/arrowlang/arrow/test/tokenize/identifier.as:1.1-8: identifier: tuesday
-/home/ryan/Workspace/arrowlang/arrow/test/tokenize/identifier.as:2.1-8: identifier: pancake
-/home/ryan/Workspace/arrowlang/arrow/test/tokenize/identifier.as:3.1-8: identifier: main_30
-/home/ryan/Workspace/arrowlang/arrow/test/tokenize/identifier.as:4.1-10: identifier: __hello__
-/home/ryan/Workspace/arrowlang/arrow/test/tokenize/identifier.as:5.1-2: end
+test/tokenize/identifier.as:1.1-8: identifier: tuesday
+test/tokenize/identifier.as:2.1-8: identifier: pancake
+test/tokenize/identifier.as:3.1-8: identifier: main_30
+test/tokenize/identifier.as:4.1-10: identifier: __hello__
+test/tokenize/identifier.as:5.1-2: end

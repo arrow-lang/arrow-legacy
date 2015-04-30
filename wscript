@@ -2,6 +2,7 @@
 from subprocess import Popen, PIPE, PIPE
 from os import path
 from itertools import chain
+import sys
 import ws.test
 
 
@@ -62,7 +63,9 @@ def build(ctx):
 
 
 def test(ctx):
-    ws.test.run(ctx)
+    result = ws.test.run(ctx)
+    if not result:
+        sys.exit(1)
 
 def lint(ctx):
     import cpplint
@@ -83,7 +86,8 @@ def lint(ctx):
     cpplint._cpplint_state.PrintErrorCounts()
 
 def regenerate_expected_output(ctx):
-    filenames = [x.abspath() for x in ctx.path.ant_glob("test/**/*.as")]
+    filenames = [path.relpath(x.abspath())
+        for x in ctx.path.ant_glob("test/**/*.as")]
     for filename in filenames:
         stem, ext = path.splitext(filename)
 
