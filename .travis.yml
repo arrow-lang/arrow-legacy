@@ -7,6 +7,7 @@ python:
 install:
   - pip install -r requirements.txt
   - sudo apt-get install -y libboost-all-dev
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
   - sudo sh -c 'echo "deb http://llvm.org/apt/precise/ llvm-toolchain-precise main\ndeb-src http://llvm.org/apt/precise/ llvm-toolchain-precise main\ndeb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.5 main\ndeb-src http://llvm.org/apt/precise/ llvm-toolchain-precise-3.5 main" >> /etc/apt/sources.list'
   - sudo apt-get update
   - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
