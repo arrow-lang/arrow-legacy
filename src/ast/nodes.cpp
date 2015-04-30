@@ -52,6 +52,10 @@ IMPL(Mul)
 IMPL(Div)
 IMPL(Mod)
 
+Node::Node(Span span)
+  : span(span) {
+}
+
 Module::Module(Span span)
   : Node(span), sequence() {
 }

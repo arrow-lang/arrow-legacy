@@ -16,12 +16,13 @@ Parser::Parser(Tokenizer& t)
 std::shared_ptr<ast::Node> Parser::parse()
 {
   // Declare the top-level (root) module
-  // FIXME: Need the filename
-  auto module = make_shared<ast::Module>(Span("", {0, 0}, {0, 0}));
+  auto module = make_shared<ast::Module>(Span(_t.filename(), {0, 0}, {0, 0}));
 
   // Enumerate and attempt to match rules until the token stream
   // is empty
   while (_t.peek()->type != Token::Type::End) {
+    // TODO: Increment `module.span.end`
+
     // Try and parse a module statement ..
     if (parse_module_statement()) {
       // Consume the parsed stack
@@ -31,6 +32,11 @@ std::shared_ptr<ast::Node> Parser::parse()
 
     // Clear the (parsed) stack
     _stack.clear();
+  }
+
+  if (module->sequence.size() > 0) {
+    // Update the module span
+    module->span.end = module->sequence.back()->span.end;
   }
 
   return module;
@@ -275,22 +281,23 @@ bool Parser::parse_unary_expression()
   _stack.pop_front();
 
   // Declare the node
+  auto span = Span(_t.filename(), tok->span.begin, operand->span.end);
   std::shared_ptr<ast::Node> node;
   switch (tok->type) {
     case Token::Type::Plus:
-      node = make_shared<ast::Promote>(operand);
+      node = make_shared<ast::Promote>(span, operand);
       break;
 
     case Token::Type::Minus:
-      node = make_shared<ast::NegateNumeric>(operand);
+      node = make_shared<ast::NegateNumeric>(span, operand);
       break;
 
     case Token::Type::Not:
-      node = make_shared<ast::NegateLogical>(operand);
+      node = make_shared<ast::NegateLogical>(span, operand);
       break;
 
     case Token::Type::ExclamationMark:
-      node = make_shared<ast::NegateBit>(operand);
+      node = make_shared<ast::NegateBit>(span, operand);
       break;
 
     default:
@@ -344,15 +351,17 @@ bool Parser::parse_call_expression() {
   _stack.pop_front();
 
   // Expect `(`
-  if (!expect(Token::Type::LeftParenthesis)) { return false; }
+  auto tok = expect(Token::Type::LeftParenthesis);
+  if (!tok) { return false; }
 
   // TODO: Iterate and parse parameters
 
   // Expect `)`
-  if (!expect(Token::Type::RightParenthesis)) { return false; }
+  if (!(tok = expect(Token::Type::RightParenthesis))) { return false; }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::Call>(expr));
+  _stack.push_front(make_shared<ast::Call>(
+    Span(_t.filename(), expr->span.begin, tok->span.end), expr));
 
   return true;
 }
@@ -363,12 +372,13 @@ bool Parser::parse_call_expression() {
 // ----------------------------------------------------------------------------
 bool Parser::parse_break() {
   // Expect `break` `;`
-  if (!expect(Token::Type::Break) || !expect(Token::Type::Semicolon)) {
+  auto tok = expect(Token::Type::Break);
+  if (!tok || !expect(Token::Type::Semicolon)) {
     return false;
   }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::Break>());
+  _stack.push_front(make_shared<ast::Break>(tok->span));
 
   return true;
 }
@@ -384,7 +394,7 @@ bool Parser::parse_identifier()
   if (!tok) { return false; }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::Identifier>(tok->text));
+  _stack.push_front(make_shared<ast::Identifier>(tok->span, tok->text));
 
   return true;
 }
@@ -396,7 +406,8 @@ bool Parser::parse_identifier()
 bool Parser::parse_return()
 {
   // Expect `return`
-  if (!expect(Token::Type::Return)) { return false; }
+  auto tok = expect(Token::Type::Return);
+  if (!tok) { return false; }
 
   // Attempt to parse the returned expression
   if (!parse_expression()) { return false; }
@@ -407,7 +418,8 @@ bool Parser::parse_return()
   if (!expect(Token::Type::Semicolon)) { return false; }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::Return>(expr));
+  _stack.push_front(make_shared<ast::Return>(
+    Span(_t.filename(), tok->span.begin, expr->span.end), expr));
 
   return true;
 }
@@ -534,106 +546,107 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
     _stack.pop_front();
 
     // Declare the node
+    auto span = Span(_t.filename(), lhs->span.begin, rhs->span.end);
     std::shared_ptr<ast::Node> node;
     switch (tok->type) {
       case Token::Type::Equals:
-        node = make_shared<ast::Assign>(lhs, rhs);
+        node = make_shared<ast::Assign>(span, lhs, rhs);
         break;
 
       case Token::Type::Plus_Equals:
-        node = make_shared<ast::AssignAdd>(lhs, rhs);
+        node = make_shared<ast::AssignAdd>(span, lhs, rhs);
         break;
 
       case Token::Type::Minus_Equals:
-        node = make_shared<ast::AssignSub>(lhs, rhs);
+        node = make_shared<ast::AssignSub>(span, lhs, rhs);
         break;
 
       case Token::Type::Asterisk_Equals:
-        node = make_shared<ast::AssignMul>(lhs, rhs);
+        node = make_shared<ast::AssignMul>(span, lhs, rhs);
         break;
 
       case Token::Type::Slash_Equals:
-        node = make_shared<ast::AssignDiv>(lhs, rhs);
+        node = make_shared<ast::AssignDiv>(span, lhs, rhs);
         break;
 
       case Token::Type::Percent_Equals:
-        node = make_shared<ast::AssignMod>(lhs, rhs);
+        node = make_shared<ast::AssignMod>(span, lhs, rhs);
         break;
 
       case Token::Type::Ampersand_Equals:
-        node = make_shared<ast::AssignBitAnd>(lhs, rhs);
+        node = make_shared<ast::AssignBitAnd>(span, lhs, rhs);
         break;
 
       case Token::Type::Caret_Equals:
-        node = make_shared<ast::AssignBitXor>(lhs, rhs);
+        node = make_shared<ast::AssignBitXor>(span, lhs, rhs);
         break;
 
       case Token::Type::Pipe_Equals:
-        node = make_shared<ast::AssignBitOr>(lhs, rhs);
+        node = make_shared<ast::AssignBitOr>(span, lhs, rhs);
         break;
 
       case Token::Type::And:
-        node = make_shared<ast::And>(lhs, rhs);
+        node = make_shared<ast::And>(span, lhs, rhs);
         break;
 
       case Token::Type::Or:
-        node = make_shared<ast::Or>(lhs, rhs);
+        node = make_shared<ast::Or>(span, lhs, rhs);
         break;
 
       case Token::Type::Equals_Equals:
-        node = make_shared<ast::EqualTo>(lhs, rhs);
+        node = make_shared<ast::EqualTo>(span, lhs, rhs);
         break;
 
       case Token::Type::ExclamationMark_Equals:
-        node = make_shared<ast::NotEqualTo>(lhs, rhs);
+        node = make_shared<ast::NotEqualTo>(span, lhs, rhs);
         break;
 
       case Token::Type::LessThan:
-        node = make_shared<ast::LessThan>(lhs, rhs);
+        node = make_shared<ast::LessThan>(span, lhs, rhs);
         break;
 
       case Token::Type::LessThan_Equals:
-        node = make_shared<ast::LessThanOrEqualTo>(lhs, rhs);
+        node = make_shared<ast::LessThanOrEqualTo>(span, lhs, rhs);
         break;
 
       case Token::Type::GreaterThan_Equals:
-        node = make_shared<ast::GreaterThanOrEqualTo>(lhs, rhs);
+        node = make_shared<ast::GreaterThanOrEqualTo>(span, lhs, rhs);
         break;
 
       case Token::Type::GreaterThan:
-        node = make_shared<ast::GreaterThan>(lhs, rhs);
+        node = make_shared<ast::GreaterThan>(span, lhs, rhs);
         break;
 
       case Token::Type::Ampersand:
-        node = make_shared<ast::BitAnd>(lhs, rhs);
+        node = make_shared<ast::BitAnd>(span, lhs, rhs);
         break;
 
       case Token::Type::Caret:
-        node = make_shared<ast::BitXor>(lhs, rhs);
+        node = make_shared<ast::BitXor>(span, lhs, rhs);
         break;
 
       case Token::Type::Pipe:
-        node = make_shared<ast::BitOr>(lhs, rhs);
+        node = make_shared<ast::BitOr>(span, lhs, rhs);
         break;
 
       case Token::Type::Plus:
-        node = make_shared<ast::Add>(lhs, rhs);
+        node = make_shared<ast::Add>(span, lhs, rhs);
         break;
 
       case Token::Type::Minus:
-        node = make_shared<ast::Sub>(lhs, rhs);
+        node = make_shared<ast::Sub>(span, lhs, rhs);
         break;
 
       case Token::Type::Asterisk:
-        node = make_shared<ast::Mul>(lhs, rhs);
+        node = make_shared<ast::Mul>(span, lhs, rhs);
         break;
 
       case Token::Type::Slash:
-        node = make_shared<ast::Div>(lhs, rhs);
+        node = make_shared<ast::Div>(span, lhs, rhs);
         break;
 
       case Token::Type::Percent:
-        node = make_shared<ast::Mod>(lhs, rhs);
+        node = make_shared<ast::Mod>(span, lhs, rhs);
         break;
 
       default:
@@ -656,7 +669,8 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
 bool Parser::parse_function()
 {
   // Expect `def`
-  if (!expect(Token::Type::Def)) { return false; }
+  auto initial_tok = expect(Token::Type::Def);
+  if (!initial_tok) { return false; }
 
   // Parse identifier
   if (!parse_identifier()) { return false; }
@@ -673,7 +687,9 @@ bool Parser::parse_function()
   if (!expect(Token::Type::LeftBrace)) { return false; }
 
   // Declare the node
-  auto fn = make_shared<ast::Function>(name);
+  auto fn = make_shared<ast::Function>(
+    Span(_t.filename(), initial_tok->span.begin, initial_tok->span.begin),
+    name);
 
   // Enumerate and attempt to match rules until we reach
   // `}` or the end of stream (which would be an error)
@@ -690,9 +706,11 @@ bool Parser::parse_function()
   }
 
   // Expect `}`
-  if (!expect(Token::Type::RightBrace)) { return false; }
+  auto last_tok = expect(Token::Type::RightBrace);
+  if (!last_tok) { return false; }
 
   // Push the node
+  fn->span.end = last_tok->span.end;
   _stack.push_front(fn);
 
   return true;
@@ -704,7 +722,8 @@ bool Parser::parse_function()
 // ----------------------------------------------------------------------------
 bool Parser::parse_slot() {
   // Expect `let`
-  if (!expect(Token::Type::Let)) { return false; }
+  auto inital_tok = expect(Token::Type::Let);
+  if (!inital_tok) { return false; }
 
   // Parse identifier
   if (!parse_identifier()) { return false; }
@@ -720,7 +739,9 @@ bool Parser::parse_slot() {
   _stack.pop_front();
 
   // Declare node
-  auto node = make_shared<ast::Slot>(name, type);
+  auto node = make_shared<ast::Slot>(
+    Span(_t.filename(), inital_tok->span.begin, type->span.end),
+    name, type);
 
   // Check for `=` (to indicate an initializer)
   if (_t.peek(0)->type == Token::Type::Equals) {
@@ -729,6 +750,7 @@ bool Parser::parse_slot() {
     // Parse initializer (expression)
     if (!parse_expression()) { return false; }
     node->initializer = _stack.front();
+    node->span.end = node->initializer->span.end;
     _stack.pop_front();
   }
 

@@ -16,7 +16,6 @@ namespace arrow {
 
   struct Span {
     Span(const std::string& filename, Position begin, Position end);
-    Span(std::string&& filename, Position begin, Position end);
 
     std::string to_string() const;
 

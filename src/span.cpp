@@ -15,18 +15,16 @@ Span::Span(const std::string& filename, Position begin, Position end)
   : filename(filename), begin(begin), end(end) {
 }
 
-Span::Span(std::string&& filename, Position begin, Position end)
-  : filename(filename), begin(begin), end(end) {
-}
-
+// NOTE: Error message format comes from
+//  http://www.gnu.org/prep/standards/standards.html#Errors
 std::string Span::to_string() const {
   std::stringstream fmt;
 
-  fmt << fs::path(filename).stem().string();
+  fmt << fs::path(filename).string();
   fmt << ':';
 
   fmt << (begin.row + 1);
-  fmt << ',';
+  fmt << '.';
   fmt << (begin.column + 1);
   fmt << '-';
 
@@ -36,7 +34,7 @@ std::string Span::to_string() const {
   } else {
     // line,column-line,column
     fmt << (end.row + 1);
-    fmt << ',';
+    fmt << '.';
     fmt << (end.column + 1);
   }
 

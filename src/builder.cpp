@@ -67,14 +67,14 @@ void Builder::visit(ast::Slot& node) {
 
   // Ensure that we are not overwriting an item in the current scope
   if (_cs->exists(name, false)) {
-    Log::get().warning("redefinition of '%s'", name.c_str());
+    Log::get().warning(node.name->span, "redefinition of '%s'", name.c_str());
   }
 
   auto type_item = build_scalar(*node.type);
   if (!type_item) return;
   if (!type_item->is_type()) {
     // TODO: Report location
-    Log::get().error("expected type name");
+    Log::get().error(node.type->span, "expected type name");
     return;
   }
 

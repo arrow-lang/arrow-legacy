@@ -129,6 +129,8 @@ namespace arrow {
     #undef UNARY_DEFINE
 
     struct Break : Node {
+      using Node::Node;
+
       virtual ~Break() noexcept;
 
       virtual void accept(Visitor& v);
@@ -204,7 +206,7 @@ namespace arrow {
 
     struct Slot : Node {
       Slot(
-        Span span, 
+        Span span,
         std::shared_ptr<Identifier> name,
         std::shared_ptr<Node> type,
         std::shared_ptr<Node> initializer = nullptr);
