@@ -1,6 +1,6 @@
-float:2,1-8: float: 21.1521
-float:3,1-10: float: 612.41e10
-float:4,1-6: float: 32e50
-float:5,1-7: float: 31e+30
-float:6,1-10: float: 11.24e-30
-float:7,1-2: end
+/home/ryan/Workspace/arrowlang/arrow/test/tokenize/float.as:2.1-8: float: 21.1521
+/home/ryan/Workspace/arrowlang/arrow/test/tokenize/float.as:3.1-10: float: 612.41e10
+/home/ryan/Workspace/arrowlang/arrow/test/tokenize/float.as:4.1-6: float: 32e50
+/home/ryan/Workspace/arrowlang/arrow/test/tokenize/float.as:5.1-7: float: 31e+30
+/home/ryan/Workspace/arrowlang/arrow/test/tokenize/float.as:6.1-10: float: 11.24e-30
+/home/ryan/Workspace/arrowlang/arrow/test/tokenize/float.as:7.1-2: end
