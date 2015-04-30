@@ -1,0 +1,15 @@
+# Need python to use the build process
+language: python
+python:
+  - "3.4"
+
+# Install any testing or build dependencies
+install:
+  - apt-get install -y llvm-dev libboost-all-dev
+  - pip install -r requirements.txt
+
+# Command to build project
+before_script: ./waf clean configure build
+
+# Command to run tests
+script: ./waf test
