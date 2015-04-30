@@ -52,49 +52,50 @@ IMPL(Mul)
 IMPL(Div)
 IMPL(Mod)
 
-Module::Module()
-  : sequence() {
+Module::Module(Span span)
+  : Node(span), sequence() {
 }
 
-Unary::Unary(std::shared_ptr<Node> operand)
-  : operand(operand) {
+Unary::Unary(Span span, std::shared_ptr<Node> operand)
+  : Node(span), operand(operand) {
 }
 
-Return::Return(std::shared_ptr<Node> expression)
-  : expression(expression) {
+Return::Return(Span span, std::shared_ptr<Node> expression)
+  : Node(span), expression(expression) {
 }
 
-Binary::Binary(std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs)
-  : lhs(lhs), rhs(rhs) {
+Binary::Binary(Span span, std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs)
+  : Node(span), lhs(lhs), rhs(rhs) {
 }
 
-Function::Function(std::shared_ptr<Identifier> name)
-  : name(name), sequence() {
+Function::Function(Span span, std::shared_ptr<Identifier> name)
+  : Node(span), name(name), sequence() {
 }
 
-Call::Call(std::shared_ptr<Node> expression)
-  : expression(expression) {
+Call::Call(Span span, std::shared_ptr<Node> expression)
+  : Node(span), expression(expression) {
 }
 
 Slot::Slot(
+  Span span,
   std::shared_ptr<Identifier> name,
   std::shared_ptr<Node> type,
   std::shared_ptr<Node> initializer
-) : name(name), type(type), initializer(initializer) {
+) : Node(span), name(name), type(type), initializer(initializer) {
 }
 
-Integer::Integer(const std::string& text, unsigned base)
-  : TextNode(text), base(base) {
+Integer::Integer(Span span, const std::string& text, unsigned base)
+  : TextNode(span, text), base(base) {
 }
 
-TextNode::TextNode(const std::string& text)
-  : text(text) {
+TextNode::TextNode(Span span, const std::string& text)
+  : Node(span), text(text) {
 }
 
-Boolean::Boolean(bool value)
-  : value(value) {
+Boolean::Boolean(Span span, bool value)
+  : Node(span), value(value) {
 }
 
-String::String(const std::vector<std::uint8_t>& bytes)
-  : bytes(bytes) {
+String::String(Span span, const std::vector<std::uint8_t>& bytes)
+  : Node(span), bytes(bytes) {
 }

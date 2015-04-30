@@ -5,19 +5,25 @@
 #include <string>
 #include <memory>
 
+#include "arrow/span.hpp"
+
 namespace arrow {
   namespace ast {
 
     struct Visitor;
 
     struct Node {
+      Node(Span span);
+
       virtual ~Node() noexcept;
 
       virtual void accept(Visitor& v);
+
+      Span span;
     };
 
     struct Module : Node {
-      Module();
+      Module(Span span);
 
       virtual ~Module() noexcept;
 
@@ -27,7 +33,7 @@ namespace arrow {
     };
 
     struct TextNode : Node {
-      TextNode(const std::string& text);
+      TextNode(Span span, const std::string& text);
 
       virtual ~TextNode() noexcept;
 
@@ -45,7 +51,7 @@ namespace arrow {
     };
 
     struct Integer : TextNode {
-      Integer(const std::string& text, unsigned base);
+      Integer(Span span, const std::string& text, unsigned base);
 
       virtual ~Integer() noexcept;
 
@@ -63,7 +69,7 @@ namespace arrow {
     };
 
     struct Boolean : Node {
-      Boolean(bool value);
+      Boolean(Span span, bool value);
 
       virtual ~Boolean() noexcept;
 
@@ -73,7 +79,7 @@ namespace arrow {
     };
 
     struct String : Node {
-      String(const std::vector<std::uint8_t>& bytes);
+      String(Span span, const std::vector<std::uint8_t>& bytes);
 
       virtual ~String() noexcept;
 
@@ -89,7 +95,7 @@ namespace arrow {
     };
 
     struct Return : Node {
-      Return(std::shared_ptr<Node> expression);
+      Return(Span span, std::shared_ptr<Node> expression);
 
       virtual ~Return() noexcept;
 
@@ -99,7 +105,7 @@ namespace arrow {
     };
 
     struct Unary : Node {
-      Unary(std::shared_ptr<Node> operand);
+      Unary(Span span, std::shared_ptr<Node> operand);
 
       virtual ~Unary() noexcept;
 
@@ -129,7 +135,7 @@ namespace arrow {
     };
 
     struct Binary : Node {
-      Binary(std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs);
+      Binary(Span span, std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs);
 
       virtual ~Binary() noexcept;
 
@@ -175,7 +181,7 @@ namespace arrow {
     #undef BINARY_DEFINE
 
     struct Function : Node {
-      Function(std::shared_ptr<Identifier> name);
+      Function(Span span, std::shared_ptr<Identifier> name);
 
       virtual ~Function() noexcept;
 
@@ -186,7 +192,7 @@ namespace arrow {
     };
 
     struct Call : Node {
-      Call(std::shared_ptr<Node> expression);
+      Call(Span span, std::shared_ptr<Node> expression);
 
       virtual ~Call();
 
@@ -198,6 +204,7 @@ namespace arrow {
 
     struct Slot : Node {
       Slot(
+        Span span, 
         std::shared_ptr<Identifier> name,
         std::shared_ptr<Node> type,
         std::shared_ptr<Node> initializer = nullptr);

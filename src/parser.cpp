@@ -16,7 +16,8 @@ Parser::Parser(Tokenizer& t)
 std::shared_ptr<ast::Node> Parser::parse()
 {
   // Declare the top-level (root) module
-  auto module = make_shared<ast::Module>();
+  // FIXME: Need the filename
+  auto module = make_shared<ast::Module>(Span("", {0, 0}, {0, 0}));
 
   // Enumerate and attempt to match rules until the token stream
   // is empty
@@ -191,7 +192,8 @@ bool Parser::parse_integer()
   if (!tok) { return false; }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::Integer>(tok->text, tok->base));
+  _stack.push_front(make_shared<ast::Integer>(
+    tok->span, tok->text, tok->base));
 
   return true;
 }
@@ -207,7 +209,8 @@ bool Parser::parse_string()
   if (!tok) { return false; }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::String>(tok->bytes));
+  _stack.push_front(make_shared<ast::String>(
+    tok->span, tok->bytes));
 
   return true;
 }
@@ -223,7 +226,8 @@ bool Parser::parse_float()
   if (!tok) { return false; }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::Float>(tok->text));
+  _stack.push_front(make_shared<ast::Float>(
+    tok->span, tok->text));
 
   return true;
 }
@@ -239,7 +243,8 @@ bool Parser::parse_boolean()
   if (!tok) { return false; }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::Boolean>(tok->type == Token::Type::True));
+  _stack.push_front(make_shared<ast::Boolean>(
+    tok->span, tok->type == Token::Type::True));
 
   return true;
 }

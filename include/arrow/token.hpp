@@ -32,14 +32,8 @@ struct Token {
     /// An UTF-8 character
     Character,
 
-    /// An ASCII character
-    Byte,
-
     /// An UTF-8 string
     String,
-
-    /// An ASCII string
-    ByteString,
 
     /// And
     And,
@@ -255,20 +249,8 @@ struct CharacterToken : Token {
   std::uint32_t character;
 };
 
-struct ByteToken : Token {
-  ByteToken(std::uint8_t byte, Span span);
-
-  std::uint8_t byte;
-};
-
 struct StringToken : Token {
   StringToken(const std::vector<std::uint8_t>& bytes, Span span);
-
-  std::vector<std::uint8_t> bytes;
-};
-
-struct ByteStringToken : Token {
-  ByteStringToken(const std::vector<std::uint8_t>& bytes, Span span);
 
   std::vector<std::uint8_t> bytes;
 };

@@ -12,9 +12,7 @@ using arrow::IntegerToken;
 using arrow::FloatToken;
 using arrow::IdentifierToken;
 using arrow::CharacterToken;
-using arrow::ByteToken;
 using arrow::StringToken;
-using arrow::ByteStringToken;
 
 std::string arrow::to_string(Token::Type type) noexcept {
   switch (type) {
@@ -29,9 +27,6 @@ std::string arrow::to_string(Token::Type type) noexcept {
 
     case Token::Type::Identifier:
       return "identifier";
-
-    case Token::Type::Byte:
-      return "byte";
 
     case Token::Type::Character:
       return "character";
@@ -216,10 +211,6 @@ IdentifierToken::IdentifierToken(const std::string& text, Span span)
 
 CharacterToken::CharacterToken(std::uint32_t ch, Span span)
   : Token(Type::Character, span), character{ch} {
-}
-
-ByteToken::ByteToken(std::uint8_t by, Span span)
-  : Token(Type::Byte, span), byte{by} {
 }
 
 StringToken::StringToken(const std::vector<std::uint8_t>& bytes, Span span)
