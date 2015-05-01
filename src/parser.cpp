@@ -81,7 +81,7 @@ std::shared_ptr<arrow::Token> Parser::do_expect(
 
     stream << ")";
 
-    Log::get().error(tok->span, stream.str());
+    Log::get().error(tok->span, stream.str().c_str());
 
     return nullptr;
   }

@@ -50,6 +50,9 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
 
+    if ctx.env["CXX_NAME"] == "clang":
+         ctx.env.append_unique("CXXFLAGS", "-D__extern_always_inline=inline")
+
 
 def build(ctx):
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),

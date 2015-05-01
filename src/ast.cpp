@@ -8,11 +8,11 @@ using boost::property_tree::xml_writer_settings;
 using std::shared_ptr;
 using namespace arrow::ast;
 
-Visitor::~Visitor()
+Visitor::~Visitor() noexcept
 {
 }
 
-Show::~Show()
+Show::~Show() noexcept
 {
 }
 

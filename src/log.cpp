@@ -15,19 +15,19 @@ Log& Log::get() noexcept
   return instance;
 }
 
-void Log::error(const std::string& format, ...)
+void Log::error(const char* format, ...)
 {
   va_list args;
   va_start(args, format);
-  this->error(format.c_str(), args);
+  this->error(format, args);
   va_end(args);
 }
 
-void Log::error(arrow::Span span, const std::string& format, ...)
+void Log::error(arrow::Span span, const char* format, ...)
 {
   va_list args;
   va_start(args, format);
-  this->error(span, format.c_str(), args);
+  this->error(span, format, args);
   va_end(args);
 }
 
@@ -51,19 +51,19 @@ void Log::error(arrow::Span span, const char* format, va_list arguments)
   std::fprintf(stderr, "\x1b[0m\n");
 }
 
-void Log::warning(const std::string& format, ...)
+void Log::warning(const char* format, ...)
 {
   va_list args;
   va_start(args, format);
-  this->warning(format.c_str(), args);
+  this->warning(format, args);
   va_end(args);
 }
 
-void Log::warning(arrow::Span span, const std::string& format, ...)
+void Log::warning(arrow::Span span, const char* format, ...)
 {
   va_list args;
   va_start(args, format);
-  this->warning(span, format.c_str(), args);
+  this->warning(span, format, args);
   va_end(args);
 }
 
@@ -87,6 +87,6 @@ void Log::warning(arrow::Span span, const char* format, va_list arguments)
   std::fprintf(stderr, "\x1b[0m\n");
 }
 
-unsigned Log::count(const std::string& level) {
+unsigned Log::count(const char* level) {
   return _counters[level];
 }

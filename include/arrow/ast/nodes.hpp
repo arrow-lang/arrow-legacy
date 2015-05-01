@@ -202,7 +202,7 @@ struct Function : Node {
 struct Call : Node {
   Call(Span span, std::shared_ptr<Node> expression);
 
-  virtual ~Call();
+  virtual ~Call() noexcept;
 
   virtual void accept(Visitor& v);
 

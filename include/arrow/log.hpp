@@ -22,13 +22,13 @@ class Log {
 
   // FIXME: This shouldn't be so many functions
 
-  unsigned count(const std::string& level);
+  unsigned count(const char* level);
 
-  void error(const std::string& format, ...);
-  void error(Span span, const std::string& format, ...);
+  void error(const char* format, ...);
+  void error(Span span, const char* format, ...);
 
-  void warning(const std::string& format, ...);
-  void warning(Span span, const std::string& format, ...);
+  void warning(const char* format, ...);
+  void warning(Span span, const char* format, ...);
 
  private:
   void error(const char* format, va_list arguments);
