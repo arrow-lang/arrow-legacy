@@ -81,12 +81,15 @@ def handle_(binary_path, filename, *args):
     process = Popen(
         [binary_path, filename] + list(args), stdout=PIPE, stderr=PIPE,
         cwd=path.join(path.dirname(__file__), ".."),
-        # shell=True
     )
 
     stdout, _ = process.communicate()
 
     expected = get_expected(filename, "stdout")
+
+    print("expected", expected)
+    print("stdout", stdout)
+
     test = expected == stdout.decode('utf-8')
 
     return test
