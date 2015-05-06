@@ -7,8 +7,8 @@
 using arrow::Buffer;
 
 Buffer::Buffer(const std::string& filename)
-  : _stream(nullptr), _queue()
-{
+  : _stream(nullptr), _queue() {
+
   auto handle = new std::ifstream(filename, std::ios::in|std::ios::binary);
   _stream.reset(handle);
 
@@ -26,6 +26,7 @@ bool Buffer::_push() {
   }
 
   auto ch = utf8::next(beg, end);
+
   if (ch == 0) {
     return false;
   } else {

@@ -45,6 +45,19 @@ auto Tokenizer::_pos() const -> Position {
   return Position(_row, _column);
 }
 
+static bool is_whitespace(std::uint32_t ch) {
+  switch (ch) {
+  case 0x0020:  // SPACE ' '
+  case 0x0009:  // TAB ' '
+    // Considered a whitespace character (that is not a new-line)
+    return true;
+
+  default:
+    // Not a whitespace character
+    return false;
+  }
+}
+
 auto Tokenizer::_make_token(
   Token::Type type, Position begin,
   Position end
@@ -92,8 +105,8 @@ void Tokenizer::_push() {
     return;
   }
 
-  // Consume all whitespace
-  while (std::isblank(_buffer.peek())) { _buffer_next(); }
+  // Consume all whitespace characters
+  while (is_whitespace(_buffer.peek())) { _buffer_next(); }
 
   // Check if we are at a single-line comment indicator and
   // consume the comment.

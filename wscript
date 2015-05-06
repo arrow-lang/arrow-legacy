@@ -84,23 +84,3 @@ def lint(ctx):
         cpplint.ProcessFile(filename, 0)
 
     cpplint._cpplint_state.PrintErrorCounts()
-
-def regenerate_expected_output(ctx):
-    filenames = [path.relpath(x.abspath())
-        for x in ctx.path.ant_glob("test/**/*.as")]
-    for filename in filenames:
-        stem, ext = path.splitext(filename)
-
-        if "tokenize/" in filename:
-            command = ["--tokenize"]
-        elif "parse/" in filename:
-            command = ["--parse"]
-        else:
-            command = []
-
-        process = Popen(["./build/arrow"] + command + [filename],
-                        stdout=PIPE, stderr=PIPE)
-        (stdout, stderr) = process.communicate()
-
-        with open(stem + ".stdout", "wb") as stream:
-            stream.write(stdout)

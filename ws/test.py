@@ -86,10 +86,6 @@ def handle_(binary_path, filename, *args):
     stdout, _ = process.communicate()
 
     expected = get_expected(filename, "stdout")
-
-    print("expected", expected)
-    print("stdout", stdout)
-
     test = expected == stdout.decode('utf-8')
 
     return test
