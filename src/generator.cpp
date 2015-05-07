@@ -32,8 +32,8 @@ Generator::~Generator() noexcept
 }
 
 void Generator::generate(
-  const std::string& name, std::shared_ptr<ast::Node> node)
-{
+  const std::string& name, std::shared_ptr<ast::Node> node
+) {
   // Ensure the x86 target is initialized.
   // NOTE: We should first ask configuration what our target is
   //   and attempt to initialize the right target.
@@ -44,15 +44,11 @@ void Generator::generate(
   _mod = LLVMModuleCreateWithName(name.c_str());
 
   // Discern the triple for our target machine.
-  // TODO: This should be a configuration option.
-  // FIXME: At the very least this should be output with a verbose flag
-  //        for debugging.
   auto triple = LLVMGetDefaultTargetTriple();
   LLVMTargetRef target = nullptr;
   char* error = nullptr;
   if (LLVMGetTargetFromTriple(triple, &target, &error) != 0) {
     // Failed to get a valid target
-    // TODO: Report error
     return;
   }
 
@@ -61,8 +57,7 @@ void Generator::generate(
     target, triple, "", "",
     LLVMCodeGenLevelDefault,
     LLVMRelocDefault,
-    LLVMCodeModelDefault
-  );
+    LLVMCodeModelDefault);
 
   // Set the target triple (on the IR module)
   LLVMSetTarget(_mod, triple);
@@ -88,8 +83,7 @@ void Generator::generate(
   node->accept(builder);
 }
 
-void Generator::print(std::ostream& os) const
-{
+void Generator::print(std::ostream& os) const {
   // Output the generated LLVM IR.
   auto bytes = LLVMPrintModuleToString(_mod);
 

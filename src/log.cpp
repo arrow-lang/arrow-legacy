@@ -1,38 +1,38 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
 #include <cstdio>
 #include <cstdlib>
+
 #include "arrow/log.hpp"
 
 using arrow::Log;
 
-Log::Log()
-  : _counters()
-{
+Log::Log() : _counters() {
 }
 
-Log& Log::get() noexcept
-{
+Log& Log::get() noexcept {
   static Log instance;
   return instance;
 }
 
-void Log::error(const char* format, ...)
-{
+void Log::error(const char* format, ...) {
   va_list args;
   va_start(args, format);
   this->error(format, args);
   va_end(args);
 }
 
-void Log::error(arrow::Span span, const char* format, ...)
-{
+void Log::error(arrow::Span span, const char* format, ...) {
   va_list args;
   va_start(args, format);
   this->error(span, format, args);
   va_end(args);
 }
 
-void Log::error(const char* format, va_list arguments)
-{
+void Log::error(const char* format, va_list arguments) {
   _counters["error"] += 1;
 
   std::fprintf(stderr, "\x1b[0;37m%s", "arrow: ");
@@ -41,8 +41,7 @@ void Log::error(const char* format, va_list arguments)
   std::fprintf(stderr, "\x1b[0m\n");
 }
 
-void Log::error(arrow::Span span, const char* format, va_list arguments)
-{
+void Log::error(arrow::Span span, const char* format, va_list arguments) {
   _counters["error"] += 1;
 
   std::fprintf(stderr, "\x1b[0;37m%s%s", span.to_string().c_str(), ": ");
@@ -51,24 +50,21 @@ void Log::error(arrow::Span span, const char* format, va_list arguments)
   std::fprintf(stderr, "\x1b[0m\n");
 }
 
-void Log::warning(const char* format, ...)
-{
+void Log::warning(const char* format, ...) {
   va_list args;
   va_start(args, format);
   this->warning(format, args);
   va_end(args);
 }
 
-void Log::warning(arrow::Span span, const char* format, ...)
-{
+void Log::warning(arrow::Span span, const char* format, ...) {
   va_list args;
   va_start(args, format);
   this->warning(span, format, args);
   va_end(args);
 }
 
-void Log::warning(const char* format, va_list arguments)
-{
+void Log::warning(const char* format, va_list arguments) {
   _counters["warning"] += 1;
 
   std::fprintf(stderr, "\x1b[0;37m%s", "arrow: ");
@@ -77,8 +73,7 @@ void Log::warning(const char* format, va_list arguments)
   std::fprintf(stderr, "\x1b[0m\n");
 }
 
-void Log::warning(arrow::Span span, const char* format, va_list arguments)
-{
+void Log::warning(arrow::Span span, const char* format, va_list arguments) {
   _counters["warning"] += 1;
 
   std::fprintf(stderr, "\x1b[0;37m%s%s", span.to_string().c_str(), ": ");

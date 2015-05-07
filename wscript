@@ -26,6 +26,7 @@ def configure(ctx):
     ctx.check(lib='dl', mandatory=True, uselib_store='DL')
     ctx.check(lib='tinfo', mandatory=True, uselib_store='TINFO')
     ctx.check(lib='z', mandatory=True, uselib_store='Z')
+    ctx.check(lib='gmp', mandatory=True, uselib_store='GMP')
 
     ctx.check_boost(lib="system program_options filesystem")
 
@@ -59,13 +60,14 @@ def build(ctx):
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),
                 includes=["include", "lib"],
                 target="arrow",
-                use=["BOOST", "LLVM", "PTHREAD", "DL", "TINFO", "Z"])
+                use=["BOOST", "LLVM", "PTHREAD", "DL", "TINFO", "Z", "GMP"])
 
 
 def test(ctx):
     result = ws.test.run(ctx)
     if not result:
         sys.exit(1)
+
 
 def lint(ctx):
     import cpplint

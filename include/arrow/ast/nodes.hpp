@@ -63,6 +63,8 @@ struct Integer : TextNode {
 
   virtual void accept(AbstractVisitor& v);
 
+  std::uint64_t minimum_bits() const;
+
   unsigned base;
 };
 

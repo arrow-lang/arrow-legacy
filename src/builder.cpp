@@ -4,10 +4,12 @@
 // See accompanying file LICENSE
 
 #include "arrow/builder.hpp"
+#include "arrow/resolver.hpp"
 #include "arrow/generator.hpp"
 #include "arrow/log.hpp"
 
 using arrow::Builder;
+using arrow::resolve;
 namespace code = arrow::code;
 namespace ast = arrow::ast;
 
@@ -18,13 +20,11 @@ Builder::Builder(arrow::Generator& g, code::Scope& scope)
 Builder::~Builder() noexcept {
 }
 
+// Function
+// -----------------------------------------------------------------------------
 void Builder::visit(ast::Function& node) {
   auto& name = node.name->text;
   auto item = std::static_pointer_cast<code::Function>(_cs->get(name));
-  if (item == nullptr) {
-    // TODO: Report error (?)
-    return;
-  }
 
   auto block = LLVMAppendBasicBlock(item->handle(), "");
   LLVMPositionBuilderAtEnd(_g._irb, block);
@@ -36,6 +36,8 @@ void Builder::visit(ast::Function& node) {
   LLVMBuildRetVoid(_g._irb);
 }
 
+// Call
+// -----------------------------------------------------------------------------
 void Builder::visit(ast::Call& node) {
   auto item = std::static_pointer_cast<code::Function>(
     build_scalar(*node.expression));
@@ -51,33 +53,40 @@ void Builder::visit(ast::Call& node) {
   LLVMBuildCall(_g._irb, handle, nullptr, 0, "");
 }
 
+// Identifier
+// -----------------------------------------------------------------------------
 void Builder::visit(ast::Identifier& node) {
   auto item = _cs->get(node.text);
   if (item == nullptr) {
-    // TODO: Report location
-    Log::get().error("use of unresolved name `%s`", node.text.c_str());
+    Log::get().error(
+      node.span, "use of unresolved name `%s`", node.text.c_str());
+
     return;
   }
 
   _stack.push(item);
 }
 
-void Builder::visit(ast::Slot& node) {
-  auto& name = node.name->text;
+// Slot
+// -----------------------------------------------------------------------------
+void Builder::visit(ast::Slot& x) {
+  auto& name = x.name->text;
 
   // Check if we are overwriting an item in the current scope
   // NOTE: We need to eventually decide if we will allow this or not
   //  I'm leaning towards allowing as long as we output a warning for
-  //  an unsued variable
+  //  an unused variable
   if (_cs->exists(name, false)) {
-    Log::get().warning(node.name->span, "redefinition of '%s'", name.c_str());
+    Log::get().warning(x.name->span, "redefinition of '%s'", name.c_str());
   }
 
-  auto type_item = build_scalar(*node.type);
+  // Resolve the type of the initializer
+  auto initializer_type = resolve(_g, *x.initializer);
+
+  auto type_item = build_scalar(*x.type);
   if (!type_item) return;
   if (!type_item->is_type()) {
-    // TODO: Report location
-    Log::get().error(node.type->span, "expected typename");
+    Log::get().error(x.type->span, "expected typename");
     return;
   }
 
@@ -89,6 +98,20 @@ void Builder::visit(ast::Slot& node) {
   // the current scope
   _cs->set(name, std::make_shared<code::Slot>(
     handle,
-    name
-  ));
+    name));
 }
+
+// // Integer
+// // -----------------------------------------------------------------------------
+// void Builder::visit(ast::Integer& x) {
+//   // Resolve the type
+//   auto type = resolve(x);
+//
+//   // Build the value handle
+//   auto handle = LLVMConstIntOfStringAndSize(
+//     type.handle(), x.text.c_str(), x.text.size(), x.base);
+//
+//   // Build the code handle
+//   auto item = std::make_shared<code::Integer>(
+//     )
+// }

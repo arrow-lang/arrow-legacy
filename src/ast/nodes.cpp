@@ -1,4 +1,7 @@
+#include <gmp.h>
+
 #include "arrow/ast.hpp"
+
 
 using std::shared_ptr;
 using namespace arrow::ast;
@@ -102,4 +105,14 @@ Boolean::Boolean(Span span, bool value)
 
 String::String(Span span, const std::vector<std::uint8_t>& bytes)
   : Node(span), bytes(bytes) {
+}
+
+std::uint64_t Integer::minimum_bits() const {
+  // Find the number of bits we need (at least) to store
+  // this integer value
+  mpz_t value;
+  mpz_init_set_str(value, text.c_str(), base);
+  auto size = mpz_sizeinbase(value, 2);
+  mpz_clear(value);
+  return size;
 }

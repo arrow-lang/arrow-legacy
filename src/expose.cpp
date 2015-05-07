@@ -17,8 +17,8 @@ Expose::Expose(arrow::Generator& g, code::Scope& scope)
 
 Expose::~Expose() noexcept { }
 
-void Expose::visit_function(ast::Function& node) {
-  auto& name = node.name->text;
+void Expose::visit_function(ast::Function& x) {
+  auto& name = x.name->text;
 
   // FIXME: auto type = resolve(node)
   auto type = LLVMFunctionType(LLVMVoidType(), nullptr, 0, false);
