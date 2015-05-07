@@ -14,7 +14,7 @@ namespace arrow {
 
 class Generator;
 
-class Builder : public ast::Visitor {
+class Builder : public ast::AbstractVisitor {
  public:
   Builder(Generator& g, code::Scope& _scope);
 

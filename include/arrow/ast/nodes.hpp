@@ -16,14 +16,14 @@
 namespace arrow {
 namespace ast {
 
-struct Visitor;
+class AbstractVisitor;
 
 struct Node {
   explicit Node(Span span);
 
   virtual ~Node() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   Span span;
 };
@@ -33,7 +33,7 @@ struct Module : Node {
 
   virtual ~Module() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::deque<std::shared_ptr<Node>> sequence;
 };
@@ -43,7 +43,7 @@ struct TextNode : Node {
 
   virtual ~TextNode() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::string text;
 };
@@ -53,7 +53,7 @@ struct Identifier : TextNode {
 
   virtual ~Identifier() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 };
 
 struct Integer : TextNode {
@@ -61,7 +61,7 @@ struct Integer : TextNode {
 
   virtual ~Integer() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   unsigned base;
 };
@@ -71,7 +71,7 @@ struct Float : TextNode {
 
   virtual ~Float() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 };
 
 struct Boolean : Node {
@@ -79,7 +79,7 @@ struct Boolean : Node {
 
   virtual ~Boolean() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   bool value;
 };
@@ -89,7 +89,7 @@ struct String : Node {
 
   virtual ~String() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::string text() {
     return std::string(
@@ -105,7 +105,7 @@ struct Return : Node {
 
   virtual ~Return() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Node> expression;
 };
@@ -115,7 +115,7 @@ struct Unary : Node {
 
   virtual ~Unary() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Node> operand;
 };
@@ -124,7 +124,7 @@ struct Unary : Node {
   struct N : Unary { \
     using Unary::Unary; \
     virtual ~N() noexcept; \
-    virtual void accept(Visitor& v); \
+    virtual void accept(AbstractVisitor& v); \
   }
 
 UNARY_DEFINE(Promote);
@@ -139,7 +139,7 @@ struct Break : Node {
 
   virtual ~Break() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 };
 
 struct Binary : Node {
@@ -147,7 +147,7 @@ struct Binary : Node {
 
   virtual ~Binary() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Node> lhs;
   std::shared_ptr<Node> rhs;
@@ -157,7 +157,7 @@ struct Binary : Node {
   struct N : Binary { \
     using Binary::Binary; \
     virtual ~N() noexcept; \
-    virtual void accept(Visitor& v); \
+    virtual void accept(AbstractVisitor& v); \
   }
 
 BINARY_DEFINE(Assign);
@@ -193,7 +193,7 @@ struct Function : Node {
 
   virtual ~Function() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Identifier> name;
   std::deque<std::shared_ptr<Node>> sequence;
@@ -204,7 +204,7 @@ struct Call : Node {
 
   virtual ~Call() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Node> expression;
 };
@@ -218,7 +218,7 @@ struct Slot : Node {
 
   virtual ~Slot() noexcept;
 
-  virtual void accept(Visitor& v);
+  virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Identifier> name;
   std::shared_ptr<Node> type;

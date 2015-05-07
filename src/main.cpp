@@ -105,9 +105,7 @@ int main(int argc, char** argv) {
 
   if (vm.count("parse")) {
     // Show the AST
-    ast::Show show;
-    module->accept(show);
-    show.show(std::cout);
+    ast::Show(std::cout).run(*module);
 
     return EXIT_SUCCESS;
   }

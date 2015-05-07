@@ -16,7 +16,7 @@
 namespace arrow {
 
 class Builder;
-class Extractor;
+class Expose;
 
 class Generator {
  public:
@@ -34,7 +34,7 @@ class Generator {
 
  private:
   friend class Builder;
-  friend class Extractor;
+  friend class Expose;
 
   void _declare_basic_types();
 

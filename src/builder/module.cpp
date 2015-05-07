@@ -5,9 +5,8 @@
 
 #include "arrow/builder.hpp"
 #include "arrow/generator.hpp"
-#include "arrow/extractor.hpp"
+#include "arrow/expose.hpp"
 #include "arrow/log.hpp"
-#include "arrow/extractor.hpp"
 
 using arrow::Builder;
 namespace code = arrow::code;
@@ -19,12 +18,10 @@ void Builder::visit(ast::Module& node) {
   auto mod = std::make_shared<code::Module>("_", &_scope);
 
   // Extract named items from the sequence (for name hoisting)
-  arrow::Extractor extractor{_g, mod->scope};
-  node.accept(extractor);
+  arrow::Expose{_g, mod->scope}.run(node);
 
   // Take the remaining non-hoisted items and continue normal
   // iterative building
-  // auto& rem = extractor.remaining();
   for (auto& item : node.sequence) {
     // Remember the size of the stack at this point (so we can
     // detect if an item gets pushed; and then remove it)

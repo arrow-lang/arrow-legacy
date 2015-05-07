@@ -5,7 +5,7 @@ using namespace arrow::ast;
 
 #define IMPL(N) \
   N::~N() noexcept { } \
-  void N::accept(Visitor& v) { v.visit(*this); }
+  void N::accept(AbstractVisitor& v) { v.visit(*this); }
 
 IMPL(Node)
 IMPL(TextNode)
