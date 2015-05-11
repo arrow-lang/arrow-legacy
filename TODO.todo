@@ -1,4 +1,6 @@
- - [ ] Assignment (Stores)
+ - [x] Initialize (Stores)
+ - [ ] LValue vs. RValue -- x.handle() vs. x.value() vs. x.address() [x.has_address()]
  - [ ] Identifier resolution (Loads)
+ - [ ] Type promotion: int8 -> int16 / int64 -> int128 / int* -> float* / etc.
  - [ ] Function parameters
  - [ ] Function return

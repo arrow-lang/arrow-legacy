@@ -15,6 +15,10 @@ struct Item {
   virtual bool is_type() const noexcept {
     return false;
   }
+
+  virtual bool is_value() const noexcept {
+    return false;
+  }
 };
 
 }  // namespace code

@@ -29,7 +29,7 @@ class Builder : public ast::AbstractVisitor {
   virtual void visit(ast::Break&) { }
   virtual void visit(ast::Slot&);
   virtual void visit(ast::Return&) { }
-  virtual void visit(ast::Integer&) { }
+  virtual void visit(ast::Integer&);
   virtual void visit(ast::Float&) { }
   virtual void visit(ast::Boolean&) { }
   virtual void visit(ast::String&) { }
@@ -57,7 +57,7 @@ class Builder : public ast::AbstractVisitor {
   virtual void visit(ast::BitAnd&) { }
   virtual void visit(ast::BitXor&) { }
   virtual void visit(ast::BitOr&) { }
-  virtual void visit(ast::Add&) { }
+  virtual void visit(ast::Add&);
   virtual void visit(ast::Sub&) { }
   virtual void visit(ast::Mul&) { }
   virtual void visit(ast::Div&) { }

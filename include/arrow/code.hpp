@@ -12,6 +12,7 @@
 #include "arrow/code/item.hpp"
 #include "arrow/code/scope.hpp"
 #include "arrow/code/type.hpp"
+#include "arrow/code/value.hpp"
 
 namespace arrow {
 namespace code {
@@ -29,7 +30,7 @@ struct Module : Item {
 
 /// A named function definition
 struct Function : Item {
-  Function(LLVMValueRef handle, const std::string& name);
+  Function(LLVMValueRef handle, const std::string& name, Scope* parent);
 
   virtual ~Function() noexcept;
 
@@ -38,25 +39,24 @@ struct Function : Item {
   }
 
   std::string name;
+  Scope scope;
 
  private:
   LLVMValueRef _handle;
 };
 
 /// A named slot declaration
-struct Slot : Item {
-  Slot(LLVMValueRef handle, const std::string& name);
+struct Slot : Value {
+  Slot(
+    const std::string& name, LLVMValueRef handle, std::shared_ptr<Type> type);
 
   virtual ~Slot() noexcept;
 
-  virtual LLVMValueRef handle() noexcept {
-    return _handle;
+  virtual bool is_address() const noexcept {
+    return true;
   }
 
   std::string name;
-
- private:
-  LLVMValueRef _handle;
 };
 
 }  // namespace code

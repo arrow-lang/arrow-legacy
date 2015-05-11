@@ -29,8 +29,8 @@ void Builder::visit(ast::Function& node) {
   auto block = LLVMAppendBasicBlock(item->handle(), "");
   LLVMPositionBuilderAtEnd(_g._irb, block);
 
-  for (auto& item : node.sequence) {
-    item->accept(*this);
+  for (auto& el : node.sequence) {
+    build(*el, &item->scope);
   }
 
   LLVMBuildRetVoid(_g._irb);
@@ -80,8 +80,16 @@ void Builder::visit(ast::Slot& x) {
     Log::get().warning(x.name->span, "redefinition of '%s'", name.c_str());
   }
 
-  // Resolve the type of the initializer
-  auto initializer_type = resolve(_g, *x.initializer);
+  // Build the initializer expression
+  // TODO: Only if we have one
+  auto initializer_item = build_scalar(*x.initializer);
+  if (!initializer_item) return;
+  if (!initializer_item->is_value()) {
+    Log::get().error(x.initializer->span, "expected value");
+    return;
+  }
+
+  auto initializer = std::static_pointer_cast<code::Value>(initializer_item);
 
   auto type_item = build_scalar(*x.type);
   if (!type_item) return;
@@ -90,6 +98,8 @@ void Builder::visit(ast::Slot& x) {
     return;
   }
 
+  // TODO: Check for type mis-match
+
   // Build the slot decl with the code generator
   auto type = std::static_pointer_cast<code::Type>(type_item);
   auto handle = LLVMBuildAlloca(_g._irb, type->handle(), name.c_str());
@@ -97,21 +107,23 @@ void Builder::visit(ast::Slot& x) {
   // Create and set the new slot decl in
   // the current scope
   _cs->set(name, std::make_shared<code::Slot>(
+    name,
     handle,
-    name));
-}
+    type));
 
-// // Integer
-// // -----------------------------------------------------------------------------
-// void Builder::visit(ast::Integer& x) {
-//   // Resolve the type
-//   auto type = resolve(x);
-//
-//   // Build the value handle
-//   auto handle = LLVMConstIntOfStringAndSize(
-//     type.handle(), x.text.c_str(), x.text.size(), x.base);
-//
-//   // Build the code handle
-//   auto item = std::make_shared<code::Integer>(
-//     )
-// }
+  if (initializer) {
+    // TODO: Extract into an `assign` function
+
+    if (initializer->is_address()) {
+      // Create a load for the address
+      auto addr_han = LLVMBuildLoad(_g._irb, initializer->handle(), "");
+
+      // Create a store for the value at the address
+      LLVMBuildStore(_g._irb, addr_han, handle);
+
+    } else {
+      // Create a store for the initializer
+      LLVMBuildStore(_g._irb, initializer->handle(), handle);
+    }
+  }
+}

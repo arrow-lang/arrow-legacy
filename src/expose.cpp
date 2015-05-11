@@ -27,5 +27,6 @@ void Expose::visit_function(ast::Function& x) {
   // Create and set the new function item in the scope
   _scope.set(name, std::make_shared<code::Function>(
     handle,
-    name));
+    name,
+    &_scope));
 }
