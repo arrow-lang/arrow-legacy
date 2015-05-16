@@ -9,6 +9,7 @@
 #include <stack>
 #include "arrow/ast.hpp"
 #include "arrow/code.hpp"
+#include "arrow/log.hpp"
 
 namespace arrow {
 
@@ -74,6 +75,20 @@ class Builder : public ast::AbstractVisitor {
 
   std::shared_ptr<code::Item> build_scalar(
     ast::Node& node, code::Scope* scope = nullptr);
+
+  template <typename T>
+  std::shared_ptr<T> build_scalar_of(
+    ast::Node& node, code::Scope* scope = nullptr
+  ) {
+    auto item_generic = build_scalar(node, scope);
+    auto item = std::dynamic_pointer_cast<T>(item_generic);
+    if (item == nullptr) {
+      Log::get().error(node.span, "expected %s", typeid(T).name());
+    }
+
+    return item;
+  }
+
 };
 
 }  // namespace arrow

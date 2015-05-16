@@ -13,6 +13,9 @@
 #include "arrow/code/type.hpp"
 
 namespace arrow {
+
+class Generator;
+
 namespace code {
 
 struct Value : Item {
@@ -24,11 +27,13 @@ struct Value : Item {
     return true;
   }
 
-  virtual bool is_address() const noexcept {
+  virtual bool has_address() const noexcept {
     return false;
   }
 
-  virtual LLVMValueRef handle() const noexcept;
+  virtual LLVMValueRef value_of(Generator& g) const noexcept;
+  virtual LLVMValueRef address_of(Generator& g) const noexcept;
+
   virtual std::shared_ptr<Type> type() const noexcept;
 
  private:
@@ -36,16 +41,6 @@ struct Value : Item {
    std::shared_ptr<Type> _type;
 
 };
-
-// struct Address : Value {
-//   using Value::Value;
-//
-//   virtual ~Address() noexcept;
-//
-//   virtual bool is_address() const noexcept {
-//     return true;
-//   }
-// };
 
 }  // namespace code
 }  // namespace arrow

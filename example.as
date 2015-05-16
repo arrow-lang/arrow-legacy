@@ -14,6 +14,5 @@
 // }
 
 def main() {
-  let x: int32 = 303030;
-  let num: int32 = 100300 + x;
+  let x: int32 = int32;
 }

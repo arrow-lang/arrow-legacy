@@ -4,6 +4,7 @@
 // See accompanying file LICENSE
 
 #include "arrow/code/value.hpp"
+#include "arrow/generator.hpp"
 
 using arrow::code::Value;
 
@@ -14,10 +15,23 @@ Value::Value(LLVMValueRef handle, std::shared_ptr<Type> type)
 Value::~Value() noexcept {
 }
 
-LLVMValueRef Value::handle() const noexcept {
-  return _handle;
-}
-
 auto Value::type() const noexcept -> std::shared_ptr<Type> {
   return _type;
+}
+
+LLVMValueRef Value::value_of(Generator& g) const noexcept {
+  if (has_address()) {
+    return LLVMBuildLoad(g._irb, _handle, "");
+  } else {
+    return _handle;
+  }
+}
+
+LLVMValueRef Value::address_of(Generator& g) const noexcept {
+  if (has_address()) {
+    return _handle;
+  } else {
+    // TODO: Do the conversion
+    return nullptr;
+  }
 }

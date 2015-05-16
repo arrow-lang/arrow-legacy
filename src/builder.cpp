@@ -113,17 +113,7 @@ void Builder::visit(ast::Slot& x) {
 
   if (initializer) {
     // TODO: Extract into an `assign` function
-
-    if (initializer->is_address()) {
-      // Create a load for the address
-      auto addr_han = LLVMBuildLoad(_g._irb, initializer->handle(), "");
-
-      // Create a store for the value at the address
-      LLVMBuildStore(_g._irb, addr_han, handle);
-
-    } else {
-      // Create a store for the initializer
-      LLVMBuildStore(_g._irb, initializer->handle(), handle);
-    }
+    // Create a store for the initializer
+    LLVMBuildStore(_g._irb, initializer->value_of(_g), handle);
   }
 }

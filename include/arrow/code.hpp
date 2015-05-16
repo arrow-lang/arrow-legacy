@@ -52,7 +52,7 @@ struct Slot : Value {
 
   virtual ~Slot() noexcept;
 
-  virtual bool is_address() const noexcept {
+  virtual bool has_address() const noexcept {
     return true;
   }
 
