@@ -14,5 +14,5 @@
 // }
 
 def main() {
-  let x: int32 = int32;
+  let x: int8 = (5 + 3) / 2;
 }

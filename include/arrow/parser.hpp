@@ -44,6 +44,7 @@ class Parser {
   bool parse_primary_expression();
   bool parse_postfix_expression();
   bool parse_unary_expression();
+  bool parse_paren_expression();
   bool parse_integer();
   bool parse_float();
   bool parse_function();

@@ -45,11 +45,11 @@ void Resolver::visit(ast::Integer& x) {
   _stack.push(std::make_shared<code::IntegerType>(bits, true));
 }
 
-void Resolver::visit(ast::Float& x) {
+void Resolver::visit(ast::Float&) {
   _stack.push(std::make_shared<code::FloatType>(64));
 }
 
-void Resolver::visit(ast::Boolean& x) {
+void Resolver::visit(ast::Boolean&) {
   _stack.push(std::make_shared<code::BooleanType>());
 }
 

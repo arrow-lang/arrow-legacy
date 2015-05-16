@@ -181,6 +181,9 @@ bool Parser::parse_primary_expression()
     case Token::Type::False:
       return parse_boolean();
 
+    case Token::Type::LeftParenthesis:
+      return parse_paren_expression();
+
     default:
       // Unknown expression
       return false;
@@ -251,6 +254,21 @@ bool Parser::parse_boolean()
   // Declare (and push) the node
   _stack.push_front(make_shared<ast::Boolean>(
     tok->span, tok->type == Token::Type::True));
+
+  return true;
+}
+
+// Parenthetical Expression
+// ----------------------------------------------------------------------------
+bool Parser::parse_paren_expression() {
+  // Expect `(`
+  if (!expect(Token::Type::LeftParenthesis)) { return false; }
+
+  // Attempt to parse the inner expression
+  if (!parse_expression()) { return false; }
+
+  // Expect `)`
+  if (!expect(Token::Type::RightParenthesis)) { return false; }
 
   return true;
 }

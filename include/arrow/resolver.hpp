@@ -67,10 +67,10 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::BitXor&) { }
   virtual void visit(ast::BitOr&) { }
   virtual void visit(ast::Add&);
-  virtual void visit(ast::Sub&) { }
-  virtual void visit(ast::Mul&) { }
-  virtual void visit(ast::Div&) { }
-  virtual void visit(ast::Mod&) { }
+  virtual void visit(ast::Sub&);
+  virtual void visit(ast::Mul&);
+  virtual void visit(ast::Div&);
+  virtual void visit(ast::Mod&);
 
  private:
   Generator& _g;

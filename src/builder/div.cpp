@@ -10,7 +10,7 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::Add& x) {
+void Builder::visit(ast::Div& x) {
   // Resolve the type
   auto type = resolve(_g, x);
 
@@ -20,7 +20,7 @@ void Builder::visit(ast::Add& x) {
   if (!lhs || !rhs) return;
 
   // Build the instruction
-  auto handle = LLVMBuildAdd(
+  auto handle = LLVMBuildSDiv(
     _g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
 
   // Build and push the code handle
