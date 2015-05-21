@@ -4,3 +4,6 @@
  - [ ] Type promotion: int8 -> int16 / int64 -> int128 / int* -> float* / etc.
  - [ ] Function parameters
  - [ ] Function return
+
+
+ - [ ] Resolve FOR Identifiers

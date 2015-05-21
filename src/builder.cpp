@@ -90,18 +90,24 @@ void Builder::visit(ast::Slot& x) {
   }
 
   auto initializer = std::static_pointer_cast<code::Value>(initializer_item);
+  auto type = initializer->type();
 
-  auto type_item = build_scalar(*x.type);
-  if (!type_item) return;
-  if (!type_item->is_type()) {
-    Log::get().error(x.type->span, "expected typename");
-    return;
+  std::printf("Builder::viist(ast::Slot) %p\n", type.get());
+
+  if (x.type != nullptr) {
+    auto type_item = build_scalar(*x.type);
+    if (!type_item) return;
+    if (!type_item->is_type()) {
+      Log::get().error(x.type->span, "expected typename");
+      return;
+    }
+
+    // TODO: Check for type mis-match
+
+    // Build the slot decl with the code generator
+    type = std::static_pointer_cast<code::Type>(type_item);
   }
 
-  // TODO: Check for type mis-match
-
-  // Build the slot decl with the code generator
-  auto type = std::static_pointer_cast<code::Type>(type_item);
   auto handle = LLVMBuildAlloca(_g._irb, type->handle(), name.c_str());
 
   // Create and set the new slot decl in

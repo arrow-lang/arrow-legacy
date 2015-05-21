@@ -13,6 +13,7 @@ using arrow::resolve;
 void Builder::visit(ast::Add& x) {
   // Resolve the type
   auto type = resolve(_g, x);
+  std::printf("Builder::visit(ast::Add): %p\n", type.get());
 
   // Build the operands
   auto lhs = build_scalar_of<code::Value>(*x.lhs);

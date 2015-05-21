@@ -10,6 +10,7 @@ using arrow::code::Value;
 
 Value::Value(LLVMValueRef handle, std::shared_ptr<Type> type)
   : _handle{handle}, _type{type} {
+  std::printf("build Value with %p\n", type.get());
 }
 
 Value::~Value() noexcept {

@@ -13,7 +13,14 @@ void Resolver::visit(ast::Add& x) {
   auto lhs = resolve(_g, *(x.lhs));
   auto rhs = resolve(_g, *(x.rhs));
 
-  // Pick the first one and push the code handle
-  // TODO: Perform type promotion / checking
-  _stack.push(lhs);
+  // Attempt to find a common type between the lhs and rhs
+  // NOTE: We should validate that `+` is actually supported between the two
+  //  types
+  // NOTE: This needs to be extended once we support `ptr + int`
+  std::printf("[Resolver::visit(ast::Add)] lhs: %p, rhs: %p\n", lhs.get(), rhs.get());
+
+  auto type = common_type(lhs, rhs);
+  if (!type) return;
+
+  _stack.push(type);
 }

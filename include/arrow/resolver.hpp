@@ -73,6 +73,10 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::Mod&);
 
  private:
+  std::shared_ptr<code::Type> common_type(
+    std::shared_ptr<code::Type> lhs,
+    std::shared_ptr<code::Type> rhs);
+
   Generator& _g;
   std::stack<std::shared_ptr<code::Type>> _stack;
 };

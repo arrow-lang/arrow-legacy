@@ -748,18 +748,22 @@ bool Parser::parse_slot() {
   auto name = std::static_pointer_cast<ast::Identifier>(_stack.front());
   _stack.pop_front();
 
-  // Expect `:`
-  if (!expect(Token::Type::Colon)) { return false; }
-
-  // Parse type
-  if (!parse_type()) { return false; }
-  auto type = _stack.front();
-  _stack.pop_front();
-
   // Declare node
   auto node = make_shared<ast::Slot>(
-    Span(_t.filename(), inital_tok->span.begin, type->span.end),
-    name, type);
+    Span(_t.filename(), inital_tok->span.begin, name->span.end),
+    name, nullptr);
+
+  // Check for `:` (to indicate the type annotation)
+  if (_t.peek(0)->type == Token::Type::Colon) {
+    // Expect `:`
+    if (!expect(Token::Type::Colon)) { return false; }
+
+    // Parse type
+    if (!parse_type()) { return false; }
+    node->type = _stack.front();
+    node->span.end = node->type->span.end;
+    _stack.pop_front();
+  }
 
   // Check for `=` (to indicate an initializer)
   if (_t.peek(0)->type == Token::Type::Equals) {

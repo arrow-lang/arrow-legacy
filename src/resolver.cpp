@@ -58,3 +58,42 @@ std::shared_ptr<code::Type> arrow::resolve(Generator& _g, ast::Node& x) {
   resolver.run(x);
   return resolver.get();
 }
+
+// Attempt to resolve a single compatible type from two passed
+// types. Respects integer and float promotion rules.
+std::shared_ptr<code::Type> Resolver::common_type(
+  std::shared_ptr<code::Type> lhs,
+  std::shared_ptr<code::Type> rhs
+) {
+  std::printf("common_type: begin\n");
+
+  // If the types are the same; return the first
+  // TODO: This needs to be extended into a full recursive comparison when
+  //  we have generated types (eg. pointers of arbitrary depth)
+  if (lhs == rhs) return lhs;
+
+  if (lhs->is<code::IntegerType>() && rhs->is<code::IntegerType>()) {
+    // We're dealing with two integer types; determine the integer
+    // with the greater rank
+    auto& int_lhs = lhs->as<code::IntegerType>();
+    auto& int_rhs = rhs->as<code::IntegerType>();
+
+    if (int_lhs.is_signed == int_rhs.is_signed) {
+      // If the sign is equivalent; do a direct compare of bit size
+      return (int_lhs.bits > int_rhs.bits) ? lhs : rhs;
+    }
+
+    if (int_lhs.is_signed && int_lhs.bits > int_rhs.bits) {
+      return lhs;
+    }
+
+    if (int_rhs.is_signed && int_rhs.bits > int_lhs.bits) {
+      return rhs;
+    }
+  }
+
+  // Couldn't find a common type
+  // TODO: Where should the error report be?
+  std::printf("common_type: what are we?\n");
+  return nullptr;
+}
