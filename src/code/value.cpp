@@ -60,6 +60,38 @@ auto Value::cast(Generator& g, std::shared_ptr<Type> type) -> std::shared_ptr<Va
         }
       }
     }
+
+    if (_type->is<code::IntegerType>() && type->is<code::FloatType>()) {
+      // Convert integer to float
+      if (_type->is_signed()) {
+        res = LLVMBuildSIToFP(g._irb, res, type->handle(), "");
+      } else {
+        res = LLVMBuildUIToFP(g._irb, res, type->handle(), "");
+      }
+    }
+
+    if (type->is<code::IntegerType>() && _type->is<code::FloatType>()) {
+      // Convert float to integer
+      if (type->is_signed()) {
+        res = LLVMBuildFPToSI(g._irb, res, type->handle(), "");
+      } else {
+        res = LLVMBuildFPToUI(g._irb, res, type->handle(), "");
+      }
+    }
+
+    if (type->is<code::FloatType>() && _type->is<code::FloatType>()) {
+      // Cast between floats
+      auto& float_from = _type->as<code::FloatType>();
+      auto& float_to = type->as<code::FloatType>();
+
+      if (float_from.bits > float_to.bits) {
+        // Truncate
+        res = LLVMBuildFPTrunc(g._irb, res, type->handle(), "");
+      } else {
+        // Extend
+        res = LLVMBuildFPExt(g._irb, res, type->handle(), "");
+      }
+    }
   }
 
   // Return a new, casted value

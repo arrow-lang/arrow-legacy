@@ -21,20 +21,30 @@ void Builder::visit(ast::Slot& x) {
     Log::get().warning(x.name->span, "redefinition of '%s'", name.c_str());
   }
 
-  // Build the initializer expression
+  // Build the initializer expression (only if we have one)
+  std::shared_ptr<code::Value> initializer = nullptr;
+  std::shared_ptr<code::Type> type;
+  if (x.initializer) {
+    initializer = build_scalar_of<code::Value>(*x.initializer);
+    if (!initializer) return;
 
-  // TODO: Only if we have one
-  auto initializer = build_scalar_of<code::Value>(*x.initializer);
-  if (!initializer) return;
-  auto type = initializer->type();
+    type = initializer->type();
+  }
 
+  // Use the declared type (if present)
   if (x.type != nullptr) {
     type = build_scalar_of<code::Type>(*x.type);
     if (!type) return;
 
     // TODO: Check for type mis-match
+
+    // Perform the cast (if we have an initializer)
+    if (initializer) {
+      initializer = initializer->cast(_g, type);
+    }
   }
 
+  // Build the allocation
   auto handle = LLVMBuildAlloca(_g._irb, type->handle(), name.c_str());
 
   // Create and set the new slot decl in

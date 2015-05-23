@@ -9,14 +9,13 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::Integer& x) {
-  // Resolve the type
+void Builder::visit(ast::Float& x) {
+  // Resolve the specific type of float
   auto type = resolve(_g, *_cs, x);
-  if (!type) return;
 
   // Build the value handle
-  auto handle = LLVMConstIntOfStringAndSize(
-    type->handle(), x.text.c_str(), x.text.size(), x.base);
+  auto handle = LLVMConstRealOfStringAndSize(
+    type->handle(), x.text.c_str(), x.text.size());
 
   // Build and push the code handle
   _stack.push(std::make_shared<code::Value>(handle, type));

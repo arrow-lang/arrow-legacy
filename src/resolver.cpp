@@ -23,11 +23,7 @@ void Resolver::visit(ast::Integer& x) {
   auto min = x.minimum_bits();
   auto bits = 0;
 
-  if (min <= 8) {
-    bits = 8;
-  } else if (min <= 16) {
-    bits = 16;
-  } else if (min <= 32) {
+  if (min <= 32) {
     bits = 32;
   } else if (min <= 64) {
     bits = 64;
@@ -106,6 +102,25 @@ std::shared_ptr<code::Type> Resolver::common_type(
     }
 
     if (int_rhs.is_signed() && int_rhs.bits > int_lhs.bits) {
+      return rhs_ty;
+    }
+  }
+
+  if (lhs_ty->is<code::IntegerType>() && rhs_ty->is<code::FloatType>()) {
+    return rhs_ty;
+  }
+
+  if (rhs_ty->is<code::IntegerType>() && lhs_ty->is<code::FloatType>()) {
+    return lhs_ty;
+  }
+
+  if (rhs_ty->is<code::FloatType>() && lhs_ty->is<code::FloatType>()) {
+    auto& float_lhs = lhs_ty->as<code::FloatType>();
+    auto& float_rhs = rhs_ty->as<code::FloatType>();
+
+    if (float_lhs.bits > float_rhs.bits) {
+      return lhs_ty;
+    } else {
       return rhs_ty;
     }
   }

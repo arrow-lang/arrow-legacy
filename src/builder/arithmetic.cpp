@@ -9,6 +9,7 @@
 
 using arrow::Builder;
 using arrow::resolve;
+namespace code = arrow::code;
 
 void Builder::do_arithmetic(
   ast::Binary& x,
@@ -36,39 +37,84 @@ void Builder::do_arithmetic(
 }
 
 void Builder::visit(ast::Add& x) {
-  do_arithmetic(x, [this](auto lhs, auto rhs) {
-    return LLVMBuildAdd(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+  do_arithmetic(x, [this](std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs) {
+    if (lhs->type()->is<code::IntegerType>()) {
+      return LLVMBuildAdd(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+    }
+
+    if (lhs->type()->is<code::FloatType>()) {
+      return LLVMBuildFAdd(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+    }
+
+    // TODO: Error ?
+    return (LLVMOpaqueValue*)nullptr;
   });
 }
 
 void Builder::visit(ast::Sub& x) {
-  do_arithmetic(x, [this](auto lhs, auto rhs) {
-    return LLVMBuildSub(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+  do_arithmetic(x, [this](std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs) {
+    if (lhs->type()->is<code::IntegerType>()) {
+      return LLVMBuildSub(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+    }
+
+    if (lhs->type()->is<code::FloatType>()) {
+      return LLVMBuildFSub(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+    }
+
+    // TODO: Error ?
+    return (LLVMOpaqueValue*)nullptr;
   });
 }
 
 void Builder::visit(ast::Mul& x) {
-  do_arithmetic(x, [this](auto lhs, auto rhs) {
-    return LLVMBuildMul(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+  do_arithmetic(x, [this](std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs) {
+    if (lhs->type()->is<code::IntegerType>()) {
+      return LLVMBuildMul(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+    }
+
+    if (lhs->type()->is<code::FloatType>()) {
+      return LLVMBuildFMul(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+    }
+
+    // TODO: Error ?
+    return (LLVMOpaqueValue*)nullptr;
   });
 }
 
 void Builder::visit(ast::Div& x) {
-  do_arithmetic(x, [this](auto lhs, auto rhs) {
-    if (lhs->type()->is_signed()) {
-      return LLVMBuildSDiv(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
-    } else {
-      return LLVMBuildUDiv(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+  do_arithmetic(x, [this](std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs) {
+    if (lhs->type()->is<code::IntegerType>()) {
+      if (lhs->type()->is_signed()) {
+        return LLVMBuildSDiv(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+      } else {
+        return LLVMBuildUDiv(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+      }
     }
+
+    if (lhs->type()->is<code::FloatType>()) {
+      return LLVMBuildFDiv(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+    }
+
+    // TODO: Error ?
+    return (LLVMOpaqueValue*)nullptr;
   });
 }
 
 void Builder::visit(ast::Mod& x) {
-  do_arithmetic(x, [this](auto lhs, auto rhs) {
-    if (lhs->type()->is_signed()) {
-      return LLVMBuildSRem(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
-    } else {
-      return LLVMBuildURem(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+  do_arithmetic(x, [this](std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs) {
+    if (lhs->type()->is<code::IntegerType>()) {
+      if (lhs->type()->is_signed()) {
+        return LLVMBuildSRem(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+      } else {
+        return LLVMBuildURem(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+      }
     }
+
+    if (lhs->type()->is<code::FloatType>()) {
+      return LLVMBuildFRem(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
+    }
+
+    // TODO: Error ?
+    return (LLVMOpaqueValue*)nullptr;
   });
 }

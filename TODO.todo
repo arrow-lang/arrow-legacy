@@ -1,9 +1,7 @@
- - [x] Initialize (Stores)
- - [ ] LValue vs. RValue -- x.handle() vs. x.value() vs. x.address() [x.has_address()]
- - [ ] Identifier resolution (Loads)
- - [ ] Type promotion: int8 -> int16 / int64 -> int128 / int* -> float* / etc.
- - [ ] Function parameters
- - [ ] Function return
-
-
- - [ ] Resolve FOR Identifiers
+  - [ ] Function parameters
+  - [ ] Function return
+  - [x] Floating-point arithmetic
+  - [x] Ensure that we store nothing less than int32 automatically
+  - [ ] Unary arithmetic (+, -, !)
+  - [ ] Boolean values (and error messages for arithmetic)
+  - [ ] Relational operators
