@@ -1,7 +1,18 @@
-  - [ ] Function parameters
-  - [ ] Function return
-  - [x] Floating-point arithmetic
-  - [x] Ensure that we store nothing less than int32 automatically
-  - [ ] Unary arithmetic (+, -, !)
-  - [ ] Boolean values (and error messages for arithmetic)
-  - [ ] Relational operators
+☐ Function parameters
+☐ Function return
+☐ External functions
+☐ Strings
+☐ Unary arithmetic
+  ☐ +
+  ☐ -
+  ☐ !
+☐ Relational
+  ☐ ==
+  ☐ !=
+  ☐ >=
+  ☐ <=
+  ☐ <
+  ☐ >
+☐ Boolean (true/false)
+☐ Selection statement
+☐ Bitwise

@@ -20,7 +20,8 @@ Resolver::~Resolver() noexcept { }
 void Resolver::visit(ast::Integer& x) {
   // By default, integer literals are as big as they need to be to fit
   //  the value (except they'll coerce upwards as needed)
-  auto min = x.minimum_bits();
+  // NOTE: We add 1 for the sign bit
+  auto min = x.minimum_bits() + 1;
   auto bits = 0;
 
   if (min <= 32) {
