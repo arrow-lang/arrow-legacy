@@ -17,7 +17,7 @@ IMPL(FloatType)
 IMPL(BooleanType)
 
 code::IntegerType::IntegerType(unsigned bits, bool is_signed)
-  : bits(bits), is_signed(is_signed) {
+  : bits(bits), _is_signed(is_signed) {
 }
 
 code::FloatType::FloatType(unsigned bits)

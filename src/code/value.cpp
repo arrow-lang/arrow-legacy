@@ -10,7 +10,6 @@ using arrow::code::Value;
 
 Value::Value(LLVMValueRef handle, std::shared_ptr<Type> type)
   : _handle{handle}, _type{type} {
-  std::printf("build Value with %p\n", type.get());
 }
 
 Value::~Value() noexcept {
@@ -35,4 +34,34 @@ LLVMValueRef Value::address_of(Generator& g) const noexcept {
     // TODO: Do the conversion
     return nullptr;
   }
+}
+
+auto Value::cast(Generator& g, std::shared_ptr<Type> type) -> std::shared_ptr<Value> {
+  // If the types are the same; do nothing
+  // TODO: This needs to be extended into a full recursive comparison when
+  //  we have generated types (eg. pointers of arbitrary depth)
+  auto res = value_of(g);
+  if (_type != type) {
+    if (_type->is<code::IntegerType>() && type->is<code::IntegerType>()) {
+      // Cast between integers
+      auto& int_from = _type->as<code::IntegerType>();
+      auto& int_to = type->as<code::IntegerType>();
+
+      if (int_from.bits > int_to.bits) {
+        // Truncate
+        res = LLVMBuildTrunc(g._irb, res, type->handle(), "");
+      } else {
+        if (int_from.is_signed()) {
+          // Sign-extend
+          res = LLVMBuildSExt(g._irb, res, type->handle(), "");
+        } else {
+          // Zero-extend
+          res = LLVMBuildZExt(g._irb, res, type->handle(), "");
+        }
+      }
+    }
+  }
+
+  // Return a new, casted value
+  return std::make_shared<code::Value>(res, type);
 }

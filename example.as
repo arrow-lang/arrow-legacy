@@ -14,9 +14,8 @@
 // }
 
 def main() {
-  let x: int8 = 120;
-  let y: int16 = 2389;
-  let z = x + y;
+  let num: uint8 = 30;
+  let other = num + 5;
 
   //let x: int8 = (5 + 3) / 2;
 }

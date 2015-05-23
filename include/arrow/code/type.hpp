@@ -17,18 +17,12 @@ struct Type : Item {
 
   virtual LLVMTypeRef handle() const noexcept = 0;
 
-  template <typename T>
-  bool is() {
-    return dynamic_cast<T*>(this) != nullptr;
-  }
-
-  template <typename T>
-  T& as() {
-    return *(dynamic_cast<T*>(this));
-  }
-
   virtual bool is_type() const noexcept {
     return true;
+  }
+
+  virtual bool is_signed() const noexcept {
+    return false;
   }
 };
 
@@ -39,8 +33,14 @@ struct IntegerType : Type {
 
   virtual LLVMTypeRef handle() const noexcept;
 
+  virtual bool is_signed() const noexcept {
+    return _is_signed;
+  }
+
   unsigned bits;
-  bool is_signed;
+
+private:
+  bool _is_signed;
 };
 
 struct BooleanType : Type {

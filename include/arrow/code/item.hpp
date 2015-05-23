@@ -12,6 +12,16 @@ namespace code {
 struct Item {
   virtual ~Item() noexcept;
 
+  template <typename T>
+  bool is() {
+    return dynamic_cast<T*>(this) != nullptr;
+  }
+
+  template <typename T>
+  T& as() {
+    return *(dynamic_cast<T*>(this));
+  }
+
   virtual bool is_type() const noexcept {
     return false;
   }

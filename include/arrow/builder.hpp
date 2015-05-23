@@ -70,6 +70,10 @@ class Builder : public ast::AbstractVisitor {
   code::Scope* _cs;
   std::stack<std::shared_ptr<code::Item>> _stack;
 
+  void do_arithmetic(
+    ast::Binary& x,
+    std::function<LLVMValueRef (std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);
+
   void build(
     ast::Node& node, code::Scope* scope = nullptr);
 
@@ -81,6 +85,8 @@ class Builder : public ast::AbstractVisitor {
     ast::Node& node, code::Scope* scope = nullptr
   ) {
     auto item_generic = build_scalar(node, scope);
+    if (item_generic == nullptr) return nullptr;
+
     auto item = std::dynamic_pointer_cast<T>(item_generic);
     if (item == nullptr) {
       Log::get().error(node.span, "expected %s", typeid(T).name());

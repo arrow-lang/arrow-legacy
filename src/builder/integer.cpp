@@ -11,7 +11,7 @@ using arrow::resolve;
 
 void Builder::visit(ast::Integer& x) {
   // Resolve the type
-  auto type = resolve(_g, x);
+  auto type = resolve(_g, *_cs, x);
 
   // Build the value handle
   auto handle = LLVMConstIntOfStringAndSize(

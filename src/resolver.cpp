@@ -11,8 +11,8 @@ using arrow::Resolver;
 namespace code = arrow::code;
 namespace ast = arrow::ast;
 
-Resolver::Resolver(arrow::Generator& g)
-  : _g{g} {
+Resolver::Resolver(arrow::Generator& g, code::Scope& scope)
+  : _g{g}, _scope(scope) {
 }
 
 Resolver::~Resolver() noexcept { }
@@ -53,8 +53,12 @@ void Resolver::visit(ast::Boolean&) {
   _stack.push(std::make_shared<code::BooleanType>());
 }
 
-std::shared_ptr<code::Type> arrow::resolve(Generator& _g, ast::Node& x) {
-  auto resolver = Resolver(_g);
+std::shared_ptr<code::Type> arrow::resolve(
+  Generator& g,
+  code::Scope& scope,
+  ast::Node& x
+) {
+  auto resolver = Resolver(g, scope);
   resolver.run(x);
   return resolver.get();
 }
@@ -62,38 +66,51 @@ std::shared_ptr<code::Type> arrow::resolve(Generator& _g, ast::Node& x) {
 // Attempt to resolve a single compatible type from two passed
 // types. Respects integer and float promotion rules.
 std::shared_ptr<code::Type> Resolver::common_type(
-  std::shared_ptr<code::Type> lhs,
-  std::shared_ptr<code::Type> rhs
+  std::shared_ptr<ast::Node> lhs,
+  std::shared_ptr<ast::Node> rhs
 ) {
-  std::printf("common_type: begin\n");
+  // Resolve the operands
+  auto lhs_ty = resolve(_g, _scope, *lhs);
+  auto rhs_ty = resolve(_g, _scope, *rhs);
 
   // If the types are the same; return the first
   // TODO: This needs to be extended into a full recursive comparison when
   //  we have generated types (eg. pointers of arbitrary depth)
-  if (lhs == rhs) return lhs;
+  if (lhs_ty == rhs_ty) return lhs_ty;
 
-  if (lhs->is<code::IntegerType>() && rhs->is<code::IntegerType>()) {
+  if (lhs_ty->is<code::IntegerType>() && rhs_ty->is<code::IntegerType>()) {
     // We're dealing with two integer types; determine the integer
     // with the greater rank
-    auto& int_lhs = lhs->as<code::IntegerType>();
-    auto& int_rhs = rhs->as<code::IntegerType>();
+    auto& int_lhs = lhs_ty->as<code::IntegerType>();
+    auto& int_rhs = rhs_ty->as<code::IntegerType>();
 
-    if (int_lhs.is_signed == int_rhs.is_signed) {
+    if (int_lhs.is_signed() == int_rhs.is_signed()) {
       // If the sign is equivalent; do a direct compare of bit size
-      return (int_lhs.bits > int_rhs.bits) ? lhs : rhs;
+      return (int_lhs.bits > int_rhs.bits) ? lhs_ty : rhs_ty;
     }
 
-    if (int_lhs.is_signed && int_lhs.bits > int_rhs.bits) {
-      return lhs;
+    if (lhs->is<ast::Integer>() && int_lhs.bits <= int_rhs.bits) {
+      // If we're dealing with a /literal/ -- just go with it as long as
+      // we fit
+      return rhs_ty;
     }
 
-    if (int_rhs.is_signed && int_rhs.bits > int_lhs.bits) {
-      return rhs;
+    if (rhs->is<ast::Integer>() && int_rhs.bits <= int_lhs.bits) {
+      // If we're dealing with a /literal/ -- just go with it as long as
+      // we fit
+      return lhs_ty;
+    }
+
+    if (int_lhs.is_signed() && int_lhs.bits > int_rhs.bits) {
+      return lhs_ty;
+    }
+
+    if (int_rhs.is_signed() && int_rhs.bits > int_lhs.bits) {
+      return rhs_ty;
     }
   }
 
   // Couldn't find a common type
   // TODO: Where should the error report be?
-  std::printf("common_type: what are we?\n");
   return nullptr;
 }

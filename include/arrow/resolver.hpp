@@ -17,7 +17,7 @@ class Generator;
 
 class Resolver : public ast::AbstractVisitor {
  public:
-  explicit Resolver(Generator& g);
+  explicit Resolver(Generator& g, code::Scope& _scope);
 
   virtual ~Resolver() noexcept;
 
@@ -31,7 +31,7 @@ class Resolver : public ast::AbstractVisitor {
 
   virtual void visit(ast::Node&) { }
   virtual void visit(ast::TextNode&) { }
-  virtual void visit(ast::Identifier&) { }
+  virtual void visit(ast::Identifier&);
   virtual void visit(ast::Function&) { }
   virtual void visit(ast::Module&) { }
   virtual void visit(ast::Call&) { }
@@ -74,14 +74,18 @@ class Resolver : public ast::AbstractVisitor {
 
  private:
   std::shared_ptr<code::Type> common_type(
-    std::shared_ptr<code::Type> lhs,
-    std::shared_ptr<code::Type> rhs);
+    std::shared_ptr<ast::Node> lhs,
+    std::shared_ptr<ast::Node> rhs);
+
+  void do_arithmetic(ast::Binary& x);
 
   Generator& _g;
+  code::Scope& _scope;
   std::stack<std::shared_ptr<code::Type>> _stack;
 };
 
-extern std::shared_ptr<code::Type> resolve(Generator& _g, ast::Node& x);
+extern std::shared_ptr<code::Type> resolve(
+  Generator& g, code::Scope& scope, ast::Node& x);
 
 }  // namespace arrow
 

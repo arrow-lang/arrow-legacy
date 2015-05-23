@@ -36,6 +36,8 @@ struct Value : Item {
 
   virtual std::shared_ptr<Type> type() const noexcept;
 
+  std::shared_ptr<code::Value> cast(Generator& g, std::shared_ptr<Type> type);
+
  private:
    LLVMValueRef _handle;
    std::shared_ptr<Type> _type;
