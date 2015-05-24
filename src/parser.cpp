@@ -46,6 +46,8 @@ std::shared_ptr<arrow::Token> Parser::do_expect(
   const std::vector<Token::Type>& types)
 {
   auto tok = _t.peek(0);
+  _t.pop();
+
   bool found = false;
   for (auto& type : types) {
     if (tok->type == type) {
@@ -55,10 +57,11 @@ std::shared_ptr<arrow::Token> Parser::do_expect(
   }
 
   if (found) {
-    _t.pop();
-
     return tok;
   } else {
+    // TODO: Change message format to
+    //  expected one of `:` or `@`; found `)`
+
     std::stringstream stream;
     stream
       << "unexpected "
@@ -185,8 +188,11 @@ bool Parser::parse_primary_expression()
       return parse_paren_expression();
 
     default:
-      // Unknown expression
-      return false;
+      // Unexpected.. whatever we are
+      // TODO: Investigate if we need an error message here; this should
+      //  only be reached if we errored out somewhere else
+      _t.pop();
+      return nullptr;
   }
 }
 
@@ -684,8 +690,7 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
 // ----------------------------------------------------------------------------
 // function = "def" identifier "(" ")" block ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_function()
-{
+bool Parser::parse_function() {
   // Expect `def`
   auto initial_tok = expect(Token::Type::Def);
   if (!initial_tok) { return false; }
@@ -695,19 +700,27 @@ bool Parser::parse_function()
   auto name = std::static_pointer_cast<ast::Identifier>(_stack.front());
   _stack.pop_front();
 
-  // Expect `(`
-  if (!expect(Token::Type::LeftParenthesis)) { return false; }
-
-  // Expect `)`
-  if (!expect(Token::Type::RightParenthesis)) { return false; }
-
-  // Expect `{`
-  if (!expect(Token::Type::LeftBrace)) { return false; }
-
   // Declare the node
   auto fn = make_shared<ast::Function>(
     Span(_t.filename(), initial_tok->span.begin, initial_tok->span.begin),
-    name);
+    name, nullptr);
+
+  // Parse parameter list
+  if (!parse_function_parameters(*fn)) { return false; }
+
+  // Check for `->` (to indicate the result type annotation)
+  if (_t.peek(0)->type == Token::Type::Arrow) {
+    // Expect `->`
+    if (!expect(Token::Type::Arrow)) { return false; }
+
+    // Parse type
+    if (!parse_type()) { return false; }
+    fn->result = _stack.front();
+    _stack.pop_front();
+  }
+
+  // Expect `{`
+  if (!expect(Token::Type::LeftBrace)) { return false; }
 
   // Enumerate and attempt to match rules until we reach
   // `}` or the end of stream (which would be an error)
@@ -730,6 +743,70 @@ bool Parser::parse_function()
   // Push the node
   fn->span.end = last_tok->span.end;
   _stack.push_front(fn);
+
+  return true;
+}
+
+// Function Parameter List
+// ----------------------------------------------------------------------------
+// TODO
+// ----------------------------------------------------------------------------
+bool Parser::parse_function_parameters(ast::Function& fn) {
+  // Expect `(`
+  if (!expect(Token::Type::LeftParenthesis)) { return false; }
+
+  // Iterate through and parse each (potential) parameter.
+  while ((_t.peek()->type != Token::Type::End) &&
+         (_t.peek()->type != Token::Type::RightParenthesis)) {
+    // Try and parse the parameter
+    if (!parse_function_parameter()) {
+      return false;
+    }
+
+    fn.parameters.push_back(std::static_pointer_cast<ast::Parameter>(
+      _stack.front()));
+    _stack.pop_front();
+
+    // Peek and consume the `,` token if present
+    if (_t.peek()->type == Token::Type::Comma) {
+      if (!expect(Token::Type::Comma)) { return false; }
+      continue;
+    } else if ((_t.peek()->type != Token::Type::End) &&
+               (_t.peek()->type != Token::Type::RightParenthesis)) {
+      if (!expect(Token::Type::RightParenthesis)) { return false; }
+    } else {
+      break;
+    }
+  }
+
+  // Expect `)`
+  if (!expect(Token::Type::RightParenthesis)) { return false; }
+
+  return true;
+}
+
+// Function Parameter
+// ----------------------------------------------------------------------------
+// TODO
+// ----------------------------------------------------------------------------
+bool Parser::parse_function_parameter() {
+  // Parse identifier
+  if (!parse_identifier()) { return false; }
+  auto name = std::static_pointer_cast<ast::Identifier>(_stack.front());
+  _stack.pop_front();
+
+  // Expect `:`
+  if (!expect(Token::Type::Colon)) { return false; }
+
+  // Parse type
+  if (!parse_type()) { return false; }
+  auto type = _stack.front();
+  _stack.pop_front();
+
+  // Declare and push the node
+  _stack.push_front(make_shared<ast::Parameter>(
+    Span(_t.filename(), name->span.begin, type->span.end),
+    name, type));
 
   return true;
 }
@@ -790,6 +867,6 @@ bool Parser::parse_slot() {
 // type = identifier ;
 // ----------------------------------------------------------------------------
 bool Parser::parse_type() {
-  // TODO: tuple type
+  // TODO: complex type expressions
   return parse_identifier();
 }

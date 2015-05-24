@@ -138,6 +138,15 @@ void Show::visit(Function& x) {
 
   fn.add("<xmlattr>.name", x.name->text.c_str());
 
+  if (x.result != nullptr) {
+    auto& type = _el().add("Result", "");
+    _ctx.push(&type);
+
+    x.result->accept(*this);
+
+    _ctx.pop();
+  }
+
   auto& seq = _el().add("Sequence", "");
   _ctx.push(&seq);
 
@@ -146,6 +155,16 @@ void Show::visit(Function& x) {
   }
 
   _ctx.pop();
+
+  auto& params = _el().add("Parameters", "");
+  _ctx.push(&params);
+
+  for (auto& item : x.parameters) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
+
   _ctx.pop();
 }
 
@@ -181,6 +200,22 @@ void Show::visit(Slot& x) {
 
     _ctx.pop();
   }
+
+  _ctx.pop();
+}
+
+void Show::visit(Parameter& x) {
+  auto& item = _el().add("Parameter", "");
+  _ctx.push(&item);
+
+  item.add("<xmlattr>.name", x.name->text.c_str());
+
+  auto& type = _el().add("Type", "");
+  _ctx.push(&type);
+
+  x.type->accept(*this);
+
+  _ctx.pop();
 
   _ctx.pop();
 }

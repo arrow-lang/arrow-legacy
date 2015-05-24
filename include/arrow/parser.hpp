@@ -57,6 +57,9 @@ class Parser {
   bool parse_slot();
   bool parse_type();
 
+  bool parse_function_parameter();
+  bool parse_function_parameters(ast::Function& fn);
+
   bool parse_binary_expression(unsigned prec = 0, unsigned assoc = 0);
 
   Tokenizer& _t;

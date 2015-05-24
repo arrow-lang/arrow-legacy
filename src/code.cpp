@@ -18,8 +18,13 @@ code::Module::Module(const std::string& name, Scope* parent)
   : scope{parent}, name{name} {
 }
 
-code::Function::Function(LLVMValueRef handle, const std::string& name, Scope* parent)
-  : name{name}, scope{parent}, _handle{handle} {
+code::Function::Function(
+  LLVMValueRef handle,
+  std::shared_ptr<Type> type,
+  const std::string& name,
+  Scope* parent
+)
+  : name{name}, scope{parent}, _handle{handle}, _type{type} {
 }
 
 code::Slot::Slot(const std::string& name, LLVMValueRef handle, std::shared_ptr<Type> type)

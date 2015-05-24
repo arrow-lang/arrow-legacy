@@ -34,6 +34,7 @@ class Show : public AbstractVisitor {
   virtual void visit(Identifier&);
   virtual void visit(Module&);
   virtual void visit(Function&);
+  virtual void visit(Parameter&);
   virtual void visit(Call&);
   virtual void visit(Slot&);
   virtual void visit(Break&);

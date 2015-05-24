@@ -27,6 +27,7 @@ class AbstractVisitor {
   friend class Identifier;
   friend class Module;
   friend class Function;
+  friend class Parameter;
   friend class Call;
   friend class Slot;
   friend class Break;
@@ -70,6 +71,7 @@ class AbstractVisitor {
   virtual void visit(Identifier&) { }
   virtual void visit(Module&) { }
   virtual void visit(Function&) { }
+  virtual void visit(Parameter&) { }
   virtual void visit(Call&) { }
   virtual void visit(Slot&) { }
   virtual void visit(Break&) { }
@@ -119,6 +121,7 @@ class Visitor : public AbstractVisitor {
   virtual void visit(Identifier&);
   virtual void visit(Module&);
   virtual void visit(Function&);
+  virtual void visit(Parameter&);
   virtual void visit(Call&);
   virtual void visit(Slot&);
   virtual void visit(Break&);
@@ -160,6 +163,7 @@ class Visitor : public AbstractVisitor {
   virtual void visit_id(Identifier&) { }
   virtual void visit_module(Module&);
   virtual void visit_function(Function&) { }
+  virtual void visit_parameter(Parameter&) { }
   virtual void visit_call(Call&) { }
   virtual void visit_slot(Slot&) { }
   virtual void visit_break(Break&) { }

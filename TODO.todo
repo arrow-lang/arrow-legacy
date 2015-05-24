@@ -1,5 +1,11 @@
-☐ Function parameters
-☐ Function return
+In Progress:
+✔ Make parser more resilient @done(2015-05-23 17:03)
+✔ Function parameters @done(2015-05-23 17:03)
+✔ Function return @done(2015-05-23 17:03)
+☐ Return statement
+☐ Call (with arguments) expression
+
+Ready:
 ☐ External functions
 ☐ Strings
 ☐ Unary arithmetic

@@ -6,6 +6,9 @@
 #ifndef ARROW_CODE_TYPE_H
 #define ARROW_CODE_TYPE_H 1
 
+#include <deque>
+#include <memory>
+
 #include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
 
@@ -57,6 +60,17 @@ struct FloatType : Type {
   virtual LLVMTypeRef handle() const noexcept;
 
   unsigned bits;
+};
+
+struct FunctionType : Type {
+  explicit FunctionType(std::shared_ptr<code::Type> result);
+
+  virtual ~FunctionType() noexcept;
+
+  virtual LLVMTypeRef handle() const noexcept;
+
+  std::shared_ptr<Type> result;
+  std::deque<std::shared_ptr<Type>> parameters;
 };
 
 }  // namespace code

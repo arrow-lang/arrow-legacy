@@ -15,6 +15,7 @@ IMPL(TextNode)
 IMPL(Identifier)
 IMPL(Module)
 IMPL(Function)
+IMPL(Parameter)
 IMPL(Call)
 IMPL(Slot)
 IMPL(Break)
@@ -75,12 +76,23 @@ Binary::Binary(Span span, std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs)
   : Node(span), lhs(lhs), rhs(rhs) {
 }
 
-Function::Function(Span span, std::shared_ptr<Identifier> name)
-  : Node(span), name(name), sequence() {
+Function::Function(
+  Span span,
+  std::shared_ptr<Identifier> name,
+  std::shared_ptr<Node> result
+)
+  : Node(span), name(name), result(result), sequence(), parameters() {
 }
 
 Call::Call(Span span, std::shared_ptr<Node> expression)
   : Node(span), expression(expression) {
+}
+
+Parameter::Parameter(
+  Span span,
+  std::shared_ptr<Identifier> name,
+  std::shared_ptr<Node> type
+) : Node(span), name(name), type(type) {
 }
 
 Slot::Slot(

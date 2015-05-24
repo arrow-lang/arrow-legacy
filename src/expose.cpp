@@ -4,9 +4,11 @@
 // See accompanying file LICENSE
 
 #include "arrow/expose.hpp"
+#include "arrow/resolver.hpp"
 #include "arrow/generator.hpp"
 #include "arrow/log.hpp"
 
+using arrow::resolve;
 using arrow::Expose;
 namespace code = arrow::code;
 namespace ast = arrow::ast;
@@ -18,15 +20,18 @@ Expose::Expose(arrow::Generator& g, code::Scope& scope)
 Expose::~Expose() noexcept { }
 
 void Expose::visit_function(ast::Function& x) {
-  auto& name = x.name->text;
+  // Resolve the type of this function
+  auto type = resolve(_g, _scope, x);
+  if (!type) { return; }
 
-  // FIXME: auto type = resolve(node)
-  auto type = LLVMFunctionType(LLVMVoidType(), nullptr, 0, false);
-  auto handle = LLVMAddFunction(_g._mod, name.c_str(), type);
+  auto& name = x.name->text;
+  auto handle = LLVMAddFunction(_g._mod, name.c_str(), type->handle());
 
   // Create and set the new function item in the scope
+  // TODO: Functions should receive module scope
   _scope.set(name, std::make_shared<code::Function>(
     handle,
+    type,
     name,
     &_scope));
 }

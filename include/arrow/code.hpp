@@ -30,7 +30,9 @@ struct Module : Item {
 
 /// A named function definition
 struct Function : Item {
-  Function(LLVMValueRef handle, const std::string& name, Scope* parent);
+  Function(
+    LLVMValueRef handle, std::shared_ptr<Type> type,
+    const std::string& name, Scope* parent);
 
   virtual ~Function() noexcept;
 
@@ -38,11 +40,16 @@ struct Function : Item {
     return _handle;
   }
 
+  virtual std::shared_ptr<Type> type() const noexcept {
+    return _type;
+  }
+
   std::string name;
   Scope scope;
 
  private:
   LLVMValueRef _handle;
+  std::shared_ptr<Type> _type;
 };
 
 /// A named slot declaration

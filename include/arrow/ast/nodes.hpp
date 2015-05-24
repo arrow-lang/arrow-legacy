@@ -200,15 +200,33 @@ BINARY_DEFINE(Mod);
 
 #undef BINARY_DEFINE
 
+struct Parameter : Node {
+  Parameter(
+    Span span,
+    std::shared_ptr<Identifier> name,
+    std::shared_ptr<Node> type);
+
+  virtual ~Parameter() noexcept;
+
+  virtual void accept(AbstractVisitor& v);
+
+  std::shared_ptr<Identifier> name;
+  std::shared_ptr<Node> type;
+};
+
 struct Function : Node {
-  Function(Span span, std::shared_ptr<Identifier> name);
+  Function(Span span,
+    std::shared_ptr<Identifier> name,
+    std::shared_ptr<Node> result);
 
   virtual ~Function() noexcept;
 
   virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Identifier> name;
+  std::shared_ptr<Node> result;
   std::deque<std::shared_ptr<Node>> sequence;
+  std::deque<std::shared_ptr<Parameter>> parameters;
 };
 
 struct Call : Node {

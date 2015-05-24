@@ -25,6 +25,7 @@ class Builder : public ast::AbstractVisitor {
   virtual void visit(ast::TextNode&) { }
   virtual void visit(ast::Identifier&);
   virtual void visit(ast::Function&);
+  virtual void visit(ast::Parameter&) { }
   virtual void visit(ast::Module&);
   virtual void visit(ast::Call&);
   virtual void visit(ast::Break&) { }
