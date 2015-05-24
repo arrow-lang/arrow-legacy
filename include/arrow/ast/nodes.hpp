@@ -237,6 +237,7 @@ struct Call : Node {
   virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Node> expression;
+  std::deque<std::shared_ptr<Node>> arguments;
 };
 
 struct Slot : Node {

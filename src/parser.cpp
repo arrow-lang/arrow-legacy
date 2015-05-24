@@ -367,25 +367,47 @@ bool Parser::parse_postfix_expression() {
 
 // Call Expression
 // ----------------------------------------------------------------------------
-// call-expression = postfix-expression "(" ")" ;
+// call-expression = postfix-expression "(" [ call-arguments ] ")" ;
+// call-arguments = expression { "," expression } [ "," ] ;
 // ----------------------------------------------------------------------------
 bool Parser::parse_call_expression() {
   // Pull the awaiting operand expression
   auto expr = _stack.front();
   _stack.pop_front();
 
+  // Declare node
+  auto call = make_shared<ast::Call>(
+    Span(_t.filename(), expr->span.begin, expr->span.end), expr);
+
   // Expect `(`
   auto tok = expect(Token::Type::LeftParenthesis);
   if (!tok) { return false; }
 
-  // TODO: Iterate and parse parameters
+  // Iterate and parse arguments
+  while ((_t.peek()->type != Token::Type::End) &&
+         (_t.peek()->type != Token::Type::RightParenthesis)) {
+    // Try and parse the argument
+    if (!parse_expression()) { return false; }
+    call->arguments.push_back(_stack.front());
+    _stack.pop_front();
+
+    // Peek and consume the `,` token if present
+    if (_t.peek()->type == Token::Type::Comma) {
+      if (!expect(Token::Type::Comma)) { return false; }
+      continue;
+    } else if ((_t.peek()->type != Token::Type::End) &&
+               (_t.peek()->type != Token::Type::RightParenthesis)) {
+      if (!expect(Token::Type::RightParenthesis)) { return false; }
+    } else {
+      break;
+    }
+  }
 
   // Expect `)`
   if (!(tok = expect(Token::Type::RightParenthesis))) { return false; }
 
   // Declare (and push) the node
-  _stack.push_front(make_shared<ast::Call>(
-    Span(_t.filename(), expr->span.begin, tok->span.end), expr));
+  _stack.push_front(call);
 
   return true;
 }
@@ -433,17 +455,22 @@ bool Parser::parse_return()
   auto tok = expect(Token::Type::Return);
   if (!tok) { return false; }
 
-  // Attempt to parse the returned expression
-  if (!parse_expression()) { return false; }
-  auto expr = _stack.front();
-  _stack.pop_front();
+  // Check for an early `;` that would indicate no expression to return
+  std::shared_ptr<ast::Node> expr = nullptr;
+  if (_t.peek()->type != Token::Type::Semicolon) {
+    // Nope; we should attempt to parse the returned expression
+    if (!parse_expression()) { return false; }
+    expr = _stack.front();
+    _stack.pop_front();
+  }
 
   // Expect `;`
   if (!expect(Token::Type::Semicolon)) { return false; }
 
   // Declare (and push) the node
   _stack.push_front(make_shared<ast::Return>(
-    Span(_t.filename(), tok->span.begin, expr->span.end), expr));
+    Span(_t.filename(), tok->span.begin, expr ? expr->span.end : tok->span.end),
+    expr));
 
   return true;
 }

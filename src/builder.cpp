@@ -33,24 +33,20 @@ void Builder::visit(ast::Function& node) {
     build(*el, &item->scope);
   }
 
-  LLVMBuildRetVoid(_g._irb);
-}
-
-// Call
-// -----------------------------------------------------------------------------
-void Builder::visit(ast::Call& node) {
-  auto item = std::static_pointer_cast<code::Function>(
-    build_scalar(*node.expression));
-
-  if (item == nullptr) {
-    return;
+  // Has the function been terminated?
+  auto last = LLVMGetLastBasicBlock(item->handle());
+  if (!LLVMGetBasicBlockTerminator(last)) {
+    // No; we need to terminate
+    if (!item->type()->as<code::FunctionType>().result) {
+      // No result type
+      LLVMBuildRetVoid(_g._irb);
+    } else {
+      // We should have gotten a result
+      // TODO: Report an error
+      return;
+    }
   }
 
-  // if (!item->is_function()) { }
-
-  auto handle = item->handle();
-
-  LLVMBuildCall(_g._irb, handle, nullptr, 0, "");
 }
 
 // Identifier

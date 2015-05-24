@@ -30,7 +30,7 @@ class Builder : public ast::AbstractVisitor {
   virtual void visit(ast::Call&);
   virtual void visit(ast::Break&) { }
   virtual void visit(ast::Slot&);
-  virtual void visit(ast::Return&) { }
+  virtual void visit(ast::Return&);
   virtual void visit(ast::Integer&);
   virtual void visit(ast::Float&);
   virtual void visit(ast::Boolean&) { }

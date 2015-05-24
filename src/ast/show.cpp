@@ -44,11 +44,13 @@ void Show::visit(Module& x) {
 
 void Show::visit(Return& x) {
   auto& node = _el().add("Return", "");
-  _ctx.push(&node);
+  if (x.expression) {
+    _ctx.push(&node);
 
-  x.expression->accept(*this);
+    x.expression->accept(*this);
 
-  _ctx.pop();
+    _ctx.pop();
+  }
 }
 
 void Show::visit(Break&) {
@@ -172,7 +174,19 @@ void Show::visit(Call& x) {
   auto& item = _el().add("Call", "");
   _ctx.push(&item);
 
+  auto& expr = _el().add("Expression", "");
+  _ctx.push(&expr);
   x.expression->accept(*this);
+  _ctx.pop();
+
+  auto& args = _el().add("Arguments", "");
+  _ctx.push(&args);
+
+  for (auto& item : x.arguments) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
 
   _ctx.pop();
 }

@@ -35,7 +35,7 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::Function&);
   virtual void visit(ast::Parameter&) { }
   virtual void visit(ast::Module&) { }
-  virtual void visit(ast::Call&) { }
+  virtual void visit(ast::Call&);
   virtual void visit(ast::Break&) { }
   virtual void visit(ast::Slot&) { }
   virtual void visit(ast::Return&) { }

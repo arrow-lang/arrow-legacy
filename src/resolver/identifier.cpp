@@ -26,6 +26,9 @@ void Resolver::visit(ast::Identifier& x) {
   } else if (item->is_value()) {
     // This item -is- a value
     _stack.push(item->as<code::Value>().type());
+  } else if (item->is<code::Function>()) {
+    // This istem -is- a function
+    _stack.push(item->as<code::Function>().type());
   } else {
     Log::get().error(
       x.span, "use of untyped name `%s`", x.text.c_str());
