@@ -2,10 +2,11 @@ In Progress:
 ✔ Make parser more resilient @done(2015-05-23 17:03)
 ✔ Function parameters @done(2015-05-23 17:03)
 ✔ Function return @done(2015-05-23 17:03)
-☐ Return statement
-☐ Call (with arguments) expression
+✔ Call (with arguments) expression @done(2015-05-23 19:12)
+✔ Return statement @done(2015-05-23 19:53)
 
 Ready:
+☐ Selection statement
 ☐ External functions
 ☐ Strings
 ☐ Unary arithmetic
@@ -20,5 +21,4 @@ Ready:
   ☐ <
   ☐ >
 ☐ Boolean (true/false)
-☐ Selection statement
 ☐ Bitwise
