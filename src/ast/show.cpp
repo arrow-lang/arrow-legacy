@@ -5,6 +5,8 @@
 
 #include <boost/property_tree/xml_parser.hpp>
 
+#include <string>
+
 #include "arrow/ast/show.hpp"
 
 using arrow::ast::Show;

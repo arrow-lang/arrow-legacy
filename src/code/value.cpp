@@ -31,15 +31,16 @@ LLVMValueRef Value::address_of(Generator&) const noexcept {
   if (has_address()) {
     return _handle;
   } else {
-    // TODO: Do the conversion
+    // TODO(mehcode): Do the conversion
     return nullptr;
   }
 }
 
-auto Value::cast(Generator& g, std::shared_ptr<Type> type) -> std::shared_ptr<Value> {
+auto Value::cast(Generator& g, std::shared_ptr<Type> type)
+  -> std::shared_ptr<Value> {
   // If the types are the same; do nothing
-  // TODO: This needs to be extended into a full recursive comparison when
-  //  we have generated types (eg. pointers of arbitrary depth)
+  // TODO(mehcode): This needs to be extended into a full recursive comparison
+  //    when we have generated types (eg. pointers of arbitrary depth)
   auto res = value_of(g);
   if (_type != type) {
     if (_type->is<code::IntegerType>() && type->is<code::IntegerType>()) {

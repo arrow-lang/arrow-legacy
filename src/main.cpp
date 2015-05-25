@@ -1,4 +1,10 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
 #include <iostream>
+#include <string>
 #include "arrow/tokenizer.hpp"
 #include "arrow/parser.hpp"
 #include "arrow/generator.hpp"
@@ -6,7 +12,7 @@
 #include "boost/program_options.hpp"
 
 namespace po = boost::program_options;
-using namespace arrow;
+// using namespace arrow;
 using std::printf;
 
 void print_help(const char* binary_path) {
@@ -35,8 +41,7 @@ int main(int argc, char** argv) {
       ("version,V", "")
       ("tokenize", "")
       ("parse", "")
-      ("input-file", po::value<std::string>(), "")
-  ;
+      ("input-file", po::value<std::string>(), "");
 
   // Declare some options as positional
   po::positional_options_description p;
@@ -48,16 +53,16 @@ int main(int argc, char** argv) {
             options(desc).positional(p).run(), vm);
   po::notify(vm);
 
-  if (vm.count("help") or argc <= 1) {
+  if (vm.count("help") || argc <= 1) {
     print_help(argv[0]);
     return 0;
   }
 
   if (vm.count("version")) {
-    // TODO: Should reference a library value for the version
-    // TODO: Should include a git sha / tag (git describe)
-    // TODO: Should include build platform
-    // TODO: Should include build date
+    // TODO(mehcode): Should reference a library value for the version
+    // TODO(mehcode): Should include a git sha / tag (git describe)
+    // TODO(mehcode): Should include build platform
+    // TODO(mehcode): Should include build date
     printf("Arrow 0.1.0-pre\n");
     return 0;
   }
@@ -114,7 +119,7 @@ int main(int argc, char** argv) {
   Generator generator{};
 
   // Generate the IR
-  // TODO: Get the correct module name
+  // TODO(mehcode): Get the correct module name
   generator.generate("_", module);
   if (Log::get().count("error") > 0) { return EXIT_FAILURE; }
 

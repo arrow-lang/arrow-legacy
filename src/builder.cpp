@@ -42,11 +42,10 @@ void Builder::visit(ast::Function& node) {
       LLVMBuildRetVoid(_g._irb);
     } else {
       // We should have gotten a result
-      // TODO: Report an error
+      // TODO(mehcode): Report an error
       return;
     }
   }
-
 }
 
 // Identifier

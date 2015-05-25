@@ -20,7 +20,7 @@ void Resolver::visit(ast::AbstractFunction& x) {
   auto type = std::make_shared<code::FunctionType>(result);
 
   // Resolve the type of each parameter (if any)
-  // TODO: Use the visitor
+  // TODO(mehcode): Use the visitor
   for (auto& param : x.parameters) {
     auto param_type = resolve(_g, _scope, *(param->type));
     if (!param_type) { return; }
@@ -36,7 +36,7 @@ void Resolver::visit(ast::Function& x) {
 }
 
 void Resolver::visit(ast::ExternalFunction& x) {
-  // TODO: Handle ABI promotion
+  // TODO(mehcode): Handle ABI promotion
   //  - int8 > int32 (because C said)
   visit(static_cast<ast::AbstractFunction&>(x));
 }

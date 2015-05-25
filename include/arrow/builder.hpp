@@ -75,7 +75,8 @@ class Builder : public ast::AbstractVisitor {
 
   void do_arithmetic(
     ast::Binary& x,
-    std::function<LLVMValueRef (std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);
+    std::function<LLVMValueRef(
+      std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);
 
   void build(
     ast::Node& node, code::Scope* scope = nullptr);
@@ -97,7 +98,6 @@ class Builder : public ast::AbstractVisitor {
 
     return item;
   }
-
 };
 
 }  // namespace arrow

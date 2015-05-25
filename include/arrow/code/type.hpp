@@ -42,7 +42,7 @@ struct IntegerType : Type {
 
   unsigned bits;
 
-private:
+ private:
   bool _is_signed;
 };
 

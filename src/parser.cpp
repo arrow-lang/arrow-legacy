@@ -1,4 +1,10 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
 #include <map>
+#include <vector>
 #include "arrow/parser.hpp"
 #include "arrow/log.hpp"
 
@@ -9,19 +15,17 @@ namespace ast = arrow::ast;
 using std::make_shared;
 
 Parser::Parser(Tokenizer& t)
-  : _t(t), _stack()
-{
+  : _t(t), _stack() {
 }
 
-std::shared_ptr<ast::Node> Parser::parse()
-{
+std::shared_ptr<ast::Node> Parser::parse() {
   // Declare the top-level (root) module
   auto module = make_shared<ast::Module>(Span(_t.filename(), {0, 0}, {0, 0}));
 
   // Enumerate and attempt to match rules until the token stream
   // is empty
   while (_t.peek()->type != Token::Type::End) {
-    // TODO: Increment `module.span.end`
+    // TODO(mehcode): Increment `module.span.end`
 
     // Try and parse a module statement ..
     if (parse_module_statement()) {
@@ -43,8 +47,7 @@ std::shared_ptr<ast::Node> Parser::parse()
 }
 
 std::shared_ptr<arrow::Token> Parser::do_expect(
-  const std::vector<Token::Type>& types)
-{
+  const std::vector<Token::Type>& types) {
   auto tok = _t.peek(0);
   _t.pop();
 
@@ -59,7 +62,7 @@ std::shared_ptr<arrow::Token> Parser::do_expect(
   if (found) {
     return tok;
   } else {
-    // TODO: Change message format to
+    // TODO(mehcode): Change message format to
     //  expected one of `:` or `@`; found `)`
 
     std::stringstream stream;
@@ -95,8 +98,7 @@ std::shared_ptr<arrow::Token> Parser::do_expect(
 // ----------------------------------------------------------------------------
 // module-statement = statement ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_module_statement()
-{
+bool Parser::parse_module_statement() {
   return parse_statement();
 }
 
@@ -106,8 +108,7 @@ bool Parser::parse_module_statement()
 //           | expression-statement
 //           ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_statement()
-{
+bool Parser::parse_statement() {
   switch (_t.peek()->type) {
     case Token::Type::Break:
       return parse_break();
@@ -134,8 +135,7 @@ bool Parser::parse_statement()
 // ----------------------------------------------------------------------------
 // expression-statement = unary-expression ";" ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_expression_statement()
-{
+bool Parser::parse_expression_statement() {
   if (!parse_expression()) { return false; }
 
   // Expect `;`
@@ -153,8 +153,7 @@ bool Parser::parse_expression_statement()
 // ----------------------------------------------------------------------------
 // expression = unary-expression | binary-expression ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_expression()
-{
+bool Parser::parse_expression() {
   // Attempt to parse the [..] expression
   if (!parse_unary_expression()) { return false; }
 
@@ -168,8 +167,7 @@ bool Parser::parse_expression()
 // ----------------------------------------------------------------------------
 // primary-expression = integer | float | boolean ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_primary_expression()
-{
+bool Parser::parse_primary_expression() {
   switch (_t.peek()->type) {
     case Token::Type::Integer:
       return parse_integer();
@@ -192,8 +190,8 @@ bool Parser::parse_primary_expression()
 
     default:
       // Unexpected.. whatever we are
-      // TODO: Investigate if we need an error message here; this should
-      //  only be reached if we errored out somewhere else
+      // TODO(mehcode): Investigate if we need an error message here;
+      //  this should only be reached if we errored out somewhere else
       _t.pop();
       return false;
   }
@@ -203,8 +201,7 @@ bool Parser::parse_primary_expression()
 // ----------------------------------------------------------------------------
 // integer = INTEGER ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_integer()
-{
+bool Parser::parse_integer() {
   // Expect INTEGER
   auto tok = expect<IntegerToken>(Token::Type::Integer);
   if (!tok) { return false; }
@@ -220,8 +217,7 @@ bool Parser::parse_integer()
 // ----------------------------------------------------------------------------
 // string = STRING ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_string()
-{
+bool Parser::parse_string() {
   // Expect STRING
   auto tok = expect<StringToken>(Token::Type::String);
   if (!tok) { return false; }
@@ -237,8 +233,7 @@ bool Parser::parse_string()
 // ----------------------------------------------------------------------------
 // float = FLOAT ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_float()
-{
+bool Parser::parse_float() {
   // Expect FLOAT
   auto tok = expect<FloatToken>(Token::Type::Float);
   if (!tok) { return false; }
@@ -254,8 +249,7 @@ bool Parser::parse_float()
 // ----------------------------------------------------------------------------
 // boolean = BOOLEAN ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_boolean()
-{
+bool Parser::parse_boolean() {
   // Expect INTEGER
   auto tok = expect({Token::Type::True, Token::Type::False});
   if (!tok) { return false; }
@@ -287,8 +281,7 @@ bool Parser::parse_paren_expression() {
 // unary-expression = unary-operator postfix-expression ;
 // unary-operator = "+" | "-" | "not" | "!" ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_unary_expression()
-{
+bool Parser::parse_unary_expression() {
   // If this is NOT a unary expression ..
   auto tok = _t.peek(0);
   if ((tok->type != Token::Type::Plus) &&
@@ -436,8 +429,7 @@ bool Parser::parse_break() {
 // ----------------------------------------------------------------------------
 // identifier = IDENTIFIER ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_identifier()
-{
+bool Parser::parse_identifier() {
   // Expect IDENTIFIER
   auto tok = expect<IdentifierToken>(Token::Type::Identifier);
   if (!tok) { return false; }
@@ -452,8 +444,7 @@ bool Parser::parse_identifier()
 // ----------------------------------------------------------------------------
 // return = "return" expression ";" ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_return()
-{
+bool Parser::parse_return() {
   // Expect `return`
   auto tok = expect(Token::Type::Return);
   if (!tok) { return false; }
@@ -488,8 +479,7 @@ bool Parser::parse_return()
 //                 | "^=" | "&=" | "|="
 //                 ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
-{
+bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
   // NOTE: This method is not normal. This is intended to be called
   //  directly after parsing a `unary-expression`. This is not LR parsing
   //  but instead a precedence parser.
@@ -562,7 +552,6 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
   };
 
   for (;;) {
-
     // Get the token and its precedence and associativity
     auto tok = _t.peek(0);
     auto tok_prec = PREC.find(tok->type);
@@ -821,7 +810,8 @@ bool Parser::parse_function() {
 
 // Function Parameter List
 // ----------------------------------------------------------------------------
-// function-parameters = "(" [ function-parameter { "," function-parameter } ] [ "," ] ")" ;
+// function-parameters = "(" [
+//    function-parameter { "," function-parameter } ] [ "," ] ")" ;
 // ----------------------------------------------------------------------------
 bool Parser::parse_function_parameters(ast::AbstractFunction& fn) {
   // Expect `(`
@@ -939,6 +929,6 @@ bool Parser::parse_slot() {
 // type = identifier ;
 // ----------------------------------------------------------------------------
 bool Parser::parse_type() {
-  // TODO: complex type expressions
+  // TODO(mehcode): complex type expressions
   return parse_identifier();
 }

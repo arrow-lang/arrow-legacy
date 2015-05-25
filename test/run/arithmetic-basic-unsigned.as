@@ -6,9 +6,9 @@ def main() {
   let u64: uint64 = 40000000;
   let u128: uint128 = 50000000000000000000;
 
-  // TODO: Addition
-  // TODO: Subtraction
-  // TODO: Multiplication
-  // TODO: Division
-  // TODO: Modulus
+  // TODO(mehcode): Addition
+  // TODO(mehcode): Subtraction
+  // TODO(mehcode): Multiplication
+  // TODO(mehcode): Division
+  // TODO(mehcode): Modulus
 }

@@ -1,3 +1,9 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
+#include <string>
 #include "arrow/generator.hpp"
 #include "arrow/builder.hpp"
 #include "arrow/code.hpp"
@@ -9,12 +15,10 @@ Generator::Generator()
     _irb{nullptr},
     _target_machine{nullptr},
     _data_layout{nullptr},
-    _scope{}
-{
+    _scope{} {
 }
 
-Generator::~Generator() noexcept
-{
+Generator::~Generator() noexcept {
   if (_mod) {
     // Dispose of the LLVM module.
     LLVMDisposeModule(_mod);
@@ -114,11 +118,11 @@ void Generator::_declare_basic_types() {
   _scope.set("float32", std::make_shared<code::FloatType>(32));
   _scope.set("float64", std::make_shared<code::FloatType>(64));
 
-  // TODO: Machine-dependent integer types
-  // TODO: UTF-32 character type
+  // TODO(mehcode): Machine-dependent integer types
+  // TODO(mehcode): UTF-32 character type
 
   // UTF-8 string type
   _scope.set("str", std::make_shared<code::StringType>());
 
-  // TODO: Byte string type
+  // TODO(mehcode): Byte string type
 }

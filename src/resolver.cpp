@@ -71,7 +71,8 @@ std::shared_ptr<code::Type> Resolver::common_type(
   auto rhs_ty = resolve(_g, _scope, *rhs);
 
   // If the types are the same; return the first
-  // TODO: This needs to be extended into a full recursive comparison when
+  // TODO(mehcode): This needs to be extended into a full recursive
+  //  comparison when
   //  we have generated types (eg. pointers of arbitrary depth)
   if (lhs_ty == rhs_ty) return lhs_ty;
 
@@ -127,6 +128,6 @@ std::shared_ptr<code::Type> Resolver::common_type(
   }
 
   // Couldn't find a common type
-  // TODO: Where should the error report be?
+  // TODO(mehcode): Where should the error report be?
   return nullptr;
 }

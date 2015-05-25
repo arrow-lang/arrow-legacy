@@ -20,8 +20,8 @@ void Builder::visit(ast::Return& x) {
     if (!expr) { return; }
   }
 
-  // TODO: Need to know what function I'm currently in so I know how to cast
-  //  this
+  // TODO(mehcode): Need to know what function I'm currently in so I
+  //  know how to cast this
   if (expr) {
     LLVMBuildRet(_g._irb, expr->value_of(_g));
   } else {

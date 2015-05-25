@@ -4,6 +4,8 @@
 // See accompanying file LICENSE
 
 #include <string>
+#include <vector>
+
 #include "arrow/token.hpp"
 
 using arrow::Token;

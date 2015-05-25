@@ -11,13 +11,13 @@ using arrow::resolve;
 
 void Resolver::visit(ast::Call& x) {
   // Attempt to resolve the function that will be called
-  // TODO: Function "values"
-  // TODO: resolve<T>
+  // TODO(mehcode): Function "values"
+  // TODO(mehcode): resolve<T>
   auto item = resolve(_g, _scope, *x.expression);
   if (!item) { return; }
   if (!item->is<code::FunctionType>()) {
     // Not a function; lame
-    // TODO: Function "values" and some kind of error message here
+    // TODO(mehcode): Function "values" and some kind of error message here
     return;
   }
 

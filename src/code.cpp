@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include <string>
 #include "arrow/code.hpp"
 
 namespace code = arrow::code;
@@ -44,7 +45,9 @@ code::ExternalFunction::ExternalFunction(
   : AbstractFunction(type, name), _mod{_mod}, _handle{nullptr} {
 }
 
-code::Slot::Slot(const std::string& name, LLVMValueRef handle, std::shared_ptr<Type> type)
+code::Slot::Slot(
+  const std::string& name, LLVMValueRef handle, std::shared_ptr<Type> type
+)
   : code::Value(handle, type), name{name} {
 }
 

@@ -3,6 +3,8 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include <vector>
+
 #include "arrow/builder.hpp"
 #include "arrow/generator.hpp"
 #include "arrow/resolver.hpp"
@@ -11,18 +13,18 @@ using arrow::Builder;
 using arrow::resolve;
 
 void Builder::visit(ast::Call& x) {
-  // TODO: Keyword arguments
-  // TODO: Default arguments
+  // TODO(mehcode): Keyword arguments
+  // TODO(mehcode): Default arguments
 
   // Attempt to get the function to call
-  // TODO: Function "values"
+  // TODO(mehcode): Function "values"
   auto item = build_scalar_of<code::AbstractFunction>(*x.expression);
   if (!item) { return; }
   auto& type = item->type()->as<code::FunctionType>();
 
   // Resolve and build each argument (if any)
-  // TODO: Check for mis-matched types
-  // TODO: Check for too many (or too little) arguments
+  // TODO(mehcode): Check for mis-matched types
+  // TODO(mehcode): Check for too many (or too little) arguments
   std::vector<LLVMValueRef> arguments;
   arguments.reserve(type.parameters.size());
   unsigned arg_index = 0;
@@ -42,6 +44,5 @@ void Builder::visit(ast::Call& x) {
 
   _stack.push(std::make_shared<code::Value>(
     res,
-    type.result
-  ));
+    type.result));
 }

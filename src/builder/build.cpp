@@ -33,7 +33,7 @@ std::shared_ptr<code::Item> Builder::build_scalar(
   build(node, scope);
 
   if ((_stack.size() - cnt) != 1) {
-    // TODO: Report error (?)
+    // TODO(mehcode): Report error (?)
     return nullptr;
   }
 

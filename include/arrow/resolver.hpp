@@ -17,7 +17,7 @@ class Generator;
 
 class Resolver : public ast::AbstractVisitor {
  public:
-  explicit Resolver(Generator& g, code::Scope& _scope);
+  Resolver(Generator& g, code::Scope& _scope);
 
   virtual ~Resolver() noexcept;
 

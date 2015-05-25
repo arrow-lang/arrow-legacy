@@ -54,7 +54,7 @@ LLVMTypeRef code::FloatType::handle() const noexcept {
 
 LLVMTypeRef code::FunctionType::handle() const noexcept {
   // Determine the result type (either void or declared)
-  // TODO: Full body deduction should come eventually
+  // TODO(mehcode): Full body deduction should come eventually
   auto res = result ? result->handle() : LLVMVoidType();
 
   // Collect the type handles for all paramters

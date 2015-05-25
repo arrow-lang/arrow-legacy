@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include <string>
 #include "arrow/code/scope.hpp"
 
 using arrow::code::Scope;
@@ -24,7 +25,8 @@ bool Scope::exists(const std::string& name, bool traverse) const {
   return get(name, traverse) != nullptr;
 }
 
-auto Scope::get(const std::string& name, bool traverse) const -> std::shared_ptr<Item> {
+auto Scope::get(const std::string& name, bool traverse) const
+    -> std::shared_ptr<Item> {
   auto ref = _items.find(name);
   if (ref != _items.end()) return ref->second;
 

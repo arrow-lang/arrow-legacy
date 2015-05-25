@@ -653,7 +653,7 @@ auto Tokenizer::_scan_string() -> std::shared_ptr<Token> {
   // escapes)
   auto in_escape = false;
   auto in_byte_escape = false;
-  // TODO: auto in_unicode_escape = false;
+  // TODO(mehcode): auto in_unicode_escape = false;
   for (;;) {
     if (in_escape) {
       // Check if we have an extension control character.

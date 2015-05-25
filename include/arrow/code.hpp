@@ -42,7 +42,7 @@ struct AbstractFunction : Item {
 
   std::string name;
 
-protected:
+ protected:
   std::shared_ptr<FunctionType> _type;
 };
 

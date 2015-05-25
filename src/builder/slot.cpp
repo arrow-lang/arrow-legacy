@@ -36,7 +36,7 @@ void Builder::visit(ast::Slot& x) {
     type = build_scalar_of<code::Type>(*x.type);
     if (!type) return;
 
-    // TODO: Check for type mis-match
+    // TODO(mehcode): Check for type mis-match
 
     // Perform the cast (if we have an initializer)
     if (initializer) {
@@ -55,7 +55,7 @@ void Builder::visit(ast::Slot& x) {
     type));
 
   if (initializer) {
-    // TODO: Extract into an `assign` function
+    // TODO(mehcode): Extract into an `assign` function
     // Create a store for the initializer
     LLVMBuildStore(_g._irb, initializer->value_of(_g), handle);
   }

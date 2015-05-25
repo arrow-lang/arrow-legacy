@@ -11,7 +11,7 @@ using arrow::Builder;
 using arrow::resolve;
 
 void Builder::visit(ast::String& x) {
-  // TODO: Unescape escape sequences
+  // TODO(mehcode): Unescape escape sequences
 
   auto type = resolve(_g, *_cs, x);
   auto handle = LLVMBuildGlobalStringPtr(_g._irb, x.text().c_str(), "");

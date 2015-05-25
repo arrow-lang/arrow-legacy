@@ -13,8 +13,8 @@ def main() {
   assert(i64 + 10000000 == 50000000);
   assert(i128 + 10000000000000000000 == 60000000000000000000);
 
-  // TODO: Subtraction
-  // TODO: Multiplication
-  // TODO: Division
-  // TODO: Modulus
+  // TODO(mehcode): Subtraction
+  // TODO(mehcode): Multiplication
+  // TODO(mehcode): Division
+  // TODO(mehcode): Modulus
 }

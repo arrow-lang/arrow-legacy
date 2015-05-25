@@ -1,3 +1,9 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
+#include <string>
 #include <fstream>
 #include <iterator>
 #include "arrow/buffer.hpp"
@@ -8,7 +14,6 @@ using arrow::Buffer;
 
 Buffer::Buffer(const std::string& filename)
   : _stream(nullptr), _queue() {
-
   auto handle = new std::ifstream(filename, std::ios::in|std::ios::binary);
   _stream.reset(handle);
 

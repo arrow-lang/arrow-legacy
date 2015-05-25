@@ -29,7 +29,7 @@ void Expose::visit_function(ast::Function& x) {
   auto handle = LLVMAddFunction(_g._mod, name.c_str(), type->handle());
 
   // Create and set the new function item in the scope
-  // TODO: Functions should receive module scope
+  // TODO(mehcode): Functions should receive module scope
   _scope.set(name, std::make_shared<code::Function>(
     handle,
     type,
