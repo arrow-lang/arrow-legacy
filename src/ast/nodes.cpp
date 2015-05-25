@@ -14,8 +14,8 @@ using std::shared_ptr;
 namespace ast = arrow::ast;
 
 #define IMPL(N) \
-  N::~N() noexcept { } \
-  void N::accept(AbstractVisitor& v) { v.visit(*this); }
+  ast::N::~N() noexcept { } \
+  void ast::N::accept(AbstractVisitor& v) { v.visit(*this); }
 
 IMPL(Node)
 IMPL(TextNode)
@@ -65,27 +65,29 @@ IMPL(Mul)
 IMPL(Div)
 IMPL(Mod)
 
-Node::Node(Span span)
+ast::Node::Node(Span span)
   : span(span) {
 }
 
-Module::Module(Span span)
+ast::Module::Module(Span span)
   : Node(span), sequence() {
 }
 
-Unary::Unary(Span span, std::shared_ptr<Node> operand)
+ast::Unary::Unary(Span span, std::shared_ptr<Node> operand)
   : Node(span), operand(operand) {
 }
 
-Return::Return(Span span, std::shared_ptr<Node> expression)
+ast::Return::Return(Span span, std::shared_ptr<Node> expression)
   : Node(span), expression(expression) {
 }
 
-Binary::Binary(Span span, std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs)
+ast::Binary::Binary(
+  Span span, std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs
+)
   : Node(span), lhs(lhs), rhs(rhs) {
 }
 
-AbstractFunction::AbstractFunction(
+ast::AbstractFunction::AbstractFunction(
   Span span,
   std::shared_ptr<Identifier> name,
   std::shared_ptr<Node> result
@@ -93,18 +95,18 @@ AbstractFunction::AbstractFunction(
   : Node(span), name(name), result(result), parameters() {
 }
 
-Call::Call(Span span, std::shared_ptr<Node> expression)
+ast::Call::Call(Span span, std::shared_ptr<Node> expression)
   : Node(span), expression(expression) {
 }
 
-Parameter::Parameter(
+ast::Parameter::Parameter(
   Span span,
   std::shared_ptr<Identifier> name,
   std::shared_ptr<Node> type
 ) : Node(span), name(name), type(type) {
 }
 
-Slot::Slot(
+ast::Slot::Slot(
   Span span,
   std::shared_ptr<Identifier> name,
   std::shared_ptr<Node> type,
@@ -112,23 +114,23 @@ Slot::Slot(
 ) : Node(span), name(name), type(type), initializer(initializer) {
 }
 
-Integer::Integer(Span span, const std::string& text, unsigned base)
+ast::Integer::Integer(Span span, const std::string& text, unsigned base)
   : TextNode(span, text), base(base) {
 }
 
-TextNode::TextNode(Span span, const std::string& text)
+ast::TextNode::TextNode(Span span, const std::string& text)
   : Node(span), text(text) {
 }
 
-Boolean::Boolean(Span span, bool value)
+ast::Boolean::Boolean(Span span, bool value)
   : Node(span), value(value) {
 }
 
-String::String(Span span, const std::vector<std::uint8_t>& bytes)
+ast::String::String(Span span, const std::vector<std::uint8_t>& bytes)
   : Node(span), bytes(bytes) {
 }
 
-std::uint64_t Integer::minimum_bits() const {
+std::uint64_t ast::Integer::minimum_bits() const {
   // Find the number of bits we need (at least) to store
   // this integer value
   mpz_t value;

@@ -13,6 +13,12 @@
 
 namespace po = boost::program_options;
 // using namespace arrow;
+namespace ast = arrow::ast;
+using arrow::Log;
+using arrow::Parser;
+using arrow::Tokenizer;
+using arrow::Generator;
+using arrow::Token;
 using std::printf;
 
 void print_help(const char* binary_path) {
@@ -83,13 +89,13 @@ int main(int argc, char** argv) {
       printf("%s: ", tok->span.to_string().c_str());
 
       if (tok->type == Token::Type::Integer) {
-        auto tok_ = std::static_pointer_cast<IntegerToken>(tok);
+        auto tok_ = std::static_pointer_cast<arrow::IntegerToken>(tok);
         printf("integer: %s (%d)\n", tok_->text.c_str(), tok_->base);
       } else if (tok->type == Token::Type::Float) {
-        auto tok_ = std::static_pointer_cast<FloatToken>(tok);
+        auto tok_ = std::static_pointer_cast<arrow::FloatToken>(tok);
         printf("float: %s\n", tok_->text.c_str());
       } else if (tok->type == Token::Type::Identifier) {
-        auto tok_ = std::static_pointer_cast<IdentifierToken>(tok);
+        auto tok_ = std::static_pointer_cast<arrow::IdentifierToken>(tok);
         printf("identifier: %s\n", tok_->text.c_str());
       } else {
         printf("%s\n", arrow::to_string(tok->type).c_str());
