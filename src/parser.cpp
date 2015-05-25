@@ -118,6 +118,9 @@ bool Parser::parse_statement()
     case Token::Type::Def:
       return parse_function();
 
+    case Token::Type::Extern:
+      return parse_extern_function();
+
     case Token::Type::Let:
       return parse_slot();
 
@@ -713,27 +716,18 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc)
   return false;
 }
 
-// Function (Declaration)
+// Function Signature
 // ----------------------------------------------------------------------------
-// function = "def" identifier "(" ")" block ;
+// function-signature = identifier function-parameters ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_function() {
-  // Expect `def`
-  auto initial_tok = expect(Token::Type::Def);
-  if (!initial_tok) { return false; }
-
+bool Parser::parse_function_signature(ast::AbstractFunction& fn) {
   // Parse identifier
   if (!parse_identifier()) { return false; }
-  auto name = std::static_pointer_cast<ast::Identifier>(_stack.front());
+  fn.name = std::static_pointer_cast<ast::Identifier>(_stack.front());
   _stack.pop_front();
 
-  // Declare the node
-  auto fn = make_shared<ast::Function>(
-    Span(_t.filename(), initial_tok->span.begin, initial_tok->span.begin),
-    name, nullptr);
-
   // Parse parameter list
-  if (!parse_function_parameters(*fn)) { return false; }
+  if (!parse_function_parameters(fn)) { return false; }
 
   // Check for `->` (to indicate the result type annotation)
   if (_t.peek(0)->type == Token::Type::Arrow) {
@@ -742,9 +736,60 @@ bool Parser::parse_function() {
 
     // Parse type
     if (!parse_type()) { return false; }
-    fn->result = _stack.front();
+    fn.result = _stack.front();
     _stack.pop_front();
   }
+
+  return true;
+}
+
+// External Function (Declaration)
+// ----------------------------------------------------------------------------
+// function = "extern" "def" function-signature ";" ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_extern_function() {
+  // Expect `extern`
+  auto initial_tok = expect(Token::Type::Extern);
+  if (!initial_tok) { return false; }
+
+  // Expect `def`
+  if (!expect(Token::Type::Def)) { return false; }
+
+  // Declare the node
+  auto fn = make_shared<ast::ExternalFunction>(
+    Span(_t.filename(), initial_tok->span.begin, initial_tok->span.end),
+    nullptr, nullptr);
+
+  // Parse signature
+  if (!parse_function_signature(*fn)) { return false; }
+
+  // Expect `;`
+  auto last_tok = expect(Token::Type::Semicolon);
+  if (!last_tok) { return false; }
+
+  // Push the node
+  fn->span.end = last_tok->span.end;
+  _stack.push_front(fn);
+
+  return true;
+}
+
+// Function (Declaration)
+// ----------------------------------------------------------------------------
+// function = "def" function-signature block ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_function() {
+  // Expect `def`
+  auto initial_tok = expect(Token::Type::Def);
+  if (!initial_tok) { return false; }
+
+  // Declare the node
+  auto fn = make_shared<ast::Function>(
+    Span(_t.filename(), initial_tok->span.begin, initial_tok->span.end),
+    nullptr, nullptr);
+
+  // Parse signature
+  if (!parse_function_signature(*fn)) { return false; }
 
   // Expect `{`
   if (!expect(Token::Type::LeftBrace)) { return false; }
@@ -776,9 +821,9 @@ bool Parser::parse_function() {
 
 // Function Parameter List
 // ----------------------------------------------------------------------------
-// TODO
+// function-parameters = "(" [ function-parameter { "," function-parameter } ] [ "," ] ")" ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_function_parameters(ast::Function& fn) {
+bool Parser::parse_function_parameters(ast::AbstractFunction& fn) {
   // Expect `(`
   if (!expect(Token::Type::LeftParenthesis)) { return false; }
 
@@ -814,7 +859,7 @@ bool Parser::parse_function_parameters(ast::Function& fn) {
 
 // Function Parameter
 // ----------------------------------------------------------------------------
-// TODO
+// function-parameter = identifier ":" type ;
 // ----------------------------------------------------------------------------
 bool Parser::parse_function_parameter() {
   // Parse identifier

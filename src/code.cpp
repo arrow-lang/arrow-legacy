@@ -11,22 +11,47 @@ namespace code = arrow::code;
   code::N::~N() noexcept { }
 
 IMPL(Module)
+IMPL(AbstractFunction)
 IMPL(Function)
+IMPL(ExternalFunction)
 IMPL(Slot)
 
 code::Module::Module(const std::string& name, Scope* parent)
   : scope{parent}, name{name} {
 }
 
+code::AbstractFunction::AbstractFunction(
+  std::shared_ptr<FunctionType> type,
+  const std::string& name
+)
+  : name{name}, _type{type} {
+}
+
 code::Function::Function(
   LLVMValueRef handle,
-  std::shared_ptr<Type> type,
+  std::shared_ptr<FunctionType> type,
   const std::string& name,
   Scope* parent
 )
-  : name{name}, scope{parent}, _handle{handle}, _type{type} {
+  : AbstractFunction(type, name), scope{parent}, _handle{handle} {
+}
+
+code::ExternalFunction::ExternalFunction(
+  LLVMModuleRef _mod,
+  std::shared_ptr<FunctionType> type,
+  const std::string& name
+)
+  : AbstractFunction(type, name), _mod{_mod}, _handle{nullptr} {
 }
 
 code::Slot::Slot(const std::string& name, LLVMValueRef handle, std::shared_ptr<Type> type)
   : code::Value(handle, type), name{name} {
+}
+
+LLVMValueRef code::ExternalFunction::handle() noexcept {
+  if (_handle == nullptr) {
+    _handle = LLVMAddFunction(_mod, name.c_str(), _type->handle());
+  }
+
+  return _handle;
 }

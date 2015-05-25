@@ -14,6 +14,8 @@ IMPL(Node)
 IMPL(TextNode)
 IMPL(Identifier)
 IMPL(Module)
+IMPL(AbstractFunction)
+IMPL(ExternalFunction)
 IMPL(Function)
 IMPL(Parameter)
 IMPL(Call)
@@ -76,12 +78,12 @@ Binary::Binary(Span span, std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs)
   : Node(span), lhs(lhs), rhs(rhs) {
 }
 
-Function::Function(
+AbstractFunction::AbstractFunction(
   Span span,
   std::shared_ptr<Identifier> name,
   std::shared_ptr<Node> result
 )
-  : Node(span), name(name), result(result), sequence(), parameters() {
+  : Node(span), name(name), result(result), parameters() {
 }
 
 Call::Call(Span span, std::shared_ptr<Node> expression)

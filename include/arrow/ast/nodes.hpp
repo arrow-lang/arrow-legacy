@@ -214,19 +214,38 @@ struct Parameter : Node {
   std::shared_ptr<Node> type;
 };
 
-struct Function : Node {
-  Function(Span span,
+struct AbstractFunction : Node {
+  AbstractFunction(Span span,
     std::shared_ptr<Identifier> name,
     std::shared_ptr<Node> result);
 
-  virtual ~Function() noexcept;
+  virtual ~AbstractFunction() noexcept;
 
   virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Identifier> name;
   std::shared_ptr<Node> result;
-  std::deque<std::shared_ptr<Node>> sequence;
   std::deque<std::shared_ptr<Parameter>> parameters;
+};
+
+struct ExternalFunction : AbstractFunction {
+  using AbstractFunction::AbstractFunction;
+
+  virtual ~ExternalFunction() noexcept;
+
+  virtual void accept(AbstractVisitor& v);
+
+  std::deque<std::shared_ptr<Node>> sequence;
+};
+
+struct Function : AbstractFunction {
+  using AbstractFunction::AbstractFunction;
+
+  virtual ~Function() noexcept;
+
+  virtual void accept(AbstractVisitor& v);
+
+  std::deque<std::shared_ptr<Node>> sequence;
 };
 
 struct Call : Node {

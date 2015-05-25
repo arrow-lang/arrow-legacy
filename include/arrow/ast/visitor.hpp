@@ -26,6 +26,8 @@ class AbstractVisitor {
   friend struct Binary;
   friend struct Identifier;
   friend struct Module;
+  friend struct AbstractFunction;
+  friend struct ExternalFunction;
   friend struct Function;
   friend struct Parameter;
   friend struct Call;
@@ -70,6 +72,8 @@ class AbstractVisitor {
   virtual void visit(TextNode&) { }
   virtual void visit(Identifier&) { }
   virtual void visit(Module&) { }
+  virtual void visit(AbstractFunction&) { }
+  virtual void visit(ExternalFunction&) { }
   virtual void visit(Function&) { }
   virtual void visit(Parameter&) { }
   virtual void visit(Call&) { }
@@ -120,6 +124,8 @@ class Visitor : public AbstractVisitor {
 
   virtual void visit(Identifier&);
   virtual void visit(Module&);
+  virtual void visit(AbstractFunction&) { }
+  virtual void visit(ExternalFunction&);
   virtual void visit(Function&);
   virtual void visit(Parameter&);
   virtual void visit(Call&);
@@ -162,6 +168,7 @@ class Visitor : public AbstractVisitor {
 
   virtual void visit_id(Identifier&) { }
   virtual void visit_module(Module&);
+  virtual void visit_extern_function(ExternalFunction&) { }
   virtual void visit_function(Function&) { }
   virtual void visit_parameter(Parameter&) { }
   virtual void visit_call(Call&) { }

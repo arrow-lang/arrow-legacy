@@ -56,6 +56,9 @@ struct Token {
     /// Def
     Def,
 
+    /// Extern
+    Extern,
+
     /// Plus `+`
     /// Binary addition
     Plus,

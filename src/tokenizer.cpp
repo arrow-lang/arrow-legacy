@@ -608,6 +608,7 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
     {"xor", Token::Type::Xor},
     {"not", Token::Type::Not},
     {"def", Token::Type::Def},
+    {"extern", Token::Type::Extern},
     {"let", Token::Type::Let},
     {"mut", Token::Type::Mut},
     {"true", Token::Type::True},

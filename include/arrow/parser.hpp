@@ -48,6 +48,7 @@ class Parser {
   bool parse_integer();
   bool parse_float();
   bool parse_function();
+  bool parse_extern_function();
   bool parse_identifier();
   bool parse_boolean();
   bool parse_string();
@@ -58,7 +59,8 @@ class Parser {
   bool parse_type();
 
   bool parse_function_parameter();
-  bool parse_function_parameters(ast::Function& fn);
+  bool parse_function_signature(ast::AbstractFunction& fn);
+  bool parse_function_parameters(ast::AbstractFunction& fn);
 
   bool parse_binary_expression(unsigned prec = 0, unsigned assoc = 0);
 

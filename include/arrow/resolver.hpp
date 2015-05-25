@@ -32,6 +32,8 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::Node&) { }
   virtual void visit(ast::TextNode&) { }
   virtual void visit(ast::Identifier&);
+  virtual void visit(ast::AbstractFunction&);
+  virtual void visit(ast::ExternalFunction&);
   virtual void visit(ast::Function&);
   virtual void visit(ast::Parameter&) { }
   virtual void visit(ast::Module&) { }

@@ -23,6 +23,7 @@ class Expose : public ast::Visitor {
   virtual ~Expose() noexcept;
 
   virtual void visit_function(ast::Function&);
+  virtual void visit_extern_function(ast::ExternalFunction&);
 
  private:
   Generator& _g;

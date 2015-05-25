@@ -21,7 +21,8 @@ Expose::~Expose() noexcept { }
 
 void Expose::visit_function(ast::Function& x) {
   // Resolve the type of this function
-  auto type = resolve(_g, _scope, x);
+  auto type = std::static_pointer_cast<code::FunctionType>(
+    resolve(_g, _scope, x));
   if (!type) { return; }
 
   auto& name = x.name->text;
@@ -34,4 +35,17 @@ void Expose::visit_function(ast::Function& x) {
     type,
     name,
     &_scope));
+}
+
+void Expose::visit_extern_function(ast::ExternalFunction& x) {
+  // Resolve the type of this function
+  auto type = std::static_pointer_cast<code::FunctionType>(
+    resolve(_g, _scope, x));
+  if (!type) { return; }
+
+  // Create and set the new function item in the scope
+  _scope.set(x.name->text, std::make_shared<code::ExternalFunction>(
+    _g._mod,
+    type,
+    x.name->text));
 }

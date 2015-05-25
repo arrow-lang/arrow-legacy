@@ -16,7 +16,7 @@ void Builder::visit(ast::Call& x) {
 
   // Attempt to get the function to call
   // TODO: Function "values"
-  auto item = build_scalar_of<code::Function>(*x.expression);
+  auto item = build_scalar_of<code::AbstractFunction>(*x.expression);
   if (!item) { return; }
   auto& type = item->type()->as<code::FunctionType>();
 

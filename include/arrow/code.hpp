@@ -28,10 +28,28 @@ struct Module : Item {
   std::string name;
 };
 
+struct AbstractFunction : Item {
+  AbstractFunction(
+    std::shared_ptr<FunctionType> type, const std::string& name);
+
+  virtual ~AbstractFunction() noexcept;
+
+  virtual LLVMValueRef handle() noexcept = 0;
+
+  virtual std::shared_ptr<FunctionType> type() const noexcept {
+    return _type;
+  }
+
+  std::string name;
+
+protected:
+  std::shared_ptr<FunctionType> _type;
+};
+
 /// A named function definition
-struct Function : Item {
+struct Function : AbstractFunction {
   Function(
-    LLVMValueRef handle, std::shared_ptr<Type> type,
+    LLVMValueRef handle, std::shared_ptr<FunctionType> type,
     const std::string& name, Scope* parent);
 
   virtual ~Function() noexcept;
@@ -40,16 +58,25 @@ struct Function : Item {
     return _handle;
   }
 
-  virtual std::shared_ptr<Type> type() const noexcept {
-    return _type;
-  }
-
-  std::string name;
   Scope scope;
 
  private:
   LLVMValueRef _handle;
-  std::shared_ptr<Type> _type;
+};
+
+/// An external function declaration
+struct ExternalFunction : AbstractFunction {
+  ExternalFunction(
+    LLVMModuleRef _mod, std::shared_ptr<FunctionType> type,
+    const std::string& name);
+
+  virtual ~ExternalFunction() noexcept;
+
+  virtual LLVMValueRef handle() noexcept;
+
+ private:
+  LLVMModuleRef _mod;
+  LLVMValueRef _handle;
 };
 
 /// A named slot declaration

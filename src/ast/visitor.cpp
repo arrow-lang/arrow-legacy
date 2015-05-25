@@ -24,6 +24,7 @@ Visitor::~Visitor() noexcept { }
 DELEGATE(Identifier, id)
 DELEGATE(Module, module)
 DELEGATE(Function, function)
+DELEGATE(ExternalFunction, extern_function)
 DELEGATE(Parameter, parameter)
 DELEGATE(Call, call)
 DELEGATE(Slot, slot)

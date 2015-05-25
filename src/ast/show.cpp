@@ -149,6 +149,15 @@ void Show::visit(Function& x) {
     _ctx.pop();
   }
 
+  auto& params = _el().add("Parameters", "");
+  _ctx.push(&params);
+
+  for (auto& item : x.parameters) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
+
   auto& seq = _el().add("Sequence", "");
   _ctx.push(&seq);
 
@@ -157,6 +166,24 @@ void Show::visit(Function& x) {
   }
 
   _ctx.pop();
+
+  _ctx.pop();
+}
+
+void Show::visit(ExternalFunction& x) {
+  auto& fn = _el().add("ExternalFunction", "");
+  _ctx.push(&fn);
+
+  fn.add("<xmlattr>.name", x.name->text.c_str());
+
+  if (x.result != nullptr) {
+    auto& type = _el().add("Result", "");
+    _ctx.push(&type);
+
+    x.result->accept(*this);
+
+    _ctx.pop();
+  }
 
   auto& params = _el().add("Parameters", "");
   _ctx.push(&params);
