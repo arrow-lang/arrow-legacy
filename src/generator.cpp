@@ -116,6 +116,9 @@ void Generator::_declare_basic_types() {
 
   // TODO: Machine-dependent integer types
   // TODO: UTF-32 character type
-  // TODO: UTF-8 string type
+
+  // UTF-8 string type
+  _scope.set("str", std::make_shared<code::StringType>());
+
   // TODO: Byte string type
 }

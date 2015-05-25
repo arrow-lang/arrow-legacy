@@ -14,6 +14,7 @@ namespace code = arrow::code;
 
 IMPL(Type)
 IMPL(IntegerType)
+IMPL(StringType)
 IMPL(FloatType)
 IMPL(BooleanType)
 IMPL(FunctionType)
@@ -64,4 +65,8 @@ LLVMTypeRef code::FunctionType::handle() const noexcept {
   }
 
   return LLVMFunctionType(res, params.data(), params.size(), false);
+}
+
+LLVMTypeRef code::StringType::handle() const noexcept {
+  return LLVMPointerType(LLVMIntType(8), 0);
 }

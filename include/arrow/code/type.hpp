@@ -62,6 +62,12 @@ struct FloatType : Type {
   unsigned bits;
 };
 
+struct StringType : Type {
+  virtual ~StringType() noexcept;
+
+  virtual LLVMTypeRef handle() const noexcept;
+};
+
 struct FunctionType : Type {
   explicit FunctionType(std::shared_ptr<code::Type> result);
 
