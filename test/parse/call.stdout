@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Module>
  <Function name="main">
+  <Parameters/>
   <Sequence>
    <Call>
-    <Identifier>main</Identifier>
+    <Expression>
+     <Identifier>main</Identifier>
+    </Expression>
+    <Arguments/>
    </Call>
   </Sequence>
  </Function>

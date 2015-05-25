@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Module>
  <Function name="main">
+  <Parameters/>
   <Sequence/>
  </Function>
  <Function name="ようこそ">
+  <Parameters/>
   <Sequence/>
  </Function>
  <Function name="main">
+  <Parameters/>
   <Sequence>
    <Return>
     <Integer base="10">10</Integer>
@@ -14,6 +17,7 @@
   </Sequence>
  </Function>
  <Function name="ようこそ">
+  <Parameters/>
   <Sequence>
    <Return>
     <Integer base="10">60</Integer>
