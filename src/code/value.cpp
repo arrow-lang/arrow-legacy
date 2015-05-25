@@ -27,7 +27,7 @@ LLVMValueRef Value::value_of(Generator& g) const noexcept {
   }
 }
 
-LLVMValueRef Value::address_of(Generator& g) const noexcept {
+LLVMValueRef Value::address_of(Generator&) const noexcept {
   if (has_address()) {
     return _handle;
   } else {

@@ -35,7 +35,7 @@ class Generator {
  private:
   friend class Builder;
   friend class Expose;
-  friend class code::Value;
+  friend struct code::Value;
 
   void _declare_basic_types();
 

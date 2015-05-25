@@ -192,7 +192,7 @@ bool Parser::parse_primary_expression()
       // TODO: Investigate if we need an error message here; this should
       //  only be reached if we errored out somewhere else
       _t.pop();
-      return nullptr;
+      return false;
   }
 }
 
