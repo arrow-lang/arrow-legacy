@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <Select>
+  <SelectBranch>
+   <Condition>
+    <NotEqualTo>
+     <Identifier>condition</Identifier>
+     <Boolean>false</Boolean>
+    </NotEqualTo>
+   </Condition>
+   <Sequence>
+    <Identifier>statement</Identifier>
+    <Identifier>other_statement</Identifier>
+   </Sequence>
+  </SelectBranch>
+ </Select>
+ <Select>
+  <SelectBranch>
+   <Condition>
+    <GreaterThan>
+     <Identifier>condition</Identifier>
+     <Integer base="10">10</Integer>
+    </GreaterThan>
+   </Condition>
+   <Sequence>
+    <Return>
+     <Integer base="10">0</Integer>
+    </Return>
+   </Sequence>
+  </SelectBranch>
+  <SelectBranch>
+   <Condition>
+    <LessThan>
+     <Identifier>other_condition</Identifier>
+     <Integer base="10">30</Integer>
+    </LessThan>
+   </Condition>
+   <Sequence>
+    <Return>
+     <Integer base="10">30</Integer>
+    </Return>
+   </Sequence>
+  </SelectBranch>
+  <SelectBranch>
+   <Sequence>
+    <Return>
+     <Integer base="10">20</Integer>
+    </Return>
+   </Sequence>
+  </SelectBranch>
+ </Select>
+ <Slot name="name">
+  <Initializer>
+   <Select>
+    <SelectBranch>
+     <Condition>
+      <Identifier>condition</Identifier>
+     </Condition>
+     <Sequence>
+      <Integer base="10">40</Integer>
+     </Sequence>
+    </SelectBranch>
+    <SelectBranch>
+     <Sequence>
+      <Integer base="10">30</Integer>
+     </Sequence>
+    </SelectBranch>
+   </Select>
+  </Initializer>
+ </Slot>
+</Module>

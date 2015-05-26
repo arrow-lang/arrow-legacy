@@ -64,6 +64,8 @@ IMPL(Sub)
 IMPL(Mul)
 IMPL(Div)
 IMPL(Mod)
+IMPL(Select)
+IMPL(SelectBranch)
 
 ast::Node::Node(Span span)
   : span(span) {
@@ -138,4 +140,10 @@ std::uint64_t ast::Integer::minimum_bits() const {
   auto size = mpz_sizeinbase(value, 2);
   mpz_clear(value);
   return size;
+}
+
+ast::SelectBranch::SelectBranch(
+  Span span,
+  std::shared_ptr<Node> condition
+) : Node(span), condition(condition), sequence{} {
 }

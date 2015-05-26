@@ -202,6 +202,9 @@ struct Token {
     /// If
     If,
 
+    /// Else
+    Else,
+
     /// While
     While,
 

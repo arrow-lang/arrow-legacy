@@ -57,12 +57,15 @@ class Parser {
   bool parse_call_expression();
   bool parse_slot();
   bool parse_type();
+  bool parse_select();
 
   bool parse_function_parameter();
   bool parse_function_signature(ast::AbstractFunction& fn);
   bool parse_function_parameters(ast::AbstractFunction& fn);
 
   bool parse_binary_expression(unsigned prec = 0, unsigned assoc = 0);
+
+  int parse_select_branch(ast::Select& x, unsigned index);
 
   Tokenizer& _t;
 

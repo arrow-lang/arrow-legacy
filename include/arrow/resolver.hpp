@@ -74,6 +74,8 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::Mul&);
   virtual void visit(ast::Div&);
   virtual void visit(ast::Mod&);
+  virtual void visit(ast::Select&) { }
+  virtual void visit(ast::SelectBranch&) { }
 
  private:
   std::shared_ptr<code::Type> common_type(

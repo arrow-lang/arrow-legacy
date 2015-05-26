@@ -44,6 +44,42 @@ void Show::visit(Module& x) {
   _ctx.pop();
 }
 
+void Show::visit(Select& x) {
+  auto& node = _el().add("Select", "");
+  _ctx.push(&node);
+
+  for (auto& item : x.branches) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
+}
+
+void Show::visit(SelectBranch& x) {
+  auto& node = _el().add("SelectBranch", "");
+  _ctx.push(&node);
+
+  if (x.condition) {
+    auto& cond = _el().add("Condition", "");
+    _ctx.push(&cond);
+
+    x.condition->accept(*this);
+
+    _ctx.pop();
+  }
+
+  auto& seq = _el().add("Sequence", "");
+  _ctx.push(&seq);
+
+  for (auto& item : x.sequence) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
+
+  _ctx.pop();
+}
+
 void Show::visit(Return& x) {
   auto& node = _el().add("Return", "");
   if (x.expression) {

@@ -66,6 +66,9 @@ std::string arrow::to_string(Token::Type type) noexcept {
     case Token::Type::If:
       return "`if`";
 
+    case Token::Type::Else:
+      return "`else`";
+
     case Token::Type::While:
       return "`while`";
 

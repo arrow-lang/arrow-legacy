@@ -275,6 +275,27 @@ struct Slot : Node {
   std::shared_ptr<Node> initializer;
 };
 
+struct SelectBranch : Node {
+  SelectBranch(Span span, std::shared_ptr<Node> condition);
+
+  virtual ~SelectBranch() noexcept;
+
+  virtual void accept(AbstractVisitor& v);
+
+  std::shared_ptr<Node> condition;
+  std::deque<std::shared_ptr<Node>> sequence;
+};
+
+struct Select : Node {
+  using Node::Node;
+
+  virtual ~Select() noexcept;
+
+  virtual void accept(AbstractVisitor& v);
+
+  std::deque<std::shared_ptr<SelectBranch>> branches;
+};
+
 }  // namespace ast
 }  // namespace arrow
 

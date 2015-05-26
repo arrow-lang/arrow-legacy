@@ -63,9 +63,17 @@ DELEGATE(Sub, sub)
 DELEGATE(Mul, mul)
 DELEGATE(Div, div)
 DELEGATE(Mod, mod)
+DELEGATE(Select, select)
+DELEGATE(SelectBranch, select_branch)
 
 void Visitor::visit_module(Module& x) {
   for (auto& item : x.sequence) {
+    item->accept(*this);
+  }
+}
+
+void Visitor::visit_select(Select& x) {
+  for (auto& item : x.branches) {
     item->accept(*this);
   }
 }

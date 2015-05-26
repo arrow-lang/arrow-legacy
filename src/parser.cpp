@@ -125,6 +125,9 @@ bool Parser::parse_statement() {
     case Token::Type::Let:
       return parse_slot();
 
+    case Token::Type::If:
+      return parse_select();
+
     default:
       // We must be an `expression statement`
       return parse_expression_statement();
@@ -187,6 +190,9 @@ bool Parser::parse_primary_expression() {
 
     case Token::Type::LeftParenthesis:
       return parse_paren_expression();
+
+    case Token::Type::If:
+      return parse_select();
 
     default:
       // Unexpected.. whatever we are
@@ -931,4 +937,108 @@ bool Parser::parse_slot() {
 bool Parser::parse_type() {
   // TODO(mehcode): complex type expressions
   return parse_identifier();
+}
+
+// Select
+// ----------------------------------------------------------------------------
+// TODO
+// ----------------------------------------------------------------------------
+bool Parser::parse_select() {
+  // Declare the node
+  auto node = make_shared<ast::Select>(
+    Span(_t.filename(), {0, 0}, {0, 0}));
+
+  // Iterate and attempt to parse as many select branches
+  // as we can
+  unsigned index = 0;
+  for (;;) {
+    int res = parse_select_branch(*node, index);
+    if (res == -1) { return false; }
+    if (res == 1) { break; }
+    index += 1;
+  }
+
+  _stack.push_front(node);
+  return true;
+}
+
+// Select Branch
+//  Returns 0 to indicate success and to continue parsing branches
+//  Returns 1 to indicate that we ran out of branches
+//  Returns -1 to indicate a failure to parse
+// ----------------------------------------------------------------------------
+// TODO
+// ----------------------------------------------------------------------------
+int Parser::parse_select_branch(ast::Select& x, unsigned index) {
+  Position begin(0, 0);
+
+  // Do we have a select branch to parse?
+  auto tok = _t.peek(0);
+  if (!((index == 0 && tok->type == Token::Type::If) ||
+        (index > 0 && tok->type == Token::Type::Else))) {
+    return 1;
+  }
+
+  if (index > 0) {
+    // If we are not at the first branch, there must be an `else`
+    tok = expect(Token::Type::Else);
+    if (!tok) { return -1; }
+    begin = tok->span.begin;
+  }
+
+  tok = _t.peek(0);
+  std::shared_ptr<ast::Node> cond = nullptr;
+  if (tok->type == Token::Type::If) {
+    if (!expect(Token::Type::If)) { return -1; }
+
+    // If we are at the first branch, this is the first token
+    if (index == 0) { begin = tok->span.begin; }
+
+    // Parse condition (expression)
+    if (!parse_expression()) { return false; }
+    cond = _stack.front();
+    _stack.pop_front();
+  } else if (index == 0) {
+    // If we are at the first branch, there must be an `if <condition>`, else
+    // we could be the closing `else`
+    expect(Token::Type::If);
+    return -1;
+  }
+
+  // Declare the node
+  auto node = make_shared<ast::SelectBranch>(
+    Span(_t.filename(), begin, begin), cond);
+
+  // TODO: Refactor into a `parse_block` once we need another one
+  // Expect `{`
+  if (!expect(Token::Type::LeftBrace)) { return false; }
+
+  // Enumerate and attempt to match rules until we reach
+  // `}` or the end of stream (which would be an error)
+  while ((_t.peek()->type != Token::Type::End) &&
+         (_t.peek()->type != Token::Type::RightBrace)) {
+    // Try and parse a statement ..
+    if (parse_statement()) {
+      // Consume the parsed stack
+      node->sequence.insert(
+        node->sequence.end(), _stack.begin(), _stack.end());
+    }
+
+    // Clear the (parsed) stack
+    _stack.clear();
+  }
+
+  // Expect `}`
+  tok = expect(Token::Type::RightBrace);
+  if (!tok) { return false; }
+
+  // Push the node
+  node->span.end = tok->span.end;
+  x.branches.push_back(node);
+
+  // Update the span of the select
+  if (index == 0) { x.span.begin = node->span.begin; }
+  x.span.end = node->span.end;
+
+  return 0;
 }
