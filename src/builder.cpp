@@ -41,8 +41,8 @@ void Builder::visit(ast::Function& node) {
       // No result type
       LLVMBuildRetVoid(_g._irb);
     } else {
-      // We should have gotten a result
-      // TODO(mehcode): Report an error
+      // We should have gotten a result; report an error and exit
+      Log::get().error(node.span, "not all code paths return a value");
       return;
     }
   }

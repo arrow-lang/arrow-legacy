@@ -99,6 +99,22 @@ def handle_parse(binary_path, filename):
     return handle_(binary_path, filename, "--parse")
 
 
+def handle_run(binary_path, filename):
+    filename = path.relpath(filename)
+    p = Popen(
+        [binary_path, filename], stdout=PIPE, stderr=PIPE,
+        cwd=path.join(path.dirname(__file__), ".."),
+    )
+    interpreter = Popen(["lli"], stdin=p.stdout, stdout=PIPE, stderr=PIPE)
+
+    stdout, _ = interpreter.communicate()
+
+    expected = get_expected(filename, "stdout")
+    test = expected == stdout.decode('utf-8') and interpreter.returncode == 0
+
+    return test
+
+
 def run(ctx):
     print_sep("test session starts", "=", end="")
 
@@ -106,6 +122,7 @@ def run(ctx):
 
     run_("tokenize", ctx, binary_path)
     run_("parse", ctx, binary_path)
+    run_("run", ctx, binary_path)
 
     print_report()
 
