@@ -37,10 +37,10 @@ class Builder : public ast::AbstractVisitor {
   virtual void visit(ast::Float&);
   virtual void visit(ast::Boolean&);
   virtual void visit(ast::String&);
-  virtual void visit(ast::Promote&) { }
-  virtual void visit(ast::NegateLogical&) { }
-  virtual void visit(ast::NegateBit&) { }
-  virtual void visit(ast::NegateNumeric&) { }
+  virtual void visit(ast::Promote&);
+  virtual void visit(ast::NegateLogical&);
+  virtual void visit(ast::NegateBit&);
+  virtual void visit(ast::NegateNumeric&);
   virtual void visit(ast::Assign&) { }
   virtual void visit(ast::AssignAdd&) { }
   virtual void visit(ast::AssignSub&) { }
@@ -80,6 +80,10 @@ class Builder : public ast::AbstractVisitor {
     ast::Binary& x,
     std::function<LLVMValueRef(
       std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);
+
+  void do_unary(
+    ast::Unary& x,
+    std::function<LLVMValueRef(std::shared_ptr<code::Value>)> cb);
 
   void build(
     ast::Node& node, code::Scope* scope = nullptr);

@@ -45,10 +45,10 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::Float&);
   virtual void visit(ast::Boolean&);
   virtual void visit(ast::String&);
-  virtual void visit(ast::Promote&) { }
-  virtual void visit(ast::NegateLogical&) { }
-  virtual void visit(ast::NegateBit&) { }
-  virtual void visit(ast::NegateNumeric&) { }
+  virtual void visit(ast::Promote&);
+  virtual void visit(ast::NegateLogical&);
+  virtual void visit(ast::NegateBit&);
+  virtual void visit(ast::NegateNumeric&);
   virtual void visit(ast::Assign&) { }
   virtual void visit(ast::AssignAdd&) { }
   virtual void visit(ast::AssignSub&) { }

@@ -30,7 +30,7 @@ void Builder::visit(ast::Call& x) {
   unsigned arg_index = 0;
   for (auto& arg_node : x.arguments) {
     auto arg = build_scalar_of<code::Value>(*arg_node);
-    if (!item) { return; }
+    if (!arg) { return; }
 
     // Cast the argument to the appropriate type
     arg = arg->cast(_g, *arg_node, type.parameters.at(arg_index));
