@@ -56,37 +56,6 @@ void Builder::visit(ast::Function& node) {
       param_type
     ));
   }
-//
-// let mut i: int = 0;
-// while i as uint < type_.parameters.size {
-//     # Get the parameter node.
-//     let prm_han: *code.Handle = type_.parameters.get_ptr(i) as *code.Handle;
-//     let prm: *code.Parameter = prm_han._object as *code.Parameter;
-//
-//     # Get the type handle.
-//     let prm_type: *code.Type = prm.type_._object as *code.Type;
-//
-//     # Allocate this param.
-//     let mut val: *llvm.LLVMOpaqueValue;
-//     val = llvm.LLVMBuildAlloca(
-//         g.irb, prm_type.handle,
-//         prm.name.data());
-//
-//     # Get the parameter handle.
-//     let mut prm_val: *llvm.LLVMOpaqueValue;
-//     prm_val = llvm.LLVMGetParam(x.handle, i as uint32);
-//
-//     # Store the parameter in the allocation.
-//     llvm.LLVMBuildStore(g.irb, prm_val, val);
-//
-//     # Insert into the local scope.
-//     x.scope.insert(prm.name.data() as str, code.make_local_slot(
-//         prm.type_, false, val));
-//
-//     # Continue.
-//     i = i + 1;
-// }
-
 
   // Iterate and build each node in the function sequence
   for (auto& el : node.sequence) {
