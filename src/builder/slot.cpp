@@ -36,11 +36,10 @@ void Builder::visit(ast::Slot& x) {
     type = build_scalar_of<code::Type>(*x.type);
     if (!type) return;
 
-    // TODO(mehcode): Check for type mis-match
-
     // Perform the cast (if we have an initializer)
     if (initializer) {
-      initializer = initializer->cast(_g, type);
+      initializer = initializer->cast(_g, *x.initializer, type);
+      if (!initializer) return;
     }
   }
 

@@ -27,6 +27,8 @@ struct Type : Item {
   virtual bool is_signed() const noexcept {
     return false;
   }
+
+  virtual std::string name() const noexcept = 0;
 };
 
 struct IntegerType : Type {
@@ -40,6 +42,8 @@ struct IntegerType : Type {
     return _is_signed;
   }
 
+  virtual std::string name() const noexcept;
+
   unsigned bits;
 
  private:
@@ -50,6 +54,10 @@ struct BooleanType : Type {
   virtual ~BooleanType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+
+  virtual std::string name() const noexcept {
+    return "bool";
+  }
 };
 
 struct FloatType : Type {
@@ -59,6 +67,8 @@ struct FloatType : Type {
 
   virtual LLVMTypeRef handle() const noexcept;
 
+  virtual std::string name() const noexcept;
+
   unsigned bits;
 };
 
@@ -66,6 +76,10 @@ struct StringType : Type {
   virtual ~StringType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+
+  virtual std::string name() const noexcept {
+    return "str";
+  }
 };
 
 struct FunctionType : Type {
@@ -74,6 +88,8 @@ struct FunctionType : Type {
   virtual ~FunctionType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+
+  virtual std::string name() const noexcept;
 
   std::shared_ptr<Type> result;
   std::deque<std::shared_ptr<Type>> parameters;

@@ -5,6 +5,7 @@
 
 #include "arrow/code/value.hpp"
 #include "arrow/generator.hpp"
+#include "arrow/log.hpp"
 
 using arrow::code::Value;
 
@@ -36,63 +37,85 @@ LLVMValueRef Value::address_of(Generator&) const noexcept {
   }
 }
 
-auto Value::cast(Generator& g, std::shared_ptr<Type> type)
+auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
   -> std::shared_ptr<Value> {
-  // If the types are the same; do nothing
-  // TODO(mehcode): This needs to be extended into a full recursive comparison
-  //    when we have generated types (eg. pointers of arbitrary depth)
-  auto res = value_of(g);
-  if (_type != type) {
-    if (_type->is<code::IntegerType>() && type->is<code::IntegerType>()) {
-      // Cast between integers
-      auto& int_from = _type->as<code::IntegerType>();
-      auto& int_to = type->as<code::IntegerType>();
+  auto value = value_of(g);
+  decltype(value) res = nullptr;
 
-      if (int_from.bits > int_to.bits) {
-        // Truncate
-        res = LLVMBuildTrunc(g._irb, res, type->handle(), "");
+  // TODO(mehcode): Use a special method to check for type equality
+  if (_type == type) {
+    return std::make_shared<code::Value>(value, type);
+  }
+
+  if (_type->is<code::IntegerType>() && type->is<code::IntegerType>()) {
+    // Cast between integers
+    auto& int_from = _type->as<code::IntegerType>();
+    auto& int_to = type->as<code::IntegerType>();
+
+    if (int_from.bits <= int_to.bits) {
+      if (int_from.is_signed()) {
+        // Sign-extend
+        res = LLVMBuildSExt(g._irb, value, type->handle(), "");
       } else {
-        if (int_from.is_signed()) {
-          // Sign-extend
-          res = LLVMBuildSExt(g._irb, res, type->handle(), "");
-        } else {
-          // Zero-extend
-          res = LLVMBuildZExt(g._irb, res, type->handle(), "");
-        }
+        // Zero-extend
+        res = LLVMBuildZExt(g._irb, value, type->handle(), "");
+      }
+    } else if (ctx.is<ast::Integer>()) {
+      // This is a constant integer
+      auto bits = ctx.as<ast::Integer>().minimum_bits();
+      if (bits <= int_to.bits) {
+        // Truncate (but not really; this is a bitcast)
+        res = LLVMBuildTrunc(g._irb, value, type->handle(), "");
+      } else {
+        Log::get().error(ctx.span,
+          "integer literal out of range for '%s'", type->name().c_str());
+
+        return nullptr;
       }
     }
+  }
 
-    if (_type->is<code::IntegerType>() && type->is<code::FloatType>()) {
-      // Convert integer to float
-      if (_type->is_signed()) {
-        res = LLVMBuildSIToFP(g._irb, res, type->handle(), "");
-      } else {
-        res = LLVMBuildUIToFP(g._irb, res, type->handle(), "");
-      }
+  if (_type->is<code::IntegerType>() && type->is<code::FloatType>()) {
+    // Convert integer to float
+    if (_type->is_signed()) {
+      res = LLVMBuildSIToFP(g._irb, value, type->handle(), "");
+    } else {
+      res = LLVMBuildUIToFP(g._irb, value, type->handle(), "");
     }
+  }
 
-    if (type->is<code::IntegerType>() && _type->is<code::FloatType>()) {
-      // Convert float to integer
-      if (type->is_signed()) {
-        res = LLVMBuildFPToSI(g._irb, res, type->handle(), "");
-      } else {
-        res = LLVMBuildFPToUI(g._irb, res, type->handle(), "");
-      }
+  if (type->is<code::IntegerType>() && _type->is<code::FloatType>()) {
+    // Convert float to integer
+    if (type->is_signed()) {
+      res = LLVMBuildFPToSI(g._irb, value, type->handle(), "");
+    } else {
+      res = LLVMBuildFPToUI(g._irb, value, type->handle(), "");
     }
+  }
 
-    if (type->is<code::FloatType>() && _type->is<code::FloatType>()) {
-      // Cast between floats
-      auto& float_from = _type->as<code::FloatType>();
-      auto& float_to = type->as<code::FloatType>();
+  if (type->is<code::FloatType>() && _type->is<code::FloatType>()) {
+    // Cast between floats
+    auto& float_from = _type->as<code::FloatType>();
+    auto& float_to = type->as<code::FloatType>();
 
-      if (float_from.bits > float_to.bits) {
-        // Truncate
-        res = LLVMBuildFPTrunc(g._irb, res, type->handle(), "");
-      } else {
-        // Extend
-        res = LLVMBuildFPExt(g._irb, res, type->handle(), "");
-      }
+    if (float_from.bits > float_to.bits) {
+      // Truncate
+      res = LLVMBuildFPTrunc(g._irb, value, type->handle(), "");
+    } else {
+      // Extend
+      res = LLVMBuildFPExt(g._irb, value, type->handle(), "");
     }
+  }
+
+  // If we didn't manage to cast the expression
+  if (!res) {
+    // FIXME: Get location from AST
+    auto from_name = _type->name();
+    auto to_name = type->name();
+    Log::get().error(ctx.span, "no implicit conversion from '%s' to '%s'",
+      from_name.c_str(), to_name.c_str());
+
+    return nullptr;
   }
 
   // Return a new, casted value

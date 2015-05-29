@@ -26,9 +26,9 @@ void Builder::do_arithmetic(
   if (!lhs || !rhs) return;
 
   // Perform appropriate casts (if needed)
-  lhs = lhs->cast(_g, type);
-  rhs = rhs->cast(_g, type);
-
+  lhs = lhs->cast(_g, *x.lhs, type);
+  rhs = rhs->cast(_g, *x.rhs, type);
+  if (!lhs || !rhs) return;
 
   // Perform the operation
   auto res = cb(lhs, rhs);

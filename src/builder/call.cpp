@@ -33,7 +33,8 @@ void Builder::visit(ast::Call& x) {
     if (!item) { return; }
 
     // Cast the argument to the appropriate type
-    arg = arg->cast(_g, type.parameters.at(arg_index));
+    arg = arg->cast(_g, *arg_node, type.parameters.at(arg_index));
+    if (!arg) return;
 
     arguments.push_back(arg->value_of(_g));
     arg_index += 1;

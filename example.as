@@ -1,17 +1,50 @@
-// def main() -> int32 {
-//   let name = "Ryan";
+// extern def puts(s: str);
+// extern def exit(status: int32);
 //
-//   return 40;
+// def assert(condition: bool) {
+//   // if false {
+//   //   exit(1);
+//   // } else {
+//   //   exit(1);
+//   // }
 // }
 //
-// def test(value: int32) -> str {
-//   return "true";
-// }
+// def main() {
+//   // assert(false);
+//   let x = true;
+//   if x {
+//     puts("Sghs");
+//   }
 
-// extern def printf(format: str, ...args);
-extern def puts(s: str);
+// return 23;
 
-def main() -> int32 {
-  puts("This is that");
+
+def main() -> int8 {
+  // puts(false);
   return 0;
 }
+
+// }
+//
+//
+// // int8
+// // int16
+// // int32
+// // int64
+// // int128
+// // uint8
+// // uint16
+// // uint32
+// // uint64
+// // uint128
+// // float32
+// // float64
+// str
+// bool
+// char
+//
+// int
+// float
+// str
+// bool
+// char

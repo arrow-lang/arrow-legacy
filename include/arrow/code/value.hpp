@@ -10,6 +10,7 @@
 
 #include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
+#include "arrow/ast/nodes.hpp"
 #include "arrow/code/type.hpp"
 
 namespace arrow {
@@ -36,7 +37,8 @@ struct Value : Item {
 
   virtual std::shared_ptr<Type> type() const noexcept;
 
-  std::shared_ptr<code::Value> cast(Generator& g, std::shared_ptr<Type> type);
+  std::shared_ptr<code::Value> cast(
+    Generator& g, ast::Node& ctx, std::shared_ptr<Type> type);
 
  private:
   LLVMValueRef _handle;

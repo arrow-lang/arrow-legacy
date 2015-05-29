@@ -73,6 +73,7 @@ class Builder : public ast::AbstractVisitor {
   Generator& _g;
   code::Scope& _scope;
   code::Scope* _cs;
+  code::Function* _cf;
   std::stack<std::shared_ptr<code::Item>> _stack;
 
   void do_arithmetic(

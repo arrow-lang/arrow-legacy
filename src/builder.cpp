@@ -29,6 +29,11 @@ void Builder::visit(ast::Function& node) {
   auto block = LLVMAppendBasicBlock(item->handle(), "");
   LLVMPositionBuilderAtEnd(_g._irb, block);
 
+  // Set us as the active function (so return statements know who
+  // to return from)
+  auto of = _cf;
+  _cf = item.get();
+
   for (auto& el : node.sequence) {
     build(*el, &item->scope);
   }
@@ -40,12 +45,16 @@ void Builder::visit(ast::Function& node) {
     if (!item->type()->as<code::FunctionType>().result) {
       // No result type
       LLVMBuildRetVoid(_g._irb);
-    } else {
+    // TODO: Should really check if errors occured for this function
+    } else if (Log::get().count("error") == 0) {
       // We should have gotten a result; report an error and exit
       Log::get().error(node.span, "not all code paths return a value");
       return;
     }
   }
+
+  // Release the current function
+  _cf = of;
 }
 
 // Identifier

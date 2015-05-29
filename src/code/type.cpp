@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 #include "arrow/code/type.hpp"
@@ -69,4 +70,24 @@ LLVMTypeRef code::FunctionType::handle() const noexcept {
 
 LLVMTypeRef code::StringType::handle() const noexcept {
   return LLVMPointerType(LLVMIntType(8), 0);
+}
+
+std::string code::IntegerType::name() const noexcept {
+  std::stringstream stream;
+  if (!_is_signed) stream << "u";
+  stream << "int";
+  stream << bits;
+  return stream.str();
+}
+
+std::string code::FloatType::name() const noexcept {
+  std::stringstream stream;
+  stream << "float";
+  stream << bits;
+  return stream.str();
+}
+
+std::string code::FunctionType::name() const noexcept {
+  // TODO
+  return "FUNCTION TYPE";
 }
