@@ -11,10 +11,11 @@ using arrow::resolve;
 
 void Resolver::visit(ast::Identifier& x) {
   // Get the item in reference
+  // TODO: Use a builder(?); there is some copypasta here
   auto item = _scope.get(x.text);
   if (item == nullptr) {
     Log::get().error(
-      x.span, "use of unresolved name `%s`", x.text.c_str());
+      x.span, "use of unresolved name '%s'", x.text.c_str());
 
     return;
   }
@@ -31,7 +32,7 @@ void Resolver::visit(ast::Identifier& x) {
     _stack.push(item->as<code::Function>().type());
   } else {
     Log::get().error(
-      x.span, "use of untyped name `%s`", x.text.c_str());
+      x.span, "use of untyped name '%s'", x.text.c_str());
 
     return;
   }

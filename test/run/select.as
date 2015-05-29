@@ -1,10 +1,10 @@
-extern def exit(status: int8);
+extern def exit(status: int32);
 
 def assert(condition: bool) {
   if condition {
     // Do nothing
   } else {
-    exit(-1);
+    exit(1);
   }
 }
 

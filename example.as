@@ -1,14 +1,15 @@
 // extern def puts(s: str);
-// extern def exit(status: int32);
-//
-// def assert(condition: bool) {
-//   // if false {
-//   //   exit(1);
-//   // } else {
-//   //   exit(1);
-//   // }
-// }
-//
+extern def exit(status: int32);
+
+def assert(condition: bool) {
+  if condition {
+    // Do nothing
+    // TODO: Negation / Unless
+  } else {
+    exit(1);
+  }
+}
+
 // def main() {
 //   // assert(false);
 //   let x = true;
@@ -19,8 +20,8 @@
 // return 23;
 
 
-def main() -> int8 {
-  // puts(false);
+def main(argc: int32) -> int8 {
+  assert(false);
   return 0;
 }
 
