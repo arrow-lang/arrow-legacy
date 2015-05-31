@@ -15,7 +15,7 @@ install:
   - sudo apt-get install -y --force-yes g++-4.9
 
 # Command to build project
-before_script: ./waf configure clean build
+before_script: ./waf configure --check-cxx-compilers="g++-4.9" clean build
 
 # Command to run tests
 script: ./waf test coverage
