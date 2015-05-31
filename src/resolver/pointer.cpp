@@ -15,14 +15,15 @@ void Resolver::visit(ast::PointerType& x) {
   if (!pointee) { return; }
 
   // Build and push the type
-  _stack.push(std::make_shared<code::PointerType>(pointee));
+  _stack.push(std::make_shared<code::PointerType>(pointee, x.is_mutable));
 }
 
 void Resolver::visit(ast::AddressOf& x) {
   auto type = resolve(_g, _scope, *x.operand);
+  if (!type) return;
   if (!type->is<code::FunctionType>()) {
     // Build and push the type
-    _stack.push(std::make_shared<code::PointerType>(type));
+    _stack.push(std::make_shared<code::PointerType>(type, x.is_mutable));
 
     return;
   }
@@ -34,6 +35,7 @@ void Resolver::visit(ast::AddressOf& x) {
 
 void Resolver::visit(ast::Dereference& x) {
   auto type = resolve(_g, _scope, *x.operand);
+  if (!type) return;
   if (type->is<code::PointerType>()) {
     auto& type_ptr = type->as<code::PointerType>();
     _stack.push(type_ptr.pointee);

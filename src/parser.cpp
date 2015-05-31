@@ -303,6 +303,15 @@ bool Parser::parse_unary_expression() {
   // Pop the unary operator token
   _t.pop();
 
+  // Check for `mutable` (to indicate a mutable adress of)
+  bool mut = false;
+  if (tok->type == Token::Type::Ampersand) {
+    if (_t.peek(0)->type == Token::Type::Mut) {
+      mut = true;
+      _t.pop();
+    }
+  }
+
   // Parse the operand
   if (!parse_unary_expression()) { return false; }
   auto operand = _stack.front();
@@ -329,7 +338,7 @@ bool Parser::parse_unary_expression() {
       break;
 
     case Token::Type::Ampersand:
-      node = make_shared<ast::AddressOf>(span, operand);
+      node = make_shared<ast::AddressOf>(span, operand, mut);
       break;
 
     case Token::Type::Asterisk:
@@ -898,6 +907,13 @@ bool Parser::parse_slot() {
   auto inital_tok = expect(Token::Type::Let);
   if (!inital_tok) { return false; }
 
+  // Check for `mutable` (to indicate a mutable slot)
+  bool mut = false;
+  if (_t.peek(0)->type == Token::Type::Mut) {
+    mut = true;
+    _t.pop();
+  }
+
   // Parse identifier
   if (!parse_identifier()) { return false; }
   auto name = std::static_pointer_cast<ast::Identifier>(_stack.front());
@@ -906,7 +922,7 @@ bool Parser::parse_slot() {
   // Declare node
   auto node = make_shared<ast::Slot>(
     Span(_t.filename(), inital_tok->span.begin, name->span.end),
-    name, nullptr);
+    name, nullptr, nullptr, mut);
 
   // Check for `:` (to indicate the type annotation)
   if (_t.peek(0)->type == Token::Type::Colon) {
@@ -961,6 +977,13 @@ bool Parser::parse_pointer_type() {
   auto initial_tok = expect(Token::Type::Asterisk);
   if (!initial_tok) { return false; }
 
+  // Check for `mutable` (to indicate a mutable pointer)
+  bool mut = false;
+  if (_t.peek(0)->type == Token::Type::Mut) {
+    mut = true;
+    _t.pop();
+  }
+
   // Parse type
   if (!parse_type()) { return false; }
   auto type = _stack.front();
@@ -969,7 +992,7 @@ bool Parser::parse_pointer_type() {
   // Declare and push the node
   _stack.push_front(make_shared<ast::PointerType>(
     Span(_t.filename(), initial_tok->span.begin, type->span.end),
-    type));
+    type, mut));
 
   return true;
 }

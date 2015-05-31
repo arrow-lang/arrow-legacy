@@ -41,7 +41,7 @@ class Builder : public ast::AbstractVisitor {
   virtual void visit(ast::NegateLogical&);
   virtual void visit(ast::NegateBit&);
   virtual void visit(ast::NegateNumeric&);
-  virtual void visit(ast::Assign&) { }
+  virtual void visit(ast::Assign&);
   virtual void visit(ast::AssignAdd&) { }
   virtual void visit(ast::AssignSub&) { }
   virtual void visit(ast::AssignMul&) { }

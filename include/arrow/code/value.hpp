@@ -20,7 +20,9 @@ class Generator;
 namespace code {
 
 struct Value : Item {
-  Value(LLVMValueRef handle, std::shared_ptr<Type> type);
+  Value(LLVMValueRef handle, std::shared_ptr<Type> type,
+        bool _mutable = false,
+        bool _address = false);
 
   virtual ~Value() noexcept;
 
@@ -28,8 +30,12 @@ struct Value : Item {
     return true;
   }
 
+  virtual bool is_mutable() const noexcept {
+    return _mutable;
+  }
+
   virtual bool has_address() const noexcept {
-    return false;
+    return _address;
   }
 
   virtual LLVMValueRef value_of(Generator& g) const noexcept;
@@ -43,6 +49,8 @@ struct Value : Item {
  private:
   LLVMValueRef _handle;
   std::shared_ptr<Type> _type;
+  bool _mutable;
+  bool _address;
 };
 
 }  // namespace code

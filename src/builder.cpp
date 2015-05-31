@@ -55,7 +55,8 @@ void Builder::visit(ast::Function& node) {
     item->scope.set(param->name->text.c_str(), std::make_shared<code::Slot>(
       param->name->text,
       param_handle,
-      param_type
+      param_type,
+      false
     ));
   }
 

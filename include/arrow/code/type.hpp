@@ -28,13 +28,18 @@ struct Type : Item {
     return false;
   }
 
+  virtual bool is_mutable() const noexcept {
+    return false;
+  }
+
   virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept = 0;
 };
 
 struct PointerType : Type {
-  PointerType(std::shared_ptr<code::Type> pointee);
+  PointerType(std::shared_ptr<code::Type> pointee,
+              bool _mutable);
 
   virtual ~PointerType() noexcept;
 
@@ -44,7 +49,12 @@ struct PointerType : Type {
 
   virtual std::string name() const noexcept;
 
+  virtual bool is_mutable() const noexcept {
+    return _mutable;
+  }
+
   std::shared_ptr<Type> pointee;
+  bool _mutable;
 };
 
 struct IntegerType : Type {

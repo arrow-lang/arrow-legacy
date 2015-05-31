@@ -115,8 +115,10 @@ ast::Slot::Slot(
   Span span,
   std::shared_ptr<Identifier> name,
   std::shared_ptr<Node> type,
-  std::shared_ptr<Node> initializer
-) : Node(span), name(name), type(type), initializer(initializer) {
+  std::shared_ptr<Node> initializer,
+  bool is_mutable
+) : Node(span), name(name), type(type), initializer(initializer),
+    is_mutable(is_mutable) {
 }
 
 ast::Integer::Integer(Span span, const std::string& text, unsigned base)
@@ -153,6 +155,14 @@ ast::SelectBranch::SelectBranch(
 
 ast::PointerType::PointerType(
   Span span,
-  std::shared_ptr<Node> pointee
-) : Node(span), pointee(pointee) {
+  std::shared_ptr<Node> pointee,
+  bool _mutable
+) : Node(span), pointee(pointee), is_mutable(_mutable) {
+}
+
+ast::AddressOf::AddressOf(
+  Span span,
+  std::shared_ptr<Node> operand,
+  bool _mutable
+) : Unary(span, operand), is_mutable(_mutable) {
 }
