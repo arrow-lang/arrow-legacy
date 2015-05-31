@@ -54,24 +54,11 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=const")
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=noreturn")
         # ctx.env.append_unique("CXXFLAGS", "-Weffc++")
-        ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
+        # ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
         # This should be enabled only during testing; perhaps make two binaries
         ctx.env.append_unique("CXXFLAGS", "--coverage")
         ctx.env.append_unique("LINKFLAGS", "--coverage")
-
-    if ctx.env["CXX_NAME"] == "clang":
-        ctx.env.append_unique("CXXFLAGS", "-Wmismatched-tags")
-        ctx.env.append_unique("CXXFLAGS", "-D__extern_always_inline=inline")
-        ctx.env.append_unique("CXXFLAGS", "--coverage")
-        ctx.env.append_unique("LINKFLAGS", "--coverage")
-        # ctx.env.append_unique("CXXFLAGS", "-fcoverage-mapping")
-        # ctx.env.append_unique("CXXFLAGS", "-fprofile-arcs")
-        # ctx.env.append_unique("CXXFLAGS", "-ftest-coverage")
-        # ctx.env.append_unique("LINKFLAGS", "-fprofile-arcs")
-        # ctx.env.append_unique("LINKFLAGS", "-ftest-coverage")
-        # ctx.env.append_unique("LINKFLAGS", "-lprofile_rt")
-        # ctx.env.append_unique("LINKFLAGS", "-fcoverage-mapping")
 
 
 def build(ctx):
