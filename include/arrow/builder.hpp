@@ -52,12 +52,12 @@ class Builder : public ast::AbstractVisitor {
   virtual void visit(ast::AssignBitOr&) { }
   virtual void visit(ast::And&) { }
   virtual void visit(ast::Or&) { }
-  virtual void visit(ast::EqualTo&) { }
-  virtual void visit(ast::NotEqualTo&) { }
-  virtual void visit(ast::LessThan&) { }
-  virtual void visit(ast::LessThanOrEqualTo&) { }
-  virtual void visit(ast::GreaterThanOrEqualTo&) { }
-  virtual void visit(ast::GreaterThan&) { }
+  virtual void visit(ast::EqualTo&);
+  virtual void visit(ast::NotEqualTo&);
+  virtual void visit(ast::LessThan&);
+  virtual void visit(ast::LessThanOrEqualTo&);
+  virtual void visit(ast::GreaterThanOrEqualTo&);
+  virtual void visit(ast::GreaterThan&);
   virtual void visit(ast::BitAnd&) { }
   virtual void visit(ast::BitXor&) { }
   virtual void visit(ast::BitOr&) { }
@@ -80,6 +80,10 @@ class Builder : public ast::AbstractVisitor {
     ast::Binary& x,
     std::function<LLVMValueRef(
       std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);
+
+  void do_relational(
+    ast::Binary& x,
+    std::function<int(std::shared_ptr<code::Type>)> cb);
 
   void do_unary(
     ast::Unary& x,

@@ -25,6 +25,8 @@ Builder::~Builder() noexcept {
 void Builder::visit(ast::Function& node) {
   auto& name = node.name->text;
   auto item = std::static_pointer_cast<code::Function>(_cs->get(name));
+  if (!item) { return; }
+
   auto type = item->type();
 
   auto block = LLVMAppendBasicBlock(item->handle(), "");

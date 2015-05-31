@@ -60,12 +60,12 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::AssignBitOr&) { }
   virtual void visit(ast::And&) { }
   virtual void visit(ast::Or&) { }
-  virtual void visit(ast::EqualTo&) { }
-  virtual void visit(ast::NotEqualTo&) { }
-  virtual void visit(ast::LessThan&) { }
-  virtual void visit(ast::LessThanOrEqualTo&) { }
-  virtual void visit(ast::GreaterThanOrEqualTo&) { }
-  virtual void visit(ast::GreaterThan&) { }
+  virtual void visit(ast::EqualTo&);
+  virtual void visit(ast::NotEqualTo&);
+  virtual void visit(ast::LessThan&);
+  virtual void visit(ast::LessThanOrEqualTo&);
+  virtual void visit(ast::GreaterThanOrEqualTo&);
+  virtual void visit(ast::GreaterThan&);
   virtual void visit(ast::BitAnd&) { }
   virtual void visit(ast::BitXor&) { }
   virtual void visit(ast::BitOr&) { }
@@ -77,12 +77,13 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::Select&) { }
   virtual void visit(ast::SelectBranch&) { }
 
- private:
   std::shared_ptr<code::Type> common_type(
     std::shared_ptr<ast::Node> lhs,
     std::shared_ptr<ast::Node> rhs);
 
+ private:
   void do_arithmetic(ast::Binary& x);
+  void do_relational(ast::Binary& x);
 
   Generator& _g;
   code::Scope& _scope;
@@ -91,6 +92,11 @@ class Resolver : public ast::AbstractVisitor {
 
 extern std::shared_ptr<code::Type> resolve(
   Generator& g, code::Scope& scope, ast::Node& x);
+
+extern std::shared_ptr<code::Type> common_type(
+  Generator& g, code::Scope& scope,
+  std::shared_ptr<ast::Node> lhs,
+  std::shared_ptr<ast::Node> rhs);
 
 }  // namespace arrow
 

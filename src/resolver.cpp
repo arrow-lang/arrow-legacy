@@ -63,6 +63,16 @@ std::shared_ptr<code::Type> arrow::resolve(
   return resolver.get();
 }
 
+std::shared_ptr<code::Type> arrow::common_type(
+  Generator& g,
+  code::Scope& scope,
+  std::shared_ptr<ast::Node> lhs,
+  std::shared_ptr<ast::Node> rhs
+) {
+  auto resolver = Resolver(g, scope);
+  return resolver.common_type(lhs, rhs);
+}
+
 // Attempt to resolve a single compatible type from two passed
 // types. Respects integer and float promotion rules.
 std::shared_ptr<code::Type> Resolver::common_type(
