@@ -58,9 +58,9 @@ class Builder : public ast::AbstractVisitor {
   virtual void visit(ast::LessThanOrEqualTo&);
   virtual void visit(ast::GreaterThanOrEqualTo&);
   virtual void visit(ast::GreaterThan&);
-  virtual void visit(ast::BitAnd&) { }
-  virtual void visit(ast::BitXor&) { }
-  virtual void visit(ast::BitOr&) { }
+  virtual void visit(ast::BitAnd&);
+  virtual void visit(ast::BitXor&);
+  virtual void visit(ast::BitOr&);
   virtual void visit(ast::Add&);
   virtual void visit(ast::Sub&);
   virtual void visit(ast::Mul&);
@@ -77,6 +77,11 @@ class Builder : public ast::AbstractVisitor {
   std::stack<std::shared_ptr<code::Item>> _stack;
 
   void do_arithmetic(
+    ast::Binary& x,
+    std::function<LLVMValueRef(
+      std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);
+
+  void do_bitwise(
     ast::Binary& x,
     std::function<LLVMValueRef(
       std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);

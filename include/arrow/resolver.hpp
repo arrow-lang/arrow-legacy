@@ -66,9 +66,9 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::LessThanOrEqualTo&);
   virtual void visit(ast::GreaterThanOrEqualTo&);
   virtual void visit(ast::GreaterThan&);
-  virtual void visit(ast::BitAnd&) { }
-  virtual void visit(ast::BitXor&) { }
-  virtual void visit(ast::BitOr&) { }
+  virtual void visit(ast::BitAnd&);
+  virtual void visit(ast::BitXor&);
+  virtual void visit(ast::BitOr&);
   virtual void visit(ast::Add&);
   virtual void visit(ast::Sub&);
   virtual void visit(ast::Mul&);
@@ -83,6 +83,7 @@ class Resolver : public ast::AbstractVisitor {
 
  private:
   void do_arithmetic(ast::Binary& x);
+  void do_bitwise(ast::Binary& x);
   void do_relational(ast::Binary& x);
 
   Generator& _g;

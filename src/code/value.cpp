@@ -42,8 +42,7 @@ auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
   auto value = value_of(g);
   decltype(value) res = nullptr;
 
-  // TODO(mehcode): Use a special method to check for type equality
-  if (_type == type) {
+  if (_type->equals(*type)) {
     return std::make_shared<code::Value>(value, type);
   }
 

@@ -28,6 +28,8 @@ struct Type : Item {
     return false;
   }
 
+  virtual bool equals(code::Type& other) const noexcept;
+
   virtual std::string name() const noexcept = 0;
 };
 
@@ -43,6 +45,7 @@ struct IntegerType : Type {
   }
 
   virtual std::string name() const noexcept;
+  virtual bool equals(code::Type& other) const noexcept;
 
   unsigned bits;
 
@@ -54,6 +57,7 @@ struct BooleanType : Type {
   virtual ~BooleanType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+  virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept {
     return "bool";
@@ -66,6 +70,7 @@ struct FloatType : Type {
   virtual ~FloatType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+  virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept;
 
@@ -76,6 +81,7 @@ struct StringType : Type {
   virtual ~StringType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+  virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept {
     return "str";

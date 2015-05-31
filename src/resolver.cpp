@@ -84,10 +84,7 @@ std::shared_ptr<code::Type> Resolver::common_type(
   auto rhs_ty = resolve(_g, _scope, *rhs);
 
   // If the types are the same; return the first
-  // TODO(mehcode): This needs to be extended into a full recursive
-  //  comparison when
-  //  we have generated types (eg. pointers of arbitrary depth)
-  if (lhs_ty == rhs_ty) return lhs_ty;
+  if (lhs_ty->equals(*rhs_ty)) return lhs_ty;
 
   if (lhs_ty->is<code::IntegerType>() && rhs_ty->is<code::IntegerType>()) {
     // We're dealing with two integer types; determine the integer

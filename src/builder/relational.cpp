@@ -39,7 +39,8 @@ void Builder::do_relational(
 
   // Perform the operation
   LLVMValueRef res = nullptr;
-  if (common->is<code::IntegerType>()) {
+  if (common->is<code::IntegerType>() ||
+      common->is<code::BooleanType>()) {
     res = LLVMBuildICmp(_g._irb, static_cast<LLVMIntPredicate>(op), lhs->value_of(_g), rhs->value_of(_g), "");
   }
 
@@ -58,7 +59,8 @@ void Builder::do_relational(
 
 void Builder::visit(ast::EqualTo& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
-    if (type->is<code::IntegerType>()) {
+    if (type->is<code::IntegerType>() ||
+        type->is<code::BooleanType>()) {
       return static_cast<int>(LLVMIntEQ);
     }
 
@@ -72,7 +74,8 @@ void Builder::visit(ast::EqualTo& x) {
 
 void Builder::visit(ast::NotEqualTo& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
-    if (type->is<code::IntegerType>()) {
+    if (type->is<code::IntegerType>() ||
+        type->is<code::BooleanType>()) {
       return static_cast<int>(LLVMIntNE);
     }
 
@@ -86,7 +89,8 @@ void Builder::visit(ast::NotEqualTo& x) {
 
 void Builder::visit(ast::LessThan& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
-    if (type->is<code::IntegerType>()) {
+    if (type->is<code::IntegerType>() ||
+        type->is<code::BooleanType>()) {
       if (type->is_signed()) {
         return static_cast<int>(LLVMIntSLT);
       } else {
@@ -104,7 +108,8 @@ void Builder::visit(ast::LessThan& x) {
 
 void Builder::visit(ast::LessThanOrEqualTo& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
-    if (type->is<code::IntegerType>()) {
+    if (type->is<code::IntegerType>() ||
+        type->is<code::BooleanType>()) {
       if (type->is_signed()) {
         return static_cast<int>(LLVMIntSLE);
       } else {
@@ -122,7 +127,8 @@ void Builder::visit(ast::LessThanOrEqualTo& x) {
 
 void Builder::visit(ast::GreaterThanOrEqualTo& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
-    if (type->is<code::IntegerType>()) {
+    if (type->is<code::IntegerType>() ||
+        type->is<code::BooleanType>()) {
       if (type->is_signed()) {
         return static_cast<int>(LLVMIntSGE);
       } else {
@@ -140,7 +146,8 @@ void Builder::visit(ast::GreaterThanOrEqualTo& x) {
 
 void Builder::visit(ast::GreaterThan& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
-    if (type->is<code::IntegerType>()) {
+    if (type->is<code::IntegerType>() ||
+        type->is<code::BooleanType>()) {
       if (type->is_signed()) {
         return static_cast<int>(LLVMIntSGT);
       } else {

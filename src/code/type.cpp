@@ -91,3 +91,35 @@ std::string code::FunctionType::name() const noexcept {
   // TODO
   return "FUNCTION TYPE";
 }
+
+bool code::Type::equals(code::Type&) const noexcept {
+  return false;
+}
+
+bool code::IntegerType::equals(code::Type& other) const noexcept {
+  if (other.is<code::IntegerType>()) {
+    auto& other_int = other.as<code::IntegerType>();
+
+    return other_int.bits == bits && other_int._is_signed && _is_signed;
+  }
+
+  return false;
+}
+
+bool code::FloatType::equals(code::Type& other) const noexcept {
+  if (other.is<code::FloatType>()) {
+    auto& other_float = other.as<code::FloatType>();
+
+    return other_float.bits == bits;
+  }
+
+  return false;
+}
+
+bool code::BooleanType::equals(code::Type& other) const noexcept {
+  return other.is<code::BooleanType>();
+}
+
+bool code::StringType::equals(code::Type& other) const noexcept {
+  return other.is<code::StringType>();
+}
