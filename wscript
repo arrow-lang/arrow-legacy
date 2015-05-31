@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from subprocess import Popen, PIPE, PIPE
+from subprocess import Popen, PIPE, PIPE, check_call
 from os import path
+import os
+import webbrowser
 from itertools import chain
 import sys
 import ws.test
@@ -38,7 +40,10 @@ def configure(ctx):
 
     if ctx.env["CXX_NAME"] in ("gcc", "clang"):
         ctx.env.append_unique("CXXFLAGS", "-std=gnu++1y")
-        ctx.env.append_unique("CXXFLAGS", "-Ofast")
+        # TODO: Release and Debug builds
+        ctx.env.append_unique("CXXFLAGS", "-g")
+        ctx.env.append_unique("CXXFLAGS", "-O0")
+        # ctx.env.append_unique("CXXFLAGS", "-Ofast")
         ctx.env.append_unique("CXXFLAGS", "-Wall")
         ctx.env.append_unique("CXXFLAGS", "-Wextra")
         ctx.env.append_unique("CXXFLAGS", "-Wfatal-errors")
@@ -51,10 +56,22 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Weffc++")
         ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
+        # This should be enabled only during testing; perhaps make two binaries
+        ctx.env.append_unique("CXXFLAGS", "--coverage")
+        ctx.env.append_unique("LINKFLAGS", "--coverage")
 
     if ctx.env["CXX_NAME"] == "clang":
         ctx.env.append_unique("CXXFLAGS", "-Wmismatched-tags")
         ctx.env.append_unique("CXXFLAGS", "-D__extern_always_inline=inline")
+        ctx.env.append_unique("CXXFLAGS", "--coverage")
+        ctx.env.append_unique("LINKFLAGS", "--coverage")
+        # ctx.env.append_unique("CXXFLAGS", "-fcoverage-mapping")
+        # ctx.env.append_unique("CXXFLAGS", "-fprofile-arcs")
+        # ctx.env.append_unique("CXXFLAGS", "-ftest-coverage")
+        # ctx.env.append_unique("LINKFLAGS", "-fprofile-arcs")
+        # ctx.env.append_unique("LINKFLAGS", "-ftest-coverage")
+        # ctx.env.append_unique("LINKFLAGS", "-lprofile_rt")
+        # ctx.env.append_unique("LINKFLAGS", "-fcoverage-mapping")
 
 
 def build(ctx):
@@ -68,6 +85,45 @@ def test(ctx):
     result = ws.test.run(ctx)
     if not result:
         sys.exit(1)
+
+
+def coverage(ctx):
+    with open(os.devnull) as nil:
+        # Generate *.gcov files
+        object_files = ctx.path.ant_glob("build/**/*.o")
+        for object_file in object_files:
+            check_call([
+                "gcov", "-r", "-b", "-c", object_file.abspath()
+            ], cwd="./build", stdout=nil, stderr=nil)
+
+        # Process *.gcov files and create a coverage.info file
+        check_call([
+            "lcov",
+            "--capture",
+            "--directory", "./build",
+            "--output-file", "coverage.info"
+        ], stdout=nil, stderr=nil)
+
+        # Remove external files
+        check_call([
+            "lcov",
+            "--remove", "coverage.info",
+            "/usr/*",
+            "--output-file", "coverage.info"
+        ], stdout=nil, stderr=nil)
+
+        # Generate coverage report
+        check_call([
+            "genhtml",
+            "coverage.info",
+            "--output-directory", "coverage"
+        ], stdout=nil, stderr=nil)
+
+        # Print the coverage report
+        check_call([
+            "lcov",
+            "--summary", "coverage.info",
+        ])
 
 
 def lint(ctx):
