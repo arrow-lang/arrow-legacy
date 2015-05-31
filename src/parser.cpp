@@ -293,6 +293,8 @@ bool Parser::parse_unary_expression() {
   if ((tok->type != Token::Type::Plus) &&
       (tok->type != Token::Type::Minus) &&
       (tok->type != Token::Type::ExclamationMark) &&
+      (tok->type != Token::Type::Asterisk) &&
+      (tok->type != Token::Type::Ampersand) &&
       (tok->type != Token::Type::Not)) {
     // .. we MAY be a postfix expression
     return parse_postfix_expression();
@@ -324,6 +326,14 @@ bool Parser::parse_unary_expression() {
 
     case Token::Type::ExclamationMark:
       node = make_shared<ast::NegateBit>(span, operand);
+      break;
+
+    case Token::Type::Ampersand:
+      node = make_shared<ast::AddressOf>(span, operand);
+      break;
+
+    case Token::Type::Asterisk:
+      node = make_shared<ast::Dereference>(span, operand);
       break;
 
     default:
@@ -932,11 +942,36 @@ bool Parser::parse_slot() {
 
 // Type
 // ----------------------------------------------------------------------------
-// type = identifier ;
+// type = identifier | pointer-type ;
 // ----------------------------------------------------------------------------
 bool Parser::parse_type() {
-  // TODO(mehcode): complex type expressions
+  if (_t.peek()->type == Token::Type::Asterisk) {
+    return parse_pointer_type();
+  }
+
   return parse_identifier();
+}
+
+// Pointer Type
+// ----------------------------------------------------------------------------
+// pointer-type = "*" type ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_pointer_type() {
+  // Expect `.`
+  auto initial_tok = expect(Token::Type::Asterisk);
+  if (!initial_tok) { return false; }
+
+  // Parse type
+  if (!parse_type()) { return false; }
+  auto type = _stack.front();
+  _stack.pop_front();
+
+  // Declare and push the node
+  _stack.push_front(make_shared<ast::PointerType>(
+    Span(_t.filename(), initial_tok->span.begin, type->span.end),
+    type));
+
+  return true;
 }
 
 // Select

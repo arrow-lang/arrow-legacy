@@ -66,6 +66,9 @@ IMPL(Div)
 IMPL(Mod)
 IMPL(Select)
 IMPL(SelectBranch)
+IMPL(PointerType)
+IMPL(AddressOf)
+IMPL(Dereference)
 
 ast::Node::Node(Span span)
   : span(span) {
@@ -146,4 +149,10 @@ ast::SelectBranch::SelectBranch(
   Span span,
   std::shared_ptr<Node> condition
 ) : Node(span), condition(condition), sequence{} {
+}
+
+ast::PointerType::PointerType(
+  Span span,
+  std::shared_ptr<Node> pointee
+) : Node(span), pointee(pointee) {
 }

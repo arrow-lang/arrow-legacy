@@ -33,6 +33,20 @@ struct Type : Item {
   virtual std::string name() const noexcept = 0;
 };
 
+struct PointerType : Type {
+  PointerType(std::shared_ptr<code::Type> pointee);
+
+  virtual ~PointerType() noexcept;
+
+  virtual LLVMTypeRef handle() const noexcept;
+
+  virtual bool equals(code::Type& other) const noexcept;
+
+  virtual std::string name() const noexcept;
+
+  std::shared_ptr<Type> pointee;
+};
+
 struct IntegerType : Type {
   IntegerType(unsigned bits, bool is_signed);
 

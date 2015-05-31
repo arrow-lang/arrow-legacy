@@ -76,6 +76,9 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::Mod&);
   virtual void visit(ast::Select&) { }
   virtual void visit(ast::SelectBranch&) { }
+  virtual void visit(ast::PointerType&);
+  virtual void visit(ast::AddressOf&);
+  virtual void visit(ast::Dereference&);
 
   std::shared_ptr<code::Type> common_type(
     std::shared_ptr<ast::Node> lhs,

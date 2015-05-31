@@ -76,6 +76,9 @@ class Show : public AbstractVisitor {
   virtual void visit(Mod&);
   virtual void visit(Select&);
   virtual void visit(SelectBranch&);
+  virtual void visit(PointerType&);
+  virtual void visit(AddressOf&);
+  virtual void visit(Dereference&);
 
   boost::property_tree::ptree& _el();
 

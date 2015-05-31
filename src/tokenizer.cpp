@@ -187,6 +187,10 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token> {
   auto type = Token::Type::Unknown;
   auto len = 1;
   switch (p0) {
+    case 0x2e:  // ASCII `.`
+      type = Token::Type::Period;
+      break;
+
     case 0x2c:  // ASCII `,`
       type = Token::Type::Comma;
       break;

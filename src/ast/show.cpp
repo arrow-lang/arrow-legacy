@@ -132,6 +132,8 @@ SHOW_UNARY(Promote)
 SHOW_UNARY(NegateNumeric)
 SHOW_UNARY(NegateLogical)
 SHOW_UNARY(NegateBit)
+SHOW_UNARY(Dereference)
+SHOW_UNARY(AddressOf)
 
 void Show::handle_binary(const std::string& name, Binary& x) {
   auto& node = _el().add(name.c_str(), "");
@@ -295,6 +297,15 @@ void Show::visit(Parameter& x) {
   x.type->accept(*this);
 
   _ctx.pop();
+
+  _ctx.pop();
+}
+
+void Show::visit(PointerType& x) {
+  auto& item = _el().add("PointerType", "");
+  _ctx.push(&item);
+
+  x.pointee->accept(*this);
 
   _ctx.pop();
 }

@@ -57,6 +57,7 @@ class Parser {
   bool parse_call_expression();
   bool parse_slot();
   bool parse_type();
+  bool parse_pointer_type();
   bool parse_select();
 
   bool parse_function_parameter();

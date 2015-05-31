@@ -143,6 +143,8 @@ UNARY_DEFINE(Promote);
 UNARY_DEFINE(NegateNumeric);
 UNARY_DEFINE(NegateLogical);
 UNARY_DEFINE(NegateBit);
+UNARY_DEFINE(AddressOf);
+UNARY_DEFINE(Dereference);
 
 #undef UNARY_DEFINE
 
@@ -294,6 +296,16 @@ struct Select : Node {
   virtual void accept(AbstractVisitor& v);
 
   std::deque<std::shared_ptr<SelectBranch>> branches;
+};
+
+struct PointerType : Node {
+  PointerType(Span span, std::shared_ptr<Node> pointee);
+
+  virtual ~PointerType() noexcept;
+
+  virtual void accept(AbstractVisitor& v);
+
+  std::shared_ptr<Node> pointee;
 };
 
 }  // namespace ast

@@ -65,6 +65,9 @@ DELEGATE(Div, div)
 DELEGATE(Mod, mod)
 DELEGATE(Select, select)
 DELEGATE(SelectBranch, select_branch)
+DELEGATE(PointerType, pointer_type)
+DELEGATE(Dereference, dereference)
+DELEGATE(AddressOf, address_of)
 
 void Visitor::visit_module(Module& x) {
   for (auto& item : x.sequence) {

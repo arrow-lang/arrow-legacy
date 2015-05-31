@@ -69,6 +69,9 @@ class AbstractVisitor {
   friend struct Mod;
   friend struct Select;
   friend struct SelectBranch;
+  friend struct PointerType;
+  friend struct AddressOf;
+  friend struct Dereference;
 
   virtual void visit(Node&) { }
   virtual void visit(TextNode&) { }
@@ -117,6 +120,9 @@ class AbstractVisitor {
   virtual void visit(Mod&) { }
   virtual void visit(Select&) { }
   virtual void visit(SelectBranch&) { }
+  virtual void visit(PointerType&) { }
+  virtual void visit(Dereference&) { }
+  virtual void visit(AddressOf&) { }
 };
 
 class Visitor : public AbstractVisitor {
@@ -171,6 +177,9 @@ class Visitor : public AbstractVisitor {
   virtual void visit(Mod&);
   virtual void visit(Select&);
   virtual void visit(SelectBranch&);
+  virtual void visit(PointerType&);
+  virtual void visit(Dereference&);
+  virtual void visit(AddressOf&);
 
   virtual void visit_id(Identifier&) { }
   virtual void visit_module(Module&);
@@ -216,6 +225,9 @@ class Visitor : public AbstractVisitor {
   virtual void visit_mod(Mod&) { }
   virtual void visit_select(Select&);
   virtual void visit_select_branch(SelectBranch&) { }
+  virtual void visit_pointer_type(PointerType&) { }
+  virtual void visit_dereference(Dereference&) { }
+  virtual void visit_address_of(AddressOf&) { }
 };
 
 }  // namespace ast
