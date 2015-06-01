@@ -12,7 +12,7 @@ using arrow::resolve;
 void Resolver::visit(ast::Promote& x) {
   // Requires an integral or floating type
   auto type = resolve(_g, _scope, *x.operand);
-  if (type->is<code::IntegerType>() || type->is<code::FloatType>()) {
+  if (type && (type->is<code::IntegerType>() || type->is<code::FloatType>())) {
     _stack.push(type);
     return;
   }
@@ -25,7 +25,7 @@ void Resolver::visit(ast::Promote& x) {
 void Resolver::visit(ast::NegateNumeric& x) {
   // Requires an integral or floating type
   auto type = resolve(_g, _scope, *x.operand);
-  if (type->is<code::IntegerType>() || type->is<code::FloatType>()) {
+  if (type && (type->is<code::IntegerType>() || type->is<code::FloatType>())) {
     _stack.push(type);
     return;
   }
@@ -38,7 +38,7 @@ void Resolver::visit(ast::NegateNumeric& x) {
 void Resolver::visit(ast::NegateLogical& x) {
   // Requires a boolean type
   auto type = resolve(_g, _scope, *x.operand);
-  if (type->is<code::BooleanType>()) {
+  if (type && (type->is<code::BooleanType>())) {
     _stack.push(type);
     return;
   }
@@ -51,7 +51,7 @@ void Resolver::visit(ast::NegateLogical& x) {
 void Resolver::visit(ast::NegateBit& x) {
   // Requires an integral or boolean type
   auto type = resolve(_g, _scope, *x.operand);
-  if (type->is<code::BooleanType>() || type->is<code::IntegerType>()) {
+  if (type && (type->is<code::BooleanType>() || type->is<code::IntegerType>())) {
     _stack.push(type);
     return;
   }

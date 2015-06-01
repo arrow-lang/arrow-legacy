@@ -22,6 +22,7 @@ void Resolver::do_relational(ast::Binary& x) {
     // Resolve the individual types
     auto lhs_type = resolve(_g, _scope, *x.lhs);
     auto rhs_type = resolve(_g, _scope, *x.rhs);
+    if (!lhs_type || !rhs_type) return;
 
     // Report that we don't support arithmetic operators for you
     std::string op;

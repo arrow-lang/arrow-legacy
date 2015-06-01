@@ -82,6 +82,8 @@ std::shared_ptr<code::Type> Resolver::common_type(
   // Resolve the operands
   auto lhs_ty = resolve(_g, _scope, *lhs);
   auto rhs_ty = resolve(_g, _scope, *rhs);
+  // TODO: Design and use a poision concept
+  if (!lhs_ty || !rhs_ty) return nullptr;
 
   // If the types are the same; return the first
   if (lhs_ty->equals(*rhs_ty)) return lhs_ty;
