@@ -413,7 +413,10 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
       auto byte = _buffer.peek();
 
       // Check if this is a valid digit (for our base)
-      if (base == 16) {
+      if (byte == '_') {
+        _buffer_next();
+        continue;
+      } else if (base == 16) {
         if (!std::isxdigit(byte)) {
           break;
         }
