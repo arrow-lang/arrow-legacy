@@ -160,6 +160,9 @@ struct Token {
     /// Binary less-than-or-equal-to relation
     LessThan_Equals,
 
+    /// Period `.`
+    Period,
+
     /// Colon `:`
     Colon,
 

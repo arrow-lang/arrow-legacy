@@ -66,7 +66,9 @@ struct Visitor {
   virtual void visit_mod(Mod&) { }
   virtual void visit_select(Select&);
   virtual void visit_select_branch(SelectBranch&);
-  virtual void visit_loop(Loop&);
+  virtual void visit_pointer_type(PointerType&) { }
+  virtual void visit_dereference(Dereference&) { }
+  virtual void visit_address_of(AddressOf&) { }
 };
 
 }  // namespace ast

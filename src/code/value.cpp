@@ -9,8 +9,8 @@
 
 using arrow::code::Value;
 
-Value::Value(LLVMValueRef handle, std::shared_ptr<Type> type)
-  : _handle{handle}, _type{type} {
+Value::Value(LLVMValueRef handle, std::shared_ptr<Type> type, bool _mutable, bool _address)
+  : _handle{handle}, _type{type}, _mutable{_mutable}, _address{_address} {
 }
 
 Value::~Value() noexcept {
@@ -42,8 +42,7 @@ auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
   auto value = value_of(g);
   decltype(value) res = nullptr;
 
-  // TODO(mehcode): Use a special method to check for type equality
-  if (_type == type) {
+  if (_type->equals(*type)) {
     return std::make_shared<code::Value>(value, type);
   }
 
@@ -104,6 +103,17 @@ auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
     } else {
       // Extend
       res = LLVMBuildFPExt(g._irb, value, type->handle(), "");
+    }
+  }
+
+  // Going from mutable to immutable pointer
+  if (type->is<code::PointerType>() && _type->is<code::PointerType>()) {
+    auto& ptr_from = _type->as<code::PointerType>();
+    auto& ptr_to = type->as<code::PointerType>();
+
+    if (ptr_from.is_mutable() && !ptr_to.is_mutable()) {
+      // Nothing happens; we just allow it to pass through the typesystem
+      res = value;
     }
   }
 

@@ -74,14 +74,19 @@ class Resolver : public ast::Visitor {
   // virtual void visit_select(ast::Select&);
   // virtual void visit_select_branch(ast::SelectBranch&);
   // virtual void visit_loop(ast::Loop&);
+  virtual void visit_pointer_type(ast::PointerType&);
+  virtual void visit_address_of(ast::AddressOf&);
+  virtual void visit_dereference(ast::Dereference&);
 
- private:
   std::shared_ptr<code::Type> common_type(
     std::shared_ptr<ast::Node> lhs,
     std::shared_ptr<ast::Node> rhs);
 
+ private:
   void do_arithmetic(ast::Binary& x);
   void do_function(ast::AbstractFunction& x);
+  void do_bitwise(ast::Binary& x);
+  void do_relational(ast::Binary& x);
 
   Generator& _g;
   code::Scope& _scope;
@@ -90,6 +95,11 @@ class Resolver : public ast::Visitor {
 
 extern std::shared_ptr<code::Type> resolve(
   Generator& g, code::Scope& scope, ast::Node& x);
+
+extern std::shared_ptr<code::Type> common_type(
+  Generator& g, code::Scope& scope,
+  std::shared_ptr<ast::Node> lhs,
+  std::shared_ptr<ast::Node> rhs);
 
 }  // namespace arrow
 

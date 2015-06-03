@@ -70,6 +70,9 @@ class Show : public Visitor {
   virtual void visit_select(Select&);
   virtual void visit_select_branch(SelectBranch&);
   virtual void visit_loop(Loop&);
+  virtual void visit_pointer_type(PointerType&);
+  virtual void visit_address_of(AddressOf&);
+  virtual void visit_dereference(Dereference&);
 
  private:
   void handle_unary(const std::string& name, Unary&);

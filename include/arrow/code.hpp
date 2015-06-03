@@ -82,13 +82,11 @@ struct ExternalFunction : AbstractFunction {
 /// A named slot declaration
 struct Slot : Value {
   Slot(
-    const std::string& name, LLVMValueRef handle, std::shared_ptr<Type> type);
+    const std::string& name, LLVMValueRef handle,
+    std::shared_ptr<Type> type,
+    bool _mutable);
 
   virtual ~Slot() noexcept;
-
-  virtual bool has_address() const noexcept {
-    return true;
-  }
 
   std::string name;
 };

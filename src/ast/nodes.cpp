@@ -72,6 +72,9 @@ IMPL(Mod, mod)
 IMPL(Select, select)
 IMPL(SelectBranch, select_branch)
 IMPL(Loop, loop)
+IMPL(PointerType, pointer_type)
+IMPL(AddressOf, address_of)
+IMPL(Dereference, dereference)
 
 ast::Node::Node(Span span)
   : span(span) {
@@ -118,8 +121,10 @@ ast::Slot::Slot(
   Span span,
   std::shared_ptr<Identifier> name,
   std::shared_ptr<Node> type,
-  std::shared_ptr<Node> initializer
-) : Node(span), name(name), type(type), initializer(initializer) {
+  std::shared_ptr<Node> initializer,
+  bool is_mutable
+) : Node(span), name(name), type(type), initializer(initializer),
+    is_mutable(is_mutable) {
 }
 
 ast::Integer::Integer(Span span, const std::string& text, unsigned base)
@@ -158,4 +163,18 @@ ast::Loop::Loop(
   Span span,
   std::shared_ptr<Node> condition
 ) : Block(span), condition(condition) {
+}
+
+ast::PointerType::PointerType(
+  Span span,
+  std::shared_ptr<Node> pointee,
+  bool _mutable
+) : Node(span), pointee(pointee), is_mutable(_mutable) {
+}
+
+ast::AddressOf::AddressOf(
+  Span span,
+  std::shared_ptr<Node> operand,
+  bool _mutable
+) : Unary(span, operand), is_mutable(_mutable) {
 }

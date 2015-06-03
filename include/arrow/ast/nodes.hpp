@@ -139,6 +139,14 @@ UNARY_DEFINE(Promote);
 UNARY_DEFINE(NegateNumeric);
 UNARY_DEFINE(NegateLogical);
 UNARY_DEFINE(NegateBit);
+UNARY_DEFINE(Dereference);
+
+struct AddressOf : Unary {
+  AddressOf(Span span, std::shared_ptr<Node> operand, bool _mutable);
+  virtual ~AddressOf() noexcept;
+  virtual void accept(Visitor& v);
+  bool is_mutable;
+};
 
 #undef UNARY_DEFINE
 
@@ -256,7 +264,8 @@ struct Slot : Node {
     Span span,
     std::shared_ptr<Identifier> name,
     std::shared_ptr<Node> type,
-    std::shared_ptr<Node> initializer = nullptr);
+    std::shared_ptr<Node> initializer,
+    bool is_mutable);
 
   virtual ~Slot() noexcept;
 
@@ -265,6 +274,7 @@ struct Slot : Node {
   std::shared_ptr<Identifier> name;
   std::shared_ptr<Node> type;
   std::shared_ptr<Node> initializer;
+  bool is_mutable;
 };
 
 struct Block : Node {
@@ -294,6 +304,18 @@ struct Select : Node {
 
   std::deque<std::shared_ptr<SelectBranch>> branches;
 };
+
+struct PointerType : Node {
+  PointerType(Span span, std::shared_ptr<Node> pointee, bool is_mutable);
+
+  virtual ~PointerType() noexcept;
+
+  virtual void accept(Visitor& v);
+
+  std::shared_ptr<Node> pointee;
+  bool is_mutable;
+};
+
 
 struct Loop : Block {
   Loop(Span span, std::shared_ptr<Node> condition = nullptr);

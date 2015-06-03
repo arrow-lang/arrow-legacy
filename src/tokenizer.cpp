@@ -187,6 +187,10 @@ auto Tokenizer::_scan_punctuator() -> std::shared_ptr<Token> {
   auto type = Token::Type::Unknown;
   auto len = 1;
   switch (p0) {
+    case 0x2e:  // ASCII `.`
+      type = Token::Type::Period;
+      break;
+
     case 0x2c:  // ASCII `,`
       type = Token::Type::Comma;
       break;
@@ -409,7 +413,10 @@ auto Tokenizer::_scan_numeric() -> std::shared_ptr<Token> {
       auto byte = _buffer.peek();
 
       // Check if this is a valid digit (for our base)
-      if (base == 16) {
+      if (byte == '_') {
+        _buffer_next();
+        continue;
+      } else if (base == 16) {
         if (!std::isxdigit(byte)) {
           break;
         }
@@ -610,7 +617,7 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
     {"def", Token::Type::Def},
     {"extern", Token::Type::Extern},
     {"let", Token::Type::Let},
-    {"mut", Token::Type::Mut},
+    {"mutable", Token::Type::Mut},
     {"true", Token::Type::True},
     {"false", Token::Type::False},
     {"if", Token::Type::If},

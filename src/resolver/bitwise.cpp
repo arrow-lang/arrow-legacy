@@ -9,15 +9,14 @@
 using arrow::Resolver;
 using arrow::resolve;
 
-void Resolver::do_arithmetic(ast::Binary& x) {
+void Resolver::do_bitwise(ast::Binary& x) {
   // Attempt to find a common type between the lhs and rhs
-  // NOTE: This needs to be extended once we support `ptr + int`
   auto type = common_type(x.lhs, x.rhs);
 
   // Validate that the operation is actually supported between the two types
   // TODO: This obviously needs to change once we support overloading these
   if (!type || (!type->is<code::IntegerType>() &&
-                !type->is<code::FloatType>()))
+                !type->is<code::BooleanType>()))
   {
     // Resolve the individual types
     auto lhs_type = resolve(_g, _scope, *x.lhs);
@@ -26,16 +25,12 @@ void Resolver::do_arithmetic(ast::Binary& x) {
 
     // Report that we don't support arithmetic operators for you
     std::string op;
-    if (x.is<ast::Add>()) {
-      op = "+";
-    } else if (x.is<ast::Sub>()) {
-      op = "-";
-    } else if (x.is<ast::Mul>()) {
-      op = "*";
-    } else if (x.is<ast::Div>()) {
-      op = "/";
-    } else if (x.is<ast::Mod>()) {
-      op = "%";
+    if (x.is<ast::BitAnd>()) {
+      op = "&";
+    } else if (x.is<ast::BitOr>()) {
+      op = "|";
+    } else if (x.is<ast::BitXor>()) {
+      op = "^";
     }
 
     Log::get().error(x.span,
@@ -50,22 +45,14 @@ void Resolver::do_arithmetic(ast::Binary& x) {
   _stack.push(type);
 }
 
-void Resolver::visit_add(ast::Add& x) {
-  do_arithmetic(x);
+void Resolver::visit(ast::BitAnd& x) {
+  do_bitwise(x);
 }
 
-void Resolver::visit_sub(ast::Sub& x) {
-  do_arithmetic(x);
+void Resolver::visit(ast::BitXor& x) {
+  do_bitwise(x);
 }
 
-void Resolver::visit_mul(ast::Mul& x) {
-  do_arithmetic(x);
-}
-
-void Resolver::visit_div(ast::Div& x) {
-  do_arithmetic(x);
-}
-
-void Resolver::visit_mod(ast::Mod& x) {
-  do_arithmetic(x);
+void Resolver::visit(ast::BitOr& x) {
+  do_bitwise(x);
 }

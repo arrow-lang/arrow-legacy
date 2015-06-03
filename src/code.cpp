@@ -46,9 +46,11 @@ code::ExternalFunction::ExternalFunction(
 }
 
 code::Slot::Slot(
-  const std::string& name, LLVMValueRef handle, std::shared_ptr<Type> type
+  const std::string& name, LLVMValueRef handle,
+  std::shared_ptr<Type> type,
+  bool _mutable
 )
-  : code::Value(handle, type), name{name} {
+  : code::Value(handle, type, _mutable, true), name{name} {
 }
 
 LLVMValueRef code::ExternalFunction::handle() noexcept {

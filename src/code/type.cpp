@@ -19,6 +19,7 @@ IMPL(StringType)
 IMPL(FloatType)
 IMPL(BooleanType)
 IMPL(FunctionType)
+IMPL(PointerType)
 
 code::IntegerType::IntegerType(unsigned bits, bool is_signed)
   : bits(bits), _is_signed(is_signed) {
@@ -28,8 +29,15 @@ code::FloatType::FloatType(unsigned bits)
   : bits(bits) {
 }
 
-code::FunctionType::FunctionType(std::shared_ptr<code::Type>  result)
+code::FunctionType::FunctionType(std::shared_ptr<code::Type> result)
   : result(result), parameters{} {
+}
+
+code::PointerType::PointerType(
+  std::shared_ptr<code::Type> pointee,
+  bool _mutable
+)
+  : pointee(pointee), _mutable(_mutable) {
 }
 
 LLVMTypeRef code::IntegerType::handle() const noexcept {
@@ -72,6 +80,10 @@ LLVMTypeRef code::StringType::handle() const noexcept {
   return LLVMPointerType(LLVMIntType(8), 0);
 }
 
+LLVMTypeRef code::PointerType::handle() const noexcept {
+  return LLVMPointerType(pointee->handle(), 0);
+}
+
 std::string code::IntegerType::name() const noexcept {
   std::stringstream stream;
   if (!_is_signed) stream << "u";
@@ -90,4 +102,53 @@ std::string code::FloatType::name() const noexcept {
 std::string code::FunctionType::name() const noexcept {
   // TODO
   return "FUNCTION TYPE";
+}
+
+std::string code::PointerType::name() const noexcept {
+  std::stringstream stream;
+  stream << "*";
+  if (is_mutable()) stream << "mutable ";
+  stream << pointee->name();
+  return stream.str();
+}
+
+bool code::Type::equals(code::Type&) const noexcept {
+  return false;
+}
+
+bool code::IntegerType::equals(code::Type& other) const noexcept {
+  if (other.is<code::IntegerType>()) {
+    auto& other_int = other.as<code::IntegerType>();
+
+    return other_int.bits == bits && other_int._is_signed && _is_signed;
+  }
+
+  return false;
+}
+
+bool code::FloatType::equals(code::Type& other) const noexcept {
+  if (other.is<code::FloatType>()) {
+    auto& other_float = other.as<code::FloatType>();
+
+    return other_float.bits == bits;
+  }
+
+  return false;
+}
+
+bool code::BooleanType::equals(code::Type& other) const noexcept {
+  return other.is<code::BooleanType>();
+}
+
+bool code::StringType::equals(code::Type& other) const noexcept {
+  return other.is<code::StringType>();
+}
+
+bool code::PointerType::equals(code::Type& other) const noexcept {
+  if (other.is<code::PointerType>()) {
+    auto& other_ptr = other.as<code::PointerType>();
+    return other_ptr.pointee->equals(*pointee) && (other_ptr.is_mutable() == is_mutable());
+  }
+
+  return false;
 }

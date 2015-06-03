@@ -51,7 +51,8 @@ void Builder::visit_slot(ast::Slot& x) {
   _cs->set(name, std::make_shared<code::Slot>(
     name,
     handle,
-    type));
+    type,
+    x.is_mutable));
 
   if (initializer) {
     // TODO(mehcode): Extract into an `assign` function

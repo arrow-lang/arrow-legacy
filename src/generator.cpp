@@ -97,8 +97,20 @@ void Generator::print(std::ostream& os) const {
 }
 
 void Generator::_declare_basic_types() {
-  // Boolean type
+  // Basic types
+
+  // Boolean
   _scope.set("bool", std::make_shared<code::BooleanType>());
+
+  // Numeric
+  _scope.set("byte", std::make_shared<code::IntegerType>(8, false));
+  _scope.set("int", std::make_shared<code::IntegerType>(64, true));
+  _scope.set("float", std::make_shared<code::FloatType>(64));
+
+  // UTF-8 encoded, UTF-32 string
+  _scope.set("str", std::make_shared<code::StringType>());
+
+  // Storage (focused) types
 
   // Signed, machine-independent integer types
   _scope.set("int8", std::make_shared<code::IntegerType>(8, true));
@@ -117,12 +129,4 @@ void Generator::_declare_basic_types() {
   // Floating-point types
   _scope.set("float32", std::make_shared<code::FloatType>(32));
   _scope.set("float64", std::make_shared<code::FloatType>(64));
-
-  // TODO(mehcode): Machine-dependent integer types
-  // TODO(mehcode): UTF-32 character type
-
-  // UTF-8 string type
-  _scope.set("str", std::make_shared<code::StringType>());
-
-  // TODO(mehcode): Byte string type
 }

@@ -25,6 +25,8 @@ Builder::~Builder() noexcept {
 void Builder::visit_function(ast::Function& node) {
   auto& name = node.name->text;
   auto item = std::static_pointer_cast<code::Function>(_cs->get(name));
+  if (!item) { return; }
+
   auto type = item->type();
 
   auto block = LLVMAppendBasicBlock(item->handle(), "");
@@ -53,7 +55,8 @@ void Builder::visit_function(ast::Function& node) {
     item->scope.set(param->name->text.c_str(), std::make_shared<code::Slot>(
       param->name->text,
       param_handle,
-      param_type
+      param_type,
+      false
     ));
   }
 

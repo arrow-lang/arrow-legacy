@@ -132,6 +132,7 @@ SHOW_UNARY(Promote, promote)
 SHOW_UNARY(NegateNumeric, negate_numeric)
 SHOW_UNARY(NegateLogical, negate_logical)
 SHOW_UNARY(NegateBit, negate_bit)
+SHOW_UNARY(Dereference, dereference)
 
 void Show::handle_binary(const std::string& name, Binary& x) {
   auto& node = _el().add(name.c_str(), "");
@@ -261,6 +262,7 @@ void Show::visit_slot(Slot& x) {
   _ctx.push(&item);
 
   item.add("<xmlattr>.name", x.name->text.c_str());
+  item.add("<xmlattr>.mutable", x.is_mutable);
 
   if (x.type != nullptr) {
     auto& type = _el().add("Type", "");
@@ -320,6 +322,28 @@ void Show::visit_loop(Loop& x) {
   }
 
   _ctx.pop();
+
+  _ctx.pop();
+}
+
+void Show::visit_pointer_type(PointerType& x) {
+  auto& item = _el().add("PointerType", "");
+  _ctx.push(&item);
+
+  item.add("<xmlattr>.mutable", x.is_mutable);
+
+  x.pointee->accept(*this);
+
+  _ctx.pop();
+}
+
+void Show::visit_address_of(AddressOf& x) {
+  auto& node = _el().add("AddressOf", "");
+  _ctx.push(&node);
+
+  node.add("<xmlattr>.mutable", x.is_mutable);
+
+  x.operand->accept(*this);
 
   _ctx.pop();
 }

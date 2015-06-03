@@ -14,3 +14,7 @@ indent_size = 4
 
 [wscript]
 indent_size = 4
+
+[Makefile]
+indent_size = 4
+indent_style = tab

@@ -63,6 +63,16 @@ std::shared_ptr<code::Type> arrow::resolve(
   return resolver.get();
 }
 
+std::shared_ptr<code::Type> arrow::common_type(
+  Generator& g,
+  code::Scope& scope,
+  std::shared_ptr<ast::Node> lhs,
+  std::shared_ptr<ast::Node> rhs
+) {
+  auto resolver = Resolver(g, scope);
+  return resolver.common_type(lhs, rhs);
+}
+
 // Attempt to resolve a single compatible type from two passed
 // types. Respects integer and float promotion rules.
 std::shared_ptr<code::Type> Resolver::common_type(
@@ -72,12 +82,11 @@ std::shared_ptr<code::Type> Resolver::common_type(
   // Resolve the operands
   auto lhs_ty = resolve(_g, _scope, *lhs);
   auto rhs_ty = resolve(_g, _scope, *rhs);
+  // TODO: Design and use a poision concept
+  if (!lhs_ty || !rhs_ty) return nullptr;
 
   // If the types are the same; return the first
-  // TODO(mehcode): This needs to be extended into a full recursive
-  //  comparison when
-  //  we have generated types (eg. pointers of arbitrary depth)
-  if (lhs_ty == rhs_ty) return lhs_ty;
+  if (lhs_ty->equals(*rhs_ty)) return lhs_ty;
 
   if (lhs_ty->is<code::IntegerType>() && rhs_ty->is<code::IntegerType>()) {
     // We're dealing with two integer types; determine the integer

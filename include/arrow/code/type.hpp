@@ -28,7 +28,33 @@ struct Type : Item {
     return false;
   }
 
+  virtual bool is_mutable() const noexcept {
+    return false;
+  }
+
+  virtual bool equals(code::Type& other) const noexcept;
+
   virtual std::string name() const noexcept = 0;
+};
+
+struct PointerType : Type {
+  PointerType(std::shared_ptr<code::Type> pointee,
+              bool _mutable);
+
+  virtual ~PointerType() noexcept;
+
+  virtual LLVMTypeRef handle() const noexcept;
+
+  virtual bool equals(code::Type& other) const noexcept;
+
+  virtual std::string name() const noexcept;
+
+  virtual bool is_mutable() const noexcept {
+    return _mutable;
+  }
+
+  std::shared_ptr<Type> pointee;
+  bool _mutable;
 };
 
 struct IntegerType : Type {
@@ -43,6 +69,7 @@ struct IntegerType : Type {
   }
 
   virtual std::string name() const noexcept;
+  virtual bool equals(code::Type& other) const noexcept;
 
   unsigned bits;
 
@@ -54,6 +81,7 @@ struct BooleanType : Type {
   virtual ~BooleanType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+  virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept {
     return "bool";
@@ -66,6 +94,7 @@ struct FloatType : Type {
   virtual ~FloatType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+  virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept;
 
@@ -76,6 +105,7 @@ struct StringType : Type {
   virtual ~StringType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
+  virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept {
     return "str";

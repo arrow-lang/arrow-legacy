@@ -65,6 +65,9 @@ class Builder : public ast::Visitor {
   virtual void visit_select(ast::Select&);
   // virtual void visit_select_branch(ast::SelectBranch&);
   // virtual void visit_loop(ast::Loop&);
+  virtual void visit_pointer_type(ast::PointerType&);
+  virtual void visit_address_of(ast::AddressOf&);
+  virtual void visit_dereference(ast::Dereference&);
 
  private:
   Generator& _g;
@@ -77,6 +80,15 @@ class Builder : public ast::Visitor {
     ast::Binary& x,
     std::function<LLVMValueRef(
       std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);
+
+  void do_bitwise(
+    ast::Binary& x,
+    std::function<LLVMValueRef(
+      std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb);
+
+  void do_relational(
+    ast::Binary& x,
+    std::function<int(std::shared_ptr<code::Type>)> cb);
 
   void do_unary(
     ast::Unary& x,
