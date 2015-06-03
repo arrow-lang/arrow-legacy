@@ -49,7 +49,7 @@
    </Sequence>
   </SelectBranch>
  </Select>
- <Slot name="name">
+ <Slot name="name" mutable="false">
   <Initializer>
    <Select>
     <SelectBranch>

@@ -57,7 +57,7 @@ void Builder::do_relational(
   _stack.push(std::make_shared<code::Value>(res, type));
 }
 
-void Builder::visit(ast::EqualTo& x) {
+void Builder::visit_eq(ast::EqualTo& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
     if (type->is<code::IntegerType>() ||
         type->is<code::BooleanType>()) {
@@ -72,7 +72,7 @@ void Builder::visit(ast::EqualTo& x) {
   });
 }
 
-void Builder::visit(ast::NotEqualTo& x) {
+void Builder::visit_ne(ast::NotEqualTo& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
     if (type->is<code::IntegerType>() ||
         type->is<code::BooleanType>()) {
@@ -87,7 +87,7 @@ void Builder::visit(ast::NotEqualTo& x) {
   });
 }
 
-void Builder::visit(ast::LessThan& x) {
+void Builder::visit_lt(ast::LessThan& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
     if (type->is<code::IntegerType>() ||
         type->is<code::BooleanType>()) {
@@ -106,7 +106,7 @@ void Builder::visit(ast::LessThan& x) {
   });
 }
 
-void Builder::visit(ast::LessThanOrEqualTo& x) {
+void Builder::visit_le(ast::LessThanOrEqualTo& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
     if (type->is<code::IntegerType>() ||
         type->is<code::BooleanType>()) {
@@ -125,7 +125,7 @@ void Builder::visit(ast::LessThanOrEqualTo& x) {
   });
 }
 
-void Builder::visit(ast::GreaterThanOrEqualTo& x) {
+void Builder::visit_ge(ast::GreaterThanOrEqualTo& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
     if (type->is<code::IntegerType>() ||
         type->is<code::BooleanType>()) {
@@ -144,7 +144,7 @@ void Builder::visit(ast::GreaterThanOrEqualTo& x) {
   });
 }
 
-void Builder::visit(ast::GreaterThan& x) {
+void Builder::visit_gt(ast::GreaterThan& x) {
   do_relational(x, [this](std::shared_ptr<code::Type> type) {
     if (type->is<code::IntegerType>() ||
         type->is<code::BooleanType>()) {

@@ -4,11 +4,12 @@ xor
 not
 let
 def
-mut
+mutable
 true
 false
 if
 while
+loop
 break
 continue
 return

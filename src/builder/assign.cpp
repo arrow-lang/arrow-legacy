@@ -12,7 +12,7 @@ using arrow::Builder;
 using arrow::resolve;
 namespace code = arrow::code;
 
-void Builder::visit(ast::Assign& x) {
+void Builder::visit_assign(ast::Assign& x) {
   // Build the destination operand
   auto dst = build_scalar_of<code::Value>(*x.lhs);
   if (!dst) return;

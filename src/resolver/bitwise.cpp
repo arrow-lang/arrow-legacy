@@ -45,14 +45,14 @@ void Resolver::do_bitwise(ast::Binary& x) {
   _stack.push(type);
 }
 
-void Resolver::visit(ast::BitAnd& x) {
+void Resolver::visit_bit_and(ast::BitAnd& x) {
   do_bitwise(x);
 }
 
-void Resolver::visit(ast::BitXor& x) {
+void Resolver::visit_bit_xor(ast::BitXor& x) {
   do_bitwise(x);
 }
 
-void Resolver::visit(ast::BitOr& x) {
+void Resolver::visit_bit_or(ast::BitOr& x) {
   do_bitwise(x);
 }

@@ -11,7 +11,7 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::PointerType& x) {
+void Builder::visit_pointer_type(ast::PointerType& x) {
   // Attempt to resolve the type
   auto type = resolve(_g, _scope, x);
   if (!type) { return; }
@@ -20,7 +20,7 @@ void Builder::visit(ast::PointerType& x) {
   _stack.push(type);
 }
 
-void Builder::visit(ast::Dereference& x) {
+void Builder::visit_dereference(ast::Dereference& x) {
   // Resolve the type
   auto type = resolve(_g, *_cs, x);
   if (!type) return;
@@ -38,7 +38,7 @@ void Builder::visit(ast::Dereference& x) {
     res, type, op->type()->is_mutable(), true));
 }
 
-void Builder::visit(ast::AddressOf& x) {
+void Builder::visit_address_of(ast::AddressOf& x) {
   // Resolve the type
   auto type = resolve(_g, *_cs, x);
   if (!type) return;

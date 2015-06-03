@@ -53,26 +53,26 @@ void Resolver::do_relational(ast::Binary& x) {
   _stack.push(std::static_pointer_cast<code::Type>(_scope.get("bool")));
 }
 
-void Resolver::visit(ast::EqualTo& x) {
+void Resolver::visit_eq(ast::EqualTo& x) {
   do_relational(x);
 }
 
-void Resolver::visit(ast::NotEqualTo& x) {
+void Resolver::visit_ne(ast::NotEqualTo& x) {
   do_relational(x);
 }
 
-void Resolver::visit(ast::LessThan& x) {
+void Resolver::visit_lt(ast::LessThan& x) {
   do_relational(x);
 }
 
-void Resolver::visit(ast::LessThanOrEqualTo& x) {
+void Resolver::visit_le(ast::LessThanOrEqualTo& x) {
   do_relational(x);
 }
 
-void Resolver::visit(ast::GreaterThanOrEqualTo& x) {
+void Resolver::visit_ge(ast::GreaterThanOrEqualTo& x) {
   do_relational(x);
 }
 
-void Resolver::visit(ast::GreaterThan& x) {
+void Resolver::visit_gt(ast::GreaterThan& x) {
   do_relational(x);
 }

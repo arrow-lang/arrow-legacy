@@ -37,7 +37,7 @@ void Builder::do_bitwise(
   _stack.push(std::make_shared<code::Value>(res, type));
 }
 
-void Builder::visit(ast::BitAnd& x) {
+void Builder::visit_bit_and(ast::BitAnd& x) {
   do_bitwise(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {
@@ -45,7 +45,7 @@ void Builder::visit(ast::BitAnd& x) {
   });
 }
 
-void Builder::visit(ast::BitOr& x) {
+void Builder::visit_bit_or(ast::BitOr& x) {
   do_bitwise(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {
@@ -53,7 +53,7 @@ void Builder::visit(ast::BitOr& x) {
   });
 }
 
-void Builder::visit(ast::BitXor& x) {
+void Builder::visit_bit_xor(ast::BitXor& x) {
   do_bitwise(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {

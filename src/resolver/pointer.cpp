@@ -9,7 +9,7 @@
 using arrow::Resolver;
 using arrow::resolve;
 
-void Resolver::visit(ast::PointerType& x) {
+void Resolver::visit_pointer_type(ast::PointerType& x) {
   // Attempt to resolve the pointee
   auto pointee = resolve(_g, _scope, *x.pointee);
   if (!pointee) { return; }
@@ -18,7 +18,7 @@ void Resolver::visit(ast::PointerType& x) {
   _stack.push(std::make_shared<code::PointerType>(pointee, x.is_mutable));
 }
 
-void Resolver::visit(ast::AddressOf& x) {
+void Resolver::visit_address_of(ast::AddressOf& x) {
   auto type = resolve(_g, _scope, *x.operand);
   if (!type) return;
   if (!type->is<code::FunctionType>()) {
@@ -33,7 +33,7 @@ void Resolver::visit(ast::AddressOf& x) {
     type->name().c_str());
 }
 
-void Resolver::visit(ast::Dereference& x) {
+void Resolver::visit_dereference(ast::Dereference& x) {
   auto type = resolve(_g, _scope, *x.operand);
   if (!type) return;
   if (type->is<code::PointerType>()) {
