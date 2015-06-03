@@ -19,22 +19,22 @@ void Resolver::do_arithmetic(ast::Binary& x) {
   _stack.push(type);
 }
 
-void Resolver::visit(ast::Add& x) {
+void Resolver::visit_add(ast::Add& x) {
   do_arithmetic(x);
 }
 
-void Resolver::visit(ast::Sub& x) {
+void Resolver::visit_sub(ast::Sub& x) {
   do_arithmetic(x);
 }
 
-void Resolver::visit(ast::Mul& x) {
+void Resolver::visit_mul(ast::Mul& x) {
   do_arithmetic(x);
 }
 
-void Resolver::visit(ast::Div& x) {
+void Resolver::visit_div(ast::Div& x) {
   do_arithmetic(x);
 }
 
-void Resolver::visit(ast::Mod& x) {
+void Resolver::visit_mod(ast::Mod& x) {
   do_arithmetic(x);
 }

@@ -9,6 +9,6 @@
 using arrow::Resolver;
 using arrow::resolve;
 
-void Resolver::visit(ast::String&) {
+void Resolver::visit_str(ast::String&) {
   _stack.push(std::static_pointer_cast<code::Type>(_scope.get("str")));
 }

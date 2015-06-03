@@ -12,7 +12,7 @@ using arrow::Builder;
 namespace code = arrow::code;
 namespace ast = arrow::ast;
 
-void Builder::visit(ast::Return& x) {
+void Builder::visit_return(ast::Return& x) {
   // Fail if we are not in a function
   if (!_cf) {
     // NOTE: This code is never executed (yet)

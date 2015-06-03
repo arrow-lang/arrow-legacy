@@ -9,7 +9,7 @@
 using arrow::Resolver;
 using arrow::resolve;
 
-void Resolver::visit(ast::AbstractFunction& x) {
+void Resolver::do_function(ast::AbstractFunction& x) {
   // Resolve the result type (if defined)
   std::shared_ptr<code::Type> result = nullptr;
   if (x.result) {
@@ -31,12 +31,12 @@ void Resolver::visit(ast::AbstractFunction& x) {
   _stack.push(type);
 }
 
-void Resolver::visit(ast::Function& x) {
-  visit(static_cast<ast::AbstractFunction&>(x));
+void Resolver::visit_function(ast::Function& x) {
+  do_function(x);
 }
 
-void Resolver::visit(ast::ExternalFunction& x) {
+void Resolver::visit_extern_function(ast::ExternalFunction& x) {
   // TODO(mehcode): Handle ABI promotion
   //  - int8 > int32 (because C said)
-  visit(static_cast<ast::AbstractFunction&>(x));
+  do_function(x);
 }

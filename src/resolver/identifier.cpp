@@ -9,7 +9,7 @@
 using arrow::Resolver;
 using arrow::resolve;
 
-void Resolver::visit(ast::Identifier& x) {
+void Resolver::visit_id(ast::Identifier& x) {
   // Get the item in reference
   // TODO: Use a builder(?); there is some copypasta here
   auto item = _scope.get(x.text);

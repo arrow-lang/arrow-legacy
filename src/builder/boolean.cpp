@@ -9,7 +9,7 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::Boolean& x) {
+void Builder::visit_bool(ast::Boolean& x) {
   auto type = resolve(_g, *_cs, x);
   auto handle = LLVMConstInt(type->handle(), x.value ? 1 : 0, 0);
 

@@ -18,7 +18,7 @@ Show::Show(std::ostream& os)
 Show::~Show() noexcept { }
 
 void Show::run(Node& node) {
-  AbstractVisitor::run(node);
+  Visitor::run(node);
 
   // Write out the result
   boost::property_tree::xml_writer_settings<char> settings(' ', 1);
@@ -33,7 +33,7 @@ boost::property_tree::ptree& Show::_el() {
   }
 }
 
-void Show::visit(Module& x) {
+void Show::visit_module(Module& x) {
   auto& node = _el().add("Module", "");
   _ctx.push(&node);
 
@@ -44,7 +44,7 @@ void Show::visit(Module& x) {
   _ctx.pop();
 }
 
-void Show::visit(Select& x) {
+void Show::visit_select(Select& x) {
   auto& node = _el().add("Select", "");
   _ctx.push(&node);
 
@@ -55,7 +55,7 @@ void Show::visit(Select& x) {
   _ctx.pop();
 }
 
-void Show::visit(SelectBranch& x) {
+void Show::visit_select_branch(SelectBranch& x) {
   auto& node = _el().add("SelectBranch", "");
   _ctx.push(&node);
 
@@ -80,7 +80,7 @@ void Show::visit(SelectBranch& x) {
   _ctx.pop();
 }
 
-void Show::visit(Return& x) {
+void Show::visit_return(Return& x) {
   auto& node = _el().add("Return", "");
   if (x.expression) {
     _ctx.push(&node);
@@ -91,28 +91,28 @@ void Show::visit(Return& x) {
   }
 }
 
-void Show::visit(Break&) {
+void Show::visit_break(Break&) {
   _el().add("Break", "");
 }
 
-void Show::visit(Integer& x) {
+void Show::visit_int(Integer& x) {
   auto& node = _el().add("Integer", x.text.c_str());
   node.add("<xmlattr>.base", std::to_string(x.base).c_str());
 }
 
-void Show::visit(Float& x) {
+void Show::visit_float(Float& x) {
   _el().add("Float", x.text.c_str());
 }
 
-void Show::visit(Identifier& x) {
+void Show::visit_id(Identifier& x) {
   _el().add("Identifier", x.text.c_str());
 }
 
-void Show::visit(Boolean& x) {
+void Show::visit_bool(Boolean& x) {
   _el().add("Boolean", x.value ? "true" : "false");
 }
 
-void Show::visit(String& x) {
+void Show::visit_str(String& x) {
   _el().add("String", x.text());
 }
 
@@ -125,13 +125,13 @@ void Show::handle_unary(const std::string& name, Unary& x) {
   _ctx.pop();
 }
 
-#define SHOW_UNARY(N) \
-  void Show::visit(N& x) { handle_unary(#N, x); }
+#define SHOW_UNARY(N, D) \
+  void Show::visit_##D(N& x) { handle_unary(#N, x); }
 
-SHOW_UNARY(Promote)
-SHOW_UNARY(NegateNumeric)
-SHOW_UNARY(NegateLogical)
-SHOW_UNARY(NegateBit)
+SHOW_UNARY(Promote, promote)
+SHOW_UNARY(NegateNumeric, negate_numeric)
+SHOW_UNARY(NegateLogical, negate_logical)
+SHOW_UNARY(NegateBit, negate_bit)
 
 void Show::handle_binary(const std::string& name, Binary& x) {
   auto& node = _el().add(name.c_str(), "");
@@ -143,36 +143,36 @@ void Show::handle_binary(const std::string& name, Binary& x) {
   _ctx.pop();
 }
 
-#define SHOW_BINARY(N) \
-  void Show::visit(N& x) { handle_binary(#N, x); }
+#define SHOW_BINARY(N, D) \
+  void Show::visit_##D(N& x) { handle_binary(#N, x); }
 
-SHOW_BINARY(Assign)
-SHOW_BINARY(AssignAdd)
-SHOW_BINARY(AssignSub)
-SHOW_BINARY(AssignMul)
-SHOW_BINARY(AssignDiv)
-SHOW_BINARY(AssignMod)
-SHOW_BINARY(AssignBitAnd)
-SHOW_BINARY(AssignBitXor)
-SHOW_BINARY(AssignBitOr)
-SHOW_BINARY(And)
-SHOW_BINARY(Or)
-SHOW_BINARY(EqualTo)
-SHOW_BINARY(NotEqualTo)
-SHOW_BINARY(LessThan)
-SHOW_BINARY(LessThanOrEqualTo)
-SHOW_BINARY(GreaterThanOrEqualTo)
-SHOW_BINARY(GreaterThan)
-SHOW_BINARY(BitAnd)
-SHOW_BINARY(BitXor)
-SHOW_BINARY(BitOr)
-SHOW_BINARY(Add)
-SHOW_BINARY(Sub)
-SHOW_BINARY(Mul)
-SHOW_BINARY(Div)
-SHOW_BINARY(Mod)
+SHOW_BINARY(Assign, assign)
+SHOW_BINARY(AssignAdd, assign_add)
+SHOW_BINARY(AssignSub, assign_sub)
+SHOW_BINARY(AssignMul, assign_mul)
+SHOW_BINARY(AssignDiv, assign_div)
+SHOW_BINARY(AssignMod, assign_mod)
+SHOW_BINARY(AssignBitAnd, assign_bit_and)
+SHOW_BINARY(AssignBitXor, assign_bit_xor)
+SHOW_BINARY(AssignBitOr, assign_bit_or)
+SHOW_BINARY(And, and)
+SHOW_BINARY(Or, or)
+SHOW_BINARY(EqualTo, eq)
+SHOW_BINARY(NotEqualTo, ne)
+SHOW_BINARY(LessThan, lt)
+SHOW_BINARY(LessThanOrEqualTo, le)
+SHOW_BINARY(GreaterThanOrEqualTo, ge)
+SHOW_BINARY(GreaterThan, gt)
+SHOW_BINARY(BitAnd, bit_and)
+SHOW_BINARY(BitXor, bit_xor)
+SHOW_BINARY(BitOr, bit_or)
+SHOW_BINARY(Add, add)
+SHOW_BINARY(Sub, sub)
+SHOW_BINARY(Mul, mul)
+SHOW_BINARY(Div, div)
+SHOW_BINARY(Mod, mod)
 
-void Show::visit(Function& x) {
+void Show::visit_function(Function& x) {
   auto& fn = _el().add("Function", "");
   _ctx.push(&fn);
 
@@ -208,7 +208,7 @@ void Show::visit(Function& x) {
   _ctx.pop();
 }
 
-void Show::visit(ExternalFunction& x) {
+void Show::visit_extern_function(ExternalFunction& x) {
   auto& fn = _el().add("ExternalFunction", "");
   _ctx.push(&fn);
 
@@ -235,7 +235,7 @@ void Show::visit(ExternalFunction& x) {
   _ctx.pop();
 }
 
-void Show::visit(Call& x) {
+void Show::visit_call(Call& x) {
   auto& item = _el().add("Call", "");
   _ctx.push(&item);
 
@@ -256,7 +256,7 @@ void Show::visit(Call& x) {
   _ctx.pop();
 }
 
-void Show::visit(Slot& x) {
+void Show::visit_slot(Slot& x) {
   auto& item = _el().add("Slot", "");
   _ctx.push(&item);
 
@@ -283,7 +283,7 @@ void Show::visit(Slot& x) {
   _ctx.pop();
 }
 
-void Show::visit(Parameter& x) {
+void Show::visit_parameter(Parameter& x) {
   auto& item = _el().add("Parameter", "");
   _ctx.push(&item);
 
@@ -299,7 +299,7 @@ void Show::visit(Parameter& x) {
   _ctx.pop();
 }
 
-void Show::visit(Loop& x) {
+void Show::visit_loop(Loop& x) {
   auto& node = _el().add("Loop", "");
   _ctx.push(&node);
 

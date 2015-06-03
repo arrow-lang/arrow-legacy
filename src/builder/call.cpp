@@ -12,7 +12,7 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::Call& x) {
+void Builder::visit_call(ast::Call& x) {
   // TODO(mehcode): Keyword arguments
   // TODO(mehcode): Default arguments
 

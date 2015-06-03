@@ -17,7 +17,7 @@ using arrow::resolve;
 // 4. Build sequence into the THEN block
 
 
-void Builder::visit(ast::Select& x) {
+void Builder::visit_select(ast::Select& x) {
   // Get the current insertion block and function
   auto current_block = LLVMGetInsertBlock(_g._irb);
   auto current_fn = LLVMGetBasicBlockParent(current_block);

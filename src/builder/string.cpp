@@ -10,7 +10,7 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::String& x) {
+void Builder::visit_str(ast::String& x) {
   // TODO(mehcode): Unescape escape sequences
 
   auto type = resolve(_g, *_cs, x);

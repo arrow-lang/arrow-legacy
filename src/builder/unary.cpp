@@ -31,14 +31,14 @@ void Builder::do_unary(
 }
 
 // TODO: Rename the promotion operator to the identity operator?
-void Builder::visit(ast::Promote& x) {
+void Builder::visit_promote(ast::Promote& x) {
   do_unary(x, [this](std::shared_ptr<code::Value> op) {
     // Promotion does nothing more than coerce into a rvalue
     return op->value_of(_g);
   });
 }
 
-void Builder::visit(ast::NegateNumeric& x) {
+void Builder::visit_negate_numeric(ast::NegateNumeric& x) {
   do_unary(x, [this](std::shared_ptr<code::Value> op) {
     if (op->type()->is<code::IntegerType>()) {
       return LLVMBuildNeg(_g._irb, op->value_of(_g), "");
@@ -52,7 +52,7 @@ void Builder::visit(ast::NegateNumeric& x) {
   });
 }
 
-void Builder::visit(ast::NegateLogical& x) {
+void Builder::visit_negate_logical(ast::NegateLogical& x) {
   do_unary(x, [this](std::shared_ptr<code::Value> op) {
     if (op->type()->is<code::BooleanType>()) {
       return LLVMBuildNot(_g._irb, op->value_of(_g), "");
@@ -62,7 +62,7 @@ void Builder::visit(ast::NegateLogical& x) {
   });
 }
 
-void Builder::visit(ast::NegateBit& x) {
+void Builder::visit_negate_bit(ast::NegateBit& x) {
   do_unary(x, [this](std::shared_ptr<code::Value> op) {
     if (op->type()->is<code::BooleanType>() ||
         op->type()->is<code::IntegerType>()) {

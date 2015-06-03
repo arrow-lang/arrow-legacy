@@ -9,7 +9,7 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::Float& x) {
+void Builder::visit_float(ast::Float& x) {
   // Resolve the specific type of float
   auto type = resolve(_g, *_cs, x);
 

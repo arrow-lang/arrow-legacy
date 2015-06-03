@@ -9,7 +9,7 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::Integer& x) {
+void Builder::visit_int(ast::Integer& x) {
   // Resolve the type
   auto type = resolve(_g, *_cs, x);
   if (!type) return;

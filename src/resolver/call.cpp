@@ -9,7 +9,7 @@
 using arrow::Resolver;
 using arrow::resolve;
 
-void Resolver::visit(ast::Call& x) {
+void Resolver::visit_call(ast::Call& x) {
   // Attempt to resolve the function that will be called
   // TODO(mehcode): Function "values"
   // TODO(mehcode): resolve<T>

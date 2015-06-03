@@ -22,7 +22,7 @@ Builder::~Builder() noexcept {
 
 // Function
 // -----------------------------------------------------------------------------
-void Builder::visit(ast::Function& node) {
+void Builder::visit_function(ast::Function& node) {
   auto& name = node.name->text;
   auto item = std::static_pointer_cast<code::Function>(_cs->get(name));
   auto type = item->type();
@@ -83,7 +83,7 @@ void Builder::visit(ast::Function& node) {
 
 // Identifier
 // -----------------------------------------------------------------------------
-void Builder::visit(ast::Identifier& node) {
+void Builder::visit_id(ast::Identifier& node) {
   auto item = _cs->get(node.text);
   if (item == nullptr) {
     Log::get().error(

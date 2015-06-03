@@ -12,7 +12,7 @@ using arrow::Builder;
 namespace code = arrow::code;
 namespace ast = arrow::ast;
 
-void Builder::visit(ast::Module& node) {
+void Builder::visit_module(ast::Module& node) {
   // Create the module item
   // FIXME: The parser doesn't give the module a name (yet)
   auto mod = std::make_shared<code::Module>("_", &_scope);

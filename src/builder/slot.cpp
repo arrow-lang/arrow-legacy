@@ -10,7 +10,7 @@
 using arrow::Builder;
 using arrow::resolve;
 
-void Builder::visit(ast::Slot& x) {
+void Builder::visit_slot(ast::Slot& x) {
   auto& name = x.name->text;
 
   // Check if we are overwriting an item in the current scope

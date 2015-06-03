@@ -37,7 +37,7 @@ void Builder::do_arithmetic(
   _stack.push(std::make_shared<code::Value>(res, type));
 }
 
-void Builder::visit(ast::Add& x) {
+void Builder::visit_add(ast::Add& x) {
   do_arithmetic(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {
@@ -54,7 +54,7 @@ void Builder::visit(ast::Add& x) {
   });
 }
 
-void Builder::visit(ast::Sub& x) {
+void Builder::visit_sub(ast::Sub& x) {
   do_arithmetic(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {
@@ -71,7 +71,7 @@ void Builder::visit(ast::Sub& x) {
   });
 }
 
-void Builder::visit(ast::Mul& x) {
+void Builder::visit_mul(ast::Mul& x) {
   do_arithmetic(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {
@@ -88,7 +88,7 @@ void Builder::visit(ast::Mul& x) {
   });
 }
 
-void Builder::visit(ast::Div& x) {
+void Builder::visit_div(ast::Div& x) {
   do_arithmetic(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {
@@ -109,7 +109,7 @@ void Builder::visit(ast::Div& x) {
   });
 }
 
-void Builder::visit(ast::Mod& x) {
+void Builder::visit_mod(ast::Mod& x) {
   do_arithmetic(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {

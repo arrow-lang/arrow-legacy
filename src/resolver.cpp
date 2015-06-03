@@ -18,7 +18,7 @@ Resolver::Resolver(arrow::Generator& g, code::Scope& scope)
 
 Resolver::~Resolver() noexcept { }
 
-void Resolver::visit(ast::Integer& x) {
+void Resolver::visit_int(ast::Integer& x) {
   // By default, integer literals are signed
   // By default, integer literals are as big as they need to be to fit
   //  the value (except they'll coerce upwards as needed)
@@ -45,11 +45,11 @@ void Resolver::visit(ast::Integer& x) {
   _stack.push(std::static_pointer_cast<code::Type>(_scope.get(stream.str())));
 }
 
-void Resolver::visit(ast::Float&) {
+void Resolver::visit_float(ast::Float&) {
   _stack.push(std::static_pointer_cast<code::Type>(_scope.get("float64")));
 }
 
-void Resolver::visit(ast::Boolean&) {
+void Resolver::visit_bool(ast::Boolean&) {
   _stack.push(std::static_pointer_cast<code::Type>(_scope.get("bool")));
 }
 
