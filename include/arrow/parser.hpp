@@ -58,6 +58,9 @@ class Parser {
   bool parse_slot();
   bool parse_type();
   bool parse_select();
+  bool parse_loop();
+
+  bool parse_block(ast::Block& node);
 
   bool parse_function_parameter();
   bool parse_function_signature(ast::AbstractFunction& fn);

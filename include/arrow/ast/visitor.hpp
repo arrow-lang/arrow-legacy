@@ -13,68 +13,14 @@ namespace ast {
 
 struct Node;
 
-class AbstractVisitor {
- public:
+struct AbstractVisitor {
   virtual ~AbstractVisitor() noexcept;
 
   virtual void run(Node&);
 
- private:
-  friend struct Node;
-  friend struct TextNode;
-  friend struct Unary;
-  friend struct Binary;
-  friend struct Identifier;
-  friend struct Module;
-  friend struct AbstractFunction;
-  friend struct ExternalFunction;
-  friend struct Function;
-  friend struct Parameter;
-  friend struct Call;
-  friend struct Slot;
-  friend struct Break;
-  friend struct Return;
-  friend struct Integer;
-  friend struct Float;
-  friend struct Boolean;
-  friend struct String;
-  friend struct Promote;
-  friend struct NegateLogical;
-  friend struct NegateBit;
-  friend struct NegateNumeric;
-  friend struct Assign;
-  friend struct AssignAdd;
-  friend struct AssignSub;
-  friend struct AssignMul;
-  friend struct AssignDiv;
-  friend struct AssignMod;
-  friend struct AssignBitAnd;
-  friend struct AssignBitXor;
-  friend struct AssignBitOr;
-  friend struct And;
-  friend struct Or;
-  friend struct EqualTo;
-  friend struct NotEqualTo;
-  friend struct LessThan;
-  friend struct LessThanOrEqualTo;
-  friend struct GreaterThanOrEqualTo;
-  friend struct GreaterThan;
-  friend struct BitAnd;
-  friend struct BitXor;
-  friend struct BitOr;
-  friend struct Add;
-  friend struct Sub;
-  friend struct Mul;
-  friend struct Div;
-  friend struct Mod;
-  friend struct Select;
-  friend struct SelectBranch;
-
   virtual void visit(Node&) { }
-  virtual void visit(TextNode&) { }
   virtual void visit(Identifier&) { }
   virtual void visit(Module&) { }
-  virtual void visit(AbstractFunction&) { }
   virtual void visit(ExternalFunction&) { }
   virtual void visit(Function&) { }
   virtual void visit(Parameter&) { }
@@ -117,18 +63,16 @@ class AbstractVisitor {
   virtual void visit(Mod&) { }
   virtual void visit(Select&) { }
   virtual void visit(SelectBranch&) { }
+  virtual void visit(Loop&) { }
 };
 
-class Visitor : public AbstractVisitor {
- public:
+struct Visitor : public AbstractVisitor {
   virtual ~Visitor() noexcept;
 
   virtual void visit(Node&) { }
-  virtual void visit(TextNode&) { }
 
   virtual void visit(Identifier&);
   virtual void visit(Module&);
-  virtual void visit(AbstractFunction&) { }
   virtual void visit(ExternalFunction&);
   virtual void visit(Function&);
   virtual void visit(Parameter&);
@@ -171,6 +115,7 @@ class Visitor : public AbstractVisitor {
   virtual void visit(Mod&);
   virtual void visit(Select&);
   virtual void visit(SelectBranch&);
+  virtual void visit(Loop&);
 
   virtual void visit_id(Identifier&) { }
   virtual void visit_module(Module&);
@@ -215,7 +160,8 @@ class Visitor : public AbstractVisitor {
   virtual void visit_div(Div&) { }
   virtual void visit_mod(Mod&) { }
   virtual void visit_select(Select&);
-  virtual void visit_select_branch(SelectBranch&) { }
+  virtual void visit_select_branch(SelectBranch&);
+  virtual void visit_loop(Loop&);
 };
 
 }  // namespace ast

@@ -17,11 +17,16 @@ namespace ast = arrow::ast;
   ast::N::~N() noexcept { } \
   void ast::N::accept(AbstractVisitor& v) { v.visit(*this); }
 
+#define IMPL_ABSTRACT(N) \
+  ast::N::~N() noexcept { }
+
+IMPL_ABSTRACT(TextNode)
+IMPL_ABSTRACT(Block)
+IMPL_ABSTRACT(AbstractFunction)
+
 IMPL(Node)
-IMPL(TextNode)
 IMPL(Identifier)
 IMPL(Module)
-IMPL(AbstractFunction)
 IMPL(ExternalFunction)
 IMPL(Function)
 IMPL(Parameter)
@@ -66,6 +71,7 @@ IMPL(Div)
 IMPL(Mod)
 IMPL(Select)
 IMPL(SelectBranch)
+IMPL(Loop)
 
 ast::Node::Node(Span span)
   : span(span) {
@@ -145,5 +151,11 @@ std::uint64_t ast::Integer::minimum_bits() const {
 ast::SelectBranch::SelectBranch(
   Span span,
   std::shared_ptr<Node> condition
-) : Node(span), condition(condition), sequence{} {
+) : Block(span), condition(condition) {
+}
+
+ast::Loop::Loop(
+  Span span,
+  std::shared_ptr<Node> condition
+) : Block(span), condition(condition) {
 }

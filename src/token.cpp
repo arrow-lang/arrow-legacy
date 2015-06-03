@@ -72,6 +72,9 @@ std::string arrow::to_string(Token::Type type) noexcept {
     case Token::Type::While:
       return "`while`";
 
+    case Token::Type::Loop:
+      return "`loop`";
+
     case Token::Type::Break:
       return "`break`";
 

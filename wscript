@@ -38,7 +38,7 @@ def configure(ctx):
 
     if ctx.env["CXX_NAME"] in ("gcc", "clang"):
         ctx.env.append_unique("CXXFLAGS", "-std=gnu++1y")
-        ctx.env.append_unique("CXXFLAGS", "-Ofast")
+        ctx.env.append_unique("CXXFLAGS", "-O0")
         ctx.env.append_unique("CXXFLAGS", "-Wall")
         ctx.env.append_unique("CXXFLAGS", "-Wextra")
         ctx.env.append_unique("CXXFLAGS", "-Wfatal-errors")

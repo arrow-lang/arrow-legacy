@@ -25,15 +25,12 @@ class Show : public AbstractVisitor {
 
   virtual void run(Node&);
 
- private:
-  void handle_unary(const std::string& name, Unary&);
-  void handle_binary(const std::string& name, Binary&);
-
   virtual void visit(Node&) { }
   virtual void visit(TextNode&) { }
+  virtual void visit(AbstractFunction&) { }
+
   virtual void visit(Identifier&);
   virtual void visit(Module&);
-  virtual void visit(AbstractFunction&) { }
   virtual void visit(Function&);
   virtual void visit(ExternalFunction&);
   virtual void visit(Parameter&);
@@ -76,6 +73,11 @@ class Show : public AbstractVisitor {
   virtual void visit(Mod&);
   virtual void visit(Select&);
   virtual void visit(SelectBranch&);
+  virtual void visit(Loop&);
+
+ private:
+  void handle_unary(const std::string& name, Unary&);
+  void handle_binary(const std::string& name, Binary&);
 
   boost::property_tree::ptree& _el();
 

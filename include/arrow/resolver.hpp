@@ -30,7 +30,6 @@ class Resolver : public ast::AbstractVisitor {
   }
 
   virtual void visit(ast::Node&) { }
-  virtual void visit(ast::TextNode&) { }
   virtual void visit(ast::Identifier&);
   virtual void visit(ast::AbstractFunction&);
   virtual void visit(ast::ExternalFunction&);
@@ -76,6 +75,7 @@ class Resolver : public ast::AbstractVisitor {
   virtual void visit(ast::Mod&);
   virtual void visit(ast::Select&) { }
   virtual void visit(ast::SelectBranch&) { }
+  virtual void visit(ast::Loop&) { }
 
  private:
   std::shared_ptr<code::Type> common_type(

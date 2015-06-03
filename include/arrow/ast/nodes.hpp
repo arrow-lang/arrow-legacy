@@ -53,8 +53,6 @@ struct TextNode : Node {
 
   virtual ~TextNode() noexcept;
 
-  virtual void accept(AbstractVisitor& v);
-
   std::string text;
 };
 
@@ -221,8 +219,6 @@ struct AbstractFunction : Node {
 
   virtual ~AbstractFunction() noexcept;
 
-  virtual void accept(AbstractVisitor& v);
-
   std::shared_ptr<Identifier> name;
   std::shared_ptr<Node> result;
   std::deque<std::shared_ptr<Parameter>> parameters;
@@ -275,7 +271,15 @@ struct Slot : Node {
   std::shared_ptr<Node> initializer;
 };
 
-struct SelectBranch : Node {
+struct Block : Node {
+  Block(Span span) : Node(span) {}
+
+  virtual ~Block() noexcept;
+
+  std::deque<std::shared_ptr<Node>> sequence;
+};
+
+struct SelectBranch : Block {
   SelectBranch(Span span, std::shared_ptr<Node> condition);
 
   virtual ~SelectBranch() noexcept;
@@ -283,7 +287,6 @@ struct SelectBranch : Node {
   virtual void accept(AbstractVisitor& v);
 
   std::shared_ptr<Node> condition;
-  std::deque<std::shared_ptr<Node>> sequence;
 };
 
 struct Select : Node {
@@ -294,6 +297,16 @@ struct Select : Node {
   virtual void accept(AbstractVisitor& v);
 
   std::deque<std::shared_ptr<SelectBranch>> branches;
+};
+
+struct Loop : Block {
+  Loop(Span span, std::shared_ptr<Node> condition = nullptr);
+
+  virtual ~Loop() noexcept;
+
+  virtual void accept(AbstractVisitor& v);
+
+  std::shared_ptr<Node> condition;
 };
 
 }  // namespace ast

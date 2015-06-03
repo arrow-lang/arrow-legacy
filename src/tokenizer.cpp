@@ -616,6 +616,7 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
     {"if", Token::Type::If},
     {"else", Token::Type::Else},
     {"while", Token::Type::While},
+    {"loop", Token::Type::Loop},
     {"break", Token::Type::Break},
     {"continue", Token::Type::Continue},
     {"return", Token::Type::Return},

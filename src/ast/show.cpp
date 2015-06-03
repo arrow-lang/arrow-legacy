@@ -298,3 +298,28 @@ void Show::visit(Parameter& x) {
 
   _ctx.pop();
 }
+
+void Show::visit(Loop& x) {
+  auto& node = _el().add("Loop", "");
+  _ctx.push(&node);
+
+  if (x.condition) {
+    auto& cond = _el().add("Condition", "");
+    _ctx.push(&cond);
+
+    x.condition->accept(*this);
+
+    _ctx.pop();
+  }
+
+  auto& seq = _el().add("Sequence", "");
+  _ctx.push(&seq);
+
+  for (auto& item : x.sequence) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
+
+  _ctx.pop();
+}

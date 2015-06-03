@@ -110,6 +110,10 @@ bool Parser::parse_module_statement() {
 // ----------------------------------------------------------------------------
 bool Parser::parse_statement() {
   switch (_t.peek()->type) {
+    case Token::Type::Loop:
+    case Token::Type::While:
+      return parse_loop();
+
     case Token::Type::Break:
       return parse_break();
 
@@ -1041,4 +1045,74 @@ int Parser::parse_select_branch(ast::Select& x, unsigned index) {
   x.span.end = node->span.end;
 
   return 0;
+}
+
+// Loop
+// ----------------------------------------------------------------------------
+// TODO
+// ----------------------------------------------------------------------------
+bool Parser::parse_loop() {
+  // Check the initial token (to see if have a condition)
+  auto initial_tok = _t.peek();
+  auto has_condition = false;
+  if (initial_tok->type == Token::Type::While) {
+    has_condition = true;
+  } else if (initial_tok->type != Token::Type::Loop) {
+    expect({Token::Type::Loop, Token::Type::While});
+    return false;
+  }
+
+  _t.pop();
+
+  std::shared_ptr<ast::Node> cond = nullptr;
+  if (has_condition) {
+    // Parse condition (expression)
+    if (!parse_expression()) { return false; }
+    cond = _stack.front();
+    _stack.pop_front();
+  }
+
+  auto node = make_shared<ast::Loop>(
+    Span(_t.filename(), initial_tok->span.begin, initial_tok->span.begin),
+    cond);
+
+  // Parse the block
+  if (!parse_block(*node)) { return false; }
+
+  _stack.push_back(node);
+
+  return true;
+}
+
+// Block
+// ----------------------------------------------------------------------------
+// TODO
+// ----------------------------------------------------------------------------
+bool Parser::parse_block(ast::Block& node) {
+  // Expect `{`
+  if (!expect(Token::Type::LeftBrace)) { return false; }
+
+  // Enumerate and attempt to match rules until we reach
+  // `}` or the end of stream (which would be an error)
+  while ((_t.peek()->type != Token::Type::End) &&
+         (_t.peek()->type != Token::Type::RightBrace)) {
+    // Try and parse a statement ..
+    if (parse_statement()) {
+      // Consume the parsed stack
+      node.sequence.insert(
+        node.sequence.end(), _stack.begin(), _stack.end());
+    }
+
+    // Clear the (parsed) stack
+    _stack.clear();
+  }
+
+  // Expect `}`
+  auto tok = expect(Token::Type::RightBrace);
+  if (!tok) { return false; }
+
+  // Update position
+  node.span.end = tok->span.end;
+
+  return true;
 }

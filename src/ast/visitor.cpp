@@ -65,6 +65,7 @@ DELEGATE(Div, div)
 DELEGATE(Mod, mod)
 DELEGATE(Select, select)
 DELEGATE(SelectBranch, select_branch)
+DELEGATE(Loop, loop)
 
 void Visitor::visit_module(Module& x) {
   for (auto& item : x.sequence) {
@@ -74,6 +75,18 @@ void Visitor::visit_module(Module& x) {
 
 void Visitor::visit_select(Select& x) {
   for (auto& item : x.branches) {
+    item->accept(*this);
+  }
+}
+
+void Visitor::visit_loop(Loop& x) {
+  for (auto& item : x.sequence) {
+    item->accept(*this);
+  }
+}
+
+void Visitor::visit_select_branch(SelectBranch& x) {
+  for (auto& item : x.sequence) {
     item->accept(*this);
   }
 }
