@@ -10,14 +10,9 @@
 using arrow::Builder;
 using arrow::resolve;
 
-
-// 1. Build condition expression
-// 2. Create a THEN block and an ELSE block
-// 3. Create a conditional branch that decides between the THEN block and the ELSE block
-// 4. Build sequence into the THEN block
-
-
 void Builder::visit_select(ast::Select& x) {
+  // TODO: Validate that the condition is boolean
+  
   // Get the current insertion block and function
   auto current_block = LLVMGetInsertBlock(_g._irb);
   auto current_fn = LLVMGetBasicBlockParent(current_block);
@@ -47,20 +42,7 @@ void Builder::visit_select(ast::Select& x) {
     LLVMPositionBuilderAtEnd(_g._irb, then_block);
 
     // Build each statement
-    // TODO: This should be a utility (build_sequence)
-    for (auto& item : br->sequence) {
-      // Remember the size of the stack at this point (so we can
-      // detect if an item gets pushed; and then remove it)
-      auto cnt = _stack.size();
-
-      // TODO: If statements should have their own scope
-      build(*item, _cs);
-
-      // Remove anything pushed onto the stack
-      for (unsigned i = 0; i < (_stack.size() - cnt); ++i) {
-        _stack.pop();
-      }
-    }
+    do_sequence(br->sequence);
 
     // Append to the block chain
     blocks.push_back(LLVMGetInsertBlock(_g._irb));
@@ -79,20 +61,7 @@ void Builder::visit_select(ast::Select& x) {
     auto& br = x.branches[index + 1];
 
     // Build each statement
-    // TODO: This should be a utility (build_sequence)
-    for (auto& item : br->sequence) {
-      // Remember the size of the stack at this point (so we can
-      // detect if an item gets pushed; and then remove it)
-      auto cnt = _stack.size();
-
-      // TODO: If statements should have their own scope
-      build(*item, _cs);
-
-      // Remove anything pushed onto the stack
-      for (unsigned i = 0; i < (_stack.size() - cnt); ++i) {
-        _stack.pop();
-      }
-    }
+    do_sequence(br->sequence);
 
     // Append to the block chain
     blocks.push_back(LLVMGetInsertBlock(_g._irb));

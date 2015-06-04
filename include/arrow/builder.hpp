@@ -64,7 +64,7 @@ class Builder : public ast::Visitor {
   virtual void visit_mod(ast::Mod&);
   virtual void visit_select(ast::Select&);
   // virtual void visit_select_branch(ast::SelectBranch&);
-  // virtual void visit_loop(ast::Loop&);
+  virtual void visit_loop(ast::Loop&);
   virtual void visit_pointer_type(ast::PointerType&);
   virtual void visit_address_of(ast::AddressOf&);
   virtual void visit_dereference(ast::Dereference&);
@@ -75,6 +75,8 @@ class Builder : public ast::Visitor {
   code::Scope* _cs;
   code::Function* _cf;
   std::stack<std::shared_ptr<code::Item>> _stack;
+
+  void do_sequence(std::deque<std::shared_ptr<ast::Node>>&);
 
   void do_arithmetic(
     ast::Binary& x,
