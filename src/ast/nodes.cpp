@@ -3,6 +3,8 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include <cstddef>
+#include <cstdlib>
 #include <gmp.h>
 
 #include <vector>
