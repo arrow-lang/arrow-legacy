@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <String>Hello World</String>
+ <String>\\</String>
+ <String>\&apos;</String>
+ <String>\&quot;</String>
+ <String>\a</String>
+ <String>\b</String>
+ <String>\f</String>
+ <String>\n</String>
+ <String>\r</String>
+ <String>\t</String>
+ <String>\v</String>
+</Module>

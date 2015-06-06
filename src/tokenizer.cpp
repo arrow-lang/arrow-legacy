@@ -673,6 +673,7 @@ auto Tokenizer::_scan_string() -> std::shared_ptr<Token> {
           in_byte_escape = true;
           // fallthrough
 
+        case 0x5c:  // `\`
         case 0x27:  // `'`
         case 0x22:  // `"`
         case 0x61:  // `a`
@@ -686,7 +687,9 @@ auto Tokenizer::_scan_string() -> std::shared_ptr<Token> {
           break;
 
         default:
-          Log::get().error("unknown character escape: %c", byte);
+          Log::get().error(Span(_filename, _pos() - 2, _pos()),
+            "unknown character escape: %c", byte);
+
           break;
       }
 

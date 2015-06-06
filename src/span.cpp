@@ -50,3 +50,7 @@ std::string Span::to_string() const {
 auto Position::operator +(unsigned offset) -> Position {
   return Position(row, column + offset);
 }
+
+auto Position::operator -(unsigned offset) -> Position {
+  return Position(row, column - offset);
+}
