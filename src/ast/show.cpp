@@ -179,6 +179,7 @@ SHOW_BINARY(Sub, sub)
 SHOW_BINARY(Mul, mul)
 SHOW_BINARY(Div, div)
 SHOW_BINARY(Mod, mod)
+SHOW_BINARY(Cast, cast)
 
 void Show::visit_function(Function& x) {
   auto& fn = _el().add("Function", "");

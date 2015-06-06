@@ -60,6 +60,7 @@ class Show : public Visitor {
   virtual void visit_mul(Mul&);
   virtual void visit_div(Div&);
   virtual void visit_mod(Mod&);
+  virtual void visit_cast(Cast&);
   virtual void visit_block(Block&);
   virtual void visit_select(Select&);
   virtual void visit_select_branch(SelectBranch&);

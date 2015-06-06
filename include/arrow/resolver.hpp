@@ -30,14 +30,9 @@ class Resolver : public ast::Visitor {
   }
 
   virtual void visit_id(ast::Identifier&);
-  // virtual void visit_module(ast::Module&);
   virtual void visit_function(ast::Function&);
   virtual void visit_extern_function(ast::ExternalFunction&);
-  // virtual void visit_parameter(ast::Parameter&);
   virtual void visit_call(ast::Call&);
-  // virtual void visit_slot(ast::Slot&);
-  // virtual void visit_break(ast::Break&);
-  // virtual void visit_return(ast::Return&);
   virtual void visit_int(ast::Integer&);
   virtual void visit_float(ast::Float&);
   virtual void visit_bool(ast::Boolean&);
@@ -63,9 +58,8 @@ class Resolver : public ast::Visitor {
   virtual void visit_mul(ast::Mul&);
   virtual void visit_div(ast::Div&);
   virtual void visit_mod(ast::Mod&);
+  virtual void visit_cast(ast::Cast&);
   virtual void visit_select(ast::Select&);
-  // virtual void visit_select_branch(ast::SelectBranch&);
-  // virtual void visit_loop(ast::Loop&);
   virtual void visit_pointer_type(ast::PointerType&);
   virtual void visit_address_of(ast::AddressOf&);
   virtual void visit_dereference(ast::Dereference&);

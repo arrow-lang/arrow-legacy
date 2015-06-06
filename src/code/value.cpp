@@ -37,8 +37,12 @@ LLVMValueRef Value::address_of(Generator&) const noexcept {
   }
 }
 
-auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
-  -> std::shared_ptr<Value> {
+auto Value::cast(
+  Generator& g,
+  ast::Node& ctx,
+  std::shared_ptr<Type> type,
+  bool explicit_
+) -> std::shared_ptr<Value> {
   auto value = value_of(g);
   decltype(value) res = nullptr;
 
@@ -59,7 +63,7 @@ auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
         // Zero-extend
         res = LLVMBuildZExt(g._irb, value, type->handle(), "");
       }
-    } else if (ctx.is<ast::Integer>()) {
+    } else if (ctx.is<ast::Integer>() || explicit_) {
       // This is a constant integer
       auto bits = ctx.as<ast::Integer>().minimum_bits();
       if (bits <= int_to.bits) {
@@ -84,11 +88,13 @@ auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
   }
 
   if (type->is<code::IntegerType>() && _type->is<code::FloatType>()) {
-    // Convert float to integer
-    if (type->is_signed()) {
-      res = LLVMBuildFPToSI(g._irb, value, type->handle(), "");
-    } else {
-      res = LLVMBuildFPToUI(g._irb, value, type->handle(), "");
+    if (explicit_) {
+      // Convert float to integer
+      if (type->is_signed()) {
+        res = LLVMBuildFPToSI(g._irb, value, type->handle(), "");
+      } else {
+        res = LLVMBuildFPToUI(g._irb, value, type->handle(), "");
+      }
     }
   }
 
@@ -106,15 +112,33 @@ auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
     }
   }
 
-  // Going from mutable to immutable pointer
+
   if (type->is<code::PointerType>() && _type->is<code::PointerType>()) {
     auto& ptr_from = _type->as<code::PointerType>();
     auto& ptr_to = type->as<code::PointerType>();
 
-    if (ptr_from.is_mutable() && !ptr_to.is_mutable()) {
-      // Nothing happens; we just allow it to pass through the typesystem
-      res = value;
+    if (ptr_from.pointee->equals(*ptr_to.pointee)) {
+      // Going from mutable to immutable pointer
+      if ((ptr_from.is_mutable() && !ptr_to.is_mutable()) || explicit_) {
+        // Nothing happens; we just allow it to pass through the typesystem
+        res = value;
+      }
+    } else if (explicit_) {
+      // Going from pointer to pointer
+      res = LLVMBuildPointerCast(g._irb, value, type->handle(), "");
     }
+  }
+
+  // Going from integer to pointer
+  if (type->is<code::PointerType>() && _type->is<code::IntegerType>() &&
+      explicit_) {
+    res = LLVMBuildPtrToInt(g._irb, value, type->handle(), "");
+  }
+
+  // Going from pointer to integer
+  if (type->is<code::IntegerType>() && _type->is<code::PointerType>() &&
+      explicit_) {
+    res = LLVMBuildIntToPtr(g._irb, value, type->handle(), "");
   }
 
   // If we didn't manage to cast the expression
@@ -122,7 +146,8 @@ auto Value::cast(Generator& g, ast::Node& ctx, std::shared_ptr<Type> type)
     // FIXME: Get location from AST
     auto from_name = _type->name();
     auto to_name = type->name();
-    Log::get().error(ctx.span, "no implicit conversion from '%s' to '%s'",
+    Log::get().error(ctx.span, "no %s conversion from '%s' to '%s'",
+      explicit_ ? "explicit" : "implicit",
       from_name.c_str(), to_name.c_str());
 
     return nullptr;

@@ -54,6 +54,7 @@ class Builder : public ast::Visitor {
   virtual void visit_mul(ast::Mul&);
   virtual void visit_div(ast::Div&);
   virtual void visit_mod(ast::Mod&);
+  virtual void visit_cast(ast::Cast&);
   virtual void visit_select(ast::Select&);
   // virtual void visit_select_branch(ast::SelectBranch&);
   virtual void visit_loop(ast::Loop&);

@@ -529,16 +529,19 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     {Token::Type::And,                      60},
     {Token::Type::Or,                       60},
 
-    {Token::Type::Equals_Equals,            90},
-    {Token::Type::ExclamationMark_Equals,   90},
-    {Token::Type::LessThan,                 90},
-    {Token::Type::LessThan_Equals,          90},
-    {Token::Type::GreaterThan_Equals,       90},
-    {Token::Type::GreaterThan,              90},
+    {Token::Type::Ampersand,                70},
+    {Token::Type::Caret,                    70},
+    {Token::Type::Pipe,                     70},
 
-    {Token::Type::Ampersand,               110},
-    {Token::Type::Caret,                   110},
-    {Token::Type::Pipe,                    110},
+    {Token::Type::Equals_Equals,            80},
+    {Token::Type::ExclamationMark_Equals,   80},
+
+    {Token::Type::As,                       90},
+
+    {Token::Type::LessThan,                110},
+    {Token::Type::LessThan_Equals,         110},
+    {Token::Type::GreaterThan_Equals,      110},
+    {Token::Type::GreaterThan,             110},
 
     {Token::Type::Plus,                    120},
     {Token::Type::Minus,                   120},
@@ -559,26 +562,20 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     {Token::Type::Ampersand_Equals,        1},
     {Token::Type::Caret_Equals,            1},
     {Token::Type::Pipe_Equals,             1},
-
     {Token::Type::If,                      1},
-
     {Token::Type::And,                     0},
     {Token::Type::Or,                      0},
-
     {Token::Type::Equals_Equals,           0},
     {Token::Type::ExclamationMark_Equals,  0},
     {Token::Type::LessThan,                0},
     {Token::Type::LessThan_Equals,         0},
     {Token::Type::GreaterThan_Equals,      0},
     {Token::Type::GreaterThan,             0},
-
     {Token::Type::Ampersand,               0},
     {Token::Type::Caret,                   0},
     {Token::Type::Pipe,                    0},
-
     {Token::Type::Plus,                    0},
     {Token::Type::Minus,                   0},
-
     {Token::Type::Asterisk,                0},
     {Token::Type::Slash,                   0},
     {Token::Type::Percent,                 0},
@@ -603,17 +600,22 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     // Pop the operand token
     _t.pop();
 
-    // Parse the RHS
-    if (!parse_unary_expression()) { return false; }
+    if (tok->type == Token::Type::As) {
+      // Parse the RHS (which is a type)
+      if (!parse_type()) { return false; }
+    } else {
+      // Parse the RHS
+      if (!parse_unary_expression()) { return false; }
 
-    // If the binary operator binds less tightly with RHS than the
-    // operator after RHS, let the pending operator take RHS as its LHS.
-    auto next_prec = PREC.find(_t.peek(0)->type);
-    if (next_prec != PREC.end() && (
-        (tok_prec->second < next_prec->second) ||
-        (tok_assoc->second == 1 && (tok_prec->second == next_prec->second)))) {
-      if (!parse_binary_expression((tok_prec->second) + 1, tok_assoc->second)) {
-        return false;
+      // If the binary operator binds less tightly with RHS than the
+      // operator after RHS, let the pending operator take RHS as its LHS.
+      auto next_prec = PREC.find(_t.peek(0)->type);
+      if (next_prec != PREC.end() && (
+          (tok_prec->second < next_prec->second) ||
+          (tok_assoc->second == 1 && (tok_prec->second == next_prec->second)))) {
+        if (!parse_binary_expression((tok_prec->second) + 1, tok_assoc->second)) {
+          return false;
+        }
       }
     }
 
@@ -625,6 +627,10 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     auto span = Span(_t.filename(), lhs->span.begin, rhs->span.end);
     std::shared_ptr<ast::Node> node;
     switch (tok->type) {
+      case Token::Type::As:
+        node = make_shared<ast::Cast>(span, lhs, rhs);
+        break;
+
       case Token::Type::Equals:
         node = make_shared<ast::Assign>(span, lhs, rhs);
         break;
