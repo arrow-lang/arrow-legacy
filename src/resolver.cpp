@@ -13,7 +13,7 @@ namespace code = arrow::code;
 namespace ast = arrow::ast;
 
 Resolver::Resolver(arrow::Generator& g, code::Scope& scope)
-  : _g{g}, _scope(scope) {
+  : _g(g), _scope(scope) {
 }
 
 Resolver::~Resolver() noexcept { }
