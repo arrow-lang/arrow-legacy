@@ -18,7 +18,7 @@ install:
   - g++ --version
 
 # Command to build project
-before_script: ./waf configure clean build
+before_script: ./waf configure clean build -j 1
 
 # Command to run tests
 script: ./waf test
