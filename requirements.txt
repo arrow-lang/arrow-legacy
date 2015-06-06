@@ -1,1 +1,3 @@
 cpplint==0.0.5
+cpp-coveralls==0.3.7
+requests==2.7.0
