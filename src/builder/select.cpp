@@ -11,7 +11,8 @@ using arrow::Builder;
 using arrow::resolve;
 
 void Builder::visit_select(ast::Select& x) {
-  // TODO: Validate that the condition is boolean
+  // Push a new scope level
+  code::Scope scope{_cs};
 
   // Get the current insertion block and function
   auto current_block = LLVMGetInsertBlock(_g._irb);
@@ -31,11 +32,12 @@ void Builder::visit_select(ast::Select& x) {
 
     // Build the condition expression
     // TODO: If statements should have their own scope
-    auto cond = build_scalar_of<code::Value>(*br->condition, _cs);
+    auto cond = build_scalar_of<code::Value>(*br->condition, &scope);
     if (!cond) return;
 
     // Cast the condition expression to boolean
     cond = cond->cast(_g, *br->condition, bool_);
+    if (!cond) return;
 
     // Create the THEN and NEXT blocks
     auto then_block = LLVMAppendBasicBlock(current_fn, "");
@@ -51,7 +53,7 @@ void Builder::visit_select(ast::Select& x) {
     // TODO: Extract into `do_select_branch` or something
     // Build each statement
     auto last = std::dynamic_pointer_cast<code::Value>(
-      do_sequence(br->sequence));
+      do_sequence(br->sequence, &scope));
     auto block = LLVMGetInsertBlock(_g._irb);
 
     if (has_value && last) {
@@ -83,7 +85,7 @@ void Builder::visit_select(ast::Select& x) {
     // TODO: Extract into `do_select_branch` or something
     // Build each statement
     auto last = std::dynamic_pointer_cast<code::Value>(
-      do_sequence(br->sequence));
+      do_sequence(br->sequence, &scope));
     auto block = LLVMGetInsertBlock(_g._irb);
 
     if (has_value && last) {
@@ -135,7 +137,7 @@ void Builder::visit_select(ast::Select& x) {
   //  to reliably produce an error message saying we didn't get one.
   if (has_value) {
     // Push our PHI node
-    auto type = resolve(_g, *_cs, x);
+    auto type = resolve(_g, scope, x);
     if (!type) { return; }
     auto res = LLVMBuildPhi(_g._irb, type->handle(), "");
     LLVMAddIncoming(res, values.data(), value_blocks.data(), values.size());

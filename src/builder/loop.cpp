@@ -11,8 +11,8 @@ using arrow::Builder;
 using arrow::resolve;
 
 void Builder::visit_loop(ast::Loop& x) {
-  // TODO: Create a new scope block
-  // TODO: Validate that the condition is boolean
+  // Push a new scope level
+  code::Scope scope{_cs};
 
   // Get the current insertion block and function
   auto current_block = LLVMGetInsertBlock(_g._irb);
@@ -24,6 +24,7 @@ void Builder::visit_loop(ast::Loop& x) {
   LLVMBasicBlockRef merge_block = nullptr;
 
   // If we have a condition ..
+  auto bool_ = std::static_pointer_cast<code::Type>(_scope.get("bool"));
   if (x.condition) {
     // Create condition and merge blocks
     cond_block = LLVMAppendBasicBlock(current_fn, "");
@@ -32,7 +33,11 @@ void Builder::visit_loop(ast::Loop& x) {
 
     // Build the condition expression
     LLVMPositionBuilderAtEnd(_g._irb, cond_block);
-    auto cond = build_scalar_of<code::Value>(*x.condition, _cs);
+    auto cond = build_scalar_of<code::Value>(*x.condition, &scope);
+    if (!cond) return;
+
+    // Cast the condition expression to boolean
+    cond = cond->cast(_g, *x.condition, bool_);
     if (!cond) return;
 
     // Build the conditional branch
@@ -49,7 +54,7 @@ void Builder::visit_loop(ast::Loop& x) {
 
   // Build each statement in the loop body
   LLVMPositionBuilderAtEnd(_g._irb, loop_block);
-  do_sequence(x.sequence);
+  do_sequence(x.sequence, &scope);
 
   // Jump back to the "condition"
   LLVMBuildBr(_g._irb, cond_block);

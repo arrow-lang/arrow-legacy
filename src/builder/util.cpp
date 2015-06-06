@@ -11,7 +11,8 @@ using arrow::Builder;
 // using arrow::resolve;
 
 std::shared_ptr<arrow::code::Item> Builder::do_sequence(
-  std::deque<std::shared_ptr<ast::Node>>& seq
+  std::deque<std::shared_ptr<ast::Node>>& seq,
+  code::Scope* scope
 ) {
   std::shared_ptr<code::Item> last;
   for (auto& item : seq) {
@@ -20,7 +21,7 @@ std::shared_ptr<arrow::code::Item> Builder::do_sequence(
     auto cnt = _stack.size();
 
     // TODO: If statements should have their own scope
-    build(*item, _cs);
+    build(*item, scope);
 
     // Remove anything pushed onto the stack
     for (unsigned i = 0; i < (_stack.size() - cnt); ++i) {

@@ -13,6 +13,9 @@ void Resolver::visit_select(ast::Select& x) {
   // NOTE: If resolve(..) is called than we know someone is requesting
   //  a value from us
 
+  // Push a new scope level
+  code::Scope scope{&_scope};
+
   unsigned index = 0;
   bool has_else = false;
   bool has_value = true;
@@ -30,12 +33,12 @@ void Resolver::visit_select(ast::Select& x) {
     // Grab the last node in the sequence and resolve against
     // a previous branch
     auto final_node = br->sequence.back();
-    auto final_ty = resolve(_g, _scope, *final_node);
+    auto final_ty = resolve(_g, scope, *final_node);
     if (!final_ty) continue;
     if (!type) {
       type = final_ty;
     } else {
-      type = common_type(prev_end, final_node);
+      type = arrow::common_type(_g, scope, prev_end, final_node);
       if (!type) { return; }
     }
     prev_end = final_node;
