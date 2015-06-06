@@ -17,4 +17,7 @@ install:
 before_script: ./waf configure clean build
 
 # Command to run tests
-script: ./waf test coverage
+script: ./waf test
+
+# If successful; run coverage
+after_success: coveralls -r . -b build -i ./src -i ./include
