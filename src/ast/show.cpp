@@ -12,7 +12,7 @@
 using arrow::ast::Show;
 
 Show::Show(std::ostream& os)
-  : _stream{os}, _tree{}, _ctx{} {
+  : _stream(os), _tree(), _ctx() {
 }
 
 Show::~Show() noexcept { }

@@ -14,7 +14,7 @@ namespace code = arrow::code;
 namespace ast = arrow::ast;
 
 Expose::Expose(arrow::Generator& g, code::Scope& scope)
-  : _g{g}, _scope{scope} {
+  : _g(g), _scope(scope) {
 }
 
 Expose::~Expose() noexcept { }

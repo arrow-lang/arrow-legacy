@@ -14,7 +14,7 @@ namespace code = arrow::code;
 namespace ast = arrow::ast;
 
 Builder::Builder(arrow::Generator& g, code::Scope& scope)
-  : _g{g}, _scope{scope}, _cs{&scope}, _stack{} {
+  : _g(g), _scope(scope), _cs(&scope), _stack() {
 }
 
 Builder::~Builder() noexcept {
