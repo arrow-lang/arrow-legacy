@@ -34,9 +34,7 @@ def test_assign_op() {
   assert(z == 33);
 }
 
-def main() -> int {
+def main() {
   test_assign();
   test_assign_op();
-
-  return 0;
 }

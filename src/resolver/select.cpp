@@ -14,7 +14,7 @@ void Resolver::visit_select(ast::Select& x) {
   //  a value from us
 
   // Push a new scope level
-  code::Scope scope{&_scope};
+  code::Scope scope{"", &_scope};
 
   unsigned index = 0;
   bool has_else = false;

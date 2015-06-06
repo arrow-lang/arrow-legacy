@@ -5,11 +5,13 @@
 
 #include <map>
 #include <vector>
+#include <boost/filesystem.hpp>
 #include "arrow/parser.hpp"
 #include "arrow/log.hpp"
 
 using arrow::Parser;
 using arrow::Token;
+namespace fs = boost::filesystem;
 namespace ast = arrow::ast;
 
 using std::make_shared;
@@ -20,7 +22,9 @@ Parser::Parser(Tokenizer& t)
 
 std::shared_ptr<ast::Node> Parser::parse() {
   // Declare the top-level (root) module
-  auto module = make_shared<ast::Module>(Span(_t.filename(), {0, 0}, {0, 0}));
+  auto stem = fs::path(_t.filename()).stem().string();
+  auto module = make_shared<ast::Module>(Span(_t.filename(), {0, 0}, {0, 0}),
+    stem);
 
   // Enumerate and attempt to match rules until the token stream
   // is empty

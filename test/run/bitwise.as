@@ -6,7 +6,7 @@ def assert(condition: bool) {
   }
 }
 
-def main() -> int {
+def main() {
   let mutable a: int32 = 1;
   let mutable b: int32 = 2;
   a = a ^ b;
@@ -17,7 +17,4 @@ def main() -> int {
   assert((!0xf0 & 0xff) == 0xf);
   assert((0xf0 | 0xf) == 0xff);
   assert((0b1010_1010 | 0b0101_0101) == 0xff);
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }

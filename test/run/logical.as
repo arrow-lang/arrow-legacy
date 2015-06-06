@@ -49,10 +49,7 @@ def test_int() {
   assert(not (40 == 30) & (30 > 20));
 }
 
-def main() -> int32 {
+def main() {
   test_bool();
   test_int();
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }

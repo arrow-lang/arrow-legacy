@@ -75,8 +75,8 @@ ast::Node::Node(Span span)
   : span(span) {
 }
 
-ast::Module::Module(Span span)
-  : Node(span), sequence() {
+ast::Module::Module(Span span, const std::string& name)
+  : Node(span), sequence(), name(name) {
 }
 
 ast::Unary::Unary(Span span, std::shared_ptr<Node> operand)

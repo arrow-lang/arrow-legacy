@@ -48,7 +48,7 @@ def test_if_as_block_result() {
   assert(rs);
 }
 
-def main() -> int {
+def main() {
   test_if();
   test_else();
   test_elseif1();
@@ -57,6 +57,4 @@ def main() -> int {
   test_inferrence();
   test_if_as_if_condition();
   test_if_as_block_result();
-
-  return 0;
 }

@@ -6,7 +6,7 @@ def assert(condition: bool) {
   }
 }
 
-def main() -> int {
+def main() {
   let x = 10;
   let y = &x;
   let a = &x;
@@ -17,6 +17,4 @@ def main() -> int {
   assert(y == z);
   assert(y == a);
   assert(e != w);
-
-  return 0;
 }

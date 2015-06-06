@@ -29,6 +29,7 @@ class Generator {
   void operator=(const Generator&) = delete;
 
   void generate(const std::string& name, std::shared_ptr<ast::Node> node);
+  void generate_main();
 
   void print(std::ostream& os) const;
 
@@ -42,6 +43,7 @@ class Generator {
 
   /// LLVM module that contains the LLVM IR
   LLVMModuleRef _mod;
+  std::string _name;
 
   /// LLVM instruction builder that greatly simplifies
   /// IR generation with LLVM

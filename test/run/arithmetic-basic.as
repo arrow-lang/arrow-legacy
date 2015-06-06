@@ -6,11 +6,8 @@ def assert(condition: bool) {
   }
 }
 
-def main() -> int32 {
+def main() {
   let a: int8 = 10;
   assert(a == 10);
   assert(a * (a - 1) == 90);
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }

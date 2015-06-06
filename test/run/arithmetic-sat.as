@@ -12,10 +12,7 @@ def sat_add(x: uint32) -> uint32 {
   return ret;
 }
 
-def main() -> uint32 {
+def main() {
   let neg: uint32 = -1;
   assert(sat_add(neg) == neg);
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }

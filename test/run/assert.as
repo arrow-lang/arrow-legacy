@@ -6,11 +6,8 @@ def assert(condition: bool) {
   }
 }
 
-def main() -> int32 {
+def main() {
   // Assert that the universe is still valid and consistent according to
   // our understand of its workings.
   assert(true);
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }

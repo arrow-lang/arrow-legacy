@@ -39,13 +39,14 @@ struct Node {
 };
 
 struct Module : Node {
-  explicit Module(Span span);
+  explicit Module(Span span, const std::string& name);
 
   virtual ~Module() noexcept;
 
   virtual void accept(Visitor& v);
 
   std::deque<std::shared_ptr<Node>> sequence;
+  std::string name;
 };
 
 struct TextNode : Node {

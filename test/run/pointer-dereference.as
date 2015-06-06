@@ -6,7 +6,7 @@ def assert(condition: bool) {
   }
 }
 
-def main() -> int {
+def main() {
   let mutable a = 230;
   let b = &mutable a;
   *b = 30;
@@ -15,6 +15,4 @@ def main() -> int {
   ((*b)) = 610;
   assert(a == 610);
   assert(*b == 610);
-
-  return 0;
 }

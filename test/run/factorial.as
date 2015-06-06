@@ -15,7 +15,7 @@ def factorial(n: int64) -> int64 {
   }
 }
 
-def main() -> int32 {
+def main() {
   assert(factorial( 0) ==       1);
   assert(factorial( 1) ==       1);
   assert(factorial( 2) ==       2);
@@ -27,7 +27,4 @@ def main() -> int32 {
   assert(factorial( 8) ==   40320);
   assert(factorial( 9) ==  362880);
   assert(factorial(10) == 3628800);
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }

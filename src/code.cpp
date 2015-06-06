@@ -18,7 +18,7 @@ IMPL(ExternalFunction)
 IMPL(Slot)
 
 code::Module::Module(const std::string& name, Scope* parent)
-  : scope{parent}, name{name} {
+  : scope{name, parent}, name{name} {
 }
 
 code::AbstractFunction::AbstractFunction(
@@ -34,7 +34,7 @@ code::Function::Function(
   const std::string& name,
   Scope* parent
 )
-  : AbstractFunction(type, name), scope{parent}, _handle{handle} {
+  : AbstractFunction(type, name), scope{name, parent}, _handle{handle} {
 }
 
 code::ExternalFunction::ExternalFunction(

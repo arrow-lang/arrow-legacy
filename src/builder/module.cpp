@@ -13,9 +13,9 @@ namespace code = arrow::code;
 namespace ast = arrow::ast;
 
 void Builder::visit_module(ast::Module& node) {
-  // Create the module item
-  // FIXME: The parser doesn't give the module a name (yet)
-  auto mod = std::make_shared<code::Module>("_", &_scope);
+  // Create (and set) the module item
+  auto mod = std::make_shared<code::Module>(node.name, &_scope);
+  _cs->set(node.name, mod);
 
   // Extract named items from the sequence (for name hoisting)
   arrow::Expose{_g, mod->scope}.run(node);

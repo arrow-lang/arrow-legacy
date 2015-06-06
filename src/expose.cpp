@@ -26,7 +26,10 @@ void Expose::visit_function(ast::Function& x) {
   if (!type) { return; }
 
   auto& name = x.name->text;
-  auto handle = LLVMAddFunction(_g._mod, name.c_str(), type->handle());
+  auto namespace_ = _scope.name();
+
+  auto handle = LLVMAddFunction(
+    _g._mod, (namespace_ + "." + name).c_str(), type->handle());
 
   // Create and set the new function item in the scope
   // TODO(mehcode): Functions should receive module scope

@@ -15,7 +15,7 @@ Generator::Generator()
     _irb{nullptr},
     _target_machine{nullptr},
     _data_layout{nullptr},
-    _scope{} {
+    _scope{""} {
 }
 
 Generator::~Generator() noexcept {
@@ -46,6 +46,7 @@ void Generator::generate(
 
   // Construct a LLVM module to hold the geneated IR.
   _mod = LLVMModuleCreateWithName(name.c_str());
+  _name = name;
 
   // Discern the triple for our target machine.
   auto triple = LLVMGetDefaultTargetTriple();
@@ -129,4 +130,124 @@ void Generator::_declare_basic_types() {
   // Floating-point types
   _scope.set("float32", std::make_shared<code::FloatType>(32));
   _scope.set("float64", std::make_shared<code::FloatType>(64));
+}
+
+void Generator::generate_main() {
+  // Get a reference to our top-level module main (if present)
+  auto mod = std::dynamic_pointer_cast<code::Module>(_scope.get(_name));
+  if (!mod) return;
+
+  auto mod_main_item = mod->scope.get("main");
+  std::shared_ptr<code::Function> mod_main = nullptr;
+  if (mod_main_item) {
+    mod_main = std::dynamic_pointer_cast<code::Function>(mod_main_item);
+    if (!mod_main) {
+      // TODO: No idea where this came from; we should save context
+      //       on decl. items
+      Log::get().error("'main' must be a function");
+    }
+
+    // Check for no return type or the correct return type
+    auto mm = mod_main->type();
+    if (mm->result && !(mm->result->is<code::IntegerType>() && mm->result->as<code::IntegerType>().bits == 32)) {
+      Log::get().error("result of `main` must be unit or `int32`");
+    }
+
+    // Check for the correct parameter count
+    if (mm->parameters.size() > 3) {
+      // TODO: Waiting on context to understand where this came from
+      Log::get().error(
+        "too many parameters (%d) for 'main': must be 0, 2, or 3",
+        mm->parameters.size());
+
+    }
+
+    if (mm->parameters.size() == 1) {
+      // TODO: Waiting on context to understand where this came from
+      Log::get().error(
+        "only one parameter for 'main': must be 0, 2, or 3");
+
+    }
+
+    bool param_type_match = false;
+
+    if (mm->parameters.size() >= 1) {
+      // TODO: Revisit when we understand `c_int`
+      if (mm->parameters[0]->is<code::IntegerType>()) {
+        if (mm->parameters[0]->as<code::IntegerType>().bits == 32) {
+          param_type_match = true;
+        }
+      }
+      if (!param_type_match) {
+        // TODO: Waiting on context to understand where this came from
+        Log::get().error(
+          "first parameter of 'main' (argc) must be of type 'int32'");
+      }
+    }
+
+    if (mm->parameters.size() >= 2) {
+      if (mm->parameters[1]->is<code::PointerType>()) {
+        if (mm->parameters[1]->as<code::PointerType>().pointee->is<code::StringType>()) {
+          param_type_match = true;
+        }
+      }
+      if (!param_type_match) {
+        // TODO: Waiting on context to understand where this came from
+        Log::get().error(
+          "second parameter of 'main' (argv) must be of type '*str'");
+      }
+    }
+
+    if (mm->parameters.size() >= 3) {
+      if (mm->parameters[2]->is<code::PointerType>()) {
+        if (mm->parameters[2]->as<code::PointerType>().pointee->is<code::StringType>()) {
+          param_type_match = true;
+        }
+      }
+      if (!param_type_match) {
+        // TODO: Waiting on context to understand where this came from
+        Log::get().error(
+          "third parameter of 'main' (environ) must be of type '*str'");
+      }
+    }
+  }
+
+  // Do we keep going ?
+  if (Log::get().count("error") > 0) { return; }
+
+  // Build the ABI main function (declaration)
+  // NOTE: The correct definition is: `int main(int, **int8, **int8)`
+  // TODO: Revisit when we /know/ what type `c_int` is
+  std::vector<LLVMTypeRef> abi_main_params{
+    LLVMInt32Type(),
+    LLVMPointerType(LLVMPointerType(LLVMInt8Type(), 0), 0),
+    LLVMPointerType(LLVMPointerType(LLVMInt8Type(), 0), 0)};
+  auto abi_main_ty = LLVMFunctionType(
+    LLVMInt32Type(), abi_main_params.data(), abi_main_params.size(), 0);
+  auto abi_main = LLVMAddFunction(_mod, "main", abi_main_ty);
+
+  // Build the ABI main function (definition)
+  LLVMPositionBuilderAtEnd(_irb, LLVMAppendBasicBlock(abi_main, ""));
+
+  if (mod_main) {
+    // Collect arguments to call the module main function
+    std::vector<LLVMValueRef> main_args;
+    for (unsigned idx = 0; idx < mod_main->type()->parameters.size(); ++idx) {
+      main_args.push_back(LLVMGetParam(abi_main, idx));
+    }
+
+    // Build a call to the module main
+    auto main_res = LLVMBuildCall(
+      _irb, mod_main->handle(), main_args.data(), main_args.size(), "");
+
+    // If the module main returns ..
+    if (mod_main->type()->result) {
+      LLVMBuildRet(_irb, main_res);
+    }
+  }
+
+  // If we didn't terminate ..
+  if (!LLVMGetBasicBlockTerminator(LLVMGetLastBasicBlock(abi_main))) {
+    LLVMBuildRet(_irb, LLVMConstInt(LLVMInt32Type(), 0, false));
+  }
 }

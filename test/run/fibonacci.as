@@ -12,7 +12,7 @@ def fibonacci(n: int64, a1: int64, a2: int64) -> int64 {
     else { return fibonacci(n - 1, a2, a1 + a2); };
 }
 
-def main() -> int32 {
+def main() {
   assert(fibonacci( 0, 1, 1) ==               1);
   assert(fibonacci( 1, 1, 1) ==               1);
   assert(fibonacci( 2, 1, 1) ==               2);
@@ -28,7 +28,4 @@ def main() -> int32 {
   assert(fibonacci(40, 1, 1) ==       165580141);
   assert(fibonacci(50, 1, 1) ==     20365011074);
   assert(fibonacci(70, 1, 1) == 308061521170129);
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }

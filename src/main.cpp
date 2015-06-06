@@ -10,9 +10,10 @@
 #include "arrow/generator.hpp"
 #include "arrow/log.hpp"
 #include "boost/program_options.hpp"
+#include <boost/filesystem.hpp>
 
+namespace fs = boost::filesystem;
 namespace po = boost::program_options;
-// using namespace arrow;
 namespace ast = arrow::ast;
 using arrow::Log;
 using arrow::Parser;
@@ -125,8 +126,13 @@ int main(int argc, char** argv) {
   Generator generator{};
 
   // Generate the IR
-  // TODO(mehcode): Get the correct module name
-  generator.generate("_", module);
+  auto name = fs::path(tokenizer.filename()).stem().string();
+  generator.generate(name, module);
+  if (Log::get().count("error") > 0) { return EXIT_FAILURE; }
+
+  // Build the main function
+  // NOTE: This wouldn't be done if this was to be a library
+  generator.generate_main();
   if (Log::get().count("error") > 0) { return EXIT_FAILURE; }
 
   // Print the IR

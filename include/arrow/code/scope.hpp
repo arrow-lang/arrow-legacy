@@ -17,8 +17,8 @@ namespace code {
 
 class Scope {
  public:
-  Scope();
-  explicit Scope(Scope* parent);
+  explicit Scope(const std::string& name);
+  Scope(const std::string& name, Scope* parent);
 
   Scope(const Scope&) = delete;
 
@@ -34,8 +34,11 @@ class Scope {
   /// Set an item in this scope with the passed name
   void set(const std::string& name, std::shared_ptr<Item> item);
 
+  std::string name() const;
+
  private:
   Scope* _parent;
+  std::string _name;
   std::unordered_map<std::string, std::shared_ptr<Item>> _items;
 };
 

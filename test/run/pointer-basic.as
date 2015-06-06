@@ -6,12 +6,9 @@ def assert(condition: bool) {
   }
 }
 
-def main() -> int {
+def main() {
   let a = 10;
   let b = &a;
   let c = *b;
   assert(c == a);
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }

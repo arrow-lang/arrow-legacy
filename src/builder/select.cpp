@@ -12,7 +12,7 @@ using arrow::resolve;
 
 void Builder::visit_select(ast::Select& x) {
   // Push a new scope level
-  code::Scope scope{_cs};
+  code::Scope scope{"", _cs};
 
   // Get the current insertion block and function
   auto current_block = LLVMGetInsertBlock(_g._irb);

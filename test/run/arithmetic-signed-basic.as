@@ -6,7 +6,7 @@ def assert(condition: bool) {
   }
 }
 
-def main() -> int32 {
+def main() {
   let i8: int8 = 10;
   let i16: int16 = 2000;
   let i32: int32 = 300000;
@@ -43,7 +43,4 @@ def main() -> int32 {
   assert(i32 % 4 == 0);
   assert(i64 % 5 == 0);
   assert(i128 % 6 == 2);
-
-  // TODO: Main should return 0 if we don't specify a return type
-  return 0;
 }
