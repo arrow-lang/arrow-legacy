@@ -56,9 +56,16 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Weffc++")
         # ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
+
         # This should be enabled only during testing; perhaps make two binaries
         ctx.env.append_unique("CXXFLAGS", "--coverage")
         ctx.env.append_unique("LINKFLAGS", "--coverage")
+
+        # Reduce memory consumption (and make builds slower)
+        ctx.env.append_value("CXXFLAGS", "--param")
+        ctx.env.append_unique("CXXFLAGS", "ggc-min-expand=3")
+        ctx.env.append_value("CXXFLAGS", "--param")
+        ctx.env.append_unique("CXXFLAGS", "ggc-min-heapsize=5120")
 
 
 def build(ctx):
