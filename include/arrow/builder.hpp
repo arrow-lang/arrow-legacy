@@ -68,7 +68,8 @@ class Builder : public ast::Visitor {
   code::Function* _cf;
   std::stack<std::shared_ptr<code::Item>> _stack;
 
-  void do_sequence(std::deque<std::shared_ptr<ast::Node>>&);
+  std::shared_ptr<code::Item> do_sequence(
+    std::deque<std::shared_ptr<ast::Node>>&);
 
   void do_arithmetic(
     ast::Binary& x,

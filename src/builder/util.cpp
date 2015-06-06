@@ -10,7 +10,10 @@
 using arrow::Builder;
 // using arrow::resolve;
 
-void Builder::do_sequence(std::deque<std::shared_ptr<ast::Node>>& seq) {
+std::shared_ptr<arrow::code::Item> Builder::do_sequence(
+  std::deque<std::shared_ptr<ast::Node>>& seq
+) {
+  std::shared_ptr<code::Item> last;
   for (auto& item : seq) {
     // Remember the size of the stack at this point (so we can
     // detect if an item gets pushed; and then remove it)
@@ -21,7 +24,10 @@ void Builder::do_sequence(std::deque<std::shared_ptr<ast::Node>>& seq) {
 
     // Remove anything pushed onto the stack
     for (unsigned i = 0; i < (_stack.size() - cnt); ++i) {
+      last = _stack.top();
       _stack.pop();
     }
   }
+
+  return last;
 }

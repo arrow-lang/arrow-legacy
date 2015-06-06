@@ -12,13 +12,17 @@ using arrow::resolve;
 
 void Builder::visit_select(ast::Select& x) {
   // TODO: Validate that the condition is boolean
-  
+
   // Get the current insertion block and function
   auto current_block = LLVMGetInsertBlock(_g._irb);
   auto current_fn = LLVMGetBasicBlockParent(current_block);
 
   std::vector<LLVMBasicBlockRef> blocks;
+  std::vector<LLVMValueRef> values;
+  std::vector<LLVMBasicBlockRef> value_blocks;
   unsigned index = 0;
+  bool has_value = true;
+  auto bool_ = std::static_pointer_cast<code::Type>(_scope.get("bool"));
   for (; index < x.branches.size(); ++index) {
     auto& br = x.branches.at(index);
 
@@ -29,6 +33,9 @@ void Builder::visit_select(ast::Select& x) {
     // TODO: If statements should have their own scope
     auto cond = build_scalar_of<code::Value>(*br->condition, _cs);
     if (!cond) return;
+
+    // Cast the condition expression to boolean
+    cond = cond->cast(_g, *br->condition, bool_);
 
     // Create the THEN and NEXT blocks
     auto then_block = LLVMAppendBasicBlock(current_fn, "");
@@ -41,11 +48,24 @@ void Builder::visit_select(ast::Select& x) {
     // Activate the THEN block
     LLVMPositionBuilderAtEnd(_g._irb, then_block);
 
+    // TODO: Extract into `do_select_branch` or something
     // Build each statement
-    do_sequence(br->sequence);
+    auto last = std::dynamic_pointer_cast<code::Value>(
+      do_sequence(br->sequence));
+    auto block = LLVMGetInsertBlock(_g._irb);
+
+    if (has_value && last) {
+      // Append to the value chain
+      values.push_back(last->value_of(_g));
+      value_blocks.push_back(block);
+    } else if (!LLVMGetBasicBlockTerminator(block)) {
+      // This block wasn't terminated and it has no value
+      // We no longer have a value
+      has_value = false;
+    }
 
     // Append to the block chain
-    blocks.push_back(LLVMGetInsertBlock(_g._irb));
+    blocks.push_back(block);
 
     // Insert the `next` block after our current block.
     LLVMMoveBasicBlockAfter(next_block, LLVMGetInsertBlock(_g._irb));
@@ -60,11 +80,24 @@ void Builder::visit_select(ast::Select& x) {
     // We still have an "else" branch left
     auto& br = x.branches[index + 1];
 
+    // TODO: Extract into `do_select_branch` or something
     // Build each statement
-    do_sequence(br->sequence);
+    auto last = std::dynamic_pointer_cast<code::Value>(
+      do_sequence(br->sequence));
+    auto block = LLVMGetInsertBlock(_g._irb);
+
+    if (has_value && last) {
+      // Append to the value chain
+      values.push_back(last->value_of(_g));
+      value_blocks.push_back(block);
+    } else if (!LLVMGetBasicBlockTerminator(block)) {
+      // This block wasn't terminated and it has no value
+      // We no longer have a value
+      has_value = false;
+    }
 
     // Append to the block chain
-    blocks.push_back(LLVMGetInsertBlock(_g._irb));
+    blocks.push_back(block);
 
     // Create the final "merge" block
     merge_block = LLVMAppendBasicBlock(current_fn, "");
@@ -96,4 +129,17 @@ void Builder::visit_select(ast::Select& x) {
 
   // Re-establish our insertion point.
   LLVMPositionBuilderAtEnd(_g._irb, merge_block);
+
+  // If we still have a value ..
+  // TODO: No way to signal that we /need/ a value so no way
+  //  to reliably produce an error message saying we didn't get one.
+  if (has_value) {
+    // Push our PHI node
+    auto type = resolve(_g, *_cs, x);
+    if (!type) { return; }
+    auto res = LLVMBuildPhi(_g._irb, type->handle(), "");
+    LLVMAddIncoming(res, values.data(), value_blocks.data(), values.size());
+
+    _stack.push(std::make_shared<code::Value>(res, type));
+  }
 }

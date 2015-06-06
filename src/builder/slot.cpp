@@ -25,10 +25,11 @@ void Builder::visit_slot(ast::Slot& x) {
   std::shared_ptr<code::Value> initializer = nullptr;
   std::shared_ptr<code::Type> type;
   if (x.initializer) {
+    type = resolve(_g, *_cs, *x.initializer);
+    if (!type) return;
+
     initializer = build_scalar_of<code::Value>(*x.initializer);
     if (!initializer) return;
-
-    type = initializer->type();
   }
 
   // Use the declared type (if present)
