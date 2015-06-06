@@ -1,5 +1,6 @@
 # Arrow
 [![Build Status](https://travis-ci.org/arrowlang/arrow.svg?branch=master)](https://travis-ci.org/arrowlang/arrow)
+[![Coverage Status](https://coveralls.io/repos/arrowlang/arrow/badge.svg?branch=master)](https://coveralls.io/r/arrowlang/arrow?branch=master)
 
 ## Prerequisites
 
