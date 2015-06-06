@@ -1,13 +1,13 @@
 // [x] Fix `no implicit conversion from '*mutable uint8' to '*mutable uint8'`
 // [x] Pointer arithmetic (+, -)
 // [x] Pointer difference (size of)
-// [ ] Pointer comparison
+// [x] Pointer comparison
+// [x] De-duplicate AST nodes and parse compound assignment as two nodes
 // [ ] Pointer (explicit) cast
 // [ ] `not` parse
 // [ ] Selection "expression"
 // [ ] Ternary expression
 // [ ] Short-circuiting logical combinators
-// [x] De-duplicate AST nodes and parse compound assignment as two nodes
 // [ ] Structures
 
 extern def puts(s: str);
