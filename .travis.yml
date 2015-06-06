@@ -23,4 +23,4 @@ before_script: ./waf configure clean build -j 2
 script: ./waf test
 
 # If successful; run coverage
-after_success: coveralls -t aC3vGHW966A23ZnrYvOBq60wWpS9f9KeN -r . -b build -i ./src -i ./include
+after_success: coveralls -r . -b build -i ./src -i ./include
