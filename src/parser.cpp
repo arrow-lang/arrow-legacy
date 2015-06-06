@@ -524,6 +524,8 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     {Token::Type::Caret_Equals,             30},
     {Token::Type::Pipe_Equals,              30},
 
+    {Token::Type::If,                       45},
+
     {Token::Type::And,                      60},
     {Token::Type::Or,                       60},
 
@@ -557,6 +559,8 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     {Token::Type::Ampersand_Equals,        1},
     {Token::Type::Caret_Equals,            1},
     {Token::Type::Pipe_Equals,             1},
+
+    {Token::Type::If,                      0},
 
     {Token::Type::And,                     0},
     {Token::Type::Or,                      0},
@@ -744,6 +748,31 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
       case Token::Type::Percent:
         node = make_shared<ast::Mod>(span, lhs, rhs);
         break;
+
+      case Token::Type::If: {
+        // NOTE: This should be a tenary expression
+        // Expect `else`
+        if (!expect(Token::Type::Else)) { return false; }
+
+        // Parse the else-clause
+        if (!parse_expression()) { return false; }
+        auto else_expr = _stack.front();
+        _stack.pop_front();
+
+        // Create the two branches
+        auto then_ = std::make_shared<ast::SelectBranch>(lhs->span, rhs);
+        auto else_ = std::make_shared<ast::SelectBranch>(else_expr->span);
+        then_->sequence.push_back(lhs);
+        else_->sequence.push_back(else_expr);
+
+        // Create the selection expression
+        auto select_node = make_shared<ast::Select>(Span(
+          _t.filename(), lhs->span.begin, else_expr->span.end));
+        select_node->branches.push_back(then_);
+        select_node->branches.push_back(else_);
+        node = select_node;
+        break;
+      }
 
       default:
         // Unreachable

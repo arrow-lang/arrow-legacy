@@ -278,7 +278,7 @@ struct Block : Node {
 };
 
 struct SelectBranch : Block {
-  SelectBranch(Span span, std::shared_ptr<Node> condition);
+  SelectBranch(Span span, std::shared_ptr<Node> condition = nullptr);
 
   virtual ~SelectBranch() noexcept;
 
