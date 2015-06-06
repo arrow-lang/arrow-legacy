@@ -69,7 +69,7 @@ def run_(name, ctx, binary_path):
 
     for file_ in ctx.path.ant_glob("test/%s/*.as" % name):
         # Execute the handler
-        handler = globals()["handle_%s" % name]
+        handler = globals()["handle_%s" % name.replace("-", "_")]
         test = handler(binary_path, file_.abspath())
 
         # Print result
@@ -115,6 +115,22 @@ def handle_run(binary_path, filename):
     return test
 
 
+def handle_run_fail(binary_path, filename):
+    filename = path.relpath(filename)
+    p = Popen(
+        [binary_path, filename], stdout=PIPE, stderr=PIPE,
+        cwd=path.join(path.dirname(__file__), ".."),
+    )
+    interpreter = Popen(["lli"], stdin=p.stdout, stdout=PIPE, stderr=PIPE)
+
+    stdout, _ = interpreter.communicate()
+
+    expected = get_expected(filename, "stdout")
+    test = expected == stdout.decode('utf-8') and interpreter.returncode != 0
+
+    return test
+
+
 def run(ctx):
     print_sep("test session starts", "=", end="")
 
@@ -123,6 +139,7 @@ def run(ctx):
     run_("tokenize", ctx, binary_path)
     run_("parse", ctx, binary_path)
     run_("run", ctx, binary_path)
+    run_("run-fail", ctx, binary_path)
 
     print_report()
 
