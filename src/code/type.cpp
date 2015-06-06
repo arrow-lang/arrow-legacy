@@ -119,8 +119,7 @@ bool code::Type::equals(code::Type&) const noexcept {
 bool code::IntegerType::equals(code::Type& other) const noexcept {
   if (other.is<code::IntegerType>()) {
     auto& other_int = other.as<code::IntegerType>();
-
-    return other_int.bits == bits && other_int._is_signed && _is_signed;
+    return other_int.bits == bits && (other_int._is_signed == _is_signed);
   }
 
   return false;
@@ -129,7 +128,6 @@ bool code::IntegerType::equals(code::Type& other) const noexcept {
 bool code::FloatType::equals(code::Type& other) const noexcept {
   if (other.is<code::FloatType>()) {
     auto& other_float = other.as<code::FloatType>();
-
     return other_float.bits == bits;
   }
 

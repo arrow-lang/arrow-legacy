@@ -47,14 +47,6 @@ class Resolver : public ast::Visitor {
   virtual void visit_negate_bit(ast::NegateBit&);
   virtual void visit_negate_numeric(ast::NegateNumeric&);
   // virtual void visit_assign(ast::Assign&);
-  // virtual void visit_assign_add(ast::AssignAdd&);
-  // virtual void visit_assign_sub(ast::AssignSub&);
-  // virtual void visit_assign_mul(ast::AssignMul&);
-  // virtual void visit_assign_div(ast::AssignDiv&);
-  // virtual void visit_assign_mod(ast::AssignMod&);
-  // virtual void visit_assign_bit_and(ast::AssignBitAnd&);
-  // virtual void visit_assign_bit_xor(ast::AssignBitXor&);
-  // virtual void visit_assign_bit_or(ast::AssignBitOr&);
   // virtual void visit_and(ast::And&);
   // virtual void visit_or(ast::Or&);
   virtual void visit_eq(ast::EqualTo&);

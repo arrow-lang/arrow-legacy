@@ -16,7 +16,12 @@ void Builder::do_arithmetic(
   std::function<LLVMValueRef(
     std::shared_ptr<code::Value>, std::shared_ptr<code::Value>)> cb
 ) {
-  // Resolve the type
+  // Resolve the types of the operands
+  auto lhs_type = resolve(_g, *_cs, *x.lhs);
+  auto rhs_type = resolve(_g, *_cs, *x.rhs);
+  if (!lhs_type || !rhs_type) return;
+
+  // Resolve the target type
   auto type = resolve(_g, *_cs, x);
   if (!type) return;
 
@@ -25,10 +30,13 @@ void Builder::do_arithmetic(
   auto rhs = build_scalar_of<code::Value>(*x.rhs);
   if (!lhs || !rhs) return;
 
-  // Perform appropriate casts (if needed)
-  lhs = lhs->cast(_g, *x.lhs, type);
-  rhs = rhs->cast(_g, *x.rhs, type);
-  if (!lhs || !rhs) return;
+  if (!(lhs_type->is<code::PointerType>() ||
+        rhs_type->is<code::PointerType>())) {
+    // Perform appropriate casts (if needed)
+    lhs = lhs->cast(_g, *x.lhs, type);
+    rhs = rhs->cast(_g, *x.rhs, type);
+    if (!lhs || !rhs) return;
+  }
 
   // Perform the operation
   auto res = cb(lhs, rhs);
@@ -41,6 +49,22 @@ void Builder::visit_add(ast::Add& x) {
   do_arithmetic(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {
+    if (lhs->type()->is<code::PointerType>() &&
+        rhs->type()->is<code::IntegerType>()) {
+      // PTR + INT
+      auto rhs_val = rhs->value_of(_g);
+      return LLVMBuildGEP(
+        _g._irb, lhs->value_of(_g), &rhs_val, 1, "");
+    }
+
+    if (rhs->type()->is<code::PointerType>() &&
+        lhs->type()->is<code::IntegerType>()) {
+      // INT + PTR (communative with PTR + INT)
+      auto lhs_val = lhs->value_of(_g);
+      return LLVMBuildGEP(
+        _g._irb, rhs->value_of(_g), &lhs_val, 1, "");
+    }
+
     if (lhs->type()->is<code::IntegerType>()) {
       return LLVMBuildAdd(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
     }
@@ -58,6 +82,35 @@ void Builder::visit_sub(ast::Sub& x) {
   do_arithmetic(x, [this](
     std::shared_ptr<code::Value> lhs, std::shared_ptr<code::Value> rhs
   ) {
+    if (lhs->type()->is<code::PointerType>() &&
+        rhs->type()->is<code::IntegerType>()) {
+      // PTR - INT
+      auto rhs_val = LLVMBuildNeg(_g._irb, rhs->value_of(_g), "");
+      return LLVMBuildGEP(
+        _g._irb, lhs->value_of(_g), &rhs_val, 1, "");
+    }
+
+    if (lhs->type()->is<code::PointerType>() &&
+        rhs->type()->is<code::PointerType>()) {
+      // PTR - PTR > Difference
+
+      // Get our pointer type
+      auto ptrtype = LLVMIntPtrType(_g._data_layout);
+
+      // Convert both pointers to integers
+      auto lhs_val = LLVMBuildPtrToInt(_g._irb, lhs->value_of(_g), ptrtype, "");
+      auto rhs_val = LLVMBuildPtrToInt(_g._irb, rhs->value_of(_g), ptrtype, "");
+
+      // Build a SUB instruction
+      auto res = LLVMBuildSub(_g._irb, lhs_val, rhs_val, "");
+
+      // Perform an exact [SU]DIV to determine the size
+      // return res;
+      auto pointee_type = lhs->type()->as<code::PointerType>().pointee->handle();
+      return LLVMBuildExactSDiv(
+        _g._irb, res, LLVMSizeOf(pointee_type), "");
+    }
+
     if (lhs->type()->is<code::IntegerType>()) {
       return LLVMBuildSub(_g._irb, lhs->value_of(_g), rhs->value_of(_g), "");
     }

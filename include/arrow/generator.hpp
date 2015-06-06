@@ -34,6 +34,7 @@ class Generator {
 
  private:
   friend class Builder;
+  friend class Resolver;
   friend class Expose;
   friend struct code::Value;
 

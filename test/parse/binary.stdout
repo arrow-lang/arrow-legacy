@@ -7,44 +7,68 @@
   </Add>
   <Integer base="10">10</Integer>
  </Assign>
- <AssignAdd>
+ <Assign>
   <Integer base="10">15</Integer>
-  <Integer base="10">3</Integer>
- </AssignAdd>
- <AssignSub>
+  <Add>
+   <Integer base="10">15</Integer>
+   <Integer base="10">3</Integer>
+  </Add>
+ </Assign>
+ <Assign>
   <Integer base="10">400</Integer>
-  <Boolean>false</Boolean>
- </AssignSub>
- <AssignMul>
-  <Integer base="10">400</Integer>
-  <Boolean>false</Boolean>
- </AssignMul>
- <AssignDiv>
-  <Boolean>false</Boolean>
-  <Boolean>true</Boolean>
- </AssignDiv>
- <AssignMod>
-  <Integer base="10">314</Integer>
-  <Integer base="10">593</Integer>
- </AssignMod>
- <AssignBitAnd>
-  <Integer base="10">32</Integer>
-  <NegateBit>
-   <Integer base="10">34</Integer>
-  </NegateBit>
- </AssignBitAnd>
- <AssignBitXor>
-  <Integer base="10">42</Integer>
-  <NegateBit>
+  <Sub>
+   <Integer base="10">400</Integer>
    <Boolean>false</Boolean>
-  </NegateBit>
- </AssignBitXor>
- <AssignBitOr>
-  <Integer base="10">24</Integer>
-  <NegateBit>
+  </Sub>
+ </Assign>
+ <Assign>
+  <Integer base="10">400</Integer>
+  <Mul>
+   <Integer base="10">400</Integer>
+   <Boolean>false</Boolean>
+  </Mul>
+ </Assign>
+ <Assign>
+  <Boolean>false</Boolean>
+  <Div>
+   <Boolean>false</Boolean>
    <Boolean>true</Boolean>
-  </NegateBit>
- </AssignBitOr>
+  </Div>
+ </Assign>
+ <Assign>
+  <Integer base="10">314</Integer>
+  <Mod>
+   <Integer base="10">314</Integer>
+   <Integer base="10">593</Integer>
+  </Mod>
+ </Assign>
+ <Assign>
+  <Integer base="10">32</Integer>
+  <BitAnd>
+   <Integer base="10">32</Integer>
+   <NegateBit>
+    <Integer base="10">34</Integer>
+   </NegateBit>
+  </BitAnd>
+ </Assign>
+ <Assign>
+  <Integer base="10">42</Integer>
+  <BitXor>
+   <Integer base="10">42</Integer>
+   <NegateBit>
+    <Boolean>false</Boolean>
+   </NegateBit>
+  </BitXor>
+ </Assign>
+ <Assign>
+  <Integer base="10">24</Integer>
+  <BitOr>
+   <Integer base="10">24</Integer>
+   <NegateBit>
+    <Boolean>true</Boolean>
+   </NegateBit>
+  </BitOr>
+ </Assign>
  <And>
   <Boolean>false</Boolean>
   <NegateLogical>

@@ -43,14 +43,6 @@ class Show : public Visitor {
   virtual void visit_negate_bit(NegateBit&);
   virtual void visit_negate_numeric(NegateNumeric&);
   virtual void visit_assign(Assign&);
-  virtual void visit_assign_add(AssignAdd&);
-  virtual void visit_assign_sub(AssignSub&);
-  virtual void visit_assign_mul(AssignMul&);
-  virtual void visit_assign_div(AssignDiv&);
-  virtual void visit_assign_mod(AssignMod&);
-  virtual void visit_assign_bit_and(AssignBitAnd&);
-  virtual void visit_assign_bit_xor(AssignBitXor&);
-  virtual void visit_assign_bit_or(AssignBitOr&);
   virtual void visit_and(And&);
   virtual void visit_or(Or&);
   virtual void visit_eq(EqualTo&);

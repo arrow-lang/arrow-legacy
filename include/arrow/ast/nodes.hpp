@@ -175,14 +175,6 @@ struct Binary : Node {
   }
 
 BINARY_DEFINE(Assign);
-BINARY_DEFINE(AssignAdd);
-BINARY_DEFINE(AssignSub);
-BINARY_DEFINE(AssignMul);
-BINARY_DEFINE(AssignDiv);
-BINARY_DEFINE(AssignMod);
-BINARY_DEFINE(AssignBitAnd);
-BINARY_DEFINE(AssignBitXor);
-BINARY_DEFINE(AssignBitOr);
 BINARY_DEFINE(And);
 BINARY_DEFINE(Or);
 BINARY_DEFINE(EqualTo);

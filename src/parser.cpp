@@ -626,35 +626,59 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
         break;
 
       case Token::Type::Plus_Equals:
-        node = make_shared<ast::AssignAdd>(span, lhs, rhs);
+        node = make_shared<ast::Assign>(span,
+          lhs,
+          make_shared<ast::Add>(span, lhs, rhs));
+
         break;
 
       case Token::Type::Minus_Equals:
-        node = make_shared<ast::AssignSub>(span, lhs, rhs);
+        node = make_shared<ast::Assign>(span,
+          lhs,
+          make_shared<ast::Sub>(span, lhs, rhs));
+
         break;
 
       case Token::Type::Asterisk_Equals:
-        node = make_shared<ast::AssignMul>(span, lhs, rhs);
+        node = make_shared<ast::Assign>(span,
+          lhs,
+          make_shared<ast::Mul>(span, lhs, rhs));
+
         break;
 
       case Token::Type::Slash_Equals:
-        node = make_shared<ast::AssignDiv>(span, lhs, rhs);
+        node = make_shared<ast::Assign>(span,
+          lhs,
+          make_shared<ast::Div>(span, lhs, rhs));
+
         break;
 
       case Token::Type::Percent_Equals:
-        node = make_shared<ast::AssignMod>(span, lhs, rhs);
+        node = make_shared<ast::Assign>(span,
+          lhs,
+          make_shared<ast::Mod>(span, lhs, rhs));
+
         break;
 
       case Token::Type::Ampersand_Equals:
-        node = make_shared<ast::AssignBitAnd>(span, lhs, rhs);
+        node = make_shared<ast::Assign>(span,
+          lhs,
+          make_shared<ast::BitAnd>(span, lhs, rhs));
+
         break;
 
       case Token::Type::Caret_Equals:
-        node = make_shared<ast::AssignBitXor>(span, lhs, rhs);
+        node = make_shared<ast::Assign>(span,
+          lhs,
+          make_shared<ast::BitXor>(span, lhs, rhs));
+
         break;
 
       case Token::Type::Pipe_Equals:
-        node = make_shared<ast::AssignBitOr>(span, lhs, rhs);
+        node = make_shared<ast::Assign>(span,
+          lhs,
+          make_shared<ast::BitOr>(span, lhs, rhs));
+
         break;
 
       case Token::Type::And:

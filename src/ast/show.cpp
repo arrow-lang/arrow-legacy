@@ -148,14 +148,6 @@ void Show::handle_binary(const std::string& name, Binary& x) {
   void Show::visit_##D(N& x) { handle_binary(#N, x); }
 
 SHOW_BINARY(Assign, assign)
-SHOW_BINARY(AssignAdd, assign_add)
-SHOW_BINARY(AssignSub, assign_sub)
-SHOW_BINARY(AssignMul, assign_mul)
-SHOW_BINARY(AssignDiv, assign_div)
-SHOW_BINARY(AssignMod, assign_mod)
-SHOW_BINARY(AssignBitAnd, assign_bit_and)
-SHOW_BINARY(AssignBitXor, assign_bit_xor)
-SHOW_BINARY(AssignBitOr, assign_bit_or)
 SHOW_BINARY(And, and)
 SHOW_BINARY(Or, or)
 SHOW_BINARY(EqualTo, eq)

@@ -17,6 +17,7 @@ void Resolver::do_relational(ast::Binary& x) {
   // TODO: This obviously needs to change once we support overloading these
   if (!type || (!type->is<code::IntegerType>() &&
                 !type->is<code::FloatType>() &&
+                !type->is<code::PointerType>() &&
                 !type->is<code::BooleanType>()))
   {
     // Resolve the individual types
