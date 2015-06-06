@@ -610,6 +610,7 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
 
   // Check for a valid keyword
   static std::unordered_map<std::string, Token::Type> keywords = {
+    {"as", Token::Type::As},
     {"and", Token::Type::And},
     {"or",  Token::Type::Or},
     {"xor", Token::Type::Xor},
@@ -620,6 +621,7 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
     {"mutable", Token::Type::Mut},
     {"true", Token::Type::True},
     {"false", Token::Type::False},
+    {"struct", Token::Type::Struct},
     {"if", Token::Type::If},
     {"else", Token::Type::Else},
     {"while", Token::Type::While},

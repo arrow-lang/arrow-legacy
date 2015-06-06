@@ -30,6 +30,7 @@ struct Visitor {
   virtual void visit_call(Call&) { }
   virtual void visit_slot(Slot&) { }
   virtual void visit_break(Break&) { }
+  virtual void visit_continue(Continue&) { }
   virtual void visit_return(Return&) { }
   virtual void visit_int(Integer&) { }
   virtual void visit_float(Float&) { }
@@ -56,9 +57,10 @@ struct Visitor {
   virtual void visit_mul(Mul&) { }
   virtual void visit_div(Div&) { }
   virtual void visit_mod(Mod&) { }
-  virtual void visit_select(Select&);
-  virtual void visit_loop(Loop&);
-  virtual void visit_select_branch(SelectBranch&);
+  virtual void visit_block(Block&) { }
+  virtual void visit_select(Select&) { }
+  virtual void visit_loop(Loop&) { }
+  virtual void visit_select_branch(SelectBranch&) { }
   virtual void visit_pointer_type(PointerType&) { }
   virtual void visit_dereference(Dereference&) { }
   virtual void visit_address_of(AddressOf&) { }

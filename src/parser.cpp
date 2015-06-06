@@ -560,7 +560,7 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     {Token::Type::Caret_Equals,            1},
     {Token::Type::Pipe_Equals,             1},
 
-    {Token::Type::If,                      0},
+    {Token::Type::If,                      1},
 
     {Token::Type::And,                     0},
     {Token::Type::Or,                      0},

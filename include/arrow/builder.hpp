@@ -38,8 +38,8 @@ class Builder : public ast::Visitor {
   virtual void visit_negate_bit(ast::NegateBit&);
   virtual void visit_negate_numeric(ast::NegateNumeric&);
   virtual void visit_assign(ast::Assign&);
-  // virtual void visit_and(ast::And&);
-  // virtual void visit_or(ast::Or&);
+  virtual void visit_and(ast::And&);
+  virtual void visit_or(ast::Or&);
   virtual void visit_eq(ast::EqualTo&);
   virtual void visit_ne(ast::NotEqualTo&);
   virtual void visit_lt(ast::LessThan&);

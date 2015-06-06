@@ -224,7 +224,13 @@ struct Token {
     Return,
 
     /// Global
-    Global
+    Global,
+
+    /// As
+    As,
+
+    /// Struct
+    Struct,
   };
 
   Token(Type type, Span span);

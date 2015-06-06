@@ -24,11 +24,11 @@ namespace ast = arrow::ast;
 
 IMPL(Node, node)
 IMPL_ABSTRACT(TextNode)
-IMPL_ABSTRACT(Block)
 IMPL_ABSTRACT(AbstractFunction)
 IMPL_ABSTRACT(Binary)
 IMPL_ABSTRACT(Unary)
 
+IMPL(Block, block)
 IMPL(Identifier, id)
 IMPL(Module, module)
 IMPL(ExternalFunction, extern_function)

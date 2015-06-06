@@ -25,7 +25,7 @@ void Resolver::do_relational(ast::Binary& x) {
     auto rhs_type = resolve(_g, _scope, *x.rhs);
     if (!lhs_type || !rhs_type) return;
 
-    // Report that we don't support arithmetic operators for you
+    // Report that we don't support operators for you
     std::string op;
     if (x.is<ast::EqualTo>()) {
       op = "==";

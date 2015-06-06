@@ -44,6 +44,17 @@ void Show::visit_module(Module& x) {
   _ctx.pop();
 }
 
+void Show::visit_block(Block& x) {
+  auto& node = _el().add("Block", "");
+  _ctx.push(&node);
+
+  for (auto& item : x.sequence) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
+}
+
 void Show::visit_select(Select& x) {
   auto& node = _el().add("Select", "");
   _ctx.push(&node);
@@ -93,6 +104,10 @@ void Show::visit_return(Return& x) {
 
 void Show::visit_break(Break&) {
   _el().add("Break", "");
+}
+
+void Show::visit_continue(Continue&) {
+  _el().add("Continue", "");
 }
 
 void Show::visit_int(Integer& x) {

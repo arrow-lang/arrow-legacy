@@ -158,6 +158,14 @@ struct Break : Node {
   virtual void accept(Visitor& v);
 };
 
+struct Continue : Node {
+  using Node::Node;
+
+  virtual ~Continue() noexcept;
+
+  virtual void accept(Visitor& v);
+};
+
 struct Binary : Node {
   Binary(Span span, std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs);
 
@@ -273,6 +281,8 @@ struct Block : Node {
   Block(Span span) : Node(span) {}
 
   virtual ~Block() noexcept;
+
+  virtual void accept(Visitor& v);
 
   std::deque<std::shared_ptr<Node>> sequence;
 };

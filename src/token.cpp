@@ -36,6 +36,9 @@ std::string arrow::to_string(Token::Type type) noexcept {
     case Token::Type::String:
       return "string";
 
+    case Token::Type::As:
+      return "`as`";
+
     case Token::Type::And:
       return "`and`";
 
@@ -83,6 +86,9 @@ std::string arrow::to_string(Token::Type type) noexcept {
 
     case Token::Type::Return:
       return "`return`";
+
+    case Token::Type::Struct:
+      return "`struct`";
 
     case Token::Type::Global:
       return "`global`";

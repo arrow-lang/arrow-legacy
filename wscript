@@ -61,12 +61,6 @@ def configure(ctx):
         ctx.env.append_unique("CXXFLAGS", "--coverage")
         ctx.env.append_unique("LINKFLAGS", "--coverage")
 
-        # Reduce memory consumption (and make builds slower)
-        ctx.env.append_value("CXXFLAGS", "--param")
-        ctx.env.append_unique("CXXFLAGS", "ggc-min-expand=3")
-        ctx.env.append_value("CXXFLAGS", "--param")
-        ctx.env.append_unique("CXXFLAGS", "ggc-min-heapsize=5120")
-
 
 def build(ctx):
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),
