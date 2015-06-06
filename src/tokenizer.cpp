@@ -613,7 +613,6 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
     {"as", Token::Type::As},
     {"and", Token::Type::And},
     {"or",  Token::Type::Or},
-    {"xor", Token::Type::Xor},
     {"not", Token::Type::Not},
     {"def", Token::Type::Def},
     {"extern", Token::Type::Extern},

@@ -48,9 +48,6 @@ std::string arrow::to_string(Token::Type type) noexcept {
     case Token::Type::Not:
       return "`not`";
 
-    case Token::Type::Xor:
-      return "`xor`";
-
     case Token::Type::Def:
       return "`def`";
 

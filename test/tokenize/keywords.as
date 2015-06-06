@@ -1,6 +1,5 @@
 and
 or
-xor
 not
 let
 def
@@ -8,9 +7,11 @@ mutable
 true
 false
 if
+else
 while
 loop
 break
 continue
 return
 global
+as

@@ -20,9 +20,9 @@ class Scope {
   Scope();
   explicit Scope(Scope* parent);
 
-  Scope(const Scope& x);
+  Scope(const Scope&) = delete;
 
-  Scope& operator=(const Scope& x);
+  Scope& operator=(const Scope&) = delete;
 
   /// Check if the passed name exists in this scope (or any parent scopes)
   bool exists(const std::string& name, bool traverse = true) const;

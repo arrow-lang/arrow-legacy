@@ -14,13 +14,6 @@ Scope::Scope() : _parent{nullptr}, _items{} {
 Scope::Scope(Scope* parent) : _parent{parent}, _items{} {
 }
 
-auto Scope::operator=(const Scope& x) -> Scope& {
-  _parent = x._parent;
-  _items = x._items;
-
-  return *this;
-}
-
 bool Scope::exists(const std::string& name, bool traverse) const {
   return get(name, traverse) != nullptr;
 }

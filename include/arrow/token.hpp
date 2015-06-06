@@ -41,9 +41,6 @@ struct Token {
     /// Or
     Or,
 
-    /// Xor
-    Xor,
-
     /// Not
     Not,
 
