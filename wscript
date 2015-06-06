@@ -63,7 +63,7 @@ def configure(ctx):
 
 def build(ctx):
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),
-                includes=["include", "lib"],
+                includes=["include", "vendor"],
                 target="arrow",
                 use=["BOOST", "LLVM", "PTHREAD", "DL", "TINFO", "Z", "GMP"])
 
