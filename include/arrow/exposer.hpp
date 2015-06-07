@@ -16,14 +16,16 @@ namespace arrow {
 
 class Generator;
 
-class Expose : public ast::Visitor {
+class Exposer : public ast::Visitor {
  public:
-  Expose(Generator& g, code::Scope& _scope);
+  Exposer(Generator& g, code::Scope& _scope);
 
-  virtual ~Expose() noexcept;
+  virtual ~Exposer() noexcept;
 
+  virtual void visit_module(ast::Module&);
   virtual void visit_function(ast::Function&);
   virtual void visit_extern_function(ast::ExternalFunction&);
+  virtual void visit_import(ast::Import&);
 
  private:
   Generator& _g;

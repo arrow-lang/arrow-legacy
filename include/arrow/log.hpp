@@ -30,12 +30,18 @@ class Log {
   void warning(const char* format, ...);
   void warning(Span span, const char* format, ...);
 
+  void info(const char* format, ...);
+  void info(Span span, const char* format, ...);
+
  private:
   void error(const char* format, va_list arguments);
   void error(Span, const char* format, va_list arguments);
 
   void warning(const char* format, va_list arguments);
   void warning(Span, const char* format, va_list arguments);
+
+  void info(const char* format, va_list arguments);
+  void info(Span, const char* format, va_list arguments);
 
   std::map<std::string, unsigned> _counters;
 };

@@ -331,6 +331,19 @@ struct Loop : Block {
   std::shared_ptr<Node> condition;
 };
 
+struct Import : Node {
+  Import(
+    Span span,
+    std::shared_ptr<Identifier> name,
+    std::shared_ptr<String> path);
+
+  virtual ~Import() noexcept;
+  virtual void accept(Visitor& v);
+
+  std::shared_ptr<Identifier> name;
+  std::shared_ptr<String> path;
+};
+
 }  // namespace ast
 }  // namespace arrow
 

@@ -3,23 +3,17 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#include "arrow/expose.hpp"
+#include "arrow/exposer.hpp"
 #include "arrow/resolver.hpp"
 #include "arrow/generator.hpp"
 #include "arrow/log.hpp"
 
 using arrow::resolve;
-using arrow::Expose;
+using arrow::Exposer;
 namespace code = arrow::code;
 namespace ast = arrow::ast;
 
-Expose::Expose(arrow::Generator& g, code::Scope& scope)
-  : _g(g), _scope(scope) {
-}
-
-Expose::~Expose() noexcept { }
-
-void Expose::visit_function(ast::Function& x) {
+void Exposer::visit_function(ast::Function& x) {
   // Resolve the type of this function
   auto type = std::static_pointer_cast<code::FunctionType>(
     resolve(_g, _scope, x));
@@ -27,6 +21,8 @@ void Expose::visit_function(ast::Function& x) {
 
   auto& name = x.name->text;
   auto namespace_ = _scope.name();
+
+  Log::get().info("Exposer::visit_function => %s", name.c_str());
 
   auto handle = LLVMAddFunction(
     _g._mod, (namespace_ + "." + name).c_str(), type->handle());
@@ -40,11 +36,13 @@ void Expose::visit_function(ast::Function& x) {
     &_scope));
 }
 
-void Expose::visit_extern_function(ast::ExternalFunction& x) {
+void Exposer::visit_extern_function(ast::ExternalFunction& x) {
   // Resolve the type of this function
   auto type = std::static_pointer_cast<code::FunctionType>(
     resolve(_g, _scope, x));
   if (!type) { return; }
+
+  Log::get().info("Exposer::visit_extern_function => %s", x.name->text.c_str());
 
   // Create and set the new function item in the scope
   _scope.set(x.name->text, std::make_shared<code::ExternalFunction>(

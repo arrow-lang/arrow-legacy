@@ -16,6 +16,8 @@ namespace arrow {
 namespace code {
 
 struct Type : Item {
+  using Item::Item;
+
   virtual ~Type() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept = 0;
@@ -38,7 +40,8 @@ struct Type : Item {
 };
 
 struct PointerType : Type {
-  PointerType(std::shared_ptr<code::Type> pointee,
+  PointerType(std::shared_ptr<ast::Node> context,
+              std::shared_ptr<code::Type> pointee,
               bool _mutable);
 
   virtual ~PointerType() noexcept;
@@ -58,7 +61,8 @@ struct PointerType : Type {
 };
 
 struct IntegerType : Type {
-  IntegerType(unsigned bits, bool is_signed);
+  IntegerType(std::shared_ptr<ast::Node> context,
+              unsigned bits, bool is_signed);
 
   virtual ~IntegerType() noexcept;
 
@@ -78,6 +82,8 @@ struct IntegerType : Type {
 };
 
 struct BooleanType : Type {
+  using Type::Type;
+
   virtual ~BooleanType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
@@ -89,7 +95,7 @@ struct BooleanType : Type {
 };
 
 struct FloatType : Type {
-  explicit FloatType(unsigned bits);
+  explicit FloatType(std::shared_ptr<ast::Node> context, unsigned bits);
 
   virtual ~FloatType() noexcept;
 
@@ -102,6 +108,8 @@ struct FloatType : Type {
 };
 
 struct StringType : Type {
+  using Type::Type;
+
   virtual ~StringType() noexcept;
 
   virtual LLVMTypeRef handle() const noexcept;
@@ -113,7 +121,9 @@ struct StringType : Type {
 };
 
 struct FunctionType : Type {
-  explicit FunctionType(std::shared_ptr<code::Type> result);
+  FunctionType(
+    std::shared_ptr<ast::Node> context,
+    std::shared_ptr<code::Type> result);
 
   virtual ~FunctionType() noexcept;
 

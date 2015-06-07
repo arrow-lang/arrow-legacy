@@ -127,6 +127,9 @@ bool Parser::parse_statement() {
     case Token::Type::Def:
       return parse_function();
 
+    case Token::Type::Import:
+      return parse_import();
+
     case Token::Type::Extern:
       return parse_extern_function();
 
@@ -1234,6 +1237,48 @@ bool Parser::parse_block(ast::Block& node) {
 
   // Update position
   node.span.end = tok->span.end;
+
+  return true;
+}
+
+// Import
+// ----------------------------------------------------------------------------
+// import = "import" IDENTIFIER [ "from" STRING ] ";"
+// ----------------------------------------------------------------------------
+bool Parser::parse_import() {
+  // Expect `import`
+  auto initial_tok = expect(Token::Type::Import);
+  if (!initial_tok) { return false; }
+
+  // Parse identifier (name)
+  if (!parse_identifier()) { return false; }
+  auto name = std::dynamic_pointer_cast<ast::Identifier>(_stack.front());
+  _stack.pop_front();
+
+  // Check for `from` (which indicates an explicit path)
+  std::shared_ptr<ast::String> path;
+  if (_t.peek()->type == Token::Type::From) {
+    _t.pop();
+
+    // Parse string (path)
+    if (!parse_string()) { return false; }
+    path = std::dynamic_pointer_cast<ast::String>(_stack.front());
+    _stack.pop_front();
+  } else {
+    // NOTE: `import std` is equivalent to `import std from "std"`
+    std::vector<std::uint8_t> bytes(name->text.begin(), name->text.end());
+    path = std::make_shared<ast::String>(name->span, bytes);
+  }
+
+  // Expect `;`
+  auto last_tok = expect(Token::Type::Semicolon);
+  if (!last_tok) { return false; }
+
+  // Declare (and push) node
+  _stack.push_back(std::make_shared<ast::Import>(
+    Span(_t.filename(), initial_tok->span.begin, last_tok->span.end),
+    name, path
+  ));
 
   return true;
 }

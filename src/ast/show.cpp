@@ -309,6 +309,17 @@ void Show::visit_parameter(Parameter& x) {
   _ctx.pop();
 }
 
+void Show::visit_import(Import& x) {
+  auto& item = _el().add("Import", "");
+  _ctx.push(&item);
+
+  item.add("<xmlattr>.name", x.name->text.c_str());
+
+  x.path->accept(*this);
+
+  _ctx.pop();
+}
+
 void Show::visit_loop(Loop& x) {
   auto& node = _el().add("Loop", "");
   _ctx.push(&node);

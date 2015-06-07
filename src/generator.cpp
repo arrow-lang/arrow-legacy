@@ -6,6 +6,7 @@
 #include <string>
 #include "arrow/generator.hpp"
 #include "arrow/builder.hpp"
+#include "arrow/exposer.hpp"
 #include "arrow/code.hpp"
 
 using arrow::Generator;
@@ -82,10 +83,18 @@ void Generator::generate(
   // Declare the basic (built-in) types
   _declare_basic_types();
 
-  // Construct a intermediate builder and begin the code generation
-  // process on the passed node
-  Builder builder{*this, _scope};
-  node->accept(builder);
+  // Construct the exposer and run it over the top-level module
+  arrow::Exposer{*this, _scope}.run(*node);
+  if (Log::get().count("error") > 0) { return; }
+
+  // Construct an intermediate builder and run it on each
+  // now-exposed module
+  for (auto& mod : _modules) {
+    arrow::Builder builder{*this, _scope};
+    for (auto& item : mod.sequence) {
+      builder.build(*item, &(mod->scope));
+    }
+  }
 }
 
 void Generator::print(std::ostream& os) const {

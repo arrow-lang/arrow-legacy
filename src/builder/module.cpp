@@ -5,7 +5,6 @@
 
 #include "arrow/builder.hpp"
 #include "arrow/generator.hpp"
-#include "arrow/expose.hpp"
 #include "arrow/log.hpp"
 
 using arrow::Builder;
@@ -13,12 +12,9 @@ namespace code = arrow::code;
 namespace ast = arrow::ast;
 
 void Builder::visit_module(ast::Module& node) {
-  // Create (and set) the module item
-  auto mod = std::make_shared<code::Module>(node.name, &_scope);
-  _cs->set(node.name, mod);
-
-  // Extract named items from the sequence (for name hoisting)
-  arrow::Expose{_g, mod->scope}.run(node);
+  // Get the module item
+  auto mod = std::static_pointer_cast<code::Module>(_cs->get(node.name));
+  if (!mod) { return; }
 
   // Take the remaining non-hoisted items and continue normal
   // iterative building

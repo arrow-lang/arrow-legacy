@@ -5,7 +5,6 @@
 
 #include "arrow/builder.hpp"
 #include "arrow/generator.hpp"
-#include "arrow/expose.hpp"
 #include "arrow/log.hpp"
 
 using arrow::Builder;

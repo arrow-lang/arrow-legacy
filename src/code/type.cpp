@@ -21,23 +21,24 @@ IMPL(BooleanType)
 IMPL(FunctionType)
 IMPL(PointerType)
 
-code::IntegerType::IntegerType(unsigned bits, bool is_signed)
-  : bits(bits), _is_signed(is_signed) {
+code::IntegerType::IntegerType(std::shared_ptr<ast::Node> context, unsigned bits, bool is_signed)
+  : Type(context), bits(bits), _is_signed(is_signed) {
 }
 
-code::FloatType::FloatType(unsigned bits)
-  : bits(bits) {
+code::FloatType::FloatType(std::shared_ptr<ast::Node> context, unsigned bits)
+  : Type(context), bits(bits) {
 }
 
-code::FunctionType::FunctionType(std::shared_ptr<code::Type> result)
-  : result(result), parameters{} {
+code::FunctionType::FunctionType(std::shared_ptr<ast::Node> context, std::shared_ptr<code::Type> result)
+  : Type(context), result(result), parameters{} {
 }
 
 code::PointerType::PointerType(
+  std::shared_ptr<ast::Node> context,
   std::shared_ptr<code::Type> pointee,
   bool _mutable
 )
-  : pointee(pointee), _mutable(_mutable) {
+  : Type(context), pointee(pointee), _mutable(_mutable) {
 }
 
 LLVMTypeRef code::IntegerType::handle() const noexcept {

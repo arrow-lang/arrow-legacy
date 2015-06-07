@@ -65,6 +65,7 @@ struct Visitor {
   virtual void visit_pointer_type(PointerType&) { }
   virtual void visit_dereference(Dereference&) { }
   virtual void visit_address_of(AddressOf&) { }
+  virtual void visit_import(Import&) { }
 };
 
 }  // namespace ast

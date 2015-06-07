@@ -56,6 +56,12 @@ struct Token {
     /// Extern
     Extern,
 
+    /// Import
+    Import,
+
+    /// From
+    From,
+
     /// Plus `+`
     /// Binary addition
     Plus,

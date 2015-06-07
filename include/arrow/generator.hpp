@@ -36,7 +36,7 @@ class Generator {
  private:
   friend class Builder;
   friend class Resolver;
-  friend class Expose;
+  friend class Exposer;
   friend struct code::Value;
 
   void _declare_basic_types();
@@ -57,6 +57,9 @@ class Generator {
 
   /// The builtin (above top-level) scope
   code::Scope _scope;
+
+  std::vector<std::shared_ptr<code::Module>> _modules;
+  std::unordered_map<std::string, std::shared_ptr<ast::Module>> _imported_modules;
 };
 
 }  // namespace arrow

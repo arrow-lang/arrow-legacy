@@ -30,6 +30,7 @@ IMPL_ABSTRACT(Unary)
 
 IMPL(Block, block)
 IMPL(Identifier, id)
+IMPL(Import, import)
 IMPL(Module, module)
 IMPL(ExternalFunction, extern_function)
 IMPL(Function, function)
@@ -120,6 +121,13 @@ ast::Slot::Slot(
   bool is_mutable
 ) : Node(span), name(name), type(type), initializer(initializer),
     is_mutable(is_mutable) {
+}
+
+ast::Import::Import(
+  Span span,
+  std::shared_ptr<Identifier> name,
+  std::shared_ptr<String> path
+) : Node(span), name(name), path(path) {
 }
 
 ast::Integer::Integer(Span span, const std::string& text, unsigned base)

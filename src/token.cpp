@@ -90,6 +90,15 @@ std::string arrow::to_string(Token::Type type) noexcept {
     case Token::Type::Global:
       return "`global`";
 
+    case Token::Type::Extern:
+      return "`extern`";
+
+    case Token::Type::Import:
+      return "`import`";
+
+    case Token::Type::From:
+      return "`from`";
+
     case Token::Type::Arrow:
       return "`->`";
 

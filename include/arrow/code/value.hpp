@@ -20,7 +20,8 @@ class Generator;
 namespace code {
 
 struct Value : Item {
-  Value(LLVMValueRef handle, std::shared_ptr<Type> type,
+  Value(std::shared_ptr<ast::Node> context,
+        LLVMValueRef handle, std::shared_ptr<Type> type,
         bool _mutable = false,
         bool _address = false);
 

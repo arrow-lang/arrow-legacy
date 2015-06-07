@@ -616,6 +616,8 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
     {"not", Token::Type::Not},
     {"def", Token::Type::Def},
     {"extern", Token::Type::Extern},
+    {"import", Token::Type::Import},
+    {"from", Token::Type::From},
     {"let", Token::Type::Let},
     {"mutable", Token::Type::Mut},
     {"true", Token::Type::True},

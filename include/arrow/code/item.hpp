@@ -10,6 +10,8 @@ namespace arrow {
 namespace code {
 
 struct Item {
+  Item(std::shared_ptr<ast::Node> context);
+
   virtual ~Item() noexcept;
 
   template <typename T>
@@ -29,6 +31,8 @@ struct Item {
   virtual bool is_value() const noexcept {
     return false;
   }
+
+  std::shared_ptr<ast::Node> context;
 };
 
 }  // namespace code

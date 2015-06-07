@@ -9,8 +9,8 @@
 
 using arrow::code::Value;
 
-Value::Value(LLVMValueRef handle, std::shared_ptr<Type> type, bool _mutable, bool _address)
-  : _handle{handle}, _type{type}, _mutable{_mutable}, _address{_address} {
+Value::Value(std::shared_ptr<ast::Node> context, LLVMValueRef handle, std::shared_ptr<Type> type, bool _mutable, bool _address)
+  : Item(context), _handle{handle}, _type{type}, _mutable{_mutable}, _address{_address} {
 }
 
 Value::~Value() noexcept {

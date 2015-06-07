@@ -82,6 +82,34 @@ void Log::warning(arrow::Span span, const char* format, va_list arguments) {
   std::fprintf(stderr, "\x1b[0m\n");
 }
 
+void Log::info(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  this->info(format, args);
+  va_end(args);
+}
+
+void Log::info(arrow::Span span, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  this->info(span, format, args);
+  va_end(args);
+}
+
+void Log::info(const char* format, va_list arguments) {
+  std::fprintf(stderr, "\x1b[0;37m%s", "arrow: ");
+  std::fprintf(stderr, "\x1b[0;36m%s\x1b[1;37m", "info: ");
+  std::vfprintf(stderr, format, arguments);
+  std::fprintf(stderr, "\x1b[0m\n");
+}
+
+void Log::info(arrow::Span span, const char* format, va_list arguments) {
+  std::fprintf(stderr, "\x1b[0;37m%s%s", span.to_string().c_str(), ": ");
+  std::fprintf(stderr, "\x1b[0;36m%s\x1b[1;37m", "info: ");
+  std::vfprintf(stderr, format, arguments);
+  std::fprintf(stderr, "\x1b[0m\n");
+}
+
 unsigned Log::count(const char* level) {
   return _counters[level];
 }

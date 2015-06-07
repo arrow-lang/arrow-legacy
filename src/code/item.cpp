@@ -7,5 +7,8 @@
 
 using arrow::code::Item;
 
+Item::Item(std::shared_ptr<ast::Node> context) : context{context} {
+}
+
 Item::~Item() noexcept {
 }
