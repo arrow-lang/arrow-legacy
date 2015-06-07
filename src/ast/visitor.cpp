@@ -14,9 +14,3 @@ Visitor::~Visitor() noexcept { }
 void Visitor::run(Node& node) {
   node.accept(*this);
 }
-
-void Visitor::visit_module(Module& x) {
-  for (auto& item : x.sequence) {
-    item->accept(*this);
-  }
-}

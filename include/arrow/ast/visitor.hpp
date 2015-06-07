@@ -23,7 +23,7 @@ struct Visitor {
   virtual void visit_node(Node&) { }
 
   virtual void visit_id(Identifier&) { }
-  virtual void visit_module(Module&);
+  virtual void visit_module(Module&) { }
   virtual void visit_extern_function(ExternalFunction&) { }
   virtual void visit_function(Function&) { }
   virtual void visit_parameter(Parameter&) { }
@@ -66,6 +66,7 @@ struct Visitor {
   virtual void visit_dereference(Dereference&) { }
   virtual void visit_address_of(AddressOf&) { }
   virtual void visit_import(Import&) { }
+  virtual void visit_struct(Structure&) { }
 };
 
 }  // namespace ast

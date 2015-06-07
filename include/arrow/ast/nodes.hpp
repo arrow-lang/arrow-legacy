@@ -234,7 +234,6 @@ struct ExternalFunction : AbstractFunction {
   using AbstractFunction::AbstractFunction;
 
   virtual ~ExternalFunction() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::deque<std::shared_ptr<Node>> sequence;
@@ -244,7 +243,6 @@ struct Function : AbstractFunction {
   using AbstractFunction::AbstractFunction;
 
   virtual ~Function() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::deque<std::shared_ptr<Node>> sequence;
@@ -254,7 +252,6 @@ struct Call : Node {
   Call(Span span, std::shared_ptr<Node> expression);
 
   virtual ~Call() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::shared_ptr<Node> expression;
@@ -270,7 +267,6 @@ struct Slot : Node {
     bool is_mutable);
 
   virtual ~Slot() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::shared_ptr<Identifier> name;
@@ -283,7 +279,6 @@ struct Block : Node {
   Block(Span span) : Node(span) {}
 
   virtual ~Block() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::deque<std::shared_ptr<Node>> sequence;
@@ -293,7 +288,6 @@ struct SelectBranch : Block {
   SelectBranch(Span span, std::shared_ptr<Node> condition = nullptr);
 
   virtual ~SelectBranch() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::shared_ptr<Node> condition;
@@ -303,7 +297,6 @@ struct Select : Node {
   using Node::Node;
 
   virtual ~Select() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::deque<std::shared_ptr<SelectBranch>> branches;
@@ -313,19 +306,16 @@ struct PointerType : Node {
   PointerType(Span span, std::shared_ptr<Node> pointee, bool is_mutable);
 
   virtual ~PointerType() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::shared_ptr<Node> pointee;
   bool is_mutable;
 };
 
-
 struct Loop : Block {
   Loop(Span span, std::shared_ptr<Node> condition = nullptr);
 
   virtual ~Loop() noexcept;
-
   virtual void accept(Visitor& v);
 
   std::shared_ptr<Node> condition;
@@ -342,6 +332,30 @@ struct Import : Node {
 
   std::shared_ptr<Identifier> name;
   std::shared_ptr<String> path;
+};
+
+struct Member : Node {
+  Member(
+    Span span,
+    std::shared_ptr<Identifier> name,
+    std::shared_ptr<Node> type);
+
+  virtual ~Member() noexcept;
+  virtual void accept(Visitor& v);
+
+  std::shared_ptr<Identifier> name;
+  std::shared_ptr<Node> type;
+};
+
+struct Structure : Node {
+  Structure(
+    Span span,
+    std::shared_ptr<Identifier> name);
+
+  virtual ~Structure() noexcept;
+  virtual void accept(Visitor& v);
+
+  std::deque<std::shared_ptr<Member>> members;
 };
 
 }  // namespace ast

@@ -69,6 +69,7 @@ class Show : public Visitor {
   virtual void visit_address_of(AddressOf&);
   virtual void visit_dereference(Dereference&);
   virtual void visit_import(Import&);
+  // TODO: virtual void visit_struct(Structure&);
 
  private:
   void handle_unary(const std::string& name, Unary&);
