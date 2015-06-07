@@ -19,5 +19,5 @@ void Builder::visit_int(ast::Integer& x) {
     type->handle(), x.text.c_str(), x.text.size(), x.base);
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(handle, type));
+  _stack.push(std::make_shared<code::Value>(&x, handle, type));
 }

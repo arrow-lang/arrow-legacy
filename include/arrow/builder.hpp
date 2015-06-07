@@ -21,8 +21,29 @@ class Builder : public ast::Visitor {
 
   virtual ~Builder() noexcept;
 
+  void build(
+    ast::Node& node, code::Scope* scope = nullptr);
+
+  std::shared_ptr<code::Item> build_scalar(
+    ast::Node& node, code::Scope* scope = nullptr);
+
+  template <typename T>
+  std::shared_ptr<T> build_scalar_of(
+    ast::Node& node, code::Scope* scope = nullptr
+  ) {
+    auto item_generic = build_scalar(node, scope);
+    if (item_generic == nullptr) return nullptr;
+
+    auto item = std::dynamic_pointer_cast<T>(item_generic);
+    if (item == nullptr) {
+      Log::get().error(node.span, "expected %s", typeid(T).name());
+    }
+
+    return item;
+  }
+
   virtual void visit_id(ast::Identifier&);
-  virtual void visit_module(ast::Module&);
+  // virtual void visit_module(ast::Module&);
   virtual void visit_function(ast::Function&);
   // virtual void visit_parameter(ast::Parameter&);
   virtual void visit_call(ast::Call&);
@@ -90,27 +111,6 @@ class Builder : public ast::Visitor {
   void do_unary(
     ast::Unary& x,
     std::function<LLVMValueRef(std::shared_ptr<code::Value>)> cb);
-
-  void build(
-    ast::Node& node, code::Scope* scope = nullptr);
-
-  std::shared_ptr<code::Item> build_scalar(
-    ast::Node& node, code::Scope* scope = nullptr);
-
-  template <typename T>
-  std::shared_ptr<T> build_scalar_of(
-    ast::Node& node, code::Scope* scope = nullptr
-  ) {
-    auto item_generic = build_scalar(node, scope);
-    if (item_generic == nullptr) return nullptr;
-
-    auto item = std::dynamic_pointer_cast<T>(item_generic);
-    if (item == nullptr) {
-      Log::get().error(node.span, "expected %s", typeid(T).name());
-    }
-
-    return item;
-  }
 };
 
 }  // namespace arrow

@@ -9,8 +9,8 @@
 #include <deque>
 #include <memory>
 
-#include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
+#include "arrow/llvm.hpp"
 
 namespace arrow {
 namespace code {
@@ -40,7 +40,7 @@ struct Type : Item {
 };
 
 struct PointerType : Type {
-  PointerType(std::shared_ptr<ast::Node> context,
+  PointerType(ast::Node* context,
               std::shared_ptr<code::Type> pointee,
               bool _mutable);
 
@@ -61,7 +61,7 @@ struct PointerType : Type {
 };
 
 struct IntegerType : Type {
-  IntegerType(std::shared_ptr<ast::Node> context,
+  IntegerType(ast::Node* context,
               unsigned bits, bool is_signed);
 
   virtual ~IntegerType() noexcept;
@@ -95,7 +95,7 @@ struct BooleanType : Type {
 };
 
 struct FloatType : Type {
-  explicit FloatType(std::shared_ptr<ast::Node> context, unsigned bits);
+  explicit FloatType(ast::Node* context, unsigned bits);
 
   virtual ~FloatType() noexcept;
 
@@ -122,7 +122,7 @@ struct StringType : Type {
 
 struct FunctionType : Type {
   FunctionType(
-    std::shared_ptr<ast::Node> context,
+    ast::Node* context,
     std::shared_ptr<code::Type> result);
 
   virtual ~FunctionType() noexcept;

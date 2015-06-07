@@ -53,6 +53,7 @@ void Builder::visit_function(ast::Function& node) {
 
     // Insert into the local scope.
     item->scope.set(param->name->text.c_str(), std::make_shared<code::Slot>(
+      param.get(),
       param->name->text,
       param_handle,
       param_type,

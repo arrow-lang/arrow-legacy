@@ -16,5 +16,5 @@ void Builder::visit_str(ast::String& x) {
   auto type = resolve(_g, *_cs, x);
   auto handle = LLVMBuildGlobalStringPtr(_g._irb, x.text().c_str(), "");
 
-  _stack.push(std::make_shared<code::Value>(handle, type));
+  _stack.push(std::make_shared<code::Value>(&x, handle, type));
 }

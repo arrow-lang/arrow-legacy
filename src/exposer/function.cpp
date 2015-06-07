@@ -22,14 +22,13 @@ void Exposer::visit_function(ast::Function& x) {
   auto& name = x.name->text;
   auto namespace_ = _scope.name();
 
-  Log::get().info("Exposer::visit_function => %s", name.c_str());
-
   auto handle = LLVMAddFunction(
     _g._mod, (namespace_ + "." + name).c_str(), type->handle());
 
   // Create and set the new function item in the scope
   // TODO(mehcode): Functions should receive module scope
   _scope.set(name, std::make_shared<code::Function>(
+    &x,
     handle,
     type,
     name,
@@ -42,10 +41,9 @@ void Exposer::visit_extern_function(ast::ExternalFunction& x) {
     resolve(_g, _scope, x));
   if (!type) { return; }
 
-  Log::get().info("Exposer::visit_extern_function => %s", x.name->text.c_str());
-
   // Create and set the new function item in the scope
   _scope.set(x.name->text, std::make_shared<code::ExternalFunction>(
+    &x,
     _g._mod,
     type,
     x.name->text));

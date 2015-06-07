@@ -15,7 +15,7 @@ void Resolver::visit_pointer_type(ast::PointerType& x) {
   if (!pointee) { return; }
 
   // Build and push the type
-  _stack.push(std::make_shared<code::PointerType>(pointee, x.is_mutable));
+  _stack.push(std::make_shared<code::PointerType>(&x, pointee, x.is_mutable));
 }
 
 void Resolver::visit_address_of(ast::AddressOf& x) {
@@ -23,7 +23,7 @@ void Resolver::visit_address_of(ast::AddressOf& x) {
   if (!type) return;
   if (!type->is<code::FunctionType>()) {
     // Build and push the type
-    _stack.push(std::make_shared<code::PointerType>(type, x.is_mutable));
+    _stack.push(std::make_shared<code::PointerType>(&x, type, x.is_mutable));
 
     return;
   }

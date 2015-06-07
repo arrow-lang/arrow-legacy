@@ -17,12 +17,12 @@ IMPL(Function)
 IMPL(ExternalFunction)
 IMPL(Slot)
 
-code::Module::Module(std::shared_ptr<ast::Node> context, const std::string& name, Scope* parent)
+code::Module::Module(ast::Node* context, const std::string& name, Scope* parent)
   : Item(context), scope{name, parent}, name{name} {
 }
 
 code::AbstractFunction::AbstractFunction(
-  std::shared_ptr<ast::Node> context,
+  ast::Node* context,
   std::shared_ptr<FunctionType> type,
   const std::string& name
 )
@@ -30,7 +30,7 @@ code::AbstractFunction::AbstractFunction(
 }
 
 code::Function::Function(
-  std::shared_ptr<ast::Node> context,
+  ast::Node* context,
   LLVMValueRef handle,
   std::shared_ptr<FunctionType> type,
   const std::string& name,
@@ -40,7 +40,7 @@ code::Function::Function(
 }
 
 code::ExternalFunction::ExternalFunction(
-  std::shared_ptr<ast::Node> context,
+  ast::Node* context,
   LLVMModuleRef _mod,
   std::shared_ptr<FunctionType> type,
   const std::string& name
@@ -49,7 +49,7 @@ code::ExternalFunction::ExternalFunction(
 }
 
 code::Slot::Slot(
-  std::shared_ptr<ast::Node> context,
+  ast::Node* context,
   const std::string& name, LLVMValueRef handle,
   std::shared_ptr<Type> type,
   bool _mutable

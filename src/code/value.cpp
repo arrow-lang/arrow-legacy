@@ -6,10 +6,11 @@
 #include "arrow/code/value.hpp"
 #include "arrow/generator.hpp"
 #include "arrow/log.hpp"
+#include "arrow/llvm.hpp"
 
 using arrow::code::Value;
 
-Value::Value(std::shared_ptr<ast::Node> context, LLVMValueRef handle, std::shared_ptr<Type> type, bool _mutable, bool _address)
+Value::Value(ast::Node* context, LLVMValueRef handle, std::shared_ptr<Type> type, bool _mutable, bool _address)
   : Item(context), _handle{handle}, _type{type}, _mutable{_mutable}, _address{_address} {
 }
 
@@ -47,7 +48,7 @@ auto Value::cast(
   decltype(value) res = nullptr;
 
   if (_type->equals(*type)) {
-    return std::make_shared<code::Value>(value, type);
+    return std::make_shared<code::Value>(&ctx, value, type);
   }
 
   if (_type->is<code::IntegerType>() && type->is<code::IntegerType>()) {
@@ -154,5 +155,5 @@ auto Value::cast(
   }
 
   // Return a new, casted value
-  return std::make_shared<code::Value>(res, type);
+  return std::make_shared<code::Value>(&ctx, res, type);
 }

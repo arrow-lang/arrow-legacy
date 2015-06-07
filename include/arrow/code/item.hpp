@@ -7,10 +7,17 @@
 #define ARROW_CODE_ITEM_H 1
 
 namespace arrow {
+
+namespace ast {
+
+struct Node;
+
+}  // namespace ast
+
 namespace code {
 
 struct Item {
-  Item(std::shared_ptr<ast::Node> context);
+  Item(ast::Node* context);
 
   virtual ~Item() noexcept;
 
@@ -32,7 +39,7 @@ struct Item {
     return false;
   }
 
-  std::shared_ptr<ast::Node> context;
+  ast::Node* context;
 };
 
 }  // namespace code

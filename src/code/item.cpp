@@ -4,10 +4,11 @@
 // See accompanying file LICENSE
 
 #include "arrow/code/item.hpp"
+#include "arrow/llvm.hpp"
 
 using arrow::code::Item;
 
-Item::Item(std::shared_ptr<ast::Node> context) : context{context} {
+Item::Item(ast::Node* context) : context{context} {
 }
 
 Item::~Item() noexcept {

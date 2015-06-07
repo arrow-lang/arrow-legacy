@@ -20,7 +20,7 @@ namespace code {
 /// A module, either top-level (a file) or a sub-module block inside
 /// the file
 struct Module : Item {
-  Module(std::shared_ptr<ast::Node> context,
+  Module(ast::Node* context,
          const std::string& name, Scope* parent);
 
   virtual ~Module() noexcept;
@@ -31,7 +31,7 @@ struct Module : Item {
 
 struct AbstractFunction : Item {
   AbstractFunction(
-    std::shared_ptr<ast::Node> context,
+    ast::Node* context,
     std::shared_ptr<FunctionType> type, const std::string& name);
 
   virtual ~AbstractFunction() noexcept;
@@ -51,7 +51,7 @@ struct AbstractFunction : Item {
 /// A named function definition
 struct Function : AbstractFunction {
   Function(
-    std::shared_ptr<ast::Node> context,
+    ast::Node* context,
     LLVMValueRef handle, std::shared_ptr<FunctionType> type,
     const std::string& name, Scope* parent);
 
@@ -70,7 +70,7 @@ struct Function : AbstractFunction {
 /// An external function declaration
 struct ExternalFunction : AbstractFunction {
   ExternalFunction(
-    std::shared_ptr<ast::Node> context,
+    ast::Node* context,
     LLVMModuleRef _mod, std::shared_ptr<FunctionType> type,
     const std::string& name);
 
@@ -86,7 +86,7 @@ struct ExternalFunction : AbstractFunction {
 /// A named slot declaration
 struct Slot : Value {
   Slot(
-    std::shared_ptr<ast::Node> context,
+    ast::Node* context,
     const std::string& name, LLVMValueRef handle,
     std::shared_ptr<Type> type,
     bool _mutable);

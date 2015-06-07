@@ -91,7 +91,7 @@ void Generator::generate(
   // now-exposed module
   for (auto& mod : _modules) {
     arrow::Builder builder{*this, _scope};
-    for (auto& item : mod.sequence) {
+    for (auto& item : dynamic_cast<ast::Module*>(mod->context)->sequence) {
       builder.build(*item, &(mod->scope));
     }
   }
@@ -110,35 +110,35 @@ void Generator::_declare_basic_types() {
   // Basic types
 
   // Boolean
-  _scope.set("bool", std::make_shared<code::BooleanType>());
+  _scope.set("bool", std::make_shared<code::BooleanType>(nullptr));
 
   // Numeric
-  _scope.set("byte", std::make_shared<code::IntegerType>(8, false));
-  _scope.set("int", std::make_shared<code::IntegerType>(64, true));
-  _scope.set("float", std::make_shared<code::FloatType>(64));
+  _scope.set("byte", std::make_shared<code::IntegerType>(nullptr, 8, false));
+  _scope.set("int", std::make_shared<code::IntegerType>(nullptr, 64, true));
+  _scope.set("float", std::make_shared<code::FloatType>(nullptr, 64));
 
   // UTF-8 encoded, UTF-32 string
-  _scope.set("str", std::make_shared<code::StringType>());
+  _scope.set("str", std::make_shared<code::StringType>(nullptr));
 
   // Storage (focused) types
 
   // Signed, machine-independent integer types
-  _scope.set("int8", std::make_shared<code::IntegerType>(8, true));
-  _scope.set("int16", std::make_shared<code::IntegerType>(16, true));
-  _scope.set("int32", std::make_shared<code::IntegerType>(32, true));
-  _scope.set("int64", std::make_shared<code::IntegerType>(64, true));
-  _scope.set("int128", std::make_shared<code::IntegerType>(128, true));
+  _scope.set("int8", std::make_shared<code::IntegerType>(nullptr, 8, true));
+  _scope.set("int16", std::make_shared<code::IntegerType>(nullptr, 16, true));
+  _scope.set("int32", std::make_shared<code::IntegerType>(nullptr, 32, true));
+  _scope.set("int64", std::make_shared<code::IntegerType>(nullptr, 64, true));
+  _scope.set("int128", std::make_shared<code::IntegerType>(nullptr, 128, true));
 
   // Unsigned, machine-independent integer types
-  _scope.set("uint8", std::make_shared<code::IntegerType>(8, false));
-  _scope.set("uint16", std::make_shared<code::IntegerType>(16, false));
-  _scope.set("uint32", std::make_shared<code::IntegerType>(32, false));
-  _scope.set("uint64", std::make_shared<code::IntegerType>(64, false));
-  _scope.set("uint128", std::make_shared<code::IntegerType>(128, false));
+  _scope.set("uint8", std::make_shared<code::IntegerType>(nullptr, 8, false));
+  _scope.set("uint16", std::make_shared<code::IntegerType>(nullptr, 16, false));
+  _scope.set("uint32", std::make_shared<code::IntegerType>(nullptr, 32, false));
+  _scope.set("uint64", std::make_shared<code::IntegerType>(nullptr, 64, false));
+  _scope.set("uint128", std::make_shared<code::IntegerType>(nullptr, 128, false));
 
   // Floating-point types
-  _scope.set("float32", std::make_shared<code::FloatType>(32));
-  _scope.set("float64", std::make_shared<code::FloatType>(64));
+  _scope.set("float32", std::make_shared<code::FloatType>(nullptr, 32));
+  _scope.set("float64", std::make_shared<code::FloatType>(nullptr, 64));
 }
 
 void Generator::generate_main() {

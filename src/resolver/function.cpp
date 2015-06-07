@@ -17,7 +17,7 @@ void Resolver::do_function(ast::AbstractFunction& x) {
     if (!result) { return; }
   }
 
-  auto type = std::make_shared<code::FunctionType>(result);
+  auto type = std::make_shared<code::FunctionType>(&x, result);
 
   // Resolve the type of each parameter (if any)
   // TODO(mehcode): Use the visitor

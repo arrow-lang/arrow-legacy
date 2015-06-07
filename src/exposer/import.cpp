@@ -22,7 +22,6 @@ void Exposer::visit_import(ast::Import& x) {
   // TODO: Directory import
 
   // Build the absolute path of the file to import
-  // TODO: Get the relative path of THIS module file
   auto dir = fs::path(x.span.filename).parent_path();
   auto path = fs::absolute(x.path->text(), dir);
   std::string pathname;

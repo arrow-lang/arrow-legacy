@@ -27,7 +27,7 @@ void Builder::do_unary(
   auto res = cb(op);
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(res, type));
+  _stack.push(std::make_shared<code::Value>(&x, res, type));
 }
 
 // TODO: Rename the promotion operator to the identity operator?

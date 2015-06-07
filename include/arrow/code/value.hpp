@@ -8,10 +8,10 @@
 
 #include <memory>
 
-#include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
 #include "arrow/ast/nodes.hpp"
 #include "arrow/code/type.hpp"
+#include "arrow/llvm.hpp"
 
 namespace arrow {
 
@@ -20,7 +20,7 @@ class Generator;
 namespace code {
 
 struct Value : Item {
-  Value(std::shared_ptr<ast::Node> context,
+  Value(ast::Node* context,
         LLVMValueRef handle, std::shared_ptr<Type> type,
         bool _mutable = false,
         bool _address = false);

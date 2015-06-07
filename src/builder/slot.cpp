@@ -50,6 +50,7 @@ void Builder::visit_slot(ast::Slot& x) {
   // Create and set the new slot decl in
   // the current scope
   _cs->set(name, std::make_shared<code::Slot>(
+    &x,
     name,
     handle,
     type,

@@ -44,6 +44,7 @@ void Builder::visit_call(ast::Call& x) {
     _g._irb, item->handle(), arguments.data(), arguments.size(), "");
 
   _stack.push(std::make_shared<code::Value>(
+    &x,
     res,
     type.result));
 }

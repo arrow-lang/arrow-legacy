@@ -142,6 +142,6 @@ void Builder::visit_select(ast::Select& x) {
     auto res = LLVMBuildPhi(_g._irb, type->handle(), "");
     LLVMAddIncoming(res, values.data(), value_blocks.data(), values.size());
 
-    _stack.push(std::make_shared<code::Value>(res, type));
+    _stack.push(std::make_shared<code::Value>(&x, res, type));
   }
 }

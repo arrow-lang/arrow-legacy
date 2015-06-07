@@ -34,7 +34,7 @@ void Builder::do_bitwise(
   auto res = cb(lhs, rhs);
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(res, type));
+  _stack.push(std::make_shared<code::Value>(&x, res, type));
 }
 
 void Builder::visit_bit_and(ast::BitAnd& x) {

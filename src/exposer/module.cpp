@@ -15,13 +15,11 @@ namespace ast = arrow::ast;
 
 void Exposer::visit_module(ast::Module& x) {
   // Create (and set) the module item
-  auto mod = std::make_shared<code::Module>(x.name, &_scope);
+  auto mod = std::make_shared<code::Module>(&x, x.name, &_scope);
   _scope.set(x.name, mod);
 
   // Push us in the list of modules (to later build)
   _g._modules.push_back(mod);
-
-  Log::get().info("Exposer::visit_module => %s", x.name.c_str());
 
   // Extract named items from the sequence (for name hoisting)
   arrow::Exposer nested_exposer{_g, mod->scope};

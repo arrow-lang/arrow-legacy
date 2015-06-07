@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <vector>
 #include "arrow/code/type.hpp"
+#include "arrow/llvm.hpp"
 
 namespace code = arrow::code;
 
@@ -21,20 +22,20 @@ IMPL(BooleanType)
 IMPL(FunctionType)
 IMPL(PointerType)
 
-code::IntegerType::IntegerType(std::shared_ptr<ast::Node> context, unsigned bits, bool is_signed)
+code::IntegerType::IntegerType(ast::Node* context, unsigned bits, bool is_signed)
   : Type(context), bits(bits), _is_signed(is_signed) {
 }
 
-code::FloatType::FloatType(std::shared_ptr<ast::Node> context, unsigned bits)
+code::FloatType::FloatType(ast::Node* context, unsigned bits)
   : Type(context), bits(bits) {
 }
 
-code::FunctionType::FunctionType(std::shared_ptr<ast::Node> context, std::shared_ptr<code::Type> result)
+code::FunctionType::FunctionType(ast::Node* context, std::shared_ptr<code::Type> result)
   : Type(context), result(result), parameters{} {
 }
 
 code::PointerType::PointerType(
-  std::shared_ptr<ast::Node> context,
+  ast::Node* context,
   std::shared_ptr<code::Type> pointee,
   bool _mutable
 )

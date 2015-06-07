@@ -35,7 +35,7 @@ void Builder::visit_dereference(ast::Dereference& x) {
 
   // Build and push the code handle
   _stack.push(std::make_shared<code::Value>(
-    res, type, op->type()->is_mutable(), true));
+    &x, res, type, op->type()->is_mutable(), true));
 }
 
 void Builder::visit_address_of(ast::AddressOf& x) {
@@ -65,5 +65,5 @@ void Builder::visit_address_of(ast::AddressOf& x) {
   auto res = op->address_of(_g);
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(res, type));
+  _stack.push(std::make_shared<code::Value>(&x, res, type));
 }
