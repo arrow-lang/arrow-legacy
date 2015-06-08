@@ -1282,3 +1282,48 @@ bool Parser::parse_import() {
 
   return true;
 }
+
+// Structure
+// ----------------------------------------------------------------------------
+// struct = "struct" IDENTIFIER "{" member { "," member } [ "," ] "}" ;
+// member = IDENTIFIER ":" type ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_struct() {
+  // Expect `struct`
+  auto initial_tok = expect(Token::Type::Struct);
+  if (!initial_tok) { return false; }
+
+  // Parse identifier (name)
+  if (!parse_identifier()) { return false; }
+  auto name = std::dynamic_pointer_cast<ast::Identifier>(_stack.front());
+  _stack.pop_front();
+
+  // Expect `{`
+  if (!expect(Token::Type::LeftBrace)) { return false; }
+
+  // Declare our node
+  auto node = std::make_shared<code::Structure>(
+    Span(_t.filename(), initial_tok->span.begin, initial_tok->span.begin);
+
+  // Enumerate and attempt to match rules until we reach
+  // `}` or the end of stream (which would be an error)
+  while ((_t.peek()->type != Token::Type::End) &&
+         (_t.peek()->type != Token::Type::RightBrace)) {
+    // Try and parse a struct member ..
+    if (!parse_member()) { return false; }
+    node.members.push_back(_stack.top());
+    _stack.pop();
+  }
+
+  // Expect `}`
+  auto last_tok = expect(Token::Type::RightBrace);
+  if (!last_tok) { return false; }
+
+  // Declare (and push) node
+  _stack.push_back(std::make_shared<ast::Import>(
+    Span(_t.filename(), initial_tok->span.begin, last_tok->span.end),
+    name, path
+  ));
+
+  return true;
+}
