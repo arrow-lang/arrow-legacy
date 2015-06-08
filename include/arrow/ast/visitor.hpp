@@ -67,6 +67,8 @@ struct Visitor {
   virtual void visit_address_of(AddressOf&) { }
   virtual void visit_import(Import&) { }
   virtual void visit_struct(Structure&) { }
+  virtual void visit_member(Member&) { }
+
 };
 
 }  // namespace ast

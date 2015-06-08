@@ -355,6 +355,7 @@ struct Structure : Node {
   virtual ~Structure() noexcept;
   virtual void accept(Visitor& v);
 
+  std::shared_ptr<Identifier> name;
   std::deque<std::shared_ptr<Member>> members;
 };
 

@@ -33,6 +33,7 @@ IMPL(Identifier, id)
 IMPL(Import, import)
 IMPL(Module, module)
 IMPL(Structure, struct)
+IMPL(Member, member)
 IMPL(ExternalFunction, extern_function)
 IMPL(Function, function)
 IMPL(Parameter, parameter)
@@ -181,4 +182,17 @@ ast::AddressOf::AddressOf(
   std::shared_ptr<Node> operand,
   bool _mutable
 ) : Unary(span, operand), is_mutable(_mutable) {
+}
+
+ast::Structure::Structure(
+  Span span,
+  std::shared_ptr<Identifier> name
+) : Node(span), name(name) {
+}
+
+ast::Member::Member(
+  Span span,
+  std::shared_ptr<Identifier> name,
+  std::shared_ptr<Node> type
+) : Node(span), name(name), type(type) {
 }

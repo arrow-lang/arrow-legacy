@@ -366,3 +366,32 @@ void Show::visit_address_of(AddressOf& x) {
 
   _ctx.pop();
 }
+
+void Show::visit_struct(Structure& x) {
+  auto& node = _el().add("Structure", "");
+  _ctx.push(&node);
+
+  node.add("<xmlattr>.name", x.name->text.c_str());
+
+  for (auto& item : x.members) {
+    item->accept(*this);
+  }
+
+  _ctx.pop();
+}
+
+void Show::visit_member(Member& x) {
+  auto& item = _el().add("Member", "");
+  _ctx.push(&item);
+
+  item.add("<xmlattr>.name", x.name->text.c_str());
+
+  auto& type = _el().add("Type", "");
+  _ctx.push(&type);
+
+  x.type->accept(*this);
+
+  _ctx.pop();
+
+  _ctx.pop();
+}

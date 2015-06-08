@@ -20,7 +20,7 @@ struct Type : Item {
 
   virtual ~Type() noexcept;
 
-  virtual LLVMTypeRef handle() const noexcept = 0;
+  virtual LLVMTypeRef handle() noexcept = 0;
 
   virtual bool is_type() const noexcept {
     return true;
@@ -46,7 +46,7 @@ struct PointerType : Type {
 
   virtual ~PointerType() noexcept;
 
-  virtual LLVMTypeRef handle() const noexcept;
+  virtual LLVMTypeRef handle() noexcept;
 
   virtual bool equals(code::Type& other) const noexcept;
 
@@ -66,7 +66,7 @@ struct IntegerType : Type {
 
   virtual ~IntegerType() noexcept;
 
-  virtual LLVMTypeRef handle() const noexcept;
+  virtual LLVMTypeRef handle() noexcept;
 
   virtual bool is_signed() const noexcept {
     return _is_signed;
@@ -86,7 +86,7 @@ struct BooleanType : Type {
 
   virtual ~BooleanType() noexcept;
 
-  virtual LLVMTypeRef handle() const noexcept;
+  virtual LLVMTypeRef handle() noexcept;
   virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept {
@@ -99,7 +99,7 @@ struct FloatType : Type {
 
   virtual ~FloatType() noexcept;
 
-  virtual LLVMTypeRef handle() const noexcept;
+  virtual LLVMTypeRef handle() noexcept;
   virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept;
@@ -112,7 +112,7 @@ struct StringType : Type {
 
   virtual ~StringType() noexcept;
 
-  virtual LLVMTypeRef handle() const noexcept;
+  virtual LLVMTypeRef handle() noexcept;
   virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept {
@@ -127,12 +127,44 @@ struct FunctionType : Type {
 
   virtual ~FunctionType() noexcept;
 
-  virtual LLVMTypeRef handle() const noexcept;
+  virtual LLVMTypeRef handle() noexcept;
 
   virtual std::string name() const noexcept;
 
   std::shared_ptr<Type> result;
   std::deque<std::shared_ptr<Type>> parameters;
+};
+
+struct StructureMember : Item {
+  StructureMember(
+    ast::Node* context,
+    const std::string& name,
+    std::shared_ptr<code::Type> type);
+
+  virtual ~StructureMember() noexcept;
+
+  std::string name;
+  std::shared_ptr<Type> type;
+};
+
+struct StructureType : Type {
+  StructureType(ast::Node* context, const std::string& name);
+
+  virtual ~StructureType() noexcept;
+
+  virtual LLVMTypeRef handle() noexcept;
+
+  virtual std::string name() const noexcept {
+    return _name;
+  }
+
+  virtual bool equals(code::Type& other) const noexcept;
+
+  std::deque<std::shared_ptr<StructureMember>> members;
+
+ private:
+  std::string _name;
+  LLVMTypeRef _handle;
 };
 
 }  // namespace code

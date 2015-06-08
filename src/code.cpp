@@ -16,6 +16,7 @@ IMPL(AbstractFunction)
 IMPL(Function)
 IMPL(ExternalFunction)
 IMPL(Slot)
+IMPL(Structure)
 
 code::Module::Module(ast::Node* context, const std::string& name, Scope* parent)
   : Item(context), scope{name, parent}, name{name} {
@@ -37,6 +38,14 @@ code::Function::Function(
   Scope* parent
 )
   : AbstractFunction(context, type, name), scope{name, parent}, _handle{handle} {
+}
+
+code::Structure::Structure(
+  ast::Node* context,
+  const std::string& name,
+  std::shared_ptr<StructureType> type
+)
+  : Item(context), name(name), _type(type) {
 }
 
 code::ExternalFunction::ExternalFunction(

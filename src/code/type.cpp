@@ -21,6 +21,8 @@ IMPL(FloatType)
 IMPL(BooleanType)
 IMPL(FunctionType)
 IMPL(PointerType)
+IMPL(StructureMember)
+IMPL(StructureType)
 
 code::IntegerType::IntegerType(ast::Node* context, unsigned bits, bool is_signed)
   : Type(context), bits(bits), _is_signed(is_signed) {
@@ -42,15 +44,30 @@ code::PointerType::PointerType(
   : Type(context), pointee(pointee), _mutable(_mutable) {
 }
 
-LLVMTypeRef code::IntegerType::handle() const noexcept {
+code::StructureType::StructureType(
+  ast::Node* context,
+  const std::string& name
+)
+  : Type(context), _name(name), _handle(nullptr) {
+}
+
+code::StructureMember::StructureMember(
+  ast::Node* context,
+  const std::string& name,
+  std::shared_ptr<code::Type> type
+)
+  : Item(context), name(name), type(type) {
+}
+
+LLVMTypeRef code::IntegerType::handle() noexcept {
   return LLVMIntType(bits);
 }
 
-LLVMTypeRef code::BooleanType::handle() const noexcept {
+LLVMTypeRef code::BooleanType::handle() noexcept {
   return LLVMInt1Type();
 }
 
-LLVMTypeRef code::FloatType::handle() const noexcept {
+LLVMTypeRef code::FloatType::handle() noexcept {
   switch (bits) {
     case 32:
       return LLVMFloatType();
@@ -63,7 +80,7 @@ LLVMTypeRef code::FloatType::handle() const noexcept {
   }
 }
 
-LLVMTypeRef code::FunctionType::handle() const noexcept {
+LLVMTypeRef code::FunctionType::handle() noexcept {
   // Determine the result type (either void or declared)
   // TODO(mehcode): Full body deduction should come eventually
   auto res = result ? result->handle() : LLVMVoidType();
@@ -78,12 +95,28 @@ LLVMTypeRef code::FunctionType::handle() const noexcept {
   return LLVMFunctionType(res, params.data(), params.size(), false);
 }
 
-LLVMTypeRef code::StringType::handle() const noexcept {
+LLVMTypeRef code::StringType::handle() noexcept {
   return LLVMPointerType(LLVMIntType(8), 0);
 }
 
-LLVMTypeRef code::PointerType::handle() const noexcept {
+LLVMTypeRef code::PointerType::handle() noexcept {
   return LLVMPointerType(pointee->handle(), 0);
+}
+
+LLVMTypeRef code::StructureType::handle() noexcept {
+  if (_handle == nullptr) {
+    _handle = LLVMStructCreateNamed(LLVMGetGlobalContext(), _name.c_str());
+
+    std::vector<LLVMTypeRef> elements;
+    for (auto& mem : members) {
+      elements.push_back(mem->type->handle());
+    }
+
+    LLVMStructSetBody(_handle,
+      elements.data(), elements.size(), false);
+  }
+
+  return _handle;
 }
 
 std::string code::IntegerType::name() const noexcept {
@@ -148,6 +181,15 @@ bool code::PointerType::equals(code::Type& other) const noexcept {
   if (other.is<code::PointerType>()) {
     auto& other_ptr = other.as<code::PointerType>();
     return other_ptr.pointee->equals(*pointee) && (other_ptr.is_mutable() == is_mutable());
+  }
+
+  return false;
+}
+
+bool code::StructureType::equals(code::Type& other) const noexcept {
+  if (other.is<code::StructureType>()) {
+    auto& other_st = other.as<code::StructureType>();
+    return other_st._name == _name;
   }
 
   return false;

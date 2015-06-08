@@ -62,6 +62,7 @@ class Parser {
   bool parse_loop();
   bool parse_import();
   bool parse_struct();
+  bool parse_member();
 
   bool parse_block(ast::Block& node);
 

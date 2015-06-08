@@ -96,6 +96,25 @@ struct Slot : Value {
   std::string name;
 };
 
+/// A named structure declaration
+struct Structure : Item {
+  Structure(
+    ast::Node* context,
+    const std::string& name,
+    std::shared_ptr<StructureType> type);
+
+  virtual ~Structure() noexcept;
+
+  virtual std::shared_ptr<StructureType> type() const noexcept {
+    return _type;
+  }
+
+  std::string name;
+
+ private:
+  std::shared_ptr<StructureType> _type;
+};
+
 }  // namespace code
 }  // namespace arrow
 

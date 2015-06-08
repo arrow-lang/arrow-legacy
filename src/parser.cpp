@@ -130,6 +130,9 @@ bool Parser::parse_statement() {
     case Token::Type::Import:
       return parse_import();
 
+    case Token::Type::Struct:
+      return parse_struct();
+
     case Token::Type::Extern:
       return parse_extern_function();
 
@@ -1302,8 +1305,9 @@ bool Parser::parse_struct() {
   if (!expect(Token::Type::LeftBrace)) { return false; }
 
   // Declare our node
-  auto node = std::make_shared<code::Structure>(
-    Span(_t.filename(), initial_tok->span.begin, initial_tok->span.begin);
+  auto node = std::make_shared<ast::Structure>(
+    Span(_t.filename(), initial_tok->span.begin, initial_tok->span.begin),
+    name);
 
   // Enumerate and attempt to match rules until we reach
   // `}` or the end of stream (which would be an error)
@@ -1311,18 +1315,55 @@ bool Parser::parse_struct() {
          (_t.peek()->type != Token::Type::RightBrace)) {
     // Try and parse a struct member ..
     if (!parse_member()) { return false; }
-    node.members.push_back(_stack.top());
-    _stack.pop();
+    node->members.push_back(std::dynamic_pointer_cast<ast::Member>(
+      _stack.front()));
+
+    _stack.pop_front();
+
+    // Peek and consume the `,` token if present
+    if (_t.peek()->type == Token::Type::Comma) {
+      if (!expect(Token::Type::Comma)) { return false; }
+      continue;
+    } else if ((_t.peek()->type != Token::Type::End) &&
+               (_t.peek()->type != Token::Type::RightBrace)) {
+      if (!expect(Token::Type::RightBrace)) { return false; }
+    } else {
+      break;
+    }
   }
 
   // Expect `}`
   auto last_tok = expect(Token::Type::RightBrace);
   if (!last_tok) { return false; }
 
+  // Push node
+  _stack.push_back(node);
+
+  return true;
+}
+
+// Member
+// ----------------------------------------------------------------------------
+// member = IDENTIFIER ":" type ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_member() {
+  // Parse identifier (name)
+  if (!parse_identifier()) { return false; }
+  auto name = std::dynamic_pointer_cast<ast::Identifier>(_stack.front());
+  _stack.pop_front();
+
+  // Expect `:`
+  if (!expect(Token::Type::Colon)) { return false; }
+
+  // Parse type
+  if (!parse_type()) { return false; }
+  auto type = _stack.front();
+  _stack.pop_front();
+
   // Declare (and push) node
-  _stack.push_back(std::make_shared<ast::Import>(
-    Span(_t.filename(), initial_tok->span.begin, last_tok->span.end),
-    name, path
+  _stack.push_back(std::make_shared<ast::Member>(
+    Span(_t.filename(), name->span.begin, type->span.end),
+    name, type
   ));
 
   return true;

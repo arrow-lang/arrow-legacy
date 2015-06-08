@@ -34,7 +34,7 @@ void Builder::visit_slot(ast::Slot& x) {
 
   // Use the declared type (if present)
   if (x.type != nullptr) {
-    type = build_scalar_of<code::Type>(*x.type);
+    type = resolve(_g, *_cs, *x.type);
     if (!type) return;
 
     // Perform the cast (if we have an initializer)

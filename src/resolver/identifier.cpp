@@ -30,6 +30,9 @@ void Resolver::visit_id(ast::Identifier& x) {
   } else if (item->is<code::AbstractFunction>()) {
     // This istem -is- a function
     _stack.push(item->as<code::AbstractFunction>().type());
+  } else if (item->is<code::Structure>()) {
+    // This istem -is- a function
+    _stack.push(item->as<code::Structure>().type());
   } else {
     Log::get().error(
       x.span, "use of untyped name '%s'", x.text.c_str());

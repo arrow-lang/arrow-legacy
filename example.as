@@ -28,10 +28,16 @@
 import ctypes from "./lib/libc/ctypes";
 // import other from "./other";
 
+extern def printf(format: str, a: int);
+extern def puts(s: str);
+
 struct Point {
   x: int,
-  y: int
+  y: int128
 }
 
 def main() {
+  let size = (((0 as *Point) + 1) as *byte) - (0 as *byte);
+  printf("size: %lld", size);
+  puts("");
 }
