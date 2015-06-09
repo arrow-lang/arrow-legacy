@@ -139,9 +139,9 @@ void Builder::visit_select(ast::Select& x) {
     // Push our PHI node
     auto type = resolve(_g, scope, x);
     if (!type) { return; }
-    auto res = LLVMBuildPhi(_g._irb, type->handle(), "");
+    auto res = LLVMBuildPhi(_g._irb, type->handle(_g), "");
     LLVMAddIncoming(res, values.data(), value_blocks.data(), values.size());
 
-    _stack.push(std::make_shared<code::Value>(&x, res, type));
+    _stack.push(std::make_shared<code::Value>(&x, _cs, res, type));
   }
 }

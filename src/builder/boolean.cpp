@@ -11,7 +11,7 @@ using arrow::resolve;
 
 void Builder::visit_bool(ast::Boolean& x) {
   auto type = resolve(_g, *_cs, x);
-  auto handle = LLVMConstInt(type->handle(), x.value ? 1 : 0, 0);
+  auto handle = LLVMConstInt(type->handle(_g), x.value ? 1 : 0, 0);
 
-  _stack.push(std::make_shared<code::Value>(&x, handle, type));
+  _stack.push(std::make_shared<code::Value>(&x, _cs, handle, type));
 }

@@ -55,7 +55,7 @@ void Builder::do_relational(
   }
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(&x, res, type));
+  _stack.push(std::make_shared<code::Value>(&x, _cs, res, type));
 }
 
 void Builder::visit_eq(ast::EqualTo& x) {

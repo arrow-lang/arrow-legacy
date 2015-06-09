@@ -19,15 +19,16 @@ IMPL(Slot)
 IMPL(Structure)
 
 code::Module::Module(ast::Node* context, const std::string& name, Scope* parent)
-  : Item(context), scope{name, parent}, name{name} {
+  : Item(context, parent), scope{name, parent}, name{name} {
 }
 
 code::AbstractFunction::AbstractFunction(
   ast::Node* context,
+  Scope* scope,
   std::shared_ptr<FunctionType> type,
   const std::string& name
 )
-  : Item(context), name{name}, _type{type} {
+  : Item(context, scope), name{name}, _type{type} {
 }
 
 code::Function::Function(
@@ -37,38 +38,41 @@ code::Function::Function(
   const std::string& name,
   Scope* parent
 )
-  : AbstractFunction(context, type, name), scope{name, parent}, _handle{handle} {
+  : AbstractFunction(context, parent, type, name), scope{name, parent}, _handle{handle} {
 }
 
 code::Structure::Structure(
   ast::Node* context,
+  Scope* scope,
   const std::string& name,
   std::shared_ptr<StructureType> type
 )
-  : Item(context), name(name), _type(type) {
+  : Item(context, scope), name(name), _type(type) {
 }
 
 code::ExternalFunction::ExternalFunction(
   ast::Node* context,
+  Scope* scope,
   LLVMModuleRef _mod,
   std::shared_ptr<FunctionType> type,
   const std::string& name
 )
-  : AbstractFunction(context, type, name), _mod{_mod}, _handle{nullptr} {
+  : AbstractFunction(context, scope, type, name), _mod{_mod}, _handle{nullptr} {
 }
 
 code::Slot::Slot(
   ast::Node* context,
+  Scope* scope,
   const std::string& name, LLVMValueRef handle,
   std::shared_ptr<Type> type,
   bool _mutable
 )
-  : code::Value(context, handle, type, _mutable, true), name{name} {
+  : code::Value(context, scope, handle, type, _mutable, true), name{name} {
 }
 
-LLVMValueRef code::ExternalFunction::handle() noexcept {
+LLVMValueRef code::ExternalFunction::handle(Generator& g) noexcept {
   if (_handle == nullptr) {
-    _handle = LLVMAddFunction(_mod, name.c_str(), _type->handle());
+    _handle = LLVMAddFunction(_mod, name.c_str(), _type->handle(g));
   }
 
   return _handle;

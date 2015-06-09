@@ -29,7 +29,7 @@ void Builder::visit_function(ast::Function& node) {
 
   auto type = item->type();
 
-  auto block = LLVMAppendBasicBlock(item->handle(), "");
+  auto block = LLVMAppendBasicBlock(item->handle(_g), "");
   LLVMPositionBuilderAtEnd(_g._irb, block);
 
   // Set us as the active function (so return statements know who
@@ -45,15 +45,16 @@ void Builder::visit_function(ast::Function& node) {
     // Allocate space on the stack for this parameter
     // TODO: The parameter name should be bound to the type
     auto param_handle = LLVMBuildAlloca(
-      _g._irb, param_type->handle(), param->name->text.c_str());
+      _g._irb, param_type->handle(_g), param->name->text.c_str());
 
     // Store the parameter in the allocation.
     LLVMBuildStore(_g._irb,
-      LLVMGetParam(item->handle(), index), param_handle);
+      LLVMGetParam(item->handle(_g), index), param_handle);
 
     // Insert into the local scope.
     item->scope.set(param->name->text.c_str(), std::make_shared<code::Slot>(
       param.get(),
+      _cs,
       param->name->text,
       param_handle,
       param_type,
@@ -67,7 +68,7 @@ void Builder::visit_function(ast::Function& node) {
   }
 
   // Has the function been terminated?
-  auto last = LLVMGetLastBasicBlock(item->handle());
+  auto last = LLVMGetLastBasicBlock(item->handle(_g));
   if (!LLVMGetBasicBlockTerminator(last)) {
     // No; we need to terminate
     if (!item->type()->as<code::FunctionType>().result) {

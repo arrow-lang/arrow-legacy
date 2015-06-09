@@ -24,6 +24,9 @@ class Builder : public ast::Visitor {
   void build(
     ast::Node& node, code::Scope* scope = nullptr);
 
+  std::shared_ptr<code::Type> build_type(
+    ast::Node& node, code::Scope* scope = nullptr);
+
   std::shared_ptr<code::Item> build_scalar(
     ast::Node& node, code::Scope* scope = nullptr);
 

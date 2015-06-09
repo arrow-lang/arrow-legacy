@@ -34,7 +34,7 @@ void Builder::visit_slot(ast::Slot& x) {
 
   // Use the declared type (if present)
   if (x.type != nullptr) {
-    type = resolve(_g, *_cs, *x.type);
+    type = build_type(*x.type);
     if (!type) return;
 
     // Perform the cast (if we have an initializer)
@@ -45,12 +45,13 @@ void Builder::visit_slot(ast::Slot& x) {
   }
 
   // Build the allocation
-  auto handle = LLVMBuildAlloca(_g._irb, type->handle(), name.c_str());
+  auto handle = LLVMBuildAlloca(_g._irb, type->handle(_g), name.c_str());
 
   // Create and set the new slot decl in
   // the current scope
   _cs->set(name, std::make_shared<code::Slot>(
     &x,
+    _cs,
     name,
     handle,
     type,

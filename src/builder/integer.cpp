@@ -16,8 +16,8 @@ void Builder::visit_int(ast::Integer& x) {
 
   // Build the value handle
   auto handle = LLVMConstIntOfStringAndSize(
-    type->handle(), x.text.c_str(), x.text.size(), x.base);
+    type->handle(_g), x.text.c_str(), x.text.size(), x.base);
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(&x, handle, type));
+  _stack.push(std::make_shared<code::Value>(&x, _cs, handle, type));
 }

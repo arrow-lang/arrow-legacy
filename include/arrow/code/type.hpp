@@ -13,6 +13,9 @@
 #include "arrow/llvm.hpp"
 
 namespace arrow {
+
+class Generator;
+
 namespace code {
 
 struct Type : Item {
@@ -20,7 +23,7 @@ struct Type : Item {
 
   virtual ~Type() noexcept;
 
-  virtual LLVMTypeRef handle() noexcept = 0;
+  virtual LLVMTypeRef handle(Generator& g) noexcept = 0;
 
   virtual bool is_type() const noexcept {
     return true;
@@ -41,12 +44,13 @@ struct Type : Item {
 
 struct PointerType : Type {
   PointerType(ast::Node* context,
+              code::Scope* scope,
               std::shared_ptr<code::Type> pointee,
               bool _mutable);
 
   virtual ~PointerType() noexcept;
 
-  virtual LLVMTypeRef handle() noexcept;
+  virtual LLVMTypeRef handle(Generator& g) noexcept;
 
   virtual bool equals(code::Type& other) const noexcept;
 
@@ -62,11 +66,12 @@ struct PointerType : Type {
 
 struct IntegerType : Type {
   IntegerType(ast::Node* context,
+              code::Scope* scope,
               unsigned bits, bool is_signed);
 
   virtual ~IntegerType() noexcept;
 
-  virtual LLVMTypeRef handle() noexcept;
+  virtual LLVMTypeRef handle(Generator& g) noexcept;
 
   virtual bool is_signed() const noexcept {
     return _is_signed;
@@ -86,7 +91,7 @@ struct BooleanType : Type {
 
   virtual ~BooleanType() noexcept;
 
-  virtual LLVMTypeRef handle() noexcept;
+  virtual LLVMTypeRef handle(Generator& g) noexcept;
   virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept {
@@ -95,11 +100,14 @@ struct BooleanType : Type {
 };
 
 struct FloatType : Type {
-  explicit FloatType(ast::Node* context, unsigned bits);
+  explicit FloatType(
+    ast::Node* context,
+    code::Scope* scope,
+    unsigned bits);
 
   virtual ~FloatType() noexcept;
 
-  virtual LLVMTypeRef handle() noexcept;
+  virtual LLVMTypeRef handle(Generator& g) noexcept;
   virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept;
@@ -112,7 +120,7 @@ struct StringType : Type {
 
   virtual ~StringType() noexcept;
 
-  virtual LLVMTypeRef handle() noexcept;
+  virtual LLVMTypeRef handle(Generator& g) noexcept;
   virtual bool equals(code::Type& other) const noexcept;
 
   virtual std::string name() const noexcept {
@@ -123,11 +131,12 @@ struct StringType : Type {
 struct FunctionType : Type {
   FunctionType(
     ast::Node* context,
+    code::Scope* scope,
     std::shared_ptr<code::Type> result);
 
   virtual ~FunctionType() noexcept;
 
-  virtual LLVMTypeRef handle() noexcept;
+  virtual LLVMTypeRef handle(Generator& g) noexcept;
 
   virtual std::string name() const noexcept;
 
@@ -135,32 +144,34 @@ struct FunctionType : Type {
   std::deque<std::shared_ptr<Type>> parameters;
 };
 
-struct StructureMember : Item {
-  StructureMember(
-    ast::Node* context,
-    const std::string& name,
-    std::shared_ptr<code::Type> type);
-
-  virtual ~StructureMember() noexcept;
-
-  std::string name;
-  std::shared_ptr<Type> type;
-};
+// struct StructureMember : Item {
+//   StructureMember(
+//     ast::Node* context,
+//     code::Scope* scope,
+//     const std::string& name,
+//     std::shared_ptr<code::Type> type);
+//
+//   virtual ~StructureMember() noexcept;
+//
+//   std::string name;
+//   std::shared_ptr<Type> type;
+// };
 
 struct StructureType : Type {
-  StructureType(ast::Node* context, const std::string& name);
+  StructureType(
+    ast::Node* context,
+    code::Scope* scope,
+    const std::string& name);
 
   virtual ~StructureType() noexcept;
 
-  virtual LLVMTypeRef handle() noexcept;
+  virtual LLVMTypeRef handle(Generator& g) noexcept;
 
   virtual std::string name() const noexcept {
     return _name;
   }
 
   virtual bool equals(code::Type& other) const noexcept;
-
-  std::deque<std::shared_ptr<StructureMember>> members;
 
  private:
   std::string _name;

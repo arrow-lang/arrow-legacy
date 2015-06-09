@@ -42,7 +42,7 @@ void Builder::do_arithmetic(
   auto res = cb(lhs, rhs);
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(&x, res, type));
+  _stack.push(std::make_shared<code::Value>(&x, _cs, res, type));
 }
 
 void Builder::visit_add(ast::Add& x) {
@@ -106,7 +106,7 @@ void Builder::visit_sub(ast::Sub& x) {
 
       // Perform an exact [SU]DIV to determine the size
       // return res;
-      auto pointee_type = lhs->type()->as<code::PointerType>().pointee->handle();
+      auto pointee_type = lhs->type()->as<code::PointerType>().pointee->handle(_g);
       return LLVMBuildExactSDiv(
         _g._irb, res, LLVMSizeOf(pointee_type), "");
     }

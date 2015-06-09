@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include "arrow/builder.hpp"
 #include "arrow/resolver.hpp"
 #include "arrow/log.hpp"
 
@@ -17,13 +18,13 @@ void Resolver::do_function(ast::AbstractFunction& x) {
     if (!result) { return; }
   }
 
-  auto type = std::make_shared<code::FunctionType>(&x, result);
+  auto type = std::make_shared<code::FunctionType>(&x, &_scope, result);
 
   // Resolve the type of each parameter (if any)
   // TODO(mehcode): Use the visitor
   for (auto& param : x.parameters) {
-    auto param_type = resolve(_g, _scope, *(param->type));
-    if (!param_type) { return; }
+    auto param_type = arrow::Builder{_g, _scope}.build_type(*(param->type));
+    if (!param_type) return;
 
     type->parameters.push_back(param_type);
   }

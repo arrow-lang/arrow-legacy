@@ -10,8 +10,8 @@
 
 using arrow::code::Value;
 
-Value::Value(ast::Node* context, LLVMValueRef handle, std::shared_ptr<Type> type, bool _mutable, bool _address)
-  : Item(context), _handle{handle}, _type{type}, _mutable{_mutable}, _address{_address} {
+Value::Value(ast::Node* context, code::Scope* scope, LLVMValueRef handle, std::shared_ptr<Type> type, bool _mutable, bool _address)
+  : Item(context, scope), _handle{handle}, _type{type}, _mutable{_mutable}, _address{_address} {
 }
 
 Value::~Value() noexcept {
@@ -48,7 +48,7 @@ auto Value::cast(
   decltype(value) res = nullptr;
 
   if (_type->equals(*type)) {
-    return std::make_shared<code::Value>(&ctx, value, type);
+    return std::make_shared<code::Value>(&ctx, scope, value, type);
   }
 
   if (_type->is<code::IntegerType>() && type->is<code::IntegerType>()) {
@@ -59,17 +59,17 @@ auto Value::cast(
     if (int_from.bits <= int_to.bits) {
       if (int_from.is_signed()) {
         // Sign-extend
-        res = LLVMBuildSExt(g._irb, value, type->handle(), "");
+        res = LLVMBuildSExt(g._irb, value, type->handle(g), "");
       } else {
         // Zero-extend
-        res = LLVMBuildZExt(g._irb, value, type->handle(), "");
+        res = LLVMBuildZExt(g._irb, value, type->handle(g), "");
       }
     } else if (ctx.is<ast::Integer>() || explicit_) {
       // This is a constant integer
       auto bits = ctx.as<ast::Integer>().minimum_bits();
       if (bits <= int_to.bits) {
         // Truncate (but not really; this is a bitcast)
-        res = LLVMBuildTrunc(g._irb, value, type->handle(), "");
+        res = LLVMBuildTrunc(g._irb, value, type->handle(g), "");
       } else {
         Log::get().error(ctx.span,
           "integer literal out of range for '%s'", type->name().c_str());
@@ -82,9 +82,9 @@ auto Value::cast(
   if (_type->is<code::IntegerType>() && type->is<code::FloatType>()) {
     // Convert integer to float
     if (_type->is_signed()) {
-      res = LLVMBuildSIToFP(g._irb, value, type->handle(), "");
+      res = LLVMBuildSIToFP(g._irb, value, type->handle(g), "");
     } else {
-      res = LLVMBuildUIToFP(g._irb, value, type->handle(), "");
+      res = LLVMBuildUIToFP(g._irb, value, type->handle(g), "");
     }
   }
 
@@ -92,9 +92,9 @@ auto Value::cast(
     if (explicit_) {
       // Convert float to integer
       if (type->is_signed()) {
-        res = LLVMBuildFPToSI(g._irb, value, type->handle(), "");
+        res = LLVMBuildFPToSI(g._irb, value, type->handle(g), "");
       } else {
-        res = LLVMBuildFPToUI(g._irb, value, type->handle(), "");
+        res = LLVMBuildFPToUI(g._irb, value, type->handle(g), "");
       }
     }
   }
@@ -106,10 +106,10 @@ auto Value::cast(
 
     if (float_from.bits > float_to.bits) {
       // Truncate
-      res = LLVMBuildFPTrunc(g._irb, value, type->handle(), "");
+      res = LLVMBuildFPTrunc(g._irb, value, type->handle(g), "");
     } else {
       // Extend
-      res = LLVMBuildFPExt(g._irb, value, type->handle(), "");
+      res = LLVMBuildFPExt(g._irb, value, type->handle(g), "");
     }
   }
 
@@ -126,20 +126,20 @@ auto Value::cast(
       }
     } else if (explicit_) {
       // Going from pointer to pointer
-      res = LLVMBuildPointerCast(g._irb, value, type->handle(), "");
+      res = LLVMBuildPointerCast(g._irb, value, type->handle(g), "");
     }
   }
 
   // Going from integer to pointer
   if (type->is<code::PointerType>() && _type->is<code::IntegerType>() &&
       explicit_) {
-    res = LLVMBuildPtrToInt(g._irb, value, type->handle(), "");
+    res = LLVMBuildPtrToInt(g._irb, value, type->handle(g), "");
   }
 
   // Going from pointer to integer
   if (type->is<code::IntegerType>() && _type->is<code::PointerType>() &&
       explicit_) {
-    res = LLVMBuildIntToPtr(g._irb, value, type->handle(), "");
+    res = LLVMBuildIntToPtr(g._irb, value, type->handle(g), "");
   }
 
   // If we didn't manage to cast the expression
@@ -155,5 +155,5 @@ auto Value::cast(
   }
 
   // Return a new, casted value
-  return std::make_shared<code::Value>(&ctx, res, type);
+  return std::make_shared<code::Value>(&ctx, scope, res, type);
 }

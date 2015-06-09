@@ -23,7 +23,7 @@ void Exposer::visit_function(ast::Function& x) {
   auto namespace_ = _scope.name();
 
   auto handle = LLVMAddFunction(
-    _g._mod, (namespace_ + "." + name).c_str(), type->handle());
+    _g._mod, (namespace_ + "." + name).c_str(), type->handle(_g));
 
   // Create and set the new function item in the scope
   // TODO(mehcode): Functions should receive module scope
@@ -44,6 +44,7 @@ void Exposer::visit_extern_function(ast::ExternalFunction& x) {
   // Create and set the new function item in the scope
   _scope.set(x.name->text, std::make_shared<code::ExternalFunction>(
     &x,
+    &_scope,
     _g._mod,
     type,
     x.name->text));

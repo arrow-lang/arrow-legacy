@@ -15,6 +15,9 @@
 #include "arrow/code/value.hpp"
 
 namespace arrow {
+
+class Generator;
+
 namespace code {
 
 /// A module, either top-level (a file) or a sub-module block inside
@@ -32,11 +35,12 @@ struct Module : Item {
 struct AbstractFunction : Item {
   AbstractFunction(
     ast::Node* context,
+    code::Scope* scope,
     std::shared_ptr<FunctionType> type, const std::string& name);
 
   virtual ~AbstractFunction() noexcept;
 
-  virtual LLVMValueRef handle() noexcept = 0;
+  virtual LLVMValueRef handle(Generator& g) noexcept = 0;
 
   virtual std::shared_ptr<FunctionType> type() const noexcept {
     return _type;
@@ -57,7 +61,7 @@ struct Function : AbstractFunction {
 
   virtual ~Function() noexcept;
 
-  virtual LLVMValueRef handle() noexcept {
+  virtual LLVMValueRef handle(Generator&) noexcept {
     return _handle;
   }
 
@@ -71,12 +75,13 @@ struct Function : AbstractFunction {
 struct ExternalFunction : AbstractFunction {
   ExternalFunction(
     ast::Node* context,
+    code::Scope* scope,
     LLVMModuleRef _mod, std::shared_ptr<FunctionType> type,
     const std::string& name);
 
   virtual ~ExternalFunction() noexcept;
 
-  virtual LLVMValueRef handle() noexcept;
+  virtual LLVMValueRef handle(Generator& g) noexcept;
 
  private:
   LLVMModuleRef _mod;
@@ -87,6 +92,7 @@ struct ExternalFunction : AbstractFunction {
 struct Slot : Value {
   Slot(
     ast::Node* context,
+    code::Scope* scope,
     const std::string& name, LLVMValueRef handle,
     std::shared_ptr<Type> type,
     bool _mutable);
@@ -100,6 +106,7 @@ struct Slot : Value {
 struct Structure : Item {
   Structure(
     ast::Node* context,
+    code::Scope* scope,
     const std::string& name,
     std::shared_ptr<StructureType> type);
 

@@ -22,6 +22,7 @@ void Exposer::visit_struct(ast::Structure& x) {
   // Create and set the new structure item in the scope
   _scope.set(x.name->text, std::make_shared<code::Structure>(
     &x,
+    &_scope,
     x.name->text,
     type));
 }

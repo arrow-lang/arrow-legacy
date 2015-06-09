@@ -41,10 +41,11 @@ void Builder::visit_call(ast::Call& x) {
   }
 
   auto res = LLVMBuildCall(
-    _g._irb, item->handle(), arguments.data(), arguments.size(), "");
+    _g._irb, item->handle(_g), arguments.data(), arguments.size(), "");
 
   _stack.push(std::make_shared<code::Value>(
     &x,
+    _cs,
     res,
     type.result));
 }

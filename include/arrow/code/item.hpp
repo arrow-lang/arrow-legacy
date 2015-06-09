@@ -16,8 +16,10 @@ struct Node;
 
 namespace code {
 
+class Scope;
+
 struct Item {
-  Item(ast::Node* context);
+  Item(ast::Node* context, code::Scope* scope);
 
   virtual ~Item() noexcept;
 
@@ -40,6 +42,7 @@ struct Item {
   }
 
   ast::Node* context;
+  code::Scope* scope;
 };
 
 }  // namespace code

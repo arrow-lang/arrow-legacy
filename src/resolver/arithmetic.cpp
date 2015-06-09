@@ -37,7 +37,8 @@ void Resolver::do_arithmetic(ast::Binary& x) {
       // Get the size of an address on this processor
       // TODO: Should be pushed somewhere I can grab
       auto ptrsize = LLVMPointerSize(_g._data_layout) * 8;
-      type = std::make_shared<code::IntegerType>(nullptr, ptrsize, false);
+      type = std::make_shared<code::IntegerType>(
+        nullptr, nullptr, ptrsize, false);
     }
   }
 

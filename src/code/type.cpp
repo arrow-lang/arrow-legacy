@@ -6,6 +6,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <vector>
+#include "arrow/ast.hpp"
+#include "arrow/builder.hpp"
 #include "arrow/code/type.hpp"
 #include "arrow/llvm.hpp"
 
@@ -21,53 +23,56 @@ IMPL(FloatType)
 IMPL(BooleanType)
 IMPL(FunctionType)
 IMPL(PointerType)
-IMPL(StructureMember)
+// IMPL(StructureMember)
 IMPL(StructureType)
 
-code::IntegerType::IntegerType(ast::Node* context, unsigned bits, bool is_signed)
-  : Type(context), bits(bits), _is_signed(is_signed) {
+code::IntegerType::IntegerType(ast::Node* context, code::Scope* scope, unsigned bits, bool is_signed)
+  : Type(context, scope), bits(bits), _is_signed(is_signed) {
 }
 
-code::FloatType::FloatType(ast::Node* context, unsigned bits)
-  : Type(context), bits(bits) {
+code::FloatType::FloatType(ast::Node* context, code::Scope* scope, unsigned bits)
+  : Type(context, scope), bits(bits) {
 }
 
-code::FunctionType::FunctionType(ast::Node* context, std::shared_ptr<code::Type> result)
-  : Type(context), result(result), parameters{} {
+code::FunctionType::FunctionType(ast::Node* context, code::Scope* scope, std::shared_ptr<code::Type> result)
+  : Type(context, scope), result(result), parameters{} {
 }
 
 code::PointerType::PointerType(
   ast::Node* context,
+  code::Scope* scope,
   std::shared_ptr<code::Type> pointee,
   bool _mutable
 )
-  : Type(context), pointee(pointee), _mutable(_mutable) {
+  : Type(context, scope), pointee(pointee), _mutable(_mutable) {
 }
 
 code::StructureType::StructureType(
   ast::Node* context,
+  code::Scope* scope,
   const std::string& name
 )
-  : Type(context), _name(name), _handle(nullptr) {
+  : Type(context, scope), _name(name), _handle(nullptr) {
 }
 
-code::StructureMember::StructureMember(
-  ast::Node* context,
-  const std::string& name,
-  std::shared_ptr<code::Type> type
-)
-  : Item(context), name(name), type(type) {
-}
+// code::StructureMember::StructureMember(
+//   ast::Node* context,
+//   code::Scope* scope,
+//   const std::string& name,
+//   std::shared_ptr<code::Type> type
+// )
+//   : Item(context, scope), name(name), type(type) {
+// }
 
-LLVMTypeRef code::IntegerType::handle() noexcept {
+LLVMTypeRef code::IntegerType::handle(Generator& g) noexcept {
   return LLVMIntType(bits);
 }
 
-LLVMTypeRef code::BooleanType::handle() noexcept {
+LLVMTypeRef code::BooleanType::handle(Generator& g) noexcept {
   return LLVMInt1Type();
 }
 
-LLVMTypeRef code::FloatType::handle() noexcept {
+LLVMTypeRef code::FloatType::handle(Generator& g) noexcept {
   switch (bits) {
     case 32:
       return LLVMFloatType();
@@ -80,36 +85,40 @@ LLVMTypeRef code::FloatType::handle() noexcept {
   }
 }
 
-LLVMTypeRef code::FunctionType::handle() noexcept {
+LLVMTypeRef code::FunctionType::handle(Generator& g) noexcept {
   // Determine the result type (either void or declared)
   // TODO(mehcode): Full body deduction should come eventually
-  auto res = result ? result->handle() : LLVMVoidType();
+  auto res = result ? result->handle(g) : LLVMVoidType();
 
   // Collect the type handles for all paramters
   std::vector<LLVMTypeRef> params;
   params.reserve(parameters.size());
   for (auto& p : parameters) {
-    params.push_back(p->handle());
+    params.push_back(p->handle(g));
   }
 
   return LLVMFunctionType(res, params.data(), params.size(), false);
 }
 
-LLVMTypeRef code::StringType::handle() noexcept {
+LLVMTypeRef code::StringType::handle(Generator& g) noexcept {
   return LLVMPointerType(LLVMIntType(8), 0);
 }
 
-LLVMTypeRef code::PointerType::handle() noexcept {
-  return LLVMPointerType(pointee->handle(), 0);
+LLVMTypeRef code::PointerType::handle(Generator& g) noexcept {
+  return LLVMPointerType(pointee->handle(g), 0);
 }
 
-LLVMTypeRef code::StructureType::handle() noexcept {
+LLVMTypeRef code::StructureType::handle(Generator& g) noexcept {
   if (_handle == nullptr) {
     _handle = LLVMStructCreateNamed(LLVMGetGlobalContext(), _name.c_str());
 
     std::vector<LLVMTypeRef> elements;
-    for (auto& mem : members) {
-      elements.push_back(mem->type->handle());
+    for (auto& member : static_cast<ast::Structure*>(context)->members) {
+      // Build the type for each member
+      auto type = arrow::Builder{g, *scope}.build_type(*member->type);
+      if (!type) { return nullptr; }
+
+      elements.push_back(type->handle(g));
     }
 
     LLVMStructSetBody(_handle,

@@ -15,8 +15,8 @@ void Builder::visit_float(ast::Float& x) {
 
   // Build the value handle
   auto handle = LLVMConstRealOfStringAndSize(
-    type->handle(), x.text.c_str(), x.text.size());
+    type->handle(_g), x.text.c_str(), x.text.size());
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(&x, handle, type));
+  _stack.push(std::make_shared<code::Value>(&x, _cs, handle, type));
 }

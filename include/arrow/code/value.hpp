@@ -19,8 +19,11 @@ class Generator;
 
 namespace code {
 
+class Scope;
+
 struct Value : Item {
   Value(ast::Node* context,
+        code::Scope* scope,
         LLVMValueRef handle, std::shared_ptr<Type> type,
         bool _mutable = false,
         bool _address = false);

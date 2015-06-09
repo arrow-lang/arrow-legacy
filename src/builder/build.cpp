@@ -41,3 +41,24 @@ std::shared_ptr<code::Item> Builder::build_scalar(
   _stack.pop();
   return item;
 }
+
+std::shared_ptr<code::Type> Builder::build_type(
+  ast::Node& node, code::Scope* scope
+) {
+  // Build the scalar `item`
+  auto item = build_scalar(node, scope);
+  if (!item) { return nullptr; }
+
+  // Extract a type from this item
+  if (item->is_type()) {
+    // This /is/ a type -- return
+    return std::dynamic_pointer_cast<code::Type>(item);
+  } else if (item->is<code::Structure>()) {
+    // Get the /type/ node of the structure
+    return item->as<code::Structure>().type();
+  }
+
+  // Not a type
+  Log::get().error(node.span, "expected a type expression");
+  return nullptr;
+}

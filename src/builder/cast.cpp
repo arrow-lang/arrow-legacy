@@ -20,5 +20,5 @@ void Builder::visit_cast(ast::Cast& x) {
   if (!lhs) { return; }
 
   // Build and push the code handle
-  _stack.push(std::make_shared<code::Value>(&x, lhs->value_of(_g), rhs));
+  _stack.push(std::make_shared<code::Value>(&x, _cs, lhs->value_of(_g), rhs));
 }

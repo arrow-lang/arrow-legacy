@@ -8,7 +8,7 @@
 
 using arrow::code::Item;
 
-Item::Item(ast::Node* context) : context{context} {
+Item::Item(ast::Node* context, code::Scope* scope) : context{context}, scope{scope} {
 }
 
 Item::~Item() noexcept {
