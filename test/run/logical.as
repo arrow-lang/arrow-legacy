@@ -27,10 +27,10 @@ def test_bool() {
   assert((not false) & true);
   assert(true & (not false));
 
-  assert((false > true) or true);
-  assert(true or (false > true));
-  assert(not true or true);
-  assert(true or not true);
+  assert((false > true) | true);
+  assert(true | (false > true));
+  assert(not true | true);
+  assert(true | not true);
 }
 
 def test_int() {
