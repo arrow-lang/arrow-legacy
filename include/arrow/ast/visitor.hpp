@@ -23,6 +23,7 @@ struct Visitor {
   virtual void visit_node(Node&) { }
 
   virtual void visit_id(Identifier&) { }
+  virtual void visit_block(Block&) { }
   virtual void visit_module(Module&) { }
   virtual void visit_extern_function(ExternalFunction&) { }
   virtual void visit_function(Function&) { }
@@ -58,7 +59,6 @@ struct Visitor {
   virtual void visit_div(Div&) { }
   virtual void visit_mod(Mod&) { }
   virtual void visit_cast(Cast&) { }
-  virtual void visit_block(Block&) { }
   virtual void visit_select(Select&) { }
   virtual void visit_loop(Loop&) { }
   virtual void visit_select_branch(SelectBranch&) { }

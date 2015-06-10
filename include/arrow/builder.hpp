@@ -85,6 +85,7 @@ class Builder : public ast::Visitor {
   virtual void visit_pointer_type(ast::PointerType&);
   virtual void visit_address_of(ast::AddressOf&);
   virtual void visit_dereference(ast::Dereference&);
+  virtual void visit_block(ast::Block&);
 
  private:
   Generator& _g;

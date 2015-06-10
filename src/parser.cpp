@@ -142,6 +142,9 @@ bool Parser::parse_statement() {
     case Token::Type::If:
       return parse_select();
 
+    case Token::Type::LeftBrace:
+      return parse_block_expression();
+
     default:
       // We must be an `expression statement`
       return parse_expression_statement();
@@ -207,6 +210,9 @@ bool Parser::parse_primary_expression() {
 
     case Token::Type::If:
       return parse_select();
+
+    case Token::Type::LeftBrace:
+      return parse_block_expression();
 
     default:
       // Unexpected.. whatever we are
@@ -1205,6 +1211,23 @@ bool Parser::parse_loop() {
 
   // Parse the block
   if (!parse_block(*node)) { return false; }
+
+  _stack.push_back(node);
+
+  return true;
+}
+
+// Block (Expression)
+// ----------------------------------------------------------------------------
+// TODO
+// ----------------------------------------------------------------------------
+bool Parser::parse_block_expression() {
+  auto node = std::make_shared<ast::Block>(
+    Span(_t.filename(), {0, 0}, {0, 0}));
+
+  if (!parse_block(*node)) {
+    return false;
+  }
 
   _stack.push_back(node);
 

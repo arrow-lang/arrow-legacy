@@ -33,7 +33,10 @@ std::shared_ptr<code::Item> Builder::build_scalar(
   build(node, scope);
 
   if ((_stack.size() - cnt) != 1) {
-    // TODO(mehcode): Report error (?)
+    // TODO: Clear the stack up until our point
+  }
+
+  if (_stack.size() == 0) {
     return nullptr;
   }
 
