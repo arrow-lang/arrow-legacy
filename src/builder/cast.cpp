@@ -12,7 +12,7 @@ using arrow::resolve;
 void Builder::visit_cast(ast::Cast& x) {
   // Build the operands
   auto lhs = build_scalar_of<code::Value>(*x.lhs);
-  auto rhs = resolve(_g, *_cs, *x.rhs);
+  auto rhs = build_type(*x.rhs);
   if (!lhs || !rhs) return;
 
   // Perform the cast

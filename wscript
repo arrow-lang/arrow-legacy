@@ -100,6 +100,13 @@ def coverage(ctx):
             "--output-file", "coverage.info"
         ], stdout=nil, stderr=nil)
 
+        check_call([
+            "lcov",
+            "--remove", "coverage.info",
+            "vendor/*",
+            "--output-file", "coverage.info"
+        ], stdout=nil, stderr=nil)
+
         # Generate coverage report
         check_call([
             "genhtml",

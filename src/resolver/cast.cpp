@@ -4,6 +4,7 @@
 // See accompanying file LICENSE
 
 #include "arrow/resolver.hpp"
+#include "arrow/builder.hpp"
 #include "arrow/log.hpp"
 
 using arrow::Resolver;
@@ -11,7 +12,7 @@ using arrow::resolve;
 
 void Resolver::visit_cast(ast::Cast& x) {
   // Resolve the type of the RHS
-  auto rhs = resolve(_g, _scope, *x.rhs);
+  auto rhs = arrow::Builder{_g, _scope}.build_type(*(x.rhs));
   if (!rhs) { return; }
 
   _stack.push(rhs);

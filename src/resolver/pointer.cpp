@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include "arrow/builder.hpp"
 #include "arrow/resolver.hpp"
 #include "arrow/log.hpp"
 
@@ -11,7 +12,8 @@ using arrow::resolve;
 
 void Resolver::visit_pointer_type(ast::PointerType& x) {
   // Attempt to resolve the pointee
-  auto pointee = resolve(_g, _scope, *x.pointee);
+  auto pointee = arrow::Builder{_g, _scope}.build_type(*(x.pointee));
+  // auto pointee = resolve(_g, _scope, *x.pointee);
   if (!pointee) { return; }
 
   // Build and push the type

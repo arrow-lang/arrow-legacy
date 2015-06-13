@@ -13,7 +13,7 @@ using arrow::resolve;
 
 void Builder::visit_pointer_type(ast::PointerType& x) {
   // Attempt to resolve the type
-  auto type = resolve(_g, _scope, x);
+  auto type = resolve(_g, *_cs, x);
   if (!type) { return; }
 
   // Push the type
