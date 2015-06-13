@@ -64,15 +64,15 @@ code::StructureType::StructureType(
 //   : Item(context, scope), name(name), type(type) {
 // }
 
-LLVMTypeRef code::IntegerType::handle(Generator& g) noexcept {
+LLVMTypeRef code::IntegerType::handle(Generator&) noexcept {
   return LLVMIntType(bits);
 }
 
-LLVMTypeRef code::BooleanType::handle(Generator& g) noexcept {
+LLVMTypeRef code::BooleanType::handle(Generator&) noexcept {
   return LLVMInt1Type();
 }
 
-LLVMTypeRef code::FloatType::handle(Generator& g) noexcept {
+LLVMTypeRef code::FloatType::handle(Generator&) noexcept {
   switch (bits) {
     case 32:
       return LLVMFloatType();

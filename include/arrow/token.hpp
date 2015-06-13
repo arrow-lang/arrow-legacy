@@ -35,8 +35,8 @@ struct Token {
     /// An UTF-8 string
     String,
 
-    /// Type
-    Type,
+    /// TypeOf
+    TypeOf,
 
     /// And
     And,

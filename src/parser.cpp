@@ -1095,9 +1095,40 @@ bool Parser::parse_slot() {
 bool Parser::parse_type() {
   if (_t.peek()->type == Token::Type::Asterisk) {
     return parse_pointer_type();
+  } else if (_t.peek()->type == Token::Type::TypeOf) {
+    return parse_typeof();
   }
 
   return parse_identifier();
+}
+
+// TypeOf
+// ----------------------------------------------------------------------------
+// type-of = "type" "(" expression ")" ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_typeof() {
+  // Expect `type`
+  auto initial_tok = expect(Token::Type::TypeOf);
+  if (!initial_tok) { return false; }
+
+  // Expect `(`
+  if (!expect(Token::Type::LeftParenthesis)) { return false; }
+
+  // Parse expression
+  if (!parse_expression()) { return false; }
+  auto expr = _stack.front();
+  _stack.pop_front();
+
+  // Expect `)`
+  auto last_tok = expect(Token::Type::RightParenthesis);
+  if (!last_tok) { return false; }
+
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::TypeOf>(
+    Span(_t.filename(), initial_tok->span.begin, last_tok->span.end),
+    expr));
+
+  return true;
 }
 
 // Pointer Type

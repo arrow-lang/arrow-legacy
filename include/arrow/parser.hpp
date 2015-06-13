@@ -66,6 +66,7 @@ class Parser {
   bool parse_struct_member();
   bool parse_member();
   bool parse_block_expression();
+  bool parse_typeof();
 
   bool parse_block(ast::Block& node);
 

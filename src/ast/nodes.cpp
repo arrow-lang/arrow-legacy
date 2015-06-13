@@ -29,6 +29,7 @@ IMPL_ABSTRACT(Binary)
 IMPL_ABSTRACT(Unary)
 
 IMPL(Block, block)
+IMPL(TypeOf, typeof)
 IMPL(Identifier, id)
 IMPL(Import, import)
 IMPL(Module, module)
@@ -89,6 +90,10 @@ ast::Unary::Unary(Span span, std::shared_ptr<Node> operand)
 }
 
 ast::Return::Return(Span span, std::shared_ptr<Node> expression)
+  : Node(span), expression(expression) {
+}
+
+ast::TypeOf::TypeOf(Span span, std::shared_ptr<Node> expression)
   : Node(span), expression(expression) {
 }
 

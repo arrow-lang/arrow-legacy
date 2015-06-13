@@ -6,7 +6,9 @@
 #include "arrow/builder.hpp"
 #include "arrow/generator.hpp"
 #include "arrow/log.hpp"
+#include "arrow/resolver.hpp"
 
+using arrow::resolve;
 using arrow::Builder;
 namespace code = arrow::code;
 namespace ast = arrow::ast;
@@ -70,4 +72,11 @@ std::shared_ptr<code::Type> Builder::build_type(
   // Not a type
   Log::get().error(node.span, "expected a type expression");
   return nullptr;
+}
+
+void Builder::visit_typeof(ast::TypeOf& x) {
+  auto type = resolve(_g, *_cs, *x.expression);
+  if (!type) return;
+
+  _stack.push(type);
 }

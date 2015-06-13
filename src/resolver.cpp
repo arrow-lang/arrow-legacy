@@ -45,11 +45,11 @@ void Resolver::visit_int(ast::Integer& x) {
   _stack.push(std::static_pointer_cast<code::Type>(_scope.get(stream.str())));
 }
 
-void Resolver::visit_float(ast::Float& x) {
+void Resolver::visit_float(ast::Float&) {
   _stack.push(std::static_pointer_cast<code::Type>(_scope.get("float64")));
 }
 
-void Resolver::visit_bool(ast::Boolean& x) {
+void Resolver::visit_bool(ast::Boolean&) {
   _stack.push(std::static_pointer_cast<code::Type>(_scope.get("bool")));
 }
 

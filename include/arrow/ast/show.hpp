@@ -72,6 +72,7 @@ class Show : public Visitor {
   virtual void visit_struct(Structure&);
   virtual void visit_struct_member(StructureMember&);
   virtual void visit_member(Member&);
+  virtual void visit_typeof(TypeOf&);
 
  private:
   void handle_unary(const std::string& name, Unary&);

@@ -88,6 +88,7 @@ class Builder : public ast::Visitor {
   virtual void visit_dereference(ast::Dereference&);
   virtual void visit_block(ast::Block&);
   virtual void visit_member(ast::Member&);
+  virtual void visit_typeof(ast::TypeOf&);
 
   // Ignored (but still sent here) node types
   virtual void visit_struct(ast::Structure&) { }

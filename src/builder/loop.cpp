@@ -76,12 +76,12 @@ void Builder::visit_loop(ast::Loop& x) {
   _loops.pop();
 }
 
-void Builder::visit_break(ast::Break& x) {
+void Builder::visit_break(ast::Break&) {
   LoopFrame cur = _loops.top();
   LLVMBuildBr(_g._irb, cur.merge);
 }
 
-void Builder::visit_continue(ast::Continue& x) {
+void Builder::visit_continue(ast::Continue&) {
   LoopFrame cur = _loops.top();
   LLVMBuildBr(_g._irb, cur.condition);
 }

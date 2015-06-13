@@ -51,7 +51,7 @@ struct Visitor {
   virtual void visit_gt(GreaterThan&) { }
   virtual void visit_bit_and(BitAnd&) { }
   virtual void visit_bit_xor(BitXor&) { }
-  virtual void visit_bit_or(BitOr&) { } 
+  virtual void visit_bit_or(BitOr&) { }
   virtual void visit_add(Add&) { }
   virtual void visit_sub(Sub&) { }
   virtual void visit_mul(Mul&) { }
@@ -68,6 +68,7 @@ struct Visitor {
   virtual void visit_struct(Structure&) { }
   virtual void visit_struct_member(StructureMember&) { }
   virtual void visit_member(Member&) { }
+  virtual void visit_typeof(TypeOf&) { }
 
 };
 

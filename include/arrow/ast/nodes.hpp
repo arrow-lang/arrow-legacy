@@ -121,6 +121,16 @@ struct Return : Node {
   std::shared_ptr<Node> expression;
 };
 
+struct TypeOf : Node {
+  TypeOf(Span span, std::shared_ptr<Node> expression);
+
+  virtual ~TypeOf() noexcept;
+
+  virtual void accept(Visitor& v);
+
+  std::shared_ptr<Node> expression;
+};
+
 struct Unary : Node {
   Unary(Span span, std::shared_ptr<Node> operand);
 

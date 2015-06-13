@@ -42,7 +42,7 @@ std::string arrow::to_string(Token::Type type) noexcept {
     case Token::Type::And:
       return "`and`";
 
-    case Token::Type::Type:
+    case Token::Type::TypeOf:
       return "`type`";
 
     case Token::Type::Or:

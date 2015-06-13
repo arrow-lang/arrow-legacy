@@ -102,6 +102,15 @@ void Show::visit_return(Return& x) {
   }
 }
 
+void Show::visit_typeof(TypeOf& x) {
+  auto& node = _el().add("TypeOf", "");
+  _ctx.push(&node);
+
+  x.expression->accept(*this);
+
+  _ctx.pop();
+}
+
 void Show::visit_break(Break&) {
   _el().add("Break", "");
 }
