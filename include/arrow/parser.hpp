@@ -53,6 +53,7 @@ class Parser {
   bool parse_boolean();
   bool parse_string();
   bool parse_break();
+  bool parse_continue();
   bool parse_return();
   bool parse_call_expression();
   bool parse_slot();

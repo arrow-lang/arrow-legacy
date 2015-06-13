@@ -121,6 +121,9 @@ bool Parser::parse_statement() {
     case Token::Type::Break:
       return parse_break();
 
+    case Token::Type::Continue:
+      return parse_continue();
+
     case Token::Type::Return:
       return parse_return();
 
@@ -469,6 +472,24 @@ bool Parser::parse_break() {
 
   return true;
 }
+
+// Continue
+// ----------------------------------------------------------------------------
+// continue = "continue" ";";
+// ----------------------------------------------------------------------------
+bool Parser::parse_continue() {
+  // Expect `continue` `;`
+  auto tok = expect(Token::Type::Continue);
+  if (!tok || !expect(Token::Type::Semicolon)) {
+    return false;
+  }
+
+  // Declare (and push) the node
+  _stack.push_front(make_shared<ast::Continue>(tok->span));
+
+  return true;
+}
+
 
 // Identifier
 // ----------------------------------------------------------------------------
