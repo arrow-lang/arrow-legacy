@@ -8,7 +8,7 @@ Arrow [![Stories in Ready](https://badge.waffle.io/arrowlang/arrow.svg?label=rea
 ### Ubuntu 14.10
 
 ```bash
-$ sudo apt-get install build-essential clang llvm-dev libboost-all-dev libgmp-dev
+$ sudo apt-get install build-essential clang llvm-dev libboost-all-dev libgmp-dev libzip-dev
 ```
 
 ## Build
