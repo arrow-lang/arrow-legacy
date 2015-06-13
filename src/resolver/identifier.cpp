@@ -5,11 +5,12 @@
 
 #include "arrow/resolver.hpp"
 #include "arrow/log.hpp"
+#include "arrow/code.hpp"
 
 using arrow::Resolver;
 using arrow::resolve;
 
-void Resolver::visit_id(ast::Identifier& x) {
+auto Resolver::do_identifier(ast::Identifier& x) -> std::shared_ptr<code::Item> {
   // Get the item in reference
   // TODO: Use a builder(?); there is some copypasta here
   auto item = _scope.get(x.text);
@@ -17,8 +18,14 @@ void Resolver::visit_id(ast::Identifier& x) {
     Log::get().error(
       x.span, "use of unresolved name '%s'", x.text.c_str());
 
-    return;
+    return nullptr;
   }
+
+  return item;
+}
+
+void Resolver::visit_id(ast::Identifier& x) {
+  auto item = do_identifier(x);
 
   // Determine the type of said item
   if (item->is_type()) {

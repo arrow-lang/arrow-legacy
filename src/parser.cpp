@@ -400,11 +400,42 @@ bool Parser::parse_postfix_expression() {
         if (!parse_call_expression()) { return false; }
         break;
 
+      case Token::Type::Period:
+        if (!parse_member()) { return false; }
+        break;
+
       default:
         continue_ = false;
         break;
     }
   }
+
+  return true;
+}
+
+// Member Expression
+// ----------------------------------------------------------------------------
+// member = postfix-expression "." IDENTIFIER ;
+// ----------------------------------------------------------------------------
+bool Parser::parse_member() {
+  // Pull the awaiting operand expression
+  auto expr = _stack.front();
+  _stack.pop_front();
+
+  // Expect `.`
+  if (!expect(Token::Type::Period)) { return false; }
+
+  // Parse the path identifier
+  if (!parse_identifier()) { return false; }
+  auto id = _stack.front();
+  _stack.pop_front();
+
+  // Declare and push the node
+  _stack.push_back(std::make_shared<ast::Member>(
+    Span(_t.filename(), expr->span.begin, id->span.end),
+    expr,
+    std::dynamic_pointer_cast<ast::Identifier>(id)
+  ));
 
   return true;
 }
@@ -616,6 +647,7 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     {Token::Type::Asterisk,                0},
     {Token::Type::Slash,                   0},
     {Token::Type::Percent,                 0},
+    {Token::Type::Period,                  0},
   };
 
   for (;;) {
@@ -638,7 +670,7 @@ bool Parser::parse_binary_expression(unsigned prec, unsigned assoc) {
     _t.pop();
 
     if (tok->type == Token::Type::As) {
-      // Parse the RHS (which is a type)
+      // Parse the RHS (which must be a type)
       if (!parse_type()) { return false; }
     } else {
       // Parse the RHS
@@ -1358,8 +1390,8 @@ bool Parser::parse_struct() {
   while ((_t.peek()->type != Token::Type::End) &&
          (_t.peek()->type != Token::Type::RightBrace)) {
     // Try and parse a struct member ..
-    if (!parse_member()) { return false; }
-    node->members.push_back(std::dynamic_pointer_cast<ast::Member>(
+    if (!parse_struct_member()) { return false; }
+    node->members.push_back(std::dynamic_pointer_cast<ast::StructureMember>(
       _stack.front()));
 
     _stack.pop_front();
@@ -1386,11 +1418,11 @@ bool Parser::parse_struct() {
   return true;
 }
 
-// Member
+// Structure Member
 // ----------------------------------------------------------------------------
-// member = IDENTIFIER ":" type ;
+// struct-member = IDENTIFIER ":" type ;
 // ----------------------------------------------------------------------------
-bool Parser::parse_member() {
+bool Parser::parse_struct_member() {
   // Parse identifier (name)
   if (!parse_identifier()) { return false; }
   auto name = std::dynamic_pointer_cast<ast::Identifier>(_stack.front());
@@ -1405,7 +1437,7 @@ bool Parser::parse_member() {
   _stack.pop_front();
 
   // Declare (and push) node
-  _stack.push_back(std::make_shared<ast::Member>(
+  _stack.push_back(std::make_shared<ast::StructureMember>(
     Span(_t.filename(), name->span.begin, type->span.end),
     name, type
   ));

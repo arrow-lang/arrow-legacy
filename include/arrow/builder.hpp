@@ -86,6 +86,12 @@ class Builder : public ast::Visitor {
   virtual void visit_address_of(ast::AddressOf&);
   virtual void visit_dereference(ast::Dereference&);
   virtual void visit_block(ast::Block&);
+  virtual void visit_member(ast::Member&);
+
+  // Ignored (but still sent here) node types
+  virtual void visit_struct(ast::Structure&) { }
+  virtual void visit_import(ast::Import&) { }
+  virtual void visit_extern_function(ast::ExternalFunction&) { }
 
  private:
   // Struct to track loop positions.

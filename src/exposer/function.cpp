@@ -25,6 +25,8 @@ void Exposer::visit_function(ast::Function& x) {
   auto handle = LLVMAddFunction(
     _g._mod, (namespace_ + "." + name).c_str(), type->handle(_g));
 
+  LLVMSetLinkage(handle, LLVMPrivateLinkage);
+
   // Create and set the new function item in the scope
   // TODO(mehcode): Functions should receive module scope
   _scope.set(name, std::make_shared<code::Function>(

@@ -33,7 +33,7 @@ IMPL(Identifier, id)
 IMPL(Import, import)
 IMPL(Module, module)
 IMPL(Structure, struct)
-IMPL(Member, member)
+IMPL(StructureMember, struct_member)
 IMPL(ExternalFunction, extern_function)
 IMPL(Function, function)
 IMPL(Parameter, parameter)
@@ -74,6 +74,7 @@ IMPL(Loop, loop)
 IMPL(PointerType, pointer_type)
 IMPL(AddressOf, address_of)
 IMPL(Dereference, dereference)
+IMPL(Member, member)
 
 ast::Node::Node(Span span)
   : span(span) {
@@ -191,9 +192,16 @@ ast::Structure::Structure(
 ) : Node(span), name(name) {
 }
 
-ast::Member::Member(
+ast::StructureMember::StructureMember(
   Span span,
   std::shared_ptr<Identifier> name,
   std::shared_ptr<Node> type
 ) : Node(span), name(name), type(type) {
+}
+
+ast::Member::Member(
+  Span span,
+  std::shared_ptr<Node> operand,
+  std::shared_ptr<Identifier> id
+) : Node(span), operand(operand), id(id) {
 }

@@ -63,6 +63,7 @@ class Parser {
   bool parse_loop();
   bool parse_import();
   bool parse_struct();
+  bool parse_struct_member();
   bool parse_member();
   bool parse_block_expression();
 

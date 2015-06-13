@@ -380,8 +380,8 @@ void Show::visit_struct(Structure& x) {
   _ctx.pop();
 }
 
-void Show::visit_member(Member& x) {
-  auto& item = _el().add("Member", "");
+void Show::visit_struct_member(StructureMember& x) {
+  auto& item = _el().add("StructureMember", "");
   _ctx.push(&item);
 
   item.add("<xmlattr>.name", x.name->text.c_str());
@@ -392,6 +392,16 @@ void Show::visit_member(Member& x) {
   x.type->accept(*this);
 
   _ctx.pop();
+
+  _ctx.pop();
+}
+
+void Show::visit_member(Member& x) {
+  auto& node = _el().add("Member", "");
+  _ctx.push(&node);
+
+  x.operand->accept(*this);
+  x.id->accept(*this);
 
   _ctx.pop();
 }

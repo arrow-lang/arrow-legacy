@@ -167,6 +167,9 @@ struct StructureType : Type {
 
   virtual LLVMTypeRef handle(Generator& g) noexcept;
 
+  virtual std::shared_ptr<code::Type> member_type(
+    Generator& g, unsigned index);
+
   virtual std::string name() const noexcept {
     return _name;
   }

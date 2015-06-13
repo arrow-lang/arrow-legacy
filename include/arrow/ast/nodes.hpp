@@ -176,6 +176,19 @@ struct Binary : Node {
   std::shared_ptr<Node> rhs;
 };
 
+struct Member : Node {
+  Member(Span span,
+    std::shared_ptr<Node> operand,
+    std::shared_ptr<Identifier> id);
+
+  virtual ~Member() noexcept;
+
+  virtual void accept(Visitor& v);
+
+  std::shared_ptr<Node> operand;
+  std::shared_ptr<Identifier> id;
+};
+
 #define BINARY_DEFINE(N) \
   struct N : Binary { \
     using Binary::Binary; \
@@ -334,13 +347,13 @@ struct Import : Node {
   std::shared_ptr<String> path;
 };
 
-struct Member : Node {
-  Member(
+struct StructureMember : Node {
+  StructureMember(
     Span span,
     std::shared_ptr<Identifier> name,
     std::shared_ptr<Node> type);
 
-  virtual ~Member() noexcept;
+  virtual ~StructureMember() noexcept;
   virtual void accept(Visitor& v);
 
   std::shared_ptr<Identifier> name;
@@ -356,7 +369,7 @@ struct Structure : Node {
   virtual void accept(Visitor& v);
 
   std::shared_ptr<Identifier> name;
-  std::deque<std::shared_ptr<Member>> members;
+  std::deque<std::shared_ptr<StructureMember>> members;
 };
 
 }  // namespace ast

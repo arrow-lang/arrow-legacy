@@ -65,6 +65,10 @@ class Resolver : public ast::Visitor {
   virtual void visit_dereference(ast::Dereference&);
   virtual void visit_struct(ast::Structure&);
   virtual void visit_block(ast::Block&);
+  virtual void visit_member(ast::Member&);
+
+  // FIXME: Ignored but resolved (for some reason; stop it)
+  virtual void visit_return(ast::Return&) { } 
 
   std::shared_ptr<code::Type> common_type(
     std::shared_ptr<ast::Node> lhs,
@@ -76,6 +80,8 @@ class Resolver : public ast::Visitor {
   void do_bitwise(ast::Binary& x);
   void do_relational(ast::Binary& x);
   void do_logical(ast::Binary& x);
+
+  std::shared_ptr<code::Item> do_identifier(ast::Identifier& x);
 
   Generator& _g;
   code::Scope& _scope;

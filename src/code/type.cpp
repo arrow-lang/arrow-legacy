@@ -128,6 +128,21 @@ LLVMTypeRef code::StructureType::handle(Generator& g) noexcept {
   return _handle;
 }
 
+std::shared_ptr<code::Type> code::StructureType::member_type(
+  Generator& g, unsigned index
+) {
+  // Get the specific member
+  auto& mems = static_cast<ast::Structure*>(context)->members;
+  if (mems.size() <= index) return nullptr;
+  auto& member = mems.at(index);
+
+  // Build the type for the member
+  auto type = arrow::Builder{g, *scope}.build_type(*member->type);
+  if (!type) { return nullptr; }
+
+  return type;
+}
+
 std::string code::IntegerType::name() const noexcept {
   std::stringstream stream;
   if (!_is_signed) stream << "u";
