@@ -68,7 +68,7 @@ class Resolver : public ast::Visitor {
   virtual void visit_member(ast::Member&);
 
   // FIXME: Ignored but resolved (for some reason; stop it)
-  virtual void visit_return(ast::Return&) { } 
+  virtual void visit_return(ast::Return&) { }
 
   std::shared_ptr<code::Type> common_type(
     std::shared_ptr<ast::Node> lhs,
