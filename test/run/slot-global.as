@@ -7,7 +7,9 @@ def assert(condition: bool) {
 }
 
 let value = 30;
+let flag: bool = false;
 
 def main() {
+  assert(not flag);
   assert(value == 30);
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+ <Loop>
+  <Condition>
+   <Or>
+    <LessThan>
+     <Identifier>condition</Identifier>
+     <Integer base="10">3</Integer>
+    </LessThan>
+    <LessThan>
+     <Identifier>other</Identifier>
+     <Integer base="10">30</Integer>
+    </LessThan>
+   </Or>
+  </Condition>
+  <Sequence>
+   <Identifier>statement</Identifier>
+   <Call>
+    <Expression>
+     <Identifier>other</Identifier>
+    </Expression>
+    <Arguments/>
+   </Call>
+  </Sequence>
+ </Loop>
+ <Loop>
+  <Sequence>
+   <Identifier>inf_statement</Identifier>
+  </Sequence>
+ </Loop>
+</Module>
