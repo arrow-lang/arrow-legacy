@@ -15,20 +15,38 @@ std::shared_ptr<arrow::code::Item> Builder::do_sequence(
   code::Scope* scope
 ) {
   std::shared_ptr<code::Item> last;
+  bool terminated = false;
+  Position unreach_begin{0, 0}, unreach_end{0, 0};
   for (auto& item : seq) {
-    // Remember the size of the stack at this point (so we can
-    // detect if an item gets pushed; and then remove it)
-    auto cnt = _stack.size();
+    bool is_terminated = LLVMGetBasicBlockTerminator(
+      LLVMGetInsertBlock(_g._irb));
+    if (!terminated && is_terminated) {
+      terminated = true;
+      unreach_begin = item->span.begin;
+    } else if (terminated && !is_terminated) {
+      // TODO(mehcode): Log warning of unreachable code
+      terminated = false;
+    }
 
-    // TODO: If statements should have their own scope
-    build(*item, scope);
+    if (!terminated) {
+      // Remember the size of the stack at this point (so we can
+      // detect if an item gets pushed; and then remove it)
+      auto cnt = _stack.size();
 
-    // Remove anything pushed onto the stack
-    for (unsigned i = 0; i < (_stack.size() - cnt); ++i) {
-      last = _stack.top();
-      _stack.pop();
+      // TODO(mehcode): If statements should have their own scope
+      build(*item, scope);
+
+      // Remove anything pushed onto the stack
+      for (unsigned i = 0; i < (_stack.size() - cnt); ++i) {
+        last = _stack.top();
+        _stack.pop();
+      }
+    } else {
+      unreach_end = item->span.end;
     }
   }
+
+  // TODO(mehcode): Log warning about unreachable code block
 
   return last;
 }

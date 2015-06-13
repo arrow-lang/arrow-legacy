@@ -61,6 +61,10 @@ void Builder::visit_loop(ast::Loop& x) {
   LLVMPositionBuilderAtEnd(_g._irb, loop_block);
   do_sequence(x.sequence, &scope);
 
+  // Update our block reference (effectively flattening any blocks that
+  // that were made)
+  loop_block = LLVMGetInsertBlock(_g._irb);
+
   if (!LLVMGetBasicBlockTerminator(loop_block)) {
     // Jump back to the "condition"
     LLVMBuildBr(_g._irb, cond_block);
@@ -75,4 +79,9 @@ void Builder::visit_loop(ast::Loop& x) {
 void Builder::visit_break(ast::Break& x) {
   LoopFrame cur = _loopStack.top();
   LLVMBuildBr(_g._irb, cur.merge);
+}
+
+void Builder::visit_continue(ast::Continue& x) {
+  LoopFrame cur = _loopStack.top();
+  LLVMBuildBr(_g._irb, cur.condition);
 }

@@ -52,6 +52,7 @@ class Builder : public ast::Visitor {
   virtual void visit_call(ast::Call&);
   virtual void visit_slot(ast::Slot&);
   virtual void visit_break(ast::Break&);
+  virtual void visit_continue(ast::Continue&);
   virtual void visit_return(ast::Return&);
   virtual void visit_int(ast::Integer&);
   virtual void visit_float(ast::Float&);
