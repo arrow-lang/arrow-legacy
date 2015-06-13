@@ -27,6 +27,7 @@ class Exposer : public ast::Visitor {
   virtual void visit_extern_function(ast::ExternalFunction&);
   virtual void visit_import(ast::Import&);
   virtual void visit_struct(ast::Structure&);
+  virtual void visit_slot(ast::Slot&);
 
  private:
   Generator& _g;

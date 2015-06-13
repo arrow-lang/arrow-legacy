@@ -51,7 +51,7 @@ void Builder::visit_loop(ast::Loop& x) {
   }
 
   // Push a new LoopFrame
-  _loopStack.push({cond_block,  merge_block});
+  _loops.push({cond_block,  merge_block});
 
   // Create the un-conditional jump to the "condition"
   LLVMPositionBuilderAtEnd(_g._irb, current_block);
@@ -73,15 +73,15 @@ void Builder::visit_loop(ast::Loop& x) {
   // Switch our context to it (and move it to the end)
   LLVMMoveBasicBlockAfter(merge_block, LLVMGetInsertBlock(_g._irb));
   LLVMPositionBuilderAtEnd(_g._irb, merge_block);
-  _loopStack.pop();
+  _loops.pop();
 }
 
 void Builder::visit_break(ast::Break& x) {
-  LoopFrame cur = _loopStack.top();
+  LoopFrame cur = _loops.top();
   LLVMBuildBr(_g._irb, cur.merge);
 }
 
 void Builder::visit_continue(ast::Continue& x) {
-  LoopFrame cur = _loopStack.top();
+  LoopFrame cur = _loops.top();
   LLVMBuildBr(_g._irb, cur.condition);
 }

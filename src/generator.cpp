@@ -91,9 +91,18 @@ void Generator::generate(
   // now-exposed module
   for (auto& mod : _modules) {
     arrow::Builder builder{*this, _scope};
+    builder._cm = mod.get();
+
     for (auto& item : dynamic_cast<ast::Module*>(mod->context)->sequence) {
       builder.build(*item, &(mod->scope));
     }
+
+    // Terminate the initializer function
+    LLVMPositionBuilderAtEnd(_irb,
+      LLVMGetLastBasicBlock(builder._cm->function));
+    LLVMBuildRetVoid(_irb);
+
+    builder._cm = nullptr;
   }
 }
 
@@ -249,6 +258,16 @@ void Generator::generate_main() {
 
   // Build the ABI main function (definition)
   LLVMPositionBuilderAtEnd(_irb, LLVMAppendBasicBlock(abi_main, ""));
+
+  // Build calls to each imported modules' module initializer
+  for (auto& imp : _modules) {
+    if (imp.get() != mod.get()) {
+      LLVMBuildCall(_irb, imp->function, nullptr, 0, "");
+    }
+  }
+
+  // Build a call to the top-level module initializer
+  LLVMBuildCall(_irb, mod->function, nullptr, 0, "");
 
   if (mod_main) {
     // Collect arguments to call the module main function

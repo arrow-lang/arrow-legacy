@@ -18,6 +18,12 @@ void Builder::build(ast::Node& node, code::Scope* scope) {
     _cs = scope;
   }
 
+  // If we do not have an active function; set our IP to
+  // the current module
+  if (_cf == nullptr && _cm != nullptr) {
+    LLVMPositionBuilderAtEnd(_g._irb, LLVMGetLastBasicBlock(_cm->function));
+  }
+
   node.accept(*this);
 
   // Revert back to our previously "entered" scope

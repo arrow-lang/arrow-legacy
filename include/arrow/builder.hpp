@@ -95,6 +95,8 @@ class Builder : public ast::Visitor {
   virtual void visit_extern_function(ast::ExternalFunction&) { }
 
  private:
+  friend class Generator;
+
   // Struct to track loop positions.
   struct LoopFrame {
     LLVMBasicBlockRef condition;
@@ -104,9 +106,10 @@ class Builder : public ast::Visitor {
   Generator& _g;
   code::Scope& _scope;
   code::Scope* _cs;
+  code::Module* _cm;
   code::Function* _cf;
   std::stack<std::shared_ptr<code::Item>> _stack;
-  std::stack<LoopFrame> _loopStack;
+  std::stack<LoopFrame> _loops;
 
   std::shared_ptr<code::Item> do_sequence(
     std::deque<std::shared_ptr<ast::Node>>&,

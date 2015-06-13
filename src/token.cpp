@@ -55,7 +55,7 @@ std::string arrow::to_string(Token::Type type) noexcept {
       return "`let`";
 
     case Token::Type::Mut:
-      return "`mut`";
+      return "`mutable`";
 
     case Token::Type::True:
       return "`true`";

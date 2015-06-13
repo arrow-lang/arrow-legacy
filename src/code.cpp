@@ -72,6 +72,10 @@ code::Slot::Slot(
 
 LLVMValueRef code::ExternalFunction::handle(Generator& g) noexcept {
   if (_handle == nullptr) {
+    _handle = LLVMGetNamedFunction(_mod, name.c_str());
+  }
+
+  if (_handle == nullptr) {
     _handle = LLVMAddFunction(_mod, name.c_str(), _type->handle(g));
   }
 

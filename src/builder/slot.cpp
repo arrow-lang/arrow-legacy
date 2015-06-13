@@ -13,6 +13,40 @@ using arrow::resolve;
 void Builder::visit_slot(ast::Slot& x) {
   auto& name = x.name->text;
 
+  // Check if we are currently outside of a function (which would mean
+  // this is a global)
+  if (_cf == nullptr) {
+    // Get the global item
+    auto item = _cs->get(name);
+
+    if (x.initializer) {
+      // Activate the initialization function
+      LLVMPositionBuilderAtEnd(_g._irb, LLVMGetLastBasicBlock(_cm->function));
+
+      // Build the initializer
+      auto init = build_scalar_of<code::Value>(*x.initializer);
+
+      // Create a store for the initializer
+      // If this is a constant; just set the global var initializer
+      auto& ptr = item->as<code::Slot>();
+      auto val = init->value_of(_g);
+      if (LLVMIsConstant(val)) {
+        LLVMSetInitializer(ptr.address_of(_g), val);
+
+        if (!x.is_mutable) {
+          LLVMSetGlobalConstant(ptr.address_of(_g), true);
+        }
+      } else {
+        LLVMSetInitializer(
+          ptr.address_of(_g), LLVMConstNull(ptr.type()->handle(_g)));
+
+        LLVMBuildStore(_g._irb, val, ptr.address_of(_g));
+      }
+    }
+
+    return;
+  }
+
   // Check if we are overwriting an item in the current scope
   // NOTE: We need to eventually decide if we will allow this or not
   //  I'm leaning towards allowing as long as we output a warning for

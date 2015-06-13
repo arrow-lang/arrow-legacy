@@ -18,6 +18,13 @@ void Exposer::visit_module(ast::Module& x) {
   auto mod = std::make_shared<code::Module>(&x, x.name, &_scope);
   _scope.set(x.name, mod);
 
+  // Create a module function
+  mod->function = LLVMAddFunction(
+    _g._mod, (x.name + "@init").c_str(),
+    LLVMFunctionType(LLVMVoidType(), nullptr, 0, 0));
+
+  LLVMAppendBasicBlock(mod->function, "");
+
   // Push us in the list of modules (to later build)
   _g._modules.push_back(mod);
 

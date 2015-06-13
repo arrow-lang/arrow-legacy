@@ -30,6 +30,7 @@ struct Module : Item {
 
   Scope scope;
   std::string name;
+  LLVMValueRef function;
 };
 
 struct AbstractFunction : Item {
