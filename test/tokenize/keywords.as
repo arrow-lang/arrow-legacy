@@ -1,11 +1,16 @@
+as
 and
 or
 not
-let
 def
+extern
+import
+from
+let
 mutable
 true
 false
+struct
 if
 else
 while
@@ -14,4 +19,4 @@ break
 continue
 return
 global
-as
+type

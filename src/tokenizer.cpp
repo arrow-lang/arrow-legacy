@@ -631,6 +631,7 @@ auto Tokenizer::_scan_identifier() -> std::shared_ptr<Token> {
     {"continue", Token::Type::Continue},
     {"return", Token::Type::Return},
     {"global", Token::Type::Global},
+    {"type", Token::Type::Type},
   };
 
   auto kw = keywords.find(text);
