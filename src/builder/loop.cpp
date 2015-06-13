@@ -43,10 +43,15 @@ void Builder::visit_loop(ast::Loop& x) {
     // Build the conditional branch
     LLVMBuildCondBr(
       _g._irb, cond->value_of(_g), loop_block, merge_block);
+
   } else {
     loop_block = LLVMAppendBasicBlock(current_fn, "");
+    merge_block = LLVMAppendBasicBlock(current_fn, "");
     cond_block = loop_block;
   }
+
+  // Push a new LoopFrame
+  _loopStack.push({cond_block,  merge_block});
 
   // Create the un-conditional jump to the "condition"
   LLVMPositionBuilderAtEnd(_g._irb, current_block);
@@ -56,13 +61,18 @@ void Builder::visit_loop(ast::Loop& x) {
   LLVMPositionBuilderAtEnd(_g._irb, loop_block);
   do_sequence(x.sequence, &scope);
 
-  // Jump back to the "condition"
-  LLVMBuildBr(_g._irb, cond_block);
-
-  // If we have a merge block (not an inf. loop) ..
-  if (merge_block) {
-    // Switch our context to it (and move it to the end)
-    LLVMMoveBasicBlockAfter(merge_block, LLVMGetInsertBlock(_g._irb));
-    LLVMPositionBuilderAtEnd(_g._irb, merge_block);
+  if (!LLVMGetBasicBlockTerminator(loop_block)) {
+    // Jump back to the "condition"
+    LLVMBuildBr(_g._irb, cond_block);
   }
+
+  // Switch our context to it (and move it to the end)
+  LLVMMoveBasicBlockAfter(merge_block, LLVMGetInsertBlock(_g._irb));
+  LLVMPositionBuilderAtEnd(_g._irb, merge_block);
+  _loopStack.pop();
+}
+
+void Builder::visit_break(ast::Break& x) {
+  LoopFrame cur = _loopStack.top();
+  LLVMBuildBr(_g._irb, cur.merge);
 }

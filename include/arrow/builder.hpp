@@ -51,7 +51,7 @@ class Builder : public ast::Visitor {
   // virtual void visit_parameter(ast::Parameter&);
   virtual void visit_call(ast::Call&);
   virtual void visit_slot(ast::Slot&);
-  // virtual void visit_break(ast::Break&);
+  virtual void visit_break(ast::Break&);
   virtual void visit_return(ast::Return&);
   virtual void visit_int(ast::Integer&);
   virtual void visit_float(ast::Float&);
@@ -88,11 +88,18 @@ class Builder : public ast::Visitor {
   virtual void visit_block(ast::Block&);
 
  private:
+  // Struct to track loop positions.
+  struct LoopFrame {
+    LLVMBasicBlockRef condition;
+    LLVMBasicBlockRef merge;
+  };
+
   Generator& _g;
   code::Scope& _scope;
   code::Scope* _cs;
   code::Function* _cf;
   std::stack<std::shared_ptr<code::Item>> _stack;
+  std::stack<LoopFrame> _loopStack;
 
   std::shared_ptr<code::Item> do_sequence(
     std::deque<std::shared_ptr<ast::Node>>&,
