@@ -21,7 +21,9 @@ class Buffer {
 
   /// Peek (perserve) and test if we are at the end
   /// of the input stream.
-  bool empty();
+  inline bool empty() {
+    return (peek(0) == 0);
+  }
 
   /// Peek (perserve) the character `offset` characters away from
   /// the current position in the input stream.
@@ -31,9 +33,14 @@ class Buffer {
   std::uint32_t pop();
 
  private:
-  bool _push();
+  /// Read more characters from the bound input stream
+  /// until we can fulfill the request.
+  bool _read(unsigned count);
 
   std::unique_ptr<std::istream> _stream;
+
+  // NOTE: We use a `deque` instead of a `queue` because while this is a
+  //       FIFO buffer; we need to be able to peek with N-lookahead.
   std::deque<std::uint32_t> _queue;
 };
 
