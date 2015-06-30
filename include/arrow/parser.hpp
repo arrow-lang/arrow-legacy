@@ -52,7 +52,7 @@ class Parser {
   bool parse_unary_expression();
   int parse_binary_expression(unsigned power);
 
-  bool parse_pattern(bool require_binding = false);
+  bool parse_pattern();
 
   bool parse_block(bool top_level = false);
   bool parse_module_statement();

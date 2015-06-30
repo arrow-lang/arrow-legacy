@@ -30,18 +30,23 @@ match value { case (x, _) => .. }
 match value { case (40, y) => .. }
 
 // - Guard
-match value { case x if x < 40 => .. }
+match value { case x unless x < 40 => .. }
 
 // "Binding" pattern restricts patterns to just
 // identifier, tuple (of identifiers), and "_"
 
-
 let main() -> int {
   let file = File.open("./std.txt").or_else((err) => {
-    return -1;  // Returns from lambda
+    return -1;  // Returns from lambda (which would be an error)
   });
 
-  let text = file.read().or_else(|| {
+  let text = file.read(encoding="utf-8").or_else(|| {
     return -1;  // Returns from main
-  })
+  });
+}
+
+match value {
+  case () => {
+    // empty tuple
+  }
 }
