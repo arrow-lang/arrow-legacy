@@ -1,8 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Module>
- <Float>32.23</Float>
- <Float>52e+30</Float>
- <Float>2.0</Float>
- <Float>3.251e30</Float>
- <Float>3.251e-30</Float>
-</Module>
+{"tag":"Module","span":"test/parse/float.as:1.1-5.10","name":"float","block":{"tag":"Block","span":"test/parse/float.as:1.1-5.10","statements":[{"tag":"Float","span":"test/parse/float.as:1.1-6","text":"32.23"},{"tag":"Float","span":"test/parse/float.as:2.1-7","text":"52e+30"},{"tag":"Float","span":"test/parse/float.as:3.1-4","text":"2.0"},{"tag":"Float","span":"test/parse/float.as:4.1-9","text":"3.251e30"},{"tag":"Float","span":"test/parse/float.as:5.1-10","text":"3.251e-30"}]}}

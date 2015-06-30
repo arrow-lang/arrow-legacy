@@ -1,0 +1,76 @@
+// Copyright (c) 2014-2015 Ryan Leckey, All Rights Reserved.
+
+// Distributed under the MIT License
+// See accompanying file LICENSE
+
+#ifndef ARROW_AST_NODES_BINARY_H
+#define ARROW_AST_NODES_BINARY_H 1
+
+#include "arrow/ast/nodes/node.hpp"
+
+namespace arrow {
+namespace ast {
+
+/// A binary operation (`x + y`, `y * x`).
+struct Binary : Node {
+  Binary(Span span, Ref<Node> lhs, Ref<Node> rhs)
+    : Node(span), lhs(lhs), rhs(rhs) {
+  }
+
+  virtual ~Binary() noexcept;
+
+  Ref<Node> lhs;
+  Ref<Node> rhs;
+};
+
+#define DEF_BINARY(Name) \
+  struct Name : Binary { \
+    using Binary::Binary; \
+    virtual ~Name() noexcept; \
+    void accept(Visitor&) override; \
+  }
+
+DEF_BINARY(Add);
+DEF_BINARY(Sub);
+DEF_BINARY(Mul);
+DEF_BINARY(Div);
+DEF_BINARY(Mod);
+
+DEF_BINARY(BitOr);
+DEF_BINARY(BitXor);
+DEF_BINARY(BitAnd);
+
+DEF_BINARY(EqualTo);
+DEF_BINARY(NotEqualTo);
+DEF_BINARY(GreaterThanOrEqualTo);
+DEF_BINARY(GreaterThan);
+DEF_BINARY(LessThanOrEqualTo);
+DEF_BINARY(LessThan);
+
+DEF_BINARY(And);
+DEF_BINARY(Or);
+
+DEF_BINARY(Cast);
+
+DEF_BINARY(Assign);
+
+#undef DEF_BINARY
+
+/// A member access operation (commonly referred to as the "dot" operator).
+struct Path : Node {
+  Path(Span span, Ref<Node> operand, Ref<Identifier> id)
+    : Node(span), operand(operand), id(id) {
+  }
+
+  virtual ~Path() noexcept;
+
+  void accept(Visitor&) override;
+
+  Ref<Node> operand;
+  Ref<Identifier> id;
+};
+
+}  // namespace ast
+}  // namespace arrow
+
+#endif  // ARROW_AST_NODES_BINARY_H

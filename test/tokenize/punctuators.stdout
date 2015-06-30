@@ -1,70 +1,47 @@
-test/tokenize/punctuators.as:1.1-2: `+`
-test/tokenize/punctuators.as:2.1-2: `-`
-test/tokenize/punctuators.as:3.1-2: `/`
-test/tokenize/punctuators.as:4.1-2: `%`
-test/tokenize/punctuators.as:5.1-3: `+=`
-test/tokenize/punctuators.as:6.1-3: `-=`
-test/tokenize/punctuators.as:7.1-3: `/=`
-test/tokenize/punctuators.as:8.1-3: `%=`
-test/tokenize/punctuators.as:9.1-2: `&`
-test/tokenize/punctuators.as:10.1-3: `&=`
-test/tokenize/punctuators.as:11.1-2: `|`
-test/tokenize/punctuators.as:12.1-3: `|=`
-test/tokenize/punctuators.as:13.1-2: `^`
-test/tokenize/punctuators.as:14.1-3: `^=`
-test/tokenize/punctuators.as:15.1-2: `!`
-test/tokenize/punctuators.as:16.1-2: `=`
-test/tokenize/punctuators.as:17.1-3: `==`
-test/tokenize/punctuators.as:18.1-3: `!=`
-test/tokenize/punctuators.as:19.1-2: `>`
-test/tokenize/punctuators.as:20.1-3: `>=`
-test/tokenize/punctuators.as:21.1-2: `<`
-test/tokenize/punctuators.as:22.1-3: `<=`
-test/tokenize/punctuators.as:23.1-2: `{`
-test/tokenize/punctuators.as:24.1-2: `}`
-test/tokenize/punctuators.as:25.1-2: `[`
-test/tokenize/punctuators.as:26.1-2: `]`
-test/tokenize/punctuators.as:27.1-2: `(`
-test/tokenize/punctuators.as:28.1-2: `)`
-test/tokenize/punctuators.as:29.1-2: `;`
-test/tokenize/punctuators.as:30.1-2: `:`
-test/tokenize/punctuators.as:31.1-2: `*`
-test/tokenize/punctuators.as:32.1-3: `*=`
-test/tokenize/punctuators.as:33.1-2: `,`
-test/tokenize/punctuators.as:34.1-3: `->`
-test/tokenize/punctuators.as:35.1-3: `=>`
-test/tokenize/punctuators.as:38.1-2: `+`
-test/tokenize/punctuators.as:38.2-3: `-`
-test/tokenize/punctuators.as:38.3-4: `/`
-test/tokenize/punctuators.as:38.4-5: `%`
-test/tokenize/punctuators.as:38.5-7: `+=`
-test/tokenize/punctuators.as:38.7-9: `-=`
-test/tokenize/punctuators.as:38.9-11: `/=`
-test/tokenize/punctuators.as:38.11-13: `%=`
-test/tokenize/punctuators.as:38.13-14: `&`
-test/tokenize/punctuators.as:38.14-16: `&=`
-test/tokenize/punctuators.as:38.16-17: `|`
-test/tokenize/punctuators.as:38.17-19: `|=`
-test/tokenize/punctuators.as:38.19-20: `^`
-test/tokenize/punctuators.as:38.20-22: `^=`
-test/tokenize/punctuators.as:38.22-24: `!=`
-test/tokenize/punctuators.as:38.24-26: `==`
-test/tokenize/punctuators.as:38.26-28: `!=`
-test/tokenize/punctuators.as:38.28-29: `>`
-test/tokenize/punctuators.as:38.29-31: `>=`
-test/tokenize/punctuators.as:38.31-32: `<`
-test/tokenize/punctuators.as:38.32-34: `<=`
-test/tokenize/punctuators.as:38.34-35: `{`
-test/tokenize/punctuators.as:38.35-36: `}`
-test/tokenize/punctuators.as:38.36-37: `[`
-test/tokenize/punctuators.as:38.37-38: `]`
-test/tokenize/punctuators.as:38.38-39: `(`
-test/tokenize/punctuators.as:38.39-40: `)`
-test/tokenize/punctuators.as:38.40-41: `;`
-test/tokenize/punctuators.as:38.41-42: `:`
-test/tokenize/punctuators.as:38.42-43: `*`
-test/tokenize/punctuators.as:38.43-45: `*=`
-test/tokenize/punctuators.as:38.45-46: `,`
-test/tokenize/punctuators.as:38.46-48: `->`
-test/tokenize/punctuators.as:38.48-50: `=>`
-test/tokenize/punctuators.as:39.1-2: end
+test/tokenize/punctuators.as:2.1-2: punctuator: +
+test/tokenize/punctuators.as:3.1-2: punctuator: -
+test/tokenize/punctuators.as:4.1-2: punctuator: /
+test/tokenize/punctuators.as:5.1-2: punctuator: *
+test/tokenize/punctuators.as:6.1-2: punctuator: %
+test/tokenize/punctuators.as:7.1-2: punctuator: &
+test/tokenize/punctuators.as:8.1-2: punctuator: |
+test/tokenize/punctuators.as:9.1-2: punctuator: ^
+test/tokenize/punctuators.as:10.1-2: punctuator: !
+test/tokenize/punctuators.as:11.1-2: punctuator: =
+test/tokenize/punctuators.as:12.1-2: punctuator: <
+test/tokenize/punctuators.as:13.1-2: punctuator: >
+test/tokenize/punctuators.as:14.1-2: punctuator: .
+test/tokenize/punctuators.as:15.1-2: punctuator: :
+test/tokenize/punctuators.as:16.1-2: punctuator: ;
+test/tokenize/punctuators.as:17.1-2: punctuator: {
+test/tokenize/punctuators.as:18.1-2: punctuator: }
+test/tokenize/punctuators.as:19.1-2: punctuator: (
+test/tokenize/punctuators.as:20.1-2: punctuator: )
+test/tokenize/punctuators.as:21.1-2: punctuator: [
+test/tokenize/punctuators.as:22.1-2: punctuator: ]
+test/tokenize/punctuators.as:23.1-2: punctuator: ,
+test/tokenize/punctuators.as:26.1-3: punctuator: +=
+test/tokenize/punctuators.as:27.1-3: punctuator: -=
+test/tokenize/punctuators.as:28.1-3: punctuator: *=
+test/tokenize/punctuators.as:29.1-3: punctuator: /=
+test/tokenize/punctuators.as:30.1-3: punctuator: %=
+test/tokenize/punctuators.as:31.1-3: punctuator: &=
+test/tokenize/punctuators.as:32.1-3: punctuator: |=
+test/tokenize/punctuators.as:33.1-3: punctuator: ^=
+test/tokenize/punctuators.as:34.1-3: punctuator: ==
+test/tokenize/punctuators.as:35.1-3: punctuator: !=
+test/tokenize/punctuators.as:36.1-3: punctuator: >=
+test/tokenize/punctuators.as:37.1-3: punctuator: <=
+test/tokenize/punctuators.as:38.1-3: punctuator: ->
+test/tokenize/punctuators.as:39.1-3: punctuator: =>
+test/tokenize/punctuators.as:42.1-4: punctuator: ...
+test/tokenize/punctuators.as:45.1-4: punctuator: ...
+test/tokenize/punctuators.as:45.4-5: punctuator: .
+test/tokenize/punctuators.as:46.1-2: punctuator: +
+test/tokenize/punctuators.as:46.2-4: punctuator: +=
+test/tokenize/punctuators.as:47.1-2: punctuator: -
+test/tokenize/punctuators.as:47.2-4: punctuator: -=
+test/tokenize/punctuators.as:48.1-3: punctuator: ==
+test/tokenize/punctuators.as:48.3-4: punctuator: |
+test/tokenize/punctuators.as:48.4-6: punctuator: |=
+test/tokenize/punctuators.as:49.1-2: end

@@ -64,7 +64,10 @@ def configure(ctx):
 
 def build(ctx):
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),
-                includes=["include", "vendor"],
+                includes=[
+                    "include",
+                    "vendor",
+                ],
                 target="arrow",
                 use=["BOOST", "LLVM", "PTHREAD", "DL", "TINFO", "Z", "GMP"])
 
@@ -128,13 +131,16 @@ def lint(ctx):
     source = ctx.path.ant_glob("src/**/*.cpp")
 
     filenames = [x.abspath() for x in chain(source, include)]
+    filters = [
+        "-runtime/references",
+    ]
 
-    cpplint.ParseArguments(
-      ["--filter=-runtime/references"] + filenames)
-
+    cpplint.ParseArguments(["--filter=%s" % ",".join(filters)] + filenames)
     cpplint._cpplint_state.ResetErrorCounts()
 
     for filename in filenames:
-        cpplint.ProcessFile(filename, 0)
+        ext = path.splitext(filename)[1][1:]
+        with open(filename, "rb") as stream:
+            lines = stream.read().decode("utf8").split("\n")
 
-    cpplint._cpplint_state.PrintErrorCounts()
+        cpplint.ProcessFileData(filename, ext, lines, cpplint.Error, [])

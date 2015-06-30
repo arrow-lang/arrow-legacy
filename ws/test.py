@@ -79,24 +79,51 @@ def run_(name, ctx, binary_path):
 def handle_(binary_path, filename, *args):
     filename = path.relpath(filename)
     process = Popen(
-        [binary_path, filename] + list(args), stdout=PIPE, stderr=PIPE,
+        [binary_path] + list(args) + [filename], stdout=PIPE, stderr=PIPE,
         cwd=path.join(path.dirname(__file__), ".."),
     )
 
     stdout, _ = process.communicate()
 
     expected = get_expected(filename, "stdout")
-    test = expected == stdout.decode('utf-8')
+    test = expected == stdout.decode('utf-8') and process.returncode == 0
 
     return test
+
+
+def handle_fail_(binary_path, filename, *args):
+    filename = path.relpath(filename)
+    process = Popen(
+        [binary_path] + list(args) + [filename], stdout=PIPE, stderr=PIPE,
+        cwd=path.join(path.dirname(__file__), ".."),
+    )
+
+    _, stderr = process.communicate()
+
+    # TODO: expected = get_expected(filename, "stderr")
+    test = process.returncode != 0
+
+    return test
+
+
+def handle_read(binary_path, filename):
+    return handle_(binary_path, filename, "--read")
 
 
 def handle_tokenize(binary_path, filename):
     return handle_(binary_path, filename, "--tokenize")
 
 
+def handle_tokenize_fail(binary_path, filename):
+    return handle_fail_(binary_path, filename, "--tokenize")
+
+
 def handle_parse(binary_path, filename):
     return handle_(binary_path, filename, "--parse")
+
+
+def handle_parse_fail(binary_path, filename):
+    return handle_fail_(binary_path, filename, "--parse")
 
 
 def handle_run(binary_path, filename):
@@ -136,10 +163,13 @@ def run(ctx):
 
     binary_path = ctx.path.make_node("build/arrow").abspath()
 
+    run_("read", ctx, binary_path)
     run_("tokenize", ctx, binary_path)
+    run_("tokenize-fail", ctx, binary_path)
     run_("parse", ctx, binary_path)
-    run_("run", ctx, binary_path)
-    run_("run-fail", ctx, binary_path)
+    run_("parse-fail", ctx, binary_path)
+    # run_("run", ctx, binary_path)
+    # run_("run-fail", ctx, binary_path)
 
     print_report()
 

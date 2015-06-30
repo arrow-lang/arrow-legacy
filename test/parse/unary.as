@@ -1,15 +1,22 @@
-# Promote
-+32;
-+++643;
+// Identity
++43;
+++1;
 
-# Negate (Numeric)
--32;
---0xafe;
+// Negate
+-1;
+--26;
 
-# Negate (Bitwise)
-!6;
-!false;
+// Dereference
+*x;
 
-# Negate (Logical)
-not false;
-not not true;
+// Address Of
+&x;
+&mutable y;
+
+// BitNot
+!x;
+!!y;
+
+// Not
+not x;
+not y < x;

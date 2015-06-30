@@ -6,10 +6,7 @@
 #ifndef ARROW_COMMAND_READ_H
 #define ARROW_COMMAND_READ_H 1
 
-#include <memory>
-#include <istream>
 #include <string>
-#include <deque>
 
 #include "arrow/command.hpp"
 
@@ -26,9 +23,9 @@ class Read : public Command {
   }
 
  private:
-  virtual int run(boost::program_options::variables_map&);
-  virtual void add_options(boost::program_options::options_description&);
-
+  virtual int run(
+    std::shared_ptr<std::istream> is,
+    const boost::program_options::variables_map& vm);
 };
 
 }  // namespace command

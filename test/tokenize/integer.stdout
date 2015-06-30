@@ -1,16 +1,17 @@
-test/tokenize/integer.as:2.1-3: integer: 10 (10)
-test/tokenize/integer.as:2.4-6: integer: 51 (10)
-test/tokenize/integer.as:3.1-3: integer: 86 (10)
-test/tokenize/integer.as:4.1-4: integer: 664 (10)
-test/tokenize/integer.as:4.5-9: integer: 4897 (10)
-test/tokenize/integer.as:4.10-15: integer: 37489 (10)
-test/tokenize/integer.as:7.1-7: integer: aafa (16)
-test/tokenize/integer.as:8.1-8: integer: deeda (16)
-test/tokenize/integer.as:9.1-7: integer: AEDA (16)
-test/tokenize/integer.as:12.1-7: integer: 0210 (8)
-test/tokenize/integer.as:13.1-7: integer: 4356 (8)
-test/tokenize/integer.as:14.1-6: integer: 755 (8)
-test/tokenize/integer.as:17.1-14: integer: 01000100101 (2)
-test/tokenize/integer.as:18.1-10: integer: 0100101 (2)
-test/tokenize/integer.as:19.1-10: integer: 0101010 (2)
-test/tokenize/integer.as:20.1-2: end
+test/tokenize/integer.as:2.1-3: integer: 10
+test/tokenize/integer.as:2.4-6: integer: 51
+test/tokenize/integer.as:3.1-6: integer: 01412
+test/tokenize/integer.as:4.1-3: integer: 86
+test/tokenize/integer.as:5.1-4: integer: 664
+test/tokenize/integer.as:5.5-9: integer: 4897
+test/tokenize/integer.as:5.10-15: integer: 37489
+test/tokenize/integer.as:8.1-7: integer: 43770
+test/tokenize/integer.as:9.1-8: integer: 913114
+test/tokenize/integer.as:10.1-7: integer: 44762
+test/tokenize/integer.as:13.1-7: integer: 136
+test/tokenize/integer.as:14.1-7: integer: 2286
+test/tokenize/integer.as:15.1-6: integer: 493
+test/tokenize/integer.as:18.1-14: integer: 549
+test/tokenize/integer.as:19.1-10: integer: 37
+test/tokenize/integer.as:20.1-10: integer: 42
+test/tokenize/integer.as:21.1-2: end

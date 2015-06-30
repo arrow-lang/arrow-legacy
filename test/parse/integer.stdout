@@ -1,15 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Module>
- <Integer base="10">10</Integer>
- <Integer base="10">51325239578032572</Integer>
- <Integer base="10">86</Integer>
- <Integer base="16">aafa</Integer>
- <Integer base="16">deeda</Integer>
- <Integer base="16">AEDA</Integer>
- <Integer base="8">0210</Integer>
- <Integer base="8">4356</Integer>
- <Integer base="8">755</Integer>
- <Integer base="2">01000100101</Integer>
- <Integer base="2">0100101</Integer>
- <Integer base="2">0101010</Integer>
-</Module>
+{"tag":"Module","span":"test/parse/integer.as:1.1-19.10","name":"integer","block":{"tag":"Block","span":"test/parse/integer.as:1.1-19.10","statements":[{"tag":"Integer","span":"test/parse/integer.as:2.1-3","text":"10"},{"tag":"Integer","span":"test/parse/integer.as:3.1-18","text":"51325239578032572"},{"tag":"Integer","span":"test/parse/integer.as:4.1-3","text":"86"},{"tag":"Integer","span":"test/parse/integer.as:7.1-7","text":"43770"},{"tag":"Integer","span":"test/parse/integer.as:8.1-8","text":"913114"},{"tag":"Integer","span":"test/parse/integer.as:9.1-7","text":"44762"},{"tag":"Integer","span":"test/parse/integer.as:12.1-7","text":"136"},{"tag":"Integer","span":"test/parse/integer.as:13.1-7","text":"2286"},{"tag":"Integer","span":"test/parse/integer.as:14.1-6","text":"493"},{"tag":"Integer","span":"test/parse/integer.as:17.1-14","text":"549"},{"tag":"Integer","span":"test/parse/integer.as:18.1-10","text":"37"},{"tag":"Integer","span":"test/parse/integer.as:19.1-10","text":"42"}]}}

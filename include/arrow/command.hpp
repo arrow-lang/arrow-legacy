@@ -9,7 +9,6 @@
 #include <memory>
 #include <istream>
 #include <string>
-#include <deque>
 
 #include "boost/program_options.hpp"
 
@@ -18,8 +17,6 @@ namespace arrow {
 /// Represents an executable command to be ran from the command-line driver.
 class Command {
  public:
-  static std::deque<std::shared_ptr<Command>> commands;
-
   virtual ~Command() noexcept;
 
   virtual const char* name() const noexcept = 0;
@@ -29,13 +26,16 @@ class Command {
   int operator()(int argc, char** argv);
 
  private:
-  virtual int run(boost::program_options::variables_map&) = 0;
-  virtual void add_options(boost::program_options::options_description&) = 0;
-
+  virtual void add_options(boost::program_options::options_description&) { }
+  virtual int run(
+    std::shared_ptr<std::istream> is,
+    const boost::program_options::variables_map& vm) = 0;
 };
 
 }  // namespace arrow
 
 #include "arrow/command/read.hpp"
+#include "arrow/command/tokenize.hpp"
+#include "arrow/command/parse.hpp"
 
 #endif  // ARROW_COMMAND_H

@@ -1,76 +1,76 @@
-# Assign
+// Assign
 4 + 32 = 10;
 
-# AssignAdd
+// AssignAdd
 15 += 3;
 
-# AssignSub
+// AssignSub
 400 -= false;
 
-# AssignMul
+// AssignMul
 400 *= false;
 
-# AssignDiv
+// AssignDiv
 false /= true;
 
-# AssignMod
+// AssignMod
 314 %= 593;
 
-# AssignBitAnd
+// AssignBitAnd
 32 &= !34;
 
-# AssignBitXor
+// AssignBitXor
 42 ^= !false;
 
-# AssignBitOr
+// AssignBitOr
 24 |= !true;
 
-# And
+// And
 false and not true;
 
-# Or
+// Or
 not true or false;
 
-# EqualTo
+// EqualTo
 54 == 20;
 
-# NotEqualTo
+// NotEqualTo
 20 != 20;
 
-# LessThan
+// LessThan
 50 < false;
 
-# LessThanOrEqualTo
+// LessThanOrEqualTo
 true <= false;
 
-# GreaterThanOrEqualTo
+// GreaterThanOrEqualTo
 false >= true;
 
-# GreaterThan
+// GreaterThan
 false > 30;
 
-# BitAnd
+// BitAnd
 4093 & 39;
 
-# BitXor
+// BitXor
 32 ^ 328;
 true ^ false;
 
-# BitOr
+// BitOr
 40 | 20;
 
-# Add
+// Add
 32 + 3295;
 
-# Sub
+// Sub
 320 - 3209;
 
-# Mul
+// Mul
 523 * 230;
 32 + 320 * 32 - 30 % 32;
 
-# Div
+// Div
 32 / 321;
 
-# Mod
+// Mod
 532 % 320;
