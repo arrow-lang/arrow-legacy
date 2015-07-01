@@ -124,7 +124,7 @@ bool Parser::parse_expression(unsigned power /* = 0 */) {
     // No; report an error
     auto tok = _t.pop();
     Log::get().error(tok->span,
-      "expected an expression, found %s", arrow::to_string(tok->type).c_str());
+      "expected an expression; found %s", arrow::to_string(tok->type).c_str());
 
     return false;
   }
@@ -148,7 +148,7 @@ int Parser::parse_binary_expression(unsigned power) {
   if (_stack.size() == 0) {
     // Report an error (that we missed an expression)
     Log::get().error(tok->span,
-      "expected an expression, found %s", arrow::to_string(tok->type).c_str());
+      "expected an expression; found %s", arrow::to_string(tok->type).c_str());
 
     return false;
   }

@@ -27,18 +27,6 @@ struct Node {
   Span span;
 };
 
-/// Abstract base representing a simple leaf token that is just
-/// represented by a textual element (eg. `string`, `integer`, etc.).
-struct TextNode : Node {
-  TextNode(Span span, std::string text)
-    : Node(span), text(text) {
-  }
-
-  virtual ~TextNode() noexcept;
-
-  std::string text;
-};
-
 struct Item : Node {
   Item(Span span, bool exported_)
     : Node(span), exported(exported_) {

@@ -56,6 +56,7 @@ struct Token {
     Global,     // global
     As,         // as
     Struct,     // struct
+    Underscore, // _
 
     /// Keywords (reserved)
     // For,        // for

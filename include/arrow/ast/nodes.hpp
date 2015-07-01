@@ -107,6 +107,7 @@ struct Import : Node {
 }  // namespace ast
 }  // namespace arrow
 
+#include "arrow/ast/nodes/pattern.hpp"
 #include "arrow/ast/nodes/function.hpp"
 #include "arrow/ast/nodes/loop.hpp"
 #include "arrow/ast/nodes/unary.hpp"

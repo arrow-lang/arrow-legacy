@@ -52,6 +52,7 @@ class Parser {
   bool parse_unary_expression();
   int parse_binary_expression(unsigned power);
 
+  bool parse_literal();
   bool parse_pattern();
 
   bool parse_block(bool top_level = false);

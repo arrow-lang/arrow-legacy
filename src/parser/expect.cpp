@@ -39,7 +39,7 @@ Ref<Token> Parser::expect(std::vector<Token::Type> types) {
       st << arrow::to_string(type);
     }
 
-    st << ", found " << arrow::to_string(tok->type);
+    st << "; found " << arrow::to_string(tok->type);
 
     Log::get().error(tok->span, st.str().c_str());
     return nullptr;

@@ -10,6 +10,7 @@ namespace arrow {
 namespace ast {
 
 Show::Show() : _s(), _w(_s) {
+  _w.SetIndent(' ', 2);
 }
 
 Show::~Show() noexcept {

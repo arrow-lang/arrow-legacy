@@ -98,6 +98,15 @@ bool Parser::parse_statement() {
       _t.pop();
       return true;
 
+    case Token::Type::Underscore: {
+      // Unexpected `_`; report error
+      auto tok = _t.pop();
+      Log::get().error(tok->span,
+        "expected an expression; found %s", arrow::to_string(tok->type).c_str());
+
+      return false;
+    }
+
     default:
       // We must be an `expression statement`
       return parse_expression_statement();

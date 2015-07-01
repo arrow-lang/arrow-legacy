@@ -10,18 +10,29 @@
 
 namespace arrow {
 namespace ast {
-  
-struct Identifier : TextNode {
-  using TextNode::TextNode;
+
+struct Literal : Node {
+  using Node::Node;
+
+  virtual ~Literal() noexcept;
+};
+
+// NOTE: Identifiers are not literals
+struct Identifier : Node {
+  Identifier(Span span, std::string text)
+    : Node(span), text(text) {
+  }
 
   virtual ~Identifier() noexcept;
 
   void accept(Visitor&) override;
+
+  std::string text;
 };
 
 /// A boolean literal (either `true` or `false`).
-struct Boolean : Node {
-  Boolean(Span span, bool value) : Node(span), value(value) {
+struct Boolean : Literal {
+  Boolean(Span span, bool value) : Literal(span), value(value) {
   }
 
   virtual ~Boolean() noexcept;
@@ -32,30 +43,42 @@ struct Boolean : Node {
 };
 
 /// An integer literal (`321`, `0xaffb`, '0B0100101', etc.).
-struct Integer : TextNode {
-  using TextNode::TextNode;
+struct Integer : Literal {
+  Integer(Span span, std::string text)
+    : Literal(span), text(text) {
+  }
 
   virtual ~Integer() noexcept;
 
   void accept(Visitor&) override;
+
+  std::string text;
 };
 
 /// A float literal (`3.123`, `3e+10`, etc.)
-struct Float : TextNode {
-  using TextNode::TextNode;
+struct Float : Literal {
+  Float(Span span, std::string text)
+    : Literal(span), text(text) {
+  }
 
   virtual ~Float() noexcept;
 
   void accept(Visitor&) override;
+
+  std::string text;
 };
 
 /// A string literal (`"Hello World"`).
-struct String : TextNode {
-  using TextNode::TextNode;
+struct String : Literal {
+  String(Span span, std::string text)
+    : Literal(span), text(text) {
+  }
 
   virtual ~String() noexcept;
 
   void accept(Visitor&) override;
+
+  std::string text;
 };
 
 }  // namespace ast

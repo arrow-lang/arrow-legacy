@@ -15,17 +15,21 @@ struct Slot : Item {
   Slot(
     Span span,
     bool exported,
-    Ref<Node> binding,
+    Ref<Pattern> pattern,
     Ref<Node> type = nullptr,
     Ref<Node> initializer = nullptr
   ) : Item(span, exported),
-      binding(binding),
+      pattern(pattern),
       type(type),
       initializer(initializer) {
   }
 
-  /// The binding (identifier or tuple).
-  Ref<Node> binding;
+  virtual ~Slot() noexcept;
+
+  void accept(Visitor&) override;
+
+  /// The (irrefutable) pattern.
+  Ref<Pattern> pattern;
 
   /// The optional type annotation.
   Ref<Node> type;
@@ -45,6 +49,10 @@ struct ExternSlot : Item {
       name(name),
       type(type) {
   }
+
+  virtual ~ExternSlot() noexcept;
+
+  void accept(Visitor&) override;
 
   /// The name (in the external library).
   std::string name;

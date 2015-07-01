@@ -16,7 +16,6 @@ namespace arrow {
 namespace ast {
 
 IMPL_ACCEPT(Node, node)
-IMPL(TextNode)
 IMPL(Item)
 IMPL(Unary)
 IMPL(Binary)
@@ -25,6 +24,7 @@ IMPL_ACCEPT(Module, module)
 IMPL_ACCEPT(Identifier, id)
 IMPL_ACCEPT(Block, block)
 
+IMPL(Literal)
 IMPL_ACCEPT(Boolean, bool)
 IMPL_ACCEPT(String, str)
 IMPL_ACCEPT(Float, float)
@@ -74,6 +74,15 @@ IMPL(BaseFunction)
 IMPL_ACCEPT(Function, function)
 IMPL_ACCEPT(ExternFunction, extern_function)
 IMPL_ACCEPT(Return, return)
+
+IMPL_ACCEPT(Slot, slot)
+IMPL_ACCEPT(ExternSlot, extern_slot)
+
+IMPL(Pattern)
+IMPL_ACCEPT(PatternWildcard, pattern_wildcard)
+IMPL_ACCEPT(PatternIdentifier, pattern_identifier)
+IMPL_ACCEPT(PatternLiteral, pattern_literal)
+IMPL_ACCEPT(PatternTuple, pattern_tuple)
 
 }  // namespace ast
 }  // namespace arrow

@@ -7,6 +7,7 @@
 #define ARROW_AST_SHOW_H 1
 
 #include "rapidjson/writer.h"
+#include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 
 #include "arrow/ast/visitor.hpp"
@@ -71,14 +72,19 @@ struct Show : Visitor {
   virtual void visit_call(Call&);
   virtual void visit_argument(Argument&);
 
-  // virtual void visit_return(Return&);
+  virtual void visit_slot(Slot&);
+
+  virtual void visit_pattern_wildcard(PatternWildcard&);
+  virtual void visit_pattern_identifier(PatternIdentifier&);
+  virtual void visit_pattern_literal(PatternLiteral&);
+  virtual void visit_pattern_tuple(PatternTuple&);
 
  private:
   void do_unary(const char* name, Unary& x);
   void do_binary(const char* name, Binary& x);
 
   rapidjson::StringBuffer _s;
-  rapidjson::Writer<rapidjson::StringBuffer> _w;
+  rapidjson::PrettyWriter<rapidjson::StringBuffer> _w;
 
 };
 

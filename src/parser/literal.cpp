@@ -7,6 +7,37 @@
 
 namespace arrow {
 
+// Generic Literal
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+bool Parser::parse_literal() {
+  switch (_t.peek(0)->type) {
+    case Token::Type::Integer:
+      return parse_integer();
+
+    case Token::Type::True:
+    case Token::Type::False:
+      return parse_boolean();
+
+    case Token::Type::Float:
+      return parse_float();
+
+    case Token::Type::String:
+      return parse_string();
+
+    default:
+      // NOTE: Identifiers are not considered literals
+      expect({
+        Token::Type::Integer,
+        Token::Type::True,
+        Token::Type::False,
+        Token::Type::Float,
+        Token::Type::String,
+      });
+      return false;
+  }
+}
+
 // Integer
 // -----------------------------------------------------------------------------
 // integer = INTEGER ;

@@ -73,36 +73,13 @@ struct Visitor {
   virtual void visit_extern_function(ExternFunction&) { }
   virtual void visit_return(Return&) { }
 
-  // virtual void visit_block(Block&) { }
-  // virtual void visit_parameter(Parameter&) { }
-  // virtual void visit_call(Call&) { }
-  // virtual void visit_slot(Slot&) { }
-  // virtual void visit_break(Break&) { }
-  // virtual void visit_continue(Continue&) { }
-  // virtual void visit_return(Return&) { }
-  // virtual void visit_int(Integer&) { }
-  // virtual void visit_float(Float&) { }
-  // virtual void visit_bool(Boolean&) { }
-  // virtual void visit_str(String&) { }
-  // virtual void visit_promote(Promote&) { }
-  // virtual void visit_negate_logical(NegateLogical&) { }
-  // virtual void visit_negate_bit(NegateBit&) { }
-  // virtual void visit_negate_numeric(NegateNumeric&) { }
-  // virtual void visit_assign(Assign&) { }
-  // virtual void visit_and(And&) { }
-  // virtual void visit_or(Or&) { }
-  // virtual void visit_cast(Cast&) { }
-  // virtual void visit_select(Select&) { }
-  // virtual void visit_loop(Loop&) { }
-  // virtual void visit_select_branch(SelectBranch&) { }
-  // virtual void visit_pointer_type(PointerType&) { }
-  // virtual void visit_dereference(Dereference&) { }
-  // virtual void visit_address_of(AddressOf&) { }
-  // virtual void visit_import(Import&) { }
-  // virtual void visit_struct(Structure&) { }
-  // virtual void visit_struct_member(StructureMember&) { }
-  // virtual void visit_member(Member&) { }
-  // virtual void visit_typeof(TypeOf&) { }
+  virtual void visit_slot(Slot&) { }
+  virtual void visit_extern_slot(ExternSlot&) { }
+
+  virtual void visit_pattern_wildcard(PatternWildcard&) { }
+  virtual void visit_pattern_identifier(PatternIdentifier&) { }
+  virtual void visit_pattern_literal(PatternLiteral&) { }
+  virtual void visit_pattern_tuple(PatternTuple&) { }
 
 };
 

@@ -13,7 +13,7 @@ namespace arrow {
 // -----------------------------------------------------------------------------
 bool Parser::parse_slot() {
   // Check for "export" (to mean that this is a top-level slot AND exported)
-  Ref<ast::Node> initial_tok = nullptr;
+  Ref<Token> initial_tok = nullptr;
   bool exported = false;
   if (_t.peek()->type == Token::Type::Export) {
     exported = true;
@@ -26,9 +26,8 @@ bool Parser::parse_slot() {
   if (!initial_tok) initial_tok = tok;
 
   // Expect a (binding) pattern
-  if (!parse_pattern(true)) return false;
-  Ref<ast::Node> binding = _stack.front();
-  _stack.pop_front();
+  auto pattern = expect<ast::Pattern>(&Parser::parse_pattern);
+  if (!pattern) return false;
 
   // Check for a `:` which would indicate a type annotation
   Ref<ast::Node> annotation = nullptr;
@@ -57,12 +56,12 @@ bool Parser::parse_slot() {
   _stack.push_back(new ast::Slot(
     initial_tok->span.extend(last_tok->span),
     exported,
-    binding,
+    pattern,
     annotation,
     initializer
   ));
 
-  return false;
+  return true;
 }
 
 // External Slot
@@ -111,7 +110,7 @@ bool Parser::parse_extern_slot() {
     annotation
   ));
 
-  return false;
+  return true;
 }
 
 }  // namespace arrow
