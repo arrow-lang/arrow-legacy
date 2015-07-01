@@ -81,6 +81,11 @@ struct Visitor {
   virtual void visit_pattern_literal(PatternLiteral&) { }
   virtual void visit_pattern_tuple(PatternTuple&) { }
 
+  virtual void visit_type_none(TypeNone&) { }
+  virtual void visit_type_path(TypePath&) { }
+  virtual void visit_type_pointer(TypePointer&) { }
+  virtual void visit_type_tuple(TypeTuple&) { }
+
 };
 
 }  // namespace ast

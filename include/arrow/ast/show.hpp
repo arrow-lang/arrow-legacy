@@ -6,6 +6,8 @@
 #ifndef ARROW_AST_SHOW_H
 #define ARROW_AST_SHOW_H 1
 
+#include <functional>
+
 #include "rapidjson/writer.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
@@ -79,7 +81,15 @@ struct Show : Visitor {
   virtual void visit_pattern_literal(PatternLiteral&);
   virtual void visit_pattern_tuple(PatternTuple&);
 
+  virtual void visit_type_none(TypeNone&);
+  virtual void visit_type_path(TypePath&);
+  virtual void visit_type_pointer(TypePointer&);
+  virtual void visit_type_tuple(TypeTuple&);
+
  private:
+  void do_(const char* name, Node& x);
+  void do_(const char* name, Node& x, std::function<void()> inner);
+
   void do_unary(const char* name, Unary& x);
   void do_binary(const char* name, Binary& x);
 

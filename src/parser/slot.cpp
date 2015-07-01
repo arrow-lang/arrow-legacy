@@ -34,7 +34,7 @@ bool Parser::parse_slot() {
   if (_t.peek()->type == Token::Type::Colon) {
     _t.pop();
 
-    annotation = expect(&Parser::parse_type);
+    annotation = expect<ast::Type>(&Parser::parse_type);
     if (!annotation) return false;
   }
 
@@ -95,7 +95,7 @@ bool Parser::parse_extern_slot() {
   if (!expect(Token::Type::Colon)) return false;
 
   // Parse the type annotation
-  auto annotation = expect(&Parser::parse_type);
+  auto annotation = expect<ast::Type>(&Parser::parse_type);
   if (!annotation) return false;
 
   // Expect `;`

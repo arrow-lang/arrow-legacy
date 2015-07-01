@@ -27,7 +27,7 @@ class Ref {
 
   template <typename U>
   Ref(const Ref<U>& other) noexcept
-      : _d(reinterpret_cast<T*>(other._d)),
+      : _d(dynamic_cast<T*>(other._d)),
         _refs(other._refs),
         _is_undefined(other._is_undefined) {
     if (other._refs) { (*other._refs) += 1; }
@@ -50,7 +50,7 @@ class Ref {
 
   template <typename U>
   Ref<U> as() {
-    return Ref<U>(reinterpret_cast<U*>(_d), _refs, _is_undefined);
+    return Ref<U>(dynamic_cast<U*>(_d), _refs, _is_undefined);
   }
 
   virtual ~Ref() noexcept {

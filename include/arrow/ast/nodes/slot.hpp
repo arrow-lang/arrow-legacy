@@ -32,7 +32,7 @@ struct Slot : Item {
   Ref<Pattern> pattern;
 
   /// The optional type annotation.
-  Ref<Node> type;
+  Ref<Type> type;
 
   /// The initializer expression for this slot.
   /// An immutable slot with an initializer is a constant.
@@ -58,7 +58,7 @@ struct ExternSlot : Item {
   std::string name;
 
   /// The required (for external slots) type annotation.
-  Ref<Node> type;
+  Ref<Type> type;
 };
 
 }  // namespace ast

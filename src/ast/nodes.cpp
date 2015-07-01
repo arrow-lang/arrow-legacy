@@ -84,5 +84,11 @@ IMPL_ACCEPT(PatternIdentifier, pattern_identifier)
 IMPL_ACCEPT(PatternLiteral, pattern_literal)
 IMPL_ACCEPT(PatternTuple, pattern_tuple)
 
+IMPL(Type)
+IMPL_ACCEPT(TypeNone, type_none)
+IMPL_ACCEPT(TypeTuple, type_tuple)
+IMPL_ACCEPT(TypePath, type_path)
+IMPL_ACCEPT(TypePointer, type_pointer)
+
 }  // namespace ast
 }  // namespace arrow
