@@ -23,6 +23,7 @@ IMPL(Binary)
 IMPL_ACCEPT(Module, module)
 IMPL_ACCEPT(Identifier, id)
 IMPL_ACCEPT(Block, block)
+IMPL_ACCEPT(Import, import)
 
 IMPL(Literal)
 IMPL_ACCEPT(Boolean, bool)

@@ -37,9 +37,9 @@ Ref<ast::Node> Parser::parse() {
 // -----------------------------------------------------------------------------
 bool Parser::parse_module_statement() {
   switch (_t.peek()->type) {
-    // case Token::Type::Import:
-    //   return parse_import();
-    //
+    case Token::Type::Import:
+      return parse_import();
+
     // case Token::Type::Struct:
     //   return parse_struct();
     //
@@ -191,24 +191,6 @@ bool Parser::parse_none() {
   return true;
 }
 
-
-// Parenthetical Expression
-// -----------------------------------------------------------------------------
-// paren-expression = "(" expression ")" ;
-// -----------------------------------------------------------------------------
-bool Parser::parse_paren_expression() {
-  // Expect `(`
-  if (!expect(Token::Type::LeftParenthesis)) return false;
-
-  // Attempt to parse the inner expression
-  if (!parse_expression()) return false;
-
-  // Expect `)`
-  if (!expect(Token::Type::RightParenthesis)) return false;
-
-  return true;
-}
-
 // Postfix Expression
 // -----------------------------------------------------------------------------
 // postfix-expression = primary-expression
@@ -316,6 +298,44 @@ bool Parser::parse_extern() {
   }
 
   return parse_extern_function();
+}
+
+// Import
+// -----------------------------------------------------------------------------
+// import = "import" IDENTIFIER [ "from" STRING ] ";" ;
+// -----------------------------------------------------------------------------
+bool Parser::parse_import() {
+  // Expect `import`
+  auto initial_tok = expect(Token::Type::Import);
+  if (!initial_tok) return false;
+
+  // Parse the identifier for the imported module name
+  auto id = expect<ast::Identifier>(&Parser::parse_identifier);
+  if (!id) return false;
+  auto name = id->text;
+
+  // Check for `from` (which would contain an explicit source)
+  auto source = name;
+  if (_t.peek()->type == Token::Type::From) {
+    _t.pop();
+
+    auto str = expect<ast::String>(&Parser::parse_string);
+    if (!str) return false;
+    source = str->text;
+  }
+
+  // Expect `;`
+  auto last_tok = expect(Token::Type::Semicolon);
+  if (!last_tok) return false;
+
+  // Declare and push the node
+  _stack.push_front(new ast::Import(
+    initial_tok->span.extend(last_tok->span),
+    name,
+    source
+  ));
+
+  return true;
 }
 
 }  // namespace arrow

@@ -54,35 +54,6 @@ struct TypeOf : Node {
   Ref<Node> expression;
 };
 
-/// A pointer type annotation.
-struct Pointer : Node {
-  Pointer(Span span, Ref<Node> pointee, bool is_mutable);
-
-  virtual ~Pointer() noexcept;
-
-  virtual void accept(Visitor& v);
-
-  Ref<Node> pointee;
-  bool is_mutable;
-};
-
-/// An import statement: `import x from "x"`.
-struct Import : Node {
-  Import(
-    Span span,
-    std::string name,
-    std::string path
-  ) : Node(span), name(name), path(path) {
-  }
-
-  virtual ~Import() noexcept;
-
-  virtual void accept(Visitor& v);
-
-  std::string name;
-  std::string path;
-};
-
 }  // namespace ast
 }  // namespace arrow
 
@@ -97,5 +68,6 @@ struct Import : Node {
 #include "arrow/ast/nodes/slot.hpp"
 #include "arrow/ast/nodes/select.hpp"
 #include "arrow/ast/nodes/tuple.hpp"
+#include "arrow/ast/nodes/import.hpp"
 
 #endif  // ARROW_AST_NODES_H

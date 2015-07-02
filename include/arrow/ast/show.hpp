@@ -30,6 +30,7 @@ struct Show : Visitor {
   virtual void visit_id(Identifier&);
   virtual void visit_module(Module&);
   virtual void visit_block(Block&);
+  virtual void visit_import(Import&);
 
   virtual void visit_bool(Boolean&);
   virtual void visit_str(String&);
