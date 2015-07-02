@@ -6,6 +6,17 @@ import sys
 
 _passed = 0
 _failed = 0
+_xfailed = 0
+_xpassed = 0
+
+
+def read_suffix(filename, suffix):
+    try:
+        with open(path.splitext(filename)[0] + suffix, 'rb') as stream:
+            return stream.read()
+
+    except:
+        return None
 
 
 def get_expected(filename, item):
@@ -20,15 +31,28 @@ def get_expected(filename, item):
 def print_test(file_, status):
     global _passed
     global _failed
+    global _xfailed
+    global _xpassed
+
+    # Check if we are "expected" to fail
+    xfail = read_suffix(file_.abspath(), ".xfail") is not None
 
     filename = path.relpath(file_.abspath())
-    if status:
-        _passed += 1
-        print("{:<72}: \033[32m{}\033[0m".format(filename, 'PASS'))
+    if not status:
+        if xfail:
+            _xfailed += 1
+            print("\033[30;1m{:<72}: {}\033[0m".format(filename, 'XFAIL'))
+        else:
+            _failed += 1
+            print("\033[31m{:<72}: {}\033[0m".format(filename, 'FAIL'))
 
     else:
-        _failed += 1
-        print("\033[31m{:<72}: {}\033[0m".format(filename, 'FAIL'))
+        if xfail:
+            _xpassed += 1
+            print("\033[31m{:<72}: {}\033[0m".format(filename, 'XPASS'))
+        else:
+            _passed += 1
+            print("{:<72}: \033[32m{}\033[0m".format(filename, 'PASS'))
 
 
 def print_sep(msg, sep="-", width=80, end="\n"):
@@ -51,12 +75,19 @@ def print_report():
     if _failed:
         message.append("{} failed".format(_failed))
 
+    if _xfailed:
+        message.append("{} xfailed".format(_xfailed))
+
+    if _xpassed:
+        message.append("{} xpassed".format(_xpassed))
+
     message = ', '.join(message)
 
     if not _failed:
         sys.stdout.write("\033[1;32m")
         print_sep(message, sep='=')
         sys.stdout.write("\033[0m")
+
     else:
         sys.stdout.write("\033[1;31m")
         print_sep(message, sep='=')
