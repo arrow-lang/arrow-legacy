@@ -55,8 +55,8 @@ struct TypePointer : Type {
 };
 
 struct TypeTuple : Type {
-  TypeTuple(Span span, std::vector<Ref<Type>> elements)
-    : Type(span), elements(elements) {
+  TypeTuple(Span span)
+    : Type(span), elements() {
   }
 
   virtual ~TypeTuple() noexcept;
@@ -64,7 +64,7 @@ struct TypeTuple : Type {
   void accept(Visitor&) override;
 
   // Elements of the tuple
-  std::vector<Ref<Type>> elements;
+  std::deque<Ref<Type>> elements;
 };
 
 }  // namespace ast

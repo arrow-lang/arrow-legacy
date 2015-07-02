@@ -24,6 +24,10 @@ void Show::visit_id(Identifier& x) {
   _w.EndObject();
 }
 
+void Show::visit_none(None& x) {
+  do_("None", x);
+}
+
 void Show::visit_int(Integer& x) {
   _w.StartObject();
 

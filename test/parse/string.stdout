@@ -1,1 +1,21 @@
-{"tag":"Module","span":"test/parse/string.as:1.1-2.13","name":"string","block":{"tag":"Block","span":"test/parse/string.as:1.1-2.13","statements":[{"tag":"String","span":"test/parse/string.as:1.1-14","text":"Hello World"},{"tag":"String","span":"test/parse/string.as:2.1-13","text":"Goodbye \\n"}]}}
+{
+  "tag": "Module",
+  "span": "test/parse/string.as:1.1-2.13",
+  "name": "string",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/string.as:1.1-2.13",
+    "statements": [
+      {
+        "tag": "String",
+        "span": "test/parse/string.as:1.1-14",
+        "text": "Hello World"
+      },
+      {
+        "tag": "String",
+        "span": "test/parse/string.as:2.1-13",
+        "text": "Goodbye \\n"
+      }
+    ]
+  }
+}

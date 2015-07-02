@@ -41,15 +41,6 @@ struct Module : Node {
   Ref<Block> block;
 };
 
-/// The `None` type and value expression.
-struct None : Node {
-  using Node::Node;
-
-  virtual ~None() noexcept;
-
-  void accept(Visitor&) override;
-};
-
 /// TypeOf expression.
 struct TypeOf : Node {
   TypeOf(Span span, Ref<Node> expression)
@@ -61,18 +52,6 @@ struct TypeOf : Node {
   void accept(Visitor&) override;
 
   Ref<Node> expression;
-};
-
-/// A tuple expression; a sequence of zero or more types OR values.
-struct Tuple : Node {
-  using Node::Node;
-
-  virtual ~Tuple() noexcept;
-
-  void accept(Visitor&) override;
-
-  /// The ordered sequence of types OR values.
-  std::deque<Ref<ast::Node>> elements;
 };
 
 /// A pointer type annotation.
@@ -117,5 +96,6 @@ struct Import : Node {
 #include "arrow/ast/nodes/struct.hpp"
 #include "arrow/ast/nodes/slot.hpp"
 #include "arrow/ast/nodes/select.hpp"
+#include "arrow/ast/nodes/tuple.hpp"
 
 #endif  // ARROW_AST_NODES_H

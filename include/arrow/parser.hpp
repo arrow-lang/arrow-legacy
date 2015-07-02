@@ -54,6 +54,7 @@ class Parser {
 
   bool parse_literal();
   bool parse_pattern();
+  bool parse_none();
 
   bool parse_block(bool top_level = false);
   bool parse_module_statement();

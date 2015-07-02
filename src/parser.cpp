@@ -144,6 +144,9 @@ bool Parser::parse_expression_statement() {
 // -----------------------------------------------------------------------------
 bool Parser::parse_primary_expression() {
   switch (_t.peek()->type) {
+    case Token::Type::None:
+      return parse_none();
+
     case Token::Type::Integer:
       return parse_integer();
 
@@ -161,13 +164,13 @@ bool Parser::parse_primary_expression() {
       return parse_boolean();
 
     case Token::Type::LeftParenthesis:
-      return parse_paren_expression();
+      return parse_tuple();
 
     // case Token::Type::If:
     //   return parse_select_expression();
-    //
-    // case Token::Type::LeftBrace:
-    //   return parse_block_expression();
+
+    case Token::Type::LeftBrace:
+      return parse_block(/*top_level=*/false);
 
     case Token::Type::Break:
       return parse_break();
@@ -175,13 +178,27 @@ bool Parser::parse_primary_expression() {
     case Token::Type::Continue:
       return parse_continue();
 
-    // case Token::Type::Return:
-    //   return parse_return();
+    case Token::Type::Return:
+      return parse_return();
 
     default:
       return false;
   }
 }
+
+// None
+// -----------------------------------------------------------------------------
+// none = "none" ;
+// -----------------------------------------------------------------------------
+bool Parser::parse_none() {
+  auto tok = expect(Token::Type::None);
+  if (!tok) return false;
+
+  _stack.push_front(new ast::None(tok->span));
+
+  return true;
+}
+
 
 // Parenthetical Expression
 // -----------------------------------------------------------------------------
@@ -252,7 +269,7 @@ bool Parser::parse_path() {
   if (!id) return false;
 
   // Declare and push the node
-  _stack.push_back(new ast::Path(expr->span.extend(id->span), expr, id));
+  _stack.push_front(new ast::Path(expr->span.extend(id->span), expr, id->text));
 
   return true;
 }

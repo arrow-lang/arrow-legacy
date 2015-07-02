@@ -30,6 +30,15 @@ struct Identifier : Node {
   std::string text;
 };
 
+/// The `None` expression.
+struct None : Literal {
+  using Literal::Literal;
+
+  virtual ~None() noexcept;
+
+  void accept(Visitor&) override;
+};
+
 /// A boolean literal (either `true` or `false`).
 struct Boolean : Literal {
   Boolean(Span span, bool value) : Literal(span), value(value) {

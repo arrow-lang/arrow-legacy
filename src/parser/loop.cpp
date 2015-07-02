@@ -34,12 +34,12 @@ bool Parser::parse_loop() {
   }
 
   // Attempt to parse the loop block
-  if (!parse_block()) { return false; }
+  if (!parse_block(/*top_level=*/false)) { return false; }
   auto block = _stack.front().as<ast::Block>();
   _stack.pop_front();
 
   // Declare and push the node
-  _stack.push_back(new ast::Loop(
+  _stack.push_front(new ast::Loop(
     initial_tok->span.extend(block->span),
     block,
     condition
@@ -56,7 +56,7 @@ bool Parser::parse_break() {
   auto tok = expect(Token::Type::Break);
   if (!tok) return false;
 
-  _stack.push_back(new ast::Break(tok->span));
+  _stack.push_front(new ast::Break(tok->span));
 
   return true;
 }
@@ -69,7 +69,7 @@ bool Parser::parse_continue() {
   auto tok = expect(Token::Type::Continue);
   if (!tok) return false;
 
-  _stack.push_back(new ast::Continue(tok->span));
+  _stack.push_front(new ast::Continue(tok->span));
 
   return true;
 }

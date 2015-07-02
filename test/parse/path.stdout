@@ -1,0 +1,101 @@
+{
+  "tag": "Module",
+  "span": "test/parse/path.as:1.1-9.12",
+  "name": "path",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/path.as:1.1-9.12",
+    "statements": [
+      {
+        "tag": "Path",
+        "span": "test/parse/path.as:1.1-6",
+        "operand": {
+          "tag": "Path",
+          "span": "test/parse/path.as:1.1-4",
+          "operand": {
+            "tag": "Identifier",
+            "span": "test/parse/path.as:1.1-2",
+            "text": "x"
+          },
+          "member": "y"
+        },
+        "member": "z"
+      },
+      {
+        "tag": "Path",
+        "span": "test/parse/path.as:2.2-6",
+        "operand": {
+          "tag": "Identifier",
+          "span": "test/parse/path.as:2.2-3",
+          "text": "h"
+        },
+        "member": "x"
+      },
+      {
+        "tag": "Path",
+        "span": "test/parse/path.as:3.1-14",
+        "operand": {
+          "tag": "Call",
+          "span": "test/parse/path.as:3.1-12",
+          "arguments": []
+        },
+        "member": "y"
+      },
+      {
+        "tag": "Path",
+        "span": "test/parse/path.as:4.1-5",
+        "operand": {
+          "tag": "Integer",
+          "span": "test/parse/path.as:4.1-3",
+          "text": "42"
+        },
+        "member": "x"
+      },
+      {
+        "tag": "Path",
+        "span": "test/parse/path.as:5.1-7",
+        "operand": {
+          "tag": "Float",
+          "span": "test/parse/path.as:5.1-5",
+          "text": "31.0"
+        },
+        "member": "x"
+      },
+      {
+        "tag": "Path",
+        "span": "test/parse/path.as:6.2-7",
+        "operand": {
+          "tag": "Integer",
+          "span": "test/parse/path.as:6.2-4",
+          "text": "42"
+        },
+        "member": "x"
+      },
+      {
+        "tag": "Path",
+        "span": "test/parse/path.as:7.2-9",
+        "operand": {
+          "tag": "Float",
+          "span": "test/parse/path.as:7.2-6",
+          "text": "31.0"
+        },
+        "member": "x"
+      },
+      {
+        "tag": "Path",
+        "span": "test/parse/path.as:8.1-10",
+        "operand": {
+          "tag": "String",
+          "span": "test/parse/path.as:8.1-8",
+          "text": "sgsgs"
+        },
+        "member": "x"
+      },
+      {
+        "tag": "Call",
+        "span": "test/parse/path.as:9.1-12",
+        "arguments": []
+      }
+    ]
+  }
+}

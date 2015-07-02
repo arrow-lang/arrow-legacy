@@ -67,7 +67,7 @@ bool Parser::parse_block(bool top_level) {
   }
 
   // Push the node
-  _stack.push_back(node);
+  _stack.push_front(node);
 
   return true;
 }

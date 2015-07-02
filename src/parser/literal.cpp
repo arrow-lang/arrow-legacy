@@ -25,6 +25,9 @@ bool Parser::parse_literal() {
     case Token::Type::String:
       return parse_string();
 
+    case Token::Type::None:
+      return parse_none();
+
     default:
       // NOTE: Identifiers are not considered literals
       expect({
@@ -33,7 +36,9 @@ bool Parser::parse_literal() {
         Token::Type::False,
         Token::Type::Float,
         Token::Type::String,
+        Token::Type::None,
       });
+
       return false;
   }
 }

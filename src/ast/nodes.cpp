@@ -29,6 +29,7 @@ IMPL_ACCEPT(Boolean, bool)
 IMPL_ACCEPT(String, str)
 IMPL_ACCEPT(Float, float)
 IMPL_ACCEPT(Integer, int)
+IMPL_ACCEPT(None, none)
 
 IMPL_ACCEPT(Loop, loop)
 IMPL_ACCEPT(Break, break)
@@ -89,6 +90,8 @@ IMPL_ACCEPT(TypeNone, type_none)
 IMPL_ACCEPT(TypeTuple, type_tuple)
 IMPL_ACCEPT(TypePath, type_path)
 IMPL_ACCEPT(TypePointer, type_pointer)
+
+IMPL_ACCEPT(Tuple, tuple)
 
 }  // namespace ast
 }  // namespace arrow

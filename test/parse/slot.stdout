@@ -1,0 +1,87 @@
+{
+  "tag": "Module",
+  "span": "test/parse/slot.as:1.1-4.23",
+  "name": "slot",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/slot.as:1.1-4.23",
+    "statements": [
+      {
+        "tag": "Slot",
+        "span": "test/parse/slot.as:1.1-13",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/slot.as:1.5-6",
+          "text": "x",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypePath",
+          "span": "test/parse/slot.as:1.8-12",
+          "segments": [
+            "bool"
+          ]
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/slot.as:2.1-17",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/slot.as:2.5-6",
+          "text": "y",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypePath",
+          "span": "test/parse/slot.as:2.8-11",
+          "segments": [
+            "int"
+          ]
+        },
+        "initializer": {
+          "tag": "Integer",
+          "span": "test/parse/slot.as:2.14-16",
+          "text": "40"
+        }
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/slot.as:3.1-15",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/slot.as:3.5-6",
+          "text": "z",
+          "mutable": false
+        },
+        "type": null,
+        "initializer": {
+          "tag": "Boolean",
+          "span": "test/parse/slot.as:3.9-14",
+          "value": false
+        }
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/slot.as:4.1-23",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/slot.as:4.13-14",
+          "text": "w",
+          "mutable": true
+        },
+        "type": null,
+        "initializer": {
+          "tag": "Float",
+          "span": "test/parse/slot.as:4.17-22",
+          "text": "10.15"
+        }
+      }
+    ]
+  }
+}

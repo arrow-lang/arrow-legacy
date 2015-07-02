@@ -1,1 +1,10 @@
-{"tag":"Module","span":"test/parse/empty.as:1.1-1","name":"empty","block":{"tag":"Block","span":"test/parse/empty.as:1.1-1","statements":[]}}
+{
+  "tag": "Module",
+  "span": "test/parse/empty.as:1.1-1",
+  "name": "empty",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/empty.as:1.1-1",
+    "statements": []
+  }
+}

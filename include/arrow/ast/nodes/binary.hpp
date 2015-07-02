@@ -58,8 +58,8 @@ DEF_BINARY(Assign);
 
 /// A member access operation (commonly referred to as the "dot" operator).
 struct Path : Node {
-  Path(Span span, Ref<Node> operand, Ref<Identifier> id)
-    : Node(span), operand(operand), id(id) {
+  Path(Span span, Ref<Node> operand, std::string member)
+    : Node(span), operand(operand), member(member) {
   }
 
   virtual ~Path() noexcept;
@@ -67,7 +67,7 @@ struct Path : Node {
   void accept(Visitor&) override;
 
   Ref<Node> operand;
-  Ref<Identifier> id;
+  std::string member;
 };
 
 }  // namespace ast

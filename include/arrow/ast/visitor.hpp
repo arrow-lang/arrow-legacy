@@ -25,6 +25,7 @@ struct Visitor {
   virtual void visit_module(Module&) { }
   virtual void visit_block(Block&) { }
 
+  virtual void visit_none(None&) { }
   virtual void visit_bool(Boolean&) { }
   virtual void visit_str(String&) { }
   virtual void visit_int(Integer&) { }
@@ -85,6 +86,8 @@ struct Visitor {
   virtual void visit_type_path(TypePath&) { }
   virtual void visit_type_pointer(TypePointer&) { }
   virtual void visit_type_tuple(TypeTuple&) { }
+
+  virtual void visit_tuple(Tuple&) { }
 
 };
 

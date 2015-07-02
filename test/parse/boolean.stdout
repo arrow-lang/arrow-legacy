@@ -1,1 +1,21 @@
-{"tag":"Module","span":"test/parse/boolean.as:1.1-2.5","name":"boolean","block":{"tag":"Block","span":"test/parse/boolean.as:1.1-2.5","statements":[{"tag":"Boolean","span":"test/parse/boolean.as:1.1-6","value":false},{"tag":"Boolean","span":"test/parse/boolean.as:2.1-5","value":true}]}}
+{
+  "tag": "Module",
+  "span": "test/parse/boolean.as:1.1-2.5",
+  "name": "boolean",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/boolean.as:1.1-2.5",
+    "statements": [
+      {
+        "tag": "Boolean",
+        "span": "test/parse/boolean.as:1.1-6",
+        "value": false
+      },
+      {
+        "tag": "Boolean",
+        "span": "test/parse/boolean.as:2.1-5",
+        "value": true
+      }
+    ]
+  }
+}

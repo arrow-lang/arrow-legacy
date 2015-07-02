@@ -53,7 +53,7 @@ bool Parser::parse_slot() {
   if (!last_tok) return false;
 
   // Declare and push the node
-  _stack.push_back(new ast::Slot(
+  _stack.push_front(new ast::Slot(
     initial_tok->span.extend(last_tok->span),
     exported,
     pattern,
@@ -103,7 +103,7 @@ bool Parser::parse_extern_slot() {
   if (!last_tok) return false;
 
   // Declare and push the node
-  _stack.push_back(new ast::ExternSlot(
+  _stack.push_front(new ast::ExternSlot(
     initial_tok->span.extend(last_tok->span),
     exported,
     name,

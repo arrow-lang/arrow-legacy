@@ -29,7 +29,7 @@ bool Parser::parse_pattern() {
   if (tok->type == Token::Type::Underscore) {
     auto tok = _t.pop();
 
-    _stack.push_back(new ast::PatternWildcard(tok->span));
+    _stack.push_front(new ast::PatternWildcard(tok->span));
     return true;
   }
 
@@ -47,7 +47,7 @@ bool Parser::parse_pattern() {
     auto ident = expect<ast::Identifier>(&Parser::parse_identifier);
     if (!ident) return false;
 
-    _stack.push_back(new ast::PatternIdentifier(tok->span, ident->text, mut));
+    _stack.push_front(new ast::PatternIdentifier(tok->span, ident->text, mut));
     return true;
   }
 
@@ -62,7 +62,7 @@ bool Parser::parse_pattern() {
     if (_t.peek(0)->type == Token::Type::RightParenthesis) {
       tok = _t.pop();
       node->span = node->span.extend(tok->span);
-      _stack.push_back(node);
+      _stack.push_front(node);
       return true;
     }
 
@@ -101,11 +101,12 @@ bool Parser::parse_pattern() {
       tok->type == Token::Type::String ||
       tok->type == Token::Type::Integer ||
       tok->type == Token::Type::True ||
+      tok->type == Token::Type::None ||
       tok->type == Token::Type::False) {
     auto literal = expect<ast::Literal>(&Parser::parse_literal);
     if (!literal) return false;
 
-    _stack.push_back(new ast::PatternLiteral(tok->span, literal));
+    _stack.push_front(new ast::PatternLiteral(tok->span, literal));
     return true;
   }
 
@@ -123,6 +124,7 @@ bool Parser::parse_pattern() {
     Token::Type::False,
     Token::Type::Integer,
     Token::Type::String,
+    Token::Type::None
   });
 
   return false;

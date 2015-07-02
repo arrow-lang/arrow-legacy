@@ -1,1 +1,121 @@
-{"tag":"Module","span":"test/parse/loop.as:1.1-16.2","name":"loop","block":{"tag":"Block","span":"test/parse/loop.as:1.1-16.2","statements":[{"tag":"Loop","span":"test/parse/loop.as:1.1-4.2","condition":{"tag":"Or","span":"test/parse/loop.as:1.7-34","lhs":{"tag":"LessThan","span":"test/parse/loop.as:1.7-20","lhs":{"tag":"Identifier","span":"test/parse/loop.as:1.7-16","text":"condition"},"rhs":{"tag":"Integer","span":"test/parse/loop.as:1.19-20","text":"3"}},"rhs":{"tag":"LessThan","span":"test/parse/loop.as:1.24-34","lhs":{"tag":"Identifier","span":"test/parse/loop.as:1.24-29","text":"other"},"rhs":{"tag":"Integer","span":"test/parse/loop.as:1.32-34","text":"30"}}},"block":{"tag":"Block","span":"test/parse/loop.as:1.35-4.2","statements":[{"tag":"Identifier","span":"test/parse/loop.as:2.3-12","text":"statement"},{"tag":"Call","span":"test/parse/loop.as:3.3-10","arguments":[]}]}},{"tag":"Loop","span":"test/parse/loop.as:6.1-12.2","condition":{"tag":"Not","span":"test/parse/loop.as:6.7-16","operand":{"tag":"Identifier","span":"test/parse/loop.as:6.7-16","text":"condition"}},"block":{"tag":"Block","span":"test/parse/loop.as:6.17-12.2","statements":[{"tag":"Loop","span":"test/parse/loop.as:7.3-9.4","condition":{"tag":"Identifier","span":"test/parse/loop.as:7.9-14","text":"other"},"block":{"tag":"Block","span":"test/parse/loop.as:7.15-9.4","statements":[{"tag":"Continue","span":"test/parse/loop.as:8.5-13"}]}},{"tag":"Break","span":"test/parse/loop.as:11.3-8"}]}},{"tag":"Loop","span":"test/parse/loop.as:14.1-16.2","condition":null,"block":{"tag":"Block","span":"test/parse/loop.as:14.6-16.2","statements":[{"tag":"Identifier","span":"test/parse/loop.as:15.3-16","text":"inf_statement"}]}}]}}
+{
+  "tag": "Module",
+  "span": "test/parse/loop.as:1.1-16.2",
+  "name": "loop",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/loop.as:1.1-16.2",
+    "statements": [
+      {
+        "tag": "Loop",
+        "span": "test/parse/loop.as:1.1-4.2",
+        "condition": {
+          "tag": "Or",
+          "span": "test/parse/loop.as:1.7-34",
+          "lhs": {
+            "tag": "LessThan",
+            "span": "test/parse/loop.as:1.7-20",
+            "lhs": {
+              "tag": "Identifier",
+              "span": "test/parse/loop.as:1.7-16",
+              "text": "condition"
+            },
+            "rhs": {
+              "tag": "Integer",
+              "span": "test/parse/loop.as:1.19-20",
+              "text": "3"
+            }
+          },
+          "rhs": {
+            "tag": "LessThan",
+            "span": "test/parse/loop.as:1.24-34",
+            "lhs": {
+              "tag": "Identifier",
+              "span": "test/parse/loop.as:1.24-29",
+              "text": "other"
+            },
+            "rhs": {
+              "tag": "Integer",
+              "span": "test/parse/loop.as:1.32-34",
+              "text": "30"
+            }
+          }
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/loop.as:1.35-4.2",
+          "statements": [
+            {
+              "tag": "Identifier",
+              "span": "test/parse/loop.as:2.3-12",
+              "text": "statement"
+            },
+            {
+              "tag": "Call",
+              "span": "test/parse/loop.as:3.3-10",
+              "arguments": []
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Loop",
+        "span": "test/parse/loop.as:6.1-12.2",
+        "condition": {
+          "tag": "Not",
+          "span": "test/parse/loop.as:6.7-16",
+          "operand": {
+            "tag": "Identifier",
+            "span": "test/parse/loop.as:6.7-16",
+            "text": "condition"
+          }
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/loop.as:6.17-12.2",
+          "statements": [
+            {
+              "tag": "Loop",
+              "span": "test/parse/loop.as:7.3-9.4",
+              "condition": {
+                "tag": "Identifier",
+                "span": "test/parse/loop.as:7.9-14",
+                "text": "other"
+              },
+              "block": {
+                "tag": "Block",
+                "span": "test/parse/loop.as:7.15-9.4",
+                "statements": [
+                  {
+                    "tag": "Continue",
+                    "span": "test/parse/loop.as:8.5-13"
+                  }
+                ]
+              }
+            },
+            {
+              "tag": "Break",
+              "span": "test/parse/loop.as:11.3-8"
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Loop",
+        "span": "test/parse/loop.as:14.1-16.2",
+        "condition": null,
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/loop.as:14.6-16.2",
+          "statements": [
+            {
+              "tag": "Identifier",
+              "span": "test/parse/loop.as:15.3-16",
+              "text": "inf_statement"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

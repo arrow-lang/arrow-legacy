@@ -107,14 +107,13 @@ bool Parser::parse_expression(unsigned power /* = 0 */) {
 
     // Attempt to match a postfix expression (which could be
     // a primary expression).
+    if (_stack.size() >= 1) break;
     if (!parse_postfix_expression()) {
       // Fail only if we haven't parsed anything
       if (initial_size != _stack.size()) {
         return true;
       } else {
-        // NOTE: Don't show an error as we probably already errored
-        _t.pop();
-        return false;
+        break;
       }
     }
   }
@@ -157,9 +156,16 @@ int Parser::parse_binary_expression(unsigned power) {
   auto lhs = _stack.front();
   _stack.pop_front();
 
-  // Request an expression (rhs)
-  // TODO: Improve `expect` to handle this case
-  if (!parse_expression(tok_power + tok_assoc)) return -1;
+  // Determine what the RHS should be and parse
+  if (tok->type == Token::Type::As) {
+    // Parse the RHS (which must be a type)
+    if (!parse_type()) return -1;
+  } else {
+    // Request an expression (rhs)
+    // TODO: Improve `expect` to handle this case
+    if (!parse_expression(tok_power + tok_assoc)) return -1;
+  }
+
   auto rhs = _stack.front();
   _stack.pop_front();
 
@@ -167,6 +173,10 @@ int Parser::parse_binary_expression(unsigned power) {
   auto sp = lhs->span.extend(rhs->span);
   Ref<ast::Node> node = nullptr;
   switch (tok->type) {
+    case Token::Type::As:
+      node = new ast::Cast(sp, lhs, rhs);
+      break;
+
     case Token::Type::Plus:
       node = new ast::Add(sp, lhs, rhs);
       break;
@@ -272,7 +282,7 @@ int Parser::parse_binary_expression(unsigned power) {
       break;
   }
 
-  _stack.push_back(node);
+  _stack.push_front(node);
 
   return 0;
 }
@@ -330,7 +340,7 @@ bool Parser::parse_unary_expression() {
       break;
   }
 
-  _stack.push_back(node);
+  _stack.push_front(node);
 
   return true;
 }

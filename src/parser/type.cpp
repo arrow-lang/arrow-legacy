@@ -13,7 +13,8 @@ namespace arrow {
 //      | "None"
 //      | "*" type
 //      | "(" ")"
-//      | "(" type { "," type } [ "," ] ")"
+//      | "(" type "," ")"
+//      | "(" type "," type { "," type } [ "," ] ")"
 //      | function-type
 //      ;
 // function-type-parameter = [ "identifier" ":" ] type ;
@@ -28,7 +29,7 @@ bool Parser::parse_type() {
   if (tok->type == Token::Type::None) {
     auto tok = _t.pop();
 
-    _stack.push_back(new ast::TypeNone(tok->span));
+    _stack.push_front(new ast::TypeNone(tok->span));
     return true;
   }
 
@@ -54,7 +55,7 @@ bool Parser::parse_type() {
       if (_t.peek(0)->type != Token::Type::Period) break;
     }
 
-    _stack.push_back(new ast::TypePath(
+    _stack.push_front(new ast::TypePath(
       span,
       segments
     ));
@@ -77,7 +78,7 @@ bool Parser::parse_type() {
     auto pointee = expect(&Parser::parse_type);
     if (!pointee) return false;
 
-    _stack.push_back(new ast::TypePointer(
+    _stack.push_front(new ast::TypePointer(
       tok->span.extend(pointee->span),
       pointee,
       is_mutable
@@ -91,13 +92,13 @@ bool Parser::parse_type() {
     _t.pop();
 
     // Declare the tuple-type node
-    Ref<ast::TypeTuple> node = new ast::TypeTuple(tok->span, {});
+    Ref<ast::TypeTuple> node = new ast::TypeTuple(tok->span);
 
     // Check for an immediate `)` which makes this an empty tuple
     if (_t.peek(0)->type == Token::Type::RightParenthesis) {
       tok = _t.pop();
       node->span = node->span.extend(tok->span);
-      _stack.push_back(node);
+      _stack.push_front(node);
       return true;
     }
 
