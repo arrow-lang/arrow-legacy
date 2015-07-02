@@ -144,24 +144,16 @@ bool Parser::parse_expression_statement() {
 // -----------------------------------------------------------------------------
 bool Parser::parse_primary_expression() {
   switch (_t.peek()->type) {
-    case Token::Type::None:
-      return parse_none();
-
-    case Token::Type::Integer:
-      return parse_integer();
-
-    case Token::Type::Float:
-      return parse_float();
-
     case Token::Type::Identifier:
       return parse_identifier();
 
+    case Token::Type::None:
+    case Token::Type::Integer:
+    case Token::Type::Float:
     case Token::Type::String:
-      return parse_string();
-
     case Token::Type::True:
     case Token::Type::False:
-      return parse_boolean();
+      return parse_literal();
 
     case Token::Type::LeftParenthesis:
       return parse_tuple();

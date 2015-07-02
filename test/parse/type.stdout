@@ -1,0 +1,226 @@
+{
+  "tag": "Module",
+  "span": "test/parse/type.as:1.1-9.13",
+  "name": "type",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/type.as:1.1-9.13",
+    "statements": [
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:1.1-12",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:1.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypePath",
+          "span": "test/parse/type.as:1.8-11",
+          "segments": [
+            "int"
+          ]
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:2.1-27",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:2.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypePath",
+          "span": "test/parse/type.as:2.8-26",
+          "segments": [
+            "path",
+            "to",
+            "the",
+            "future"
+          ]
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:3.1-13",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:3.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypeNone",
+          "span": "test/parse/type.as:3.8-12"
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:4.1-11",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:4.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypeTuple",
+          "span": "test/parse/type.as:4.8-10",
+          "elements": []
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:5.1-22",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:5.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypeTuple",
+          "span": "test/parse/type.as:5.8-21",
+          "elements": [
+            {
+              "tag": "TypePath",
+              "span": "test/parse/type.as:5.9-10",
+              "segments": [
+                "x"
+              ]
+            },
+            {
+              "tag": "TypePath",
+              "span": "test/parse/type.as:5.12-13",
+              "segments": [
+                "y"
+              ]
+            },
+            {
+              "tag": "TypePath",
+              "span": "test/parse/type.as:5.15-20",
+              "segments": [
+                "float"
+              ]
+            }
+          ]
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:6.1-13",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:6.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypePointer",
+          "span": "test/parse/type.as:6.8-12",
+          "mutable": false,
+          "pointee": {
+            "tag": "TypePath",
+            "span": "test/parse/type.as:6.9-12",
+            "segments": [
+              "int"
+            ]
+          }
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:7.1-16",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:7.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypePointer",
+          "span": "test/parse/type.as:7.8-15",
+          "mutable": false,
+          "pointee": {
+            "tag": "TypeTuple",
+            "span": "test/parse/type.as:7.9-15",
+            "elements": [
+              {
+                "tag": "TypePath",
+                "span": "test/parse/type.as:7.10-13",
+                "segments": [
+                  "int"
+                ]
+              }
+            ]
+          }
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:8.1-11",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:8.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypePointer",
+          "span": "test/parse/type.as:8.8-10",
+          "mutable": false,
+          "pointee": {
+            "tag": "TypePath",
+            "span": "test/parse/type.as:8.9-10",
+            "segments": [
+              "x"
+            ]
+          }
+        },
+        "initializer": null
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/type.as:9.1-13",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/type.as:9.5-6",
+          "text": "m",
+          "mutable": false
+        },
+        "type": {
+          "tag": "TypePointer",
+          "span": "test/parse/type.as:9.8-12",
+          "mutable": false,
+          "pointee": {
+            "tag": "TypePath",
+            "span": "test/parse/type.as:9.9-12",
+            "segments": [
+              "int"
+            ]
+          }
+        },
+        "initializer": null
+      }
+    ]
+  }
+}

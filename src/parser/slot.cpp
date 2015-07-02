@@ -70,7 +70,7 @@ bool Parser::parse_slot() {
 // -----------------------------------------------------------------------------
 bool Parser::parse_extern_slot() {
   // Check for "export" (to mean that this is a top-level slot AND exported)
-  Ref<ast::Node> initial_tok = nullptr;
+  Ref<Token> initial_tok = nullptr;
   bool exported = false;
   if (_t.peek()->type == Token::Type::Export) {
     exported = true;
