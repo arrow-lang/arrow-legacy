@@ -15,9 +15,10 @@
 int main(int argc, char** argv) {
   // Register available commands
   std::deque<arrow::Ref<arrow::Command>> commands;
-  commands.push_back(new arrow::command::Read());
-  commands.push_back(new arrow::command::Tokenize());
+  commands.push_back(new arrow::command::Compile());
   commands.push_back(new arrow::command::Parse());
+  commands.push_back(new arrow::command::Tokenize());
+  commands.push_back(new arrow::command::Read());
 
   // Check for a specified command
   std::vector<char*> args(argv, argv + argc);

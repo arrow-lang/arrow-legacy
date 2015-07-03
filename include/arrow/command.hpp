@@ -37,5 +37,6 @@ class Command {
 #include "arrow/command/read.hpp"
 #include "arrow/command/tokenize.hpp"
 #include "arrow/command/parse.hpp"
+#include "arrow/command/compile.hpp"
 
 #endif  // ARROW_COMMAND_H
