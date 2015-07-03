@@ -96,6 +96,9 @@ struct Show : Visitor {
   virtual void visit_extern_function(ExternFunction&);
   virtual void visit_return(Return&);
 
+  virtual void visit_select(Select&);
+  virtual void visit_select_branch(Branch&);
+
  private:
   void do_(const char* name, Node& x);
   void do_(const char* name, Node& x, std::function<void()> inner);

@@ -1,0 +1,369 @@
+{
+  "tag": "Module",
+  "span": "test/parse/select.as:1.1-25.50",
+  "name": "select",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/select.as:1.1-25.50",
+    "statements": [
+      {
+        "tag": "Select",
+        "span": "test/parse/select.as:1.1-4.2",
+        "branches": [
+          {
+            "tag": "SelectBranch",
+            "span": "test/parse/select.as:1.1-4.2",
+            "condition": {
+              "tag": "NotEqualTo",
+              "span": "test/parse/select.as:1.4-22",
+              "lhs": {
+                "tag": "Identifier",
+                "span": "test/parse/select.as:1.4-13",
+                "text": "condition"
+              },
+              "rhs": {
+                "tag": "Boolean",
+                "span": "test/parse/select.as:1.17-22",
+                "value": false
+              }
+            },
+            "block": {
+              "tag": "Block",
+              "span": "test/parse/select.as:1.23-4.2",
+              "statements": [
+                {
+                  "tag": "Identifier",
+                  "span": "test/parse/select.as:2.3-12",
+                  "text": "statement"
+                },
+                {
+                  "tag": "Identifier",
+                  "span": "test/parse/select.as:3.3-18",
+                  "text": "other_statement"
+                }
+              ]
+            }
+          }
+        ],
+        "else_block": null
+      },
+      {
+        "tag": "Select",
+        "span": "test/parse/select.as:6.1-12.2",
+        "branches": [
+          {
+            "tag": "SelectBranch",
+            "span": "test/parse/select.as:6.1-8.2",
+            "condition": {
+              "tag": "GreaterThan",
+              "span": "test/parse/select.as:6.4-18",
+              "lhs": {
+                "tag": "Identifier",
+                "span": "test/parse/select.as:6.4-13",
+                "text": "condition"
+              },
+              "rhs": {
+                "tag": "Integer",
+                "span": "test/parse/select.as:6.16-18",
+                "text": "10"
+              }
+            },
+            "block": {
+              "tag": "Block",
+              "span": "test/parse/select.as:6.19-8.2",
+              "statements": [
+                {
+                  "tag": "Return",
+                  "span": "test/parse/select.as:7.3-11",
+                  "expression": {
+                    "tag": "Integer",
+                    "span": "test/parse/select.as:7.10-11",
+                    "text": "0"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "tag": "SelectBranch",
+            "span": "test/parse/select.as:8.8-10.2",
+            "condition": {
+              "tag": "LessThan",
+              "span": "test/parse/select.as:8.11-31",
+              "lhs": {
+                "tag": "Identifier",
+                "span": "test/parse/select.as:8.11-26",
+                "text": "other_condition"
+              },
+              "rhs": {
+                "tag": "Integer",
+                "span": "test/parse/select.as:8.29-31",
+                "text": "30"
+              }
+            },
+            "block": {
+              "tag": "Block",
+              "span": "test/parse/select.as:8.32-10.2",
+              "statements": [
+                {
+                  "tag": "Return",
+                  "span": "test/parse/select.as:9.3-12",
+                  "expression": {
+                    "tag": "Integer",
+                    "span": "test/parse/select.as:9.10-12",
+                    "text": "30"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "else_block": {
+          "tag": "Block",
+          "span": "test/parse/select.as:10.8-12.2",
+          "statements": [
+            {
+              "tag": "Return",
+              "span": "test/parse/select.as:11.3-12",
+              "expression": {
+                "tag": "Integer",
+                "span": "test/parse/select.as:11.10-12",
+                "text": "20"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Select",
+        "span": "test/parse/select.as:14.1-22.2",
+        "branches": [
+          {
+            "tag": "SelectBranch",
+            "span": "test/parse/select.as:14.1-16.2",
+            "condition": {
+              "tag": "Not",
+              "span": "test/parse/select.as:14.8-22",
+              "operand": {
+                "tag": "GreaterThan",
+                "span": "test/parse/select.as:14.8-22",
+                "lhs": {
+                  "tag": "Identifier",
+                  "span": "test/parse/select.as:14.8-17",
+                  "text": "condition"
+                },
+                "rhs": {
+                  "tag": "Integer",
+                  "span": "test/parse/select.as:14.20-22",
+                  "text": "10"
+                }
+              }
+            },
+            "block": {
+              "tag": "Block",
+              "span": "test/parse/select.as:14.23-16.2",
+              "statements": [
+                {
+                  "tag": "Return",
+                  "span": "test/parse/select.as:15.3-11",
+                  "expression": {
+                    "tag": "Integer",
+                    "span": "test/parse/select.as:15.10-11",
+                    "text": "0"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "tag": "SelectBranch",
+            "span": "test/parse/select.as:16.8-18.2",
+            "condition": {
+              "tag": "LessThan",
+              "span": "test/parse/select.as:16.11-31",
+              "lhs": {
+                "tag": "Identifier",
+                "span": "test/parse/select.as:16.11-26",
+                "text": "other_condition"
+              },
+              "rhs": {
+                "tag": "Integer",
+                "span": "test/parse/select.as:16.29-31",
+                "text": "30"
+              }
+            },
+            "block": {
+              "tag": "Block",
+              "span": "test/parse/select.as:16.32-18.2",
+              "statements": [
+                {
+                  "tag": "Return",
+                  "span": "test/parse/select.as:17.3-12",
+                  "expression": {
+                    "tag": "Integer",
+                    "span": "test/parse/select.as:17.10-12",
+                    "text": "30"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "tag": "SelectBranch",
+            "span": "test/parse/select.as:18.8-20.2",
+            "condition": {
+              "tag": "Not",
+              "span": "test/parse/select.as:18.15-35",
+              "operand": {
+                "tag": "LessThan",
+                "span": "test/parse/select.as:18.15-35",
+                "lhs": {
+                  "tag": "Identifier",
+                  "span": "test/parse/select.as:18.15-30",
+                  "text": "other_condition"
+                },
+                "rhs": {
+                  "tag": "Integer",
+                  "span": "test/parse/select.as:18.33-35",
+                  "text": "30"
+                }
+              }
+            },
+            "block": {
+              "tag": "Block",
+              "span": "test/parse/select.as:18.36-20.2",
+              "statements": [
+                {
+                  "tag": "Return",
+                  "span": "test/parse/select.as:19.3-12",
+                  "expression": {
+                    "tag": "Integer",
+                    "span": "test/parse/select.as:19.10-12",
+                    "text": "30"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "else_block": {
+          "tag": "Block",
+          "span": "test/parse/select.as:20.8-22.2",
+          "statements": [
+            {
+              "tag": "Return",
+              "span": "test/parse/select.as:21.3-12",
+              "expression": {
+                "tag": "Integer",
+                "span": "test/parse/select.as:21.10-12",
+                "text": "20"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/select.as:24.1-46",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/select.as:24.5-9",
+          "text": "name",
+          "mutable": false
+        },
+        "type": null,
+        "initializer": {
+          "tag": "Select",
+          "span": "test/parse/select.as:24.12-45",
+          "branches": [
+            {
+              "tag": "SelectBranch",
+              "span": "test/parse/select.as:24.12-32",
+              "condition": {
+                "tag": "Identifier",
+                "span": "test/parse/select.as:24.15-24",
+                "text": "condition"
+              },
+              "block": {
+                "tag": "Block",
+                "span": "test/parse/select.as:24.25-32",
+                "statements": [
+                  {
+                    "tag": "Integer",
+                    "span": "test/parse/select.as:24.27-29",
+                    "text": "40"
+                  }
+                ]
+              }
+            }
+          ],
+          "else_block": {
+            "tag": "Block",
+            "span": "test/parse/select.as:24.38-45",
+            "statements": [
+              {
+                "tag": "Integer",
+                "span": "test/parse/select.as:24.40-42",
+                "text": "30"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "tag": "Slot",
+        "span": "test/parse/select.as:25.1-50",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/select.as:25.5-9",
+          "text": "name",
+          "mutable": false
+        },
+        "type": null,
+        "initializer": {
+          "tag": "Select",
+          "span": "test/parse/select.as:25.12-49",
+          "branches": [
+            {
+              "tag": "SelectBranch",
+              "span": "test/parse/select.as:25.12-36",
+              "condition": {
+                "tag": "Not",
+                "span": "test/parse/select.as:25.19-28",
+                "operand": {
+                  "tag": "Identifier",
+                  "span": "test/parse/select.as:25.19-28",
+                  "text": "condition"
+                }
+              },
+              "block": {
+                "tag": "Block",
+                "span": "test/parse/select.as:25.29-36",
+                "statements": [
+                  {
+                    "tag": "Integer",
+                    "span": "test/parse/select.as:25.31-33",
+                    "text": "40"
+                  }
+                ]
+              }
+            }
+          ],
+          "else_block": {
+            "tag": "Block",
+            "span": "test/parse/select.as:25.42-49",
+            "statements": [
+              {
+                "tag": "Integer",
+                "span": "test/parse/select.as:25.44-46",
+                "text": "30"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

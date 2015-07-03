@@ -12,8 +12,8 @@ namespace arrow {
 namespace ast {
 
 struct Branch : Node {
-  Branch(Span span, Ref<Node> condition)
-    : Node(span), block(), condition(condition) {
+  Branch(Span span, Ref<Node> condition, Ref<Block> block)
+    : Node(span), block(block), condition(condition) {
   }
 
   virtual ~Branch() noexcept;

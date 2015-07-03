@@ -91,6 +91,9 @@ struct Visitor {
 
   virtual void visit_tuple(Tuple&) { }
 
+  virtual void visit_select(Select&) { }
+  virtual void visit_select_branch(Branch&) { }
+
 };
 
 }  // namespace ast

@@ -78,9 +78,8 @@ class Parser {
   bool parse_struct();
   bool parse_slot();
   bool parse_select();
-  // bool parse_expression();
+  bool parse_select_branch();
   bool parse_primary_expression();
-  bool parse_paren_expression();
   bool parse_integer();
   bool parse_boolean();
   bool parse_float();

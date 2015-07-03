@@ -98,7 +98,7 @@ bool Parser::parse_expression(unsigned power /* = 0 */) {
     }
 
     // Attempt to match a binary token
-    if (BINARY.find(tok->type) != BINARY.end()) {
+    if (_stack.size() > 0 && BINARY.find(tok->type) != BINARY.end()) {
       auto rv = parse_binary_expression(power);
       if      (rv == -1) return false;
       else if (rv ==  0) continue;

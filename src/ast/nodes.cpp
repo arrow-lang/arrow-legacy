@@ -95,5 +95,8 @@ IMPL_ACCEPT(TypePointer, type_pointer)
 
 IMPL_ACCEPT(Tuple, tuple)
 
+IMPL_ACCEPT(Select, select)
+IMPL_ACCEPT(Branch, select_branch)
+
 }  // namespace ast
 }  // namespace arrow

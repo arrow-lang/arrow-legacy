@@ -91,8 +91,9 @@ bool Parser::parse_statement() {
         return parse_slot();
       }
 
-    // case Token::Type::If:
-    //   return parse_select_expression();
+    case Token::Type::If:
+    case Token::Type::Unless:
+      return parse_select();
 
     case Token::Type::LeftBrace:
       return parse_block(/*top_level=*/false);
@@ -162,8 +163,9 @@ bool Parser::parse_primary_expression() {
     case Token::Type::LeftParenthesis:
       return parse_tuple();
 
-    // case Token::Type::If:
-    //   return parse_select_expression();
+    case Token::Type::If:
+    case Token::Type::Unless:
+      return parse_select();
 
     case Token::Type::LeftBrace:
       return parse_block(/*top_level=*/false);
