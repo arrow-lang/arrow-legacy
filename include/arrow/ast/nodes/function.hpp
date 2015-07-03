@@ -15,32 +15,27 @@ namespace ast {
 struct Parameter : Node {
   Parameter(
     Span span,
-    std::string name_,
-    Ref<Node> type_,
-    Ref<Node> default_value_,
-    bool is_mutable
+    Ref<Pattern> pattern,
+    Ref<Type> type = nullptr,
+    Ref<Node> default_value_ = nullptr
   ) : Node(span),
-      name(name_),
-      type(type_),
-      default_value(default_value_),
-      is_mutable(is_mutable) {
+      pattern(pattern),
+      type(type),
+      default_value(default_value_) {
   }
 
   virtual ~Parameter() noexcept;
 
   virtual void accept(Visitor&);
 
-  /// The name (from identifier).
-  std::string name;
+  /// The (irrefutable) pattern.
+  Ref<Pattern> pattern;
 
   /// The type annotation.
-  Ref<Node> type;
+  Ref<Type> type;
 
   /// The (optional) default value.
   Ref<Node> default_value;
-
-  /// Whether this parameter is defined as mutable (or not).
-  bool is_mutable;
 };
 
 struct BaseFunction : Item {
@@ -48,14 +43,14 @@ struct BaseFunction : Item {
     Span span,
     bool exported,
     std::string name,
-    Ref<Node> result_type_
+    Ref<Node> result_type_ = nullptr
   ) : Item(span, exported),
       name(name),
       result_type(result_type_) {
     if (result_type_ == nullptr) {
       // Give this function the `None` result
       // if it did not pass a result type
-      result_type = new None(Span());
+      result_type = new TypeNone(Span());
     }
   }
 
@@ -86,7 +81,7 @@ struct ExternFunction : BaseFunction {
     Span span,
     bool exported,
     std::string name,
-    Ref<Node> result_type_,
+    Ref<Node> result_type_ = nullptr,
     std::string abi_ = "cdcel"
   ) : BaseFunction(span, exported, name, result_type_),
       abi(abi_) {

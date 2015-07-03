@@ -78,14 +78,18 @@ bool Parser::parse_statement() {
     case Token::Type::Until:
       return parse_loop();
 
-    // case Token::Type::Def:
-    //   return parse_function();
-
     case Token::Type::Extern:
       return parse_extern();
 
     case Token::Type::Let:
-      return parse_slot();
+      if (_t.peek(1)->type == Token::Type::Identifier &&
+          _t.peek(2)->type == Token::Type::LeftParenthesis) {
+        // This is a function definition
+        return parse_function();
+      } else {
+        // This is a slot
+        return parse_slot();
+      }
 
     // case Token::Type::If:
     //   return parse_select_expression();
@@ -263,7 +267,7 @@ bool Parser::parse_return() {
     // Nope; we should attempt to parse the returned expression
     // TODO: Improve expect to handle this case
     if (!parse_expression()) return false;
-    auto expr = _stack.front();
+    expr = _stack.front();
     _stack.pop_front();
   }
 

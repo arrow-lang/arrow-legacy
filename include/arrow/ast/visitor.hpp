@@ -71,6 +71,7 @@ struct Visitor {
   virtual void visit_call(Call&) { }
   virtual void visit_argument(Argument&) { }
 
+  virtual void visit_parameter(Parameter&) { }
   virtual void visit_function(Function&) { }
   virtual void visit_extern_function(ExternFunction&) { }
   virtual void visit_return(Return&) { }

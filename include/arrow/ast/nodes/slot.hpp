@@ -16,7 +16,7 @@ struct Slot : Item {
     Span span,
     bool exported,
     Ref<Pattern> pattern,
-    Ref<Node> type = nullptr,
+    Ref<Type> type = nullptr,
     Ref<Node> initializer = nullptr
   ) : Item(span, exported),
       pattern(pattern),

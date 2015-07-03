@@ -1,0 +1,389 @@
+{
+  "tag": "Module",
+  "span": "test/parse/function.as:1.1-35.2",
+  "name": "function",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/function.as:1.1-35.2",
+    "statements": [
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:1.1-2.2",
+        "name": "call",
+        "exported": false,
+        "parameters": [
+          {
+            "tag": "Parameter",
+            "span": "test/parse/function.as:1.10-20",
+            "pattern": {
+              "tag": "PatternIdentifier",
+              "span": "test/parse/function.as:1.10-15",
+              "text": "param",
+              "mutable": false
+            },
+            "type": {
+              "tag": "TypePath",
+              "span": "test/parse/function.as:1.17-20",
+              "segments": [
+                "int"
+              ]
+            },
+            "default_value": null
+          }
+        ],
+        "result_type": {
+          "tag": "TypeNone",
+          "span": "test/parse/function.as:1.25-29"
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:1.30-2.2",
+          "statements": []
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:4.1-5.2",
+        "name": "call",
+        "exported": false,
+        "parameters": [
+          {
+            "tag": "Parameter",
+            "span": "test/parse/function.as:4.10-20",
+            "pattern": {
+              "tag": "PatternIdentifier",
+              "span": "test/parse/function.as:4.10-15",
+              "text": "param",
+              "mutable": false
+            },
+            "type": {
+              "tag": "TypePath",
+              "span": "test/parse/function.as:4.17-20",
+              "segments": [
+                "int"
+              ]
+            },
+            "default_value": null
+          }
+        ],
+        "result_type": {
+          "tag": "TypeNone",
+          "span": "(nil)"
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:4.22-5.2",
+          "statements": []
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:7.1-9.2",
+        "name": "list_map",
+        "exported": false,
+        "parameters": [
+          {
+            "tag": "Parameter",
+            "span": "test/parse/function.as:7.14-20",
+            "pattern": {
+              "tag": "PatternIdentifier",
+              "span": "test/parse/function.as:7.14-15",
+              "text": "x",
+              "mutable": false
+            },
+            "type": {
+              "tag": "TypePath",
+              "span": "test/parse/function.as:7.17-20",
+              "segments": [
+                "int"
+              ]
+            },
+            "default_value": null
+          }
+        ],
+        "result_type": {
+          "tag": "TypePath",
+          "span": "test/parse/function.as:7.25-28",
+          "segments": [
+            "int"
+          ]
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:7.29-9.2",
+          "statements": [
+            {
+              "tag": "Return",
+              "span": "test/parse/function.as:8.3-15",
+              "expression": {
+                "tag": "Mul",
+                "span": "test/parse/function.as:8.10-15",
+                "lhs": {
+                  "tag": "Identifier",
+                  "span": "test/parse/function.as:8.10-11",
+                  "text": "x"
+                },
+                "rhs": {
+                  "tag": "Identifier",
+                  "span": "test/parse/function.as:8.14-15",
+                  "text": "y"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:11.1-13.2",
+        "name": "dict_map",
+        "exported": false,
+        "parameters": [
+          {
+            "tag": "Parameter",
+            "span": "test/parse/function.as:11.14-24",
+            "pattern": {
+              "tag": "PatternIdentifier",
+              "span": "test/parse/function.as:11.14-19",
+              "text": "value",
+              "mutable": false
+            },
+            "type": {
+              "tag": "TypePath",
+              "span": "test/parse/function.as:11.21-24",
+              "segments": [
+                "int"
+              ]
+            },
+            "default_value": null
+          },
+          {
+            "tag": "Parameter",
+            "span": "test/parse/function.as:11.26-34",
+            "pattern": {
+              "tag": "PatternIdentifier",
+              "span": "test/parse/function.as:11.26-29",
+              "text": "key",
+              "mutable": false
+            },
+            "type": {
+              "tag": "TypePath",
+              "span": "test/parse/function.as:11.31-34",
+              "segments": [
+                "str"
+              ]
+            },
+            "default_value": null
+          }
+        ],
+        "result_type": {
+          "tag": "TypePath",
+          "span": "test/parse/function.as:11.39-42",
+          "segments": [
+            "int"
+          ]
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:11.43-13.2",
+          "statements": [
+            {
+              "tag": "Return",
+              "span": "test/parse/function.as:12.3-16",
+              "expression": {
+                "tag": "Identity",
+                "span": "test/parse/function.as:12.10-16",
+                "operand": {
+                  "tag": "Identifier",
+                  "span": "test/parse/function.as:12.11-16",
+                  "text": "value"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:15.1-17.2",
+        "name": "default_arg",
+        "exported": false,
+        "parameters": [
+          {
+            "tag": "Parameter",
+            "span": "test/parse/function.as:15.17-32",
+            "pattern": {
+              "tag": "PatternIdentifier",
+              "span": "test/parse/function.as:15.17-22",
+              "text": "radix",
+              "mutable": false
+            },
+            "type": {
+              "tag": "TypePath",
+              "span": "test/parse/function.as:15.24-27",
+              "segments": [
+                "int"
+              ]
+            },
+            "default_value": {
+              "tag": "Integer",
+              "span": "test/parse/function.as:15.30-32",
+              "text": "40"
+            }
+          }
+        ],
+        "result_type": {
+          "tag": "TypePath",
+          "span": "test/parse/function.as:15.37-40",
+          "segments": [
+            "int"
+          ]
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:15.41-17.2",
+          "statements": [
+            {
+              "tag": "Return",
+              "span": "test/parse/function.as:16.3-15",
+              "expression": {
+                "tag": "Identifier",
+                "span": "test/parse/function.as:16.10-15",
+                "text": "radix"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:19.1-20.2",
+        "name": "main",
+        "exported": false,
+        "parameters": [],
+        "result_type": {
+          "tag": "TypeNone",
+          "span": "(nil)"
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:19.12-20.2",
+          "statements": []
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:22.1-23.2",
+        "name": "ようこそ",
+        "exported": false,
+        "parameters": [],
+        "result_type": {
+          "tag": "TypeNone",
+          "span": "(nil)"
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:22.12-23.2",
+          "statements": []
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:25.1-27.2",
+        "name": "main",
+        "exported": false,
+        "parameters": [],
+        "result_type": {
+          "tag": "TypePath",
+          "span": "test/parse/function.as:25.15-18",
+          "segments": [
+            "int"
+          ]
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:25.19-27.2",
+          "statements": [
+            {
+              "tag": "Return",
+              "span": "test/parse/function.as:26.3-12",
+              "expression": {
+                "tag": "Integer",
+                "span": "test/parse/function.as:26.10-12",
+                "text": "10"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:29.1-31.2",
+        "name": "ようこそ",
+        "exported": false,
+        "parameters": [],
+        "result_type": {
+          "tag": "TypePath",
+          "span": "test/parse/function.as:29.15-18",
+          "segments": [
+            "int"
+          ]
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:29.19-31.2",
+          "statements": [
+            {
+              "tag": "Return",
+              "span": "test/parse/function.as:30.3-12",
+              "expression": {
+                "tag": "Integer",
+                "span": "test/parse/function.as:30.10-12",
+                "text": "60"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "tag": "Function",
+        "span": "test/parse/function.as:33.1-35.2",
+        "name": "generic",
+        "exported": false,
+        "parameters": [
+          {
+            "tag": "Parameter",
+            "span": "test/parse/function.as:33.13-16",
+            "pattern": {
+              "tag": "PatternIdentifier",
+              "span": "test/parse/function.as:33.13-16",
+              "text": "val",
+              "mutable": false
+            },
+            "type": null,
+            "default_value": null
+          }
+        ],
+        "result_type": {
+          "tag": "TypeNone",
+          "span": "(nil)"
+        },
+        "block": {
+          "tag": "Block",
+          "span": "test/parse/function.as:33.18-35.2",
+          "statements": [
+            {
+              "tag": "Return",
+              "span": "test/parse/function.as:34.3-13",
+              "expression": {
+                "tag": "Identifier",
+                "span": "test/parse/function.as:34.10-13",
+                "text": "val"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

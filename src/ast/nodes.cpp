@@ -73,6 +73,7 @@ IMPL_ACCEPT(Call, call)
 IMPL_ACCEPT(Argument, argument)
 
 IMPL(BaseFunction)
+IMPL_ACCEPT(Parameter, parameter)
 IMPL_ACCEPT(Function, function)
 IMPL_ACCEPT(ExternFunction, extern_function)
 IMPL_ACCEPT(Return, return)

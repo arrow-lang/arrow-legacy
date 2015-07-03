@@ -91,6 +91,11 @@ struct Show : Visitor {
 
   virtual void visit_tuple(Tuple&);
 
+  virtual void visit_parameter(Parameter&);
+  virtual void visit_function(Function&);
+  virtual void visit_extern_function(ExternFunction&);
+  virtual void visit_return(Return&);
+
  private:
   void do_(const char* name, Node& x);
   void do_(const char* name, Node& x, std::function<void()> inner);

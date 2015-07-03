@@ -67,6 +67,9 @@ class Parser {
   bool parse_break();
   bool parse_continue();
   bool parse_return();
+  bool parse_parameter();
+  bool parse_parameters(ast::BaseFunction&);
+  bool parse_function_result_type(ast::BaseFunction&);
   bool parse_function();
   bool parse_extern();
   bool parse_extern_function();
