@@ -149,7 +149,49 @@ bool Parser::parse_function() {
 // function = [ "export" ] "extern" "let" IDENTIFIER "(" [ parameters ] ")" [ "->" type ] ";" ;
 // -----------------------------------------------------------------------------
 bool Parser::parse_extern_function() {
-  return false;
+  // Check for "export" (to mean that this is a top-level function AND exported)
+  Ref<Token> initial_tok = nullptr;
+  bool exported = false;
+  if (_t.peek()->type == Token::Type::Export) {
+    exported = true;
+    initial_tok = _t.pop();
+  }
+
+  // Expect `extern`
+  if (!expect(Token::Type::Extern)) return false;
+
+  // Expect `let`
+  auto tok = expect(Token::Type::Let);
+  if (!tok) return false;
+  if (!initial_tok) initial_tok = tok;
+
+  // Expect an identifier (for the function name)
+  auto id = expect<ast::Identifier>(&Parser::parse_identifier);
+  if (!id) return false;
+  auto name = id->text;
+
+  // Declare the node
+  Ref<ast::ExternFunction> node = new ast::ExternFunction(
+    initial_tok->span,
+    exported,
+    name
+  );
+
+  // Parse the parameter list
+  if (!parse_parameters(*node)) return false;
+
+  // Parse the result type annotation (if present)
+  if (!parse_function_result_type(*node)) return false;
+
+  // Expect a `;`
+  auto last_tok = expect(Token::Type::Semicolon);
+  if (!last_tok) return false;
+  node->span = node->span.extend(last_tok->span);
+
+  // Push the node
+  _stack.push_front(node);
+
+  return true;
 }
 
 }  // namespace arrow

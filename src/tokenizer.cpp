@@ -165,7 +165,7 @@ auto Tokenizer::peek(unsigned offset) -> Ref<Token> {
 bool Tokenizer::_read(std::size_t count) {
   // If we've recursed enough; return
   // If we've enough tokens in the queue; return
-  if (count == 0 || _queue.size() >= count) return true;
+  if (count == 0 || _queue.size() > count) return true;
 
   // Check for the end-of-stream condition ..
   if (_b.empty()) {

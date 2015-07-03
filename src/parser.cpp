@@ -64,12 +64,13 @@ bool Parser::parse_module_statement() {
 // -----------------------------------------------------------------------------
 bool Parser::parse_statement() {
   auto tok = _t.peek(0);
+  unsigned pindex = 0;
   if (tok->type == Token::Type::Export && (
       _t.peek(1)->type == Token::Type::Let ||
-      _t.peek(1)->type == Token::Type::Def ||
       _t.peek(1)->type == Token::Type::Extern)) {
     // Ignore the "export" (for now)
     tok = _t.peek(1);
+    pindex = 1;
   }
 
   switch (tok->type) {
@@ -82,8 +83,8 @@ bool Parser::parse_statement() {
       return parse_extern();
 
     case Token::Type::Let:
-      if (_t.peek(1)->type == Token::Type::Identifier &&
-          _t.peek(2)->type == Token::Type::LeftParenthesis) {
+      if (_t.peek(pindex + 1)->type == Token::Type::Identifier &&
+          _t.peek(pindex + 2)->type == Token::Type::LeftParenthesis) {
         // This is a function definition
         return parse_function();
       } else {
@@ -299,11 +300,12 @@ bool Parser::parse_extern() {
     pindex += 1;
   }
 
-  if (_t.peek(pindex)->type == Token::Type::Let) {
-    return parse_extern_slot();
+  if (_t.peek(pindex + 1)->type == Token::Type::Identifier &&
+      _t.peek(pindex + 2)->type == Token::Type::LeftParenthesis) {
+    return parse_extern_function();
   }
 
-  return parse_extern_function();
+  return parse_extern_slot();
 }
 
 // Import

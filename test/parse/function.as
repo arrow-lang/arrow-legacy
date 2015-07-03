@@ -1,8 +1,8 @@
-let call(param: int) -> None {
+export let call(param: int) -> None {
 }
 
-let call(param: int) {
-}
+extern let call(param: int);
+export extern let call(param: int) -> bool;
 
 let list_map(x: int) -> int {
   return x * y;
