@@ -1,35 +1,35 @@
-export let call(param: int) -> None {
+export def call(param: int) -> None {
 }
 
-extern let call(param: int);
-export extern let call(param: int) -> bool;
+extern def call(param: int);
+export extern def call(param: int) -> bool;
 
-let list_map(x: int) -> int {
+def list_map(x: int) -> int {
   return x * y;
 }
 
-let dict_map(value: int, key: str) -> int {
+def dict_map(value: int, key: str) -> int {
   return +value;
 }
 
-let default_arg(radix: int = 40) -> int {
+def default_arg(radix: int = 40) -> int {
   return radix;
 }
 
-let main() {
+def main() {
 }
 
-let ようこそ() {
+def ようこそ() {
 }
 
-let main() -> int {
+def main() -> int {
   return 10;
 }
 
-let ようこそ() -> int {
+def ようこそ() -> int {
   return 60;
 }
 
-let generic(val) {
+def generic(val) {
   return val;
 }

@@ -36,15 +36,22 @@ Ref<ast::Node> Parser::parse() {
 // module-statement = import | struct | extern-function | statement ;
 // -----------------------------------------------------------------------------
 bool Parser::parse_module_statement() {
-  switch (_t.peek()->type) {
+  auto tok = _t.peek(0);
+  if (tok->type == Token::Type::Export && (
+      _t.peek(1)->type == Token::Type::Extern)) {
+    // Ignore the "export" (for now)
+    tok = _t.peek(1);
+  }
+
+  switch (tok->type) {
     case Token::Type::Import:
       return parse_import();
 
     // case Token::Type::Struct:
     //   return parse_struct();
-    //
-    // case Token::Type::Extern:
-    //   return parse_extern_function();
+
+    case Token::Type::Extern:
+      return parse_extern();
 
     default:
       // We must be a statement
@@ -64,13 +71,12 @@ bool Parser::parse_module_statement() {
 // -----------------------------------------------------------------------------
 bool Parser::parse_statement() {
   auto tok = _t.peek(0);
-  unsigned pindex = 0;
   if (tok->type == Token::Type::Export && (
       _t.peek(1)->type == Token::Type::Let ||
+      _t.peek(1)->type == Token::Type::Def ||
       _t.peek(1)->type == Token::Type::Extern)) {
     // Ignore the "export" (for now)
     tok = _t.peek(1);
-    pindex = 1;
   }
 
   switch (tok->type) {
@@ -79,18 +85,11 @@ bool Parser::parse_statement() {
     case Token::Type::Until:
       return parse_loop();
 
-    case Token::Type::Extern:
-      return parse_extern();
-
     case Token::Type::Let:
-      if (_t.peek(pindex + 1)->type == Token::Type::Identifier &&
-          _t.peek(pindex + 2)->type == Token::Type::LeftParenthesis) {
-        // This is a function definition
-        return parse_function();
-      } else {
-        // This is a slot
-        return parse_slot();
-      }
+      return parse_slot();
+
+    case Token::Type::Def:
+      return parse_function();
 
     case Token::Type::If:
     case Token::Type::Unless:
@@ -300,8 +299,7 @@ bool Parser::parse_extern() {
     pindex += 1;
   }
 
-  if (_t.peek(pindex + 1)->type == Token::Type::Identifier &&
-      _t.peek(pindex + 2)->type == Token::Type::LeftParenthesis) {
+  if (_t.peek(pindex)->type == Token::Type::Def) {
     return parse_extern_function();
   }
 

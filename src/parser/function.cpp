@@ -98,7 +98,7 @@ bool Parser::parse_function_result_type(ast::BaseFunction& x) {
 
 // Function
 // -----------------------------------------------------------------------------
-// function = [ "export" ] "let" IDENTIFIER "(" [ parameters ] ")" [ "->" type ] block ;
+// function = [ "export" ] "def" IDENTIFIER "(" [ parameters ] ")" [ "->" type ] block ;
 // -----------------------------------------------------------------------------
 bool Parser::parse_function() {
   // Check for "export" (to mean that this is a top-level function AND exported)
@@ -109,8 +109,8 @@ bool Parser::parse_function() {
     initial_tok = _t.pop();
   }
 
-  // Expect `let`
-  auto tok = expect(Token::Type::Let);
+  // Expect `def`
+  auto tok = expect(Token::Type::Def);
   if (!tok) return false;
   if (!initial_tok) initial_tok = tok;
 
@@ -146,7 +146,7 @@ bool Parser::parse_function() {
 
 // External Function
 // -----------------------------------------------------------------------------
-// function = [ "export" ] "extern" "let" IDENTIFIER "(" [ parameters ] ")" [ "->" type ] ";" ;
+// function = [ "export" ] "extern" "def" IDENTIFIER "(" [ parameters ] ")" [ "->" type ] ";" ;
 // -----------------------------------------------------------------------------
 bool Parser::parse_extern_function() {
   // Check for "export" (to mean that this is a top-level function AND exported)
@@ -160,8 +160,8 @@ bool Parser::parse_extern_function() {
   // Expect `extern`
   if (!expect(Token::Type::Extern)) return false;
 
-  // Expect `let`
-  auto tok = expect(Token::Type::Let);
+  // Expect `def`
+  auto tok = expect(Token::Type::Def);
   if (!tok) return false;
   if (!initial_tok) initial_tok = tok;
 
