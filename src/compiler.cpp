@@ -6,6 +6,7 @@
 #include <boost/filesystem.hpp>
 
 #include "arrow/compiler.hpp"
+#include "arrow/pass/build.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -24,6 +25,9 @@ void Compiler::compile(Ref<ast::Node> node) {
   //  - Resolve (discern the type of a value expression)
   //  - Build (render the LLVM IR)
   //  - Expose (hoist names)
+
+  // Invoke the build pass on the given node (module)
+  pass::Build(_ctx, _scope).run(*node);
 }
 
 void Compiler::print() {

@@ -1,8 +1,4 @@
- ✔ Slot @done(2015-06-30 08:29)
- ☐ Tuple
- ✔ Type @done(2015-07-01 16:36)
- ✔ Pattern @done(2015-07-01 15:25)
- ✔ Show (for Slot, Type, Pattern) @done(2015-07-01 15:26)
- ☐ Select
- ☐ Match
- ☐ Function (and External Function)
+  ☐ code::Scope
+  ☐ code::Item / code::Variable
+  ☐ code::Module
+  ☐ code::Type / code::IntegerType
