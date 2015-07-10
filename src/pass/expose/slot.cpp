@@ -9,7 +9,7 @@
 namespace arrow {
 
 static bool _expand_pattern(code::Scope& s, ast::Pattern& pattern) {
-  Match (pattern) {
+  Match(pattern) {
     Case(ast::PatternWildcard& x) {
       XTL_UNUSED(x);
 
@@ -19,18 +19,17 @@ static bool _expand_pattern(code::Scope& s, ast::Pattern& pattern) {
 
     Case(ast::PatternIdentifier& x) {
       // Add this (undefined and un-analyzed) to the current scope
-      s.add(new code::Variable(
+      s.emplace(new code::Slot(
         /*context=*/&pattern,
         /*name=*/x.text,
-        /*is_mutable=*/x.is_mutable
-      ));
+        /*is_mutable=*/x.is_mutable));
     } break;
 
     Case(ast::PatternTuple& x) {
       // A tuple-pattern (in this instance) is just a
       // sequence of identifiers/wildcards to be exposed
       for (auto& elem : x.elements) {
-        _expand_pattern(*elem);
+        _expand_pattern(s, *elem);
       }
     } break;
 
@@ -48,7 +47,7 @@ static bool _expand_pattern(code::Scope& s, ast::Pattern& pattern) {
 namespace pass {
 
 void Expose::visit_slot(ast::Slot& x) {
-  // TODO: If we are inside a function this is a local; else, global
+  // TODO(mehcode): If we are inside a function this is a local; else, global
   // NOTE: At the moment; all slots are assumed globals
 
   _expand_pattern(_scope, *x.pattern);

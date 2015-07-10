@@ -7,5 +7,7 @@
 #define ARROW_CODE_H 1
 
 #include "arrow/code/scope.hpp"
+#include "arrow/code/item.hpp"
+#include "arrow/code/slot.hpp"
 
 #endif  // ARROW_CODE_H
