@@ -97,7 +97,7 @@ struct Show : Visitor {
   virtual void visit_return(Return&);
 
   virtual void visit_select(Select&);
-  virtual void visit_select_branch(Branch&);
+  virtual void visit_select_branch(SelectBranch&);
 
  private:
   void do_(const char* name, Node& x);

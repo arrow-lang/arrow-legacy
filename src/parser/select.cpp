@@ -32,7 +32,7 @@ bool Parser::parse_select_branch() {
   _stack.pop_front();
 
   // Declare and push the node
-  _stack.push_front(new ast::Branch(
+  _stack.push_front(new ast::SelectBranch(
     initial_tok->span.extend(block->span),
     condition,
     block

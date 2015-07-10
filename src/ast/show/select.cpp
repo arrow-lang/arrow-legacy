@@ -9,7 +9,7 @@
 namespace arrow {
 namespace ast {
 
-void Show::visit_select_branch(Branch& x) {
+void Show::visit_select_branch(SelectBranch& x) {
   do_("SelectBranch", x, [&, this] {
     _w.Key("condition");
     x.condition->accept(*this);

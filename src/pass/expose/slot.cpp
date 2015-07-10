@@ -8,7 +8,7 @@
 
 namespace arrow {
 
-static bool _expand_pattern(code::Scope& s, ast::Pattern& pattern) {
+static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern) {
   Match(pattern) {
     Case(ast::PatternWildcard& x) {
       XTL_UNUSED(x);
@@ -19,7 +19,7 @@ static bool _expand_pattern(code::Scope& s, ast::Pattern& pattern) {
 
     Case(ast::PatternIdentifier& x) {
       // Add this (undefined and un-analyzed) to the current scope
-      s.emplace(new code::Slot(
+      s->emplace(new code::Slot(
         /*context=*/&pattern,
         /*name=*/x.text,
         /*is_mutable=*/x.is_mutable));

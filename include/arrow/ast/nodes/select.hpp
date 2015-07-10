@@ -11,12 +11,12 @@
 namespace arrow {
 namespace ast {
 
-struct Branch : Node {
-  Branch(Span span, Ref<Node> condition, Ref<Block> block)
+struct SelectBranch : Node {
+  SelectBranch(Span span, Ref<Node> condition, Ref<Block> block)
     : Node(span), block(block), condition(condition) {
   }
 
-  virtual ~Branch() noexcept;
+  virtual ~SelectBranch() noexcept;
 
   void accept(Visitor&) override;
 

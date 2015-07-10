@@ -15,7 +15,7 @@ namespace pass {
 
 class Build : public ast::Visitor {
  public:
-  Build(const Compiler::Context& ctx, code::Scope& scope)
+  Build(Compiler::Context& ctx, Ref<code::Scope> scope)
       : _ctx(ctx), _scope(scope) {
   }
 
@@ -26,11 +26,10 @@ class Build : public ast::Visitor {
 
  private:
   // The active compiler context.
-  const Compiler::Context& _ctx;
+  Compiler::Context& _ctx;
 
   // The scope to emplace the exposed items into.
-  code::Scope& _scope;
-
+  Ref<code::Scope> _scope;
 };
 
 }  // namespace pass

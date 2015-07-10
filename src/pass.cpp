@@ -4,12 +4,18 @@
 // See accompanying file LICENSE
 
 #include "arrow/pass/build.hpp"
+#include "arrow/pass/expose.hpp"
+#include "arrow/pass/analyze.hpp"
+
+#define IMPL(N) \
+  N::~N() noexcept { }
 
 namespace arrow {
 namespace pass {
 
-Build::~Build() noexcept {
-}
+IMPL(Build)
+IMPL(Expose)
+IMPL(Analyze)
 
 }  // namespace pass
 }  // namespace arrow

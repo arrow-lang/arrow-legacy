@@ -3,12 +3,14 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#include "arrow/pass/expose.hpp"
+#include "arrow/pass/analyze.hpp"
 
 namespace arrow {
 namespace pass {
 
-Expose::~Expose() noexcept {
+void Analyze::visit_assign(ast::Assign& x) {
+  // TODO(mehcode): Expand pattern
+  std::printf("ASSIGN: ?\n");
 }
 
 }  // namespace pass

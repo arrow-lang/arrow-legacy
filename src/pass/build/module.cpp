@@ -5,6 +5,7 @@
 
 #include "arrow/pass/build.hpp"
 #include "arrow/pass/expose.hpp"
+#include "arrow/pass/analyze.hpp"
 
 namespace arrow {
 namespace pass {
@@ -12,8 +13,11 @@ namespace pass {
 void Build::visit_module(ast::Module& x) {
   std::printf("Build::visit_module\n");
 
-  // Expose the module block (into the new module scope)
+  // Expose the module block (into the new module scope).
   Expose(_ctx, _scope).run(*x.block);
+
+  // Analyze (usage analysis) the module block.
+  Analyze(_scope).run(*x.block);
 }
 
 }  // namespace pass

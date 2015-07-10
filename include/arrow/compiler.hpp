@@ -35,8 +35,7 @@ class Compiler {
   Context _ctx;
 
   /// Top-level scope (contains built-ins)
-  code::Scope _scope;
-
+  Ref<code::Scope> _scope;
 };
 
 }  // namespace arrow

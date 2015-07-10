@@ -12,7 +12,7 @@ namespace fs = boost::filesystem;
 
 namespace arrow {
 
-Compiler::Compiler() {
+Compiler::Compiler() : _scope(new code::Scope()) {
 }
 
 Compiler::~Compiler() noexcept {
