@@ -5,11 +5,13 @@
 
 #include <vector>
 #include <string>
+#include <boost/filesystem.hpp>
 
 #include "arrow/command/compile.hpp"
 #include "arrow/compiler.hpp"
 #include "arrow/log.hpp"
 
+namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
 namespace arrow {
@@ -20,7 +22,8 @@ int Compile::run(
   const po::variables_map& vm
 ) {
   // Build and bind a parser to the input file
-  arrow::Parser parser{is, vm["input-file"].as<std::string>()};
+  auto filename = vm["input-file"].as<std::string>();
+  arrow::Parser parser{is, filename};
 
   // Parse the file into a single, top-level node (module)
   auto node = parser.parse();
@@ -30,9 +33,11 @@ int Compile::run(
 
   // Build a compiler
   arrow::Compiler compiler;
+  compiler.initialize();
 
   // Compile the top-level node (module)
-  compiler.compile(node);
+  auto module_name = fs::path(filename).stem().string();
+  compiler.compile(module_name, node);
   if (arrow::Log::get().count("error") > 0) {
     return EXIT_FAILURE;
   }

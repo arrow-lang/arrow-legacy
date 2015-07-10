@@ -21,13 +21,27 @@ namespace arrow {
 class Compiler {
  public:
   struct Context {
+    /// LLVM module that contains the LLVM IR
+    LLVMModuleRef mod;
+
+    /// LLVM instruction builder that greatly simplifies
+    /// IR generation with LLVM
+    LLVMBuilderRef irb;
+
+    /// LLVM target machine
+    LLVMTargetMachineRef target_machine;
+
+    /// LLVM target data (layout)
+    LLVMTargetDataRef data_layout;
   };
 
   Compiler();
 
   ~Compiler() noexcept;
 
-  void compile(Ref<ast::Node> node);
+  void initialize();
+
+  void compile(const std::string& name, Ref<ast::Node> node);
 
   void print();
 
