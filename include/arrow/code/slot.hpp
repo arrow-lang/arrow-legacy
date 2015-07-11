@@ -18,6 +18,10 @@ struct Slot : Item {
 
   virtual ~Slot() noexcept;
 
+  virtual bool is_type() const {
+    return false;
+  }
+
   bool is_mutable;
 };
 

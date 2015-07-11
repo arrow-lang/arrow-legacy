@@ -10,12 +10,19 @@
 namespace arrow {
 namespace pass {
 
-void Build::visit_module(ast::Module& x) {
-  // Expose the module block (into the new module scope).
-  Expose(_ctx, _scope).run(*x.block);
+void Type::visit_id(ast::Identifier& x) {
+  auto item = _scope.get(x.text);
+  if (!item) {
+    // TODO: Error
+    return;
+  }
 
-  // Analyze (usage analysis) the module block.
-  Analyze(_scope).run(*x.block);
+  if (!item->is_type()) {
+    // TODO: Error
+    return;
+  }
+
+  _stack.push_front(item->as<code::Type>());
 }
 
 }  // namespace pass

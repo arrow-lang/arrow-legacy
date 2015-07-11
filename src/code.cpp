@@ -13,6 +13,12 @@ namespace code {
 
 IMPL(Item)
 IMPL(Slot)
+IMPL(Typename)
+
+IMPL(Type)
+IMPL(BooleanType)
+IMPL(FloatType)
+IMPL(IntegerType)
 
 }  // namespace code
 }  // namespace arrow
