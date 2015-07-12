@@ -14,7 +14,7 @@ namespace pass {
 
 class Type : public ast::Visitor {
  public:
-  Type(Ref<code::Scope> scope)
+  explicit Type(Ref<code::Scope> scope)
       : _scope(scope) {
   }
 

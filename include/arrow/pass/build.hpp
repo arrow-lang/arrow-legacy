@@ -16,7 +16,7 @@ namespace pass {
 class Build : public ast::Visitor {
  public:
   Build(Compiler::Context& ctx, Ref<code::Scope> scope)
-      : _ctx(ctx), _scope(scope) {
+    : _ctx(ctx), _scope(scope) {
   }
 
   virtual ~Build() noexcept;
@@ -25,12 +25,22 @@ class Build : public ast::Visitor {
   virtual void visit_block(ast::Block&);
   virtual void visit_slot(ast::Slot&);
 
+  // Literal
+  // virtual void visit_none(ast::None&);
+  virtual void visit_bool(ast::Boolean&);
+  // virtual void visit_str(ast::String&);
+  virtual void visit_int(ast::Integer&);
+  virtual void visit_float(ast::Float&);
+
  private:
-  // The active compiler context.
+  /// The active compiler context.
   Compiler::Context& _ctx;
 
-  // The scope to emplace the exposed items into.
+  /// The scope to emplace the exposed items into.
   Ref<code::Scope> _scope;
+
+  /// Value stack for the generation process.
+  std::deque<Ref<code::Value>> _stack;
 };
 
 }  // namespace pass

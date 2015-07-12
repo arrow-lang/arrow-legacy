@@ -1,4 +1,10 @@
-  ☐ code::Scope
-  ☐ code::Item / code::Variable
-  ☐ code::Module
-  ☐ code::Type / code::IntegerType
+ ☐ Resolve: literal
+ ☐ Build: literal
+ ☐ Build(Slot): initializer
+ ☐ Analyze(Slot): initializer (resolve for type in case of missing annotation)
+ ☐ Resolve: tuple
+ ☐ Type: type_tuple
+ ☐ Build: tuple
+ ☐ Analyze(Slot): unpack tuple
+ ☐ Build(Slot): unpack tuple
+ ☐ Build(Slot): zero initializer

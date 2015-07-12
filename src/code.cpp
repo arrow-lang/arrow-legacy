@@ -20,5 +20,7 @@ IMPL(BooleanType)
 IMPL(FloatType)
 IMPL(IntegerType)
 
+IMPL(Value)
+
 }  // namespace code
 }  // namespace arrow
