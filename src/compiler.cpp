@@ -43,15 +43,39 @@ void Compiler::initialize() {
 
   // Boolean
   _scope->emplace(
-    new code::Typename(nullptr, "bool", new code::BooleanType()));
+    new code::Typename(nullptr, "bool", new code::TypeBoolean()));
 
   // Integer
+  // TODO(mehcode): `int` to be variable percision
   _scope->emplace(
-    new code::Typename(nullptr, "int", new code::IntegerType(32)));
+    new code::Typename(nullptr, "int", new code::TypeInteger(32)));
 
   // Float
   _scope->emplace(
-    new code::Typename(nullptr, "float", new code::FloatType()));
+    new code::Typename(nullptr, "float", new code::TypeFloat()));
+
+  // Sized Integers
+  _scope->emplace(
+    new code::Typename(nullptr, "int8", new code::TypeInteger(8)));
+  _scope->emplace(
+    new code::Typename(nullptr, "int16", new code::TypeInteger(16)));
+  _scope->emplace(
+    new code::Typename(nullptr, "int32", new code::TypeInteger(32)));
+  _scope->emplace(
+    new code::Typename(nullptr, "int64", new code::TypeInteger(64)));
+  _scope->emplace(
+    new code::Typename(nullptr, "int128", new code::TypeInteger(128)));
+
+  _scope->emplace(
+    new code::Typename(nullptr, "uint8", new code::TypeInteger(8, false)));
+  _scope->emplace(
+    new code::Typename(nullptr, "uint16", new code::TypeInteger(16, false)));
+  _scope->emplace(
+    new code::Typename(nullptr, "uint32", new code::TypeInteger(32, false)));
+  _scope->emplace(
+    new code::Typename(nullptr, "uint64", new code::TypeInteger(64, false)));
+  _scope->emplace(
+    new code::Typename(nullptr, "uint128", new code::TypeInteger(128, false)));
 }
 
 void Compiler::compile(const std::string& name, Ref<ast::Node> node) {

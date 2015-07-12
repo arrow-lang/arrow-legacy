@@ -61,6 +61,8 @@ struct Integer : Literal {
 
   void accept(Visitor&) override;
 
+  std::uint64_t minimum_bits() const;
+
   std::string text;
 };
 

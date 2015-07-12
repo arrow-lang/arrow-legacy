@@ -8,7 +8,7 @@
 namespace arrow {
 namespace pass {
 
-void Analyze::visit_assign(ast::Assign& x) {
+void Analyze::visit_assign(ast::Assign&) {
   // TODO(mehcode): Expand pattern
   std::printf("ASSIGN: ?\n");
 }

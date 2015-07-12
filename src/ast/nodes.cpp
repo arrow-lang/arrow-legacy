@@ -3,6 +3,10 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include <stddef.h>
+#include <stdlib.h>
+#include <gmp.h>
+
 #include "arrow/ast.hpp"
 
 #define IMPL(N) \
@@ -97,6 +101,16 @@ IMPL_ACCEPT(Tuple, tuple)
 
 IMPL_ACCEPT(Select, select)
 IMPL_ACCEPT(SelectBranch, select_branch)
+
+std::uint64_t Integer::minimum_bits() const {
+  // Find the number of bits we need (at least) to store
+  // this integer value
+  mpz_t value;
+  mpz_init_set_str(value, text.c_str(), 10);
+  auto size = mpz_sizeinbase(value, 2);
+  mpz_clear(value);
+  return size;
+}
 
 }  // namespace ast
 }  // namespace arrow

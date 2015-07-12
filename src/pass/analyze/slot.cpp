@@ -5,6 +5,7 @@
 
 #include "arrow/match.hpp"
 #include "arrow/pass/analyze.hpp"
+#include "arrow/pass/resolve.hpp"
 #include "arrow/pass/type.hpp"
 
 namespace arrow {
@@ -12,7 +13,8 @@ namespace arrow {
 static bool _expand_pattern(
   ast::Pattern& pattern,
   Ref<code::Scope> scope,
-  Ref<code::Type> type_annotation
+  Ref<code::Type> type_annotation,
+  Ref<code::Type> type_initializer
 ) {
   Match(pattern) {
     Case(ast::PatternWildcard& x) {
@@ -32,6 +34,9 @@ static bool _expand_pattern(
       if (type_annotation) {
         // .. mark this slot with the annotated type
         item->type = type_annotation;
+      } else if (type_initializer) {
+        // .. else if we have an initializer type
+        item->type = type_initializer;
       }
 
       // TODO(mehcode): No explicit annotation
@@ -59,8 +64,15 @@ void Analyze::visit_slot(ast::Slot& x) {
     if (!type_annotation) return;
   }
 
+  // Check for an initializer ..
+  Ref<code::Type> type_initializer = nullptr;
+  if (x.initializer) {
+    type_initializer = Resolve(_scope).run(*x.initializer);
+    if (!type_initializer) return;
+  }
+
   // Expand the pattern ..
-  _expand_pattern(*x.pattern, _scope, type_annotation);
+  _expand_pattern(*x.pattern, _scope, type_annotation, type_initializer);
 }
 
 }  // namespace pass

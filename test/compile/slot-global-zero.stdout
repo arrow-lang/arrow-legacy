@@ -1,0 +1,4 @@
+@a = global i32 0
+@b = global double 0.000000e+00
+@c = global i1 false
+@m = global { i32, double, i1 } zeroinitializer

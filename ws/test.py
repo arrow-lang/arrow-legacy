@@ -107,7 +107,9 @@ def run_(name, ctx, binary_path):
         print_test(file_, test)
 
 
-def handle_(binary_path, filename, *args):
+def handle_(binary_path, filename, *args, **kwargs):
+    transform_stdout = kwargs.pop("transform_stdout", None)
+
     filename = path.relpath(filename)
     process = Popen(
         [binary_path] + list(args) + [filename], stdout=PIPE, stderr=PIPE,
@@ -115,9 +117,12 @@ def handle_(binary_path, filename, *args):
     )
 
     stdout, _ = process.communicate()
+    stdout = stdout.decode('utf-8')
+    if transform_stdout:
+        stdout = transform_stdout(stdout)
 
     expected = get_expected(filename, "stdout")
-    test = expected == stdout.decode('utf-8') and process.returncode == 0
+    test = len(expected) > 0 and expected == stdout and process.returncode == 0
 
     return test
 
@@ -155,6 +160,21 @@ def handle_parse(binary_path, filename):
 
 def handle_parse_fail(binary_path, filename):
     return handle_fail_(binary_path, filename, "--parse")
+
+
+def handle_compile(binary_path, filename):
+    def transform(stdout):
+        lines = stdout.strip().split("\n")[4:]
+        lines.append("")
+
+        return "\n".join(lines)
+
+    return handle_(binary_path, filename, "--compile",
+                   transform_stdout=transform)
+
+
+def handle_compile_fail(binary_path, filename):
+    return handle_fail_(binary_path, filename, "--compile")
 
 
 def handle_run(binary_path, filename):
@@ -199,6 +219,8 @@ def run(ctx):
     run_("tokenize-fail", ctx, binary_path)
     run_("parse", ctx, binary_path)
     run_("parse-fail", ctx, binary_path)
+    run_("compile", ctx, binary_path)
+    # run_("compile-fail", ctx, binary_path)
     # run_("run", ctx, binary_path)
     # run_("run-fail", ctx, binary_path)
 

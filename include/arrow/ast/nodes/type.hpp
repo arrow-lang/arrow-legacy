@@ -55,7 +55,7 @@ struct TypePointer : Type {
 };
 
 struct TypeTuple : Type {
-  TypeTuple(Span span)
+  explicit TypeTuple(Span span)
     : Type(span), elements() {
   }
 

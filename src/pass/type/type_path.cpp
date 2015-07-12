@@ -24,7 +24,6 @@ void Type::visit_type_path(ast::TypePath& x) {
   // Pull the referred type out of the typename (and push to the stack)
   auto typename_ = item.as<code::Typename>();
   _stack.push_front(typename_->type);
-
 }
 
 }  // namespace pass

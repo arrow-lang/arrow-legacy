@@ -21,6 +21,12 @@ class Build : public ast::Visitor {
 
   virtual ~Build() noexcept;
 
+  Ref<code::Value> run_scalar(ast::Node& x) {
+    ast::Visitor::run(x);
+
+    return _stack.size() == 1 ? _stack.front() : nullptr;
+  }
+
   virtual void visit_module(ast::Module&);
   virtual void visit_block(ast::Block&);
   virtual void visit_slot(ast::Slot&);
@@ -31,6 +37,7 @@ class Build : public ast::Visitor {
   // virtual void visit_str(ast::String&);
   virtual void visit_int(ast::Integer&);
   virtual void visit_float(ast::Float&);
+  virtual void visit_tuple(ast::Tuple&);
 
  private:
   /// The active compiler context.

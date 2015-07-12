@@ -8,16 +8,31 @@
 namespace arrow {
 namespace code {
 
-LLVMTypeRef BooleanType::handle() const {
+LLVMTypeRef TypeBoolean::handle() {
   return LLVMInt1Type();
 }
 
-LLVMTypeRef FloatType::handle() const {
+LLVMTypeRef TypeFloat::handle() {
   return LLVMDoubleType();
 }
 
-LLVMTypeRef IntegerType::handle() const {
+LLVMTypeRef TypeInteger::handle() {
   return LLVMIntType(bits);
+}
+
+LLVMTypeRef TypeTuple::handle() {
+  if (!_handle) {
+    std::vector<LLVMTypeRef> element_types;
+    element_types.reserve(elements.size());
+    for (auto& element : elements) {
+      element_types.push_back(element->handle());
+    }
+
+    _handle = LLVMStructType(
+      element_types.data(), element_types.size(), false);
+  }
+
+  return _handle;
 }
 
 }  // namespace code

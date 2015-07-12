@@ -26,8 +26,8 @@ class Type : public ast::Visitor {
     return _stack.size() > 0 ? _stack.front() : nullptr;
   }
 
-  virtual void visit_id(ast::Identifier&);
   virtual void visit_type_path(ast::TypePath&);
+  virtual void visit_type_tuple(ast::TypeTuple&);
 
  private:
   // The scope to emplace the exposed items into.

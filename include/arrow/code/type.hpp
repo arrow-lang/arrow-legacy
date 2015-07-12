@@ -16,30 +16,43 @@ struct Type {
   virtual ~Type() noexcept;
 
   /// Get the LLVM type handle.
-  virtual LLVMTypeRef handle() const = 0;
+  virtual LLVMTypeRef handle() = 0;
 };
 
-struct BooleanType : Type {
-  virtual ~BooleanType() noexcept;
+struct TypeBoolean : Type {
+  virtual ~TypeBoolean() noexcept;
 
-  virtual LLVMTypeRef handle() const;
+  virtual LLVMTypeRef handle();
 };
 
-struct FloatType : Type {
-  virtual ~FloatType() noexcept;
+struct TypeFloat : Type {
+  virtual ~TypeFloat() noexcept;
 
-  virtual LLVMTypeRef handle() const;
+  virtual LLVMTypeRef handle();
 };
 
-struct IntegerType : Type {
-  explicit IntegerType(unsigned bits) : bits(bits) {
+struct TypeInteger : Type {
+  explicit TypeInteger(unsigned bits, bool is_signed = true)
+    : bits(bits), is_signed(is_signed) {
   }
 
-  virtual ~IntegerType() noexcept;
+  virtual ~TypeInteger() noexcept;
 
-  virtual LLVMTypeRef handle() const;
+  virtual LLVMTypeRef handle();
 
   unsigned bits;
+  bool is_signed;
+};
+
+struct TypeTuple : Type {
+  virtual ~TypeTuple() noexcept;
+
+  virtual LLVMTypeRef handle();
+
+  std::vector<Ref<code::Type>> elements;
+
+ private:
+  LLVMTypeRef _handle;
 };
 
 struct Typename : Item {

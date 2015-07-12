@@ -16,9 +16,10 @@ IMPL(Slot)
 IMPL(Typename)
 
 IMPL(Type)
-IMPL(BooleanType)
-IMPL(FloatType)
-IMPL(IntegerType)
+IMPL(TypeBoolean)
+IMPL(TypeFloat)
+IMPL(TypeInteger)
+IMPL(TypeTuple)
 
 IMPL(Value)
 

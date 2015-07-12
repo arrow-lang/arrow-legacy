@@ -1,10 +1,10 @@
- ☐ Resolve: literal
- ☐ Build: literal
- ☐ Build(Slot): initializer
- ☐ Analyze(Slot): initializer (resolve for type in case of missing annotation)
- ☐ Resolve: tuple
- ☐ Type: type_tuple
- ☐ Build: tuple
+ ✔ Resolve: literal @done(2015-07-12 08:17)
+ ✔ Build: literal @done(2015-07-12 08:17)
+ ✔ Build(Slot): initializer @done(2015-07-12 08:17)
+ ✔ Analyze(Slot): initializer (resolve for type in case of missing annotation) @done(2015-07-12 08:17)
+ ✔ Type: type_tuple @done(2015-07-12 08:28)
+ ✔ Resolve: tuple @done(2015-07-12 08:51)
+ ✔ Build: tuple @done(2015-07-12 08:51)
  ☐ Analyze(Slot): unpack tuple
  ☐ Build(Slot): unpack tuple
- ☐ Build(Slot): zero initializer
+ ✔ Build(Slot): zero initializer @done(2015-07-12 08:30)
