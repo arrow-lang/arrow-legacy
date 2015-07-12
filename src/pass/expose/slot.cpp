@@ -34,6 +34,7 @@ static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern) {
     } break;
 
     Otherwise() {
+      // FIXME(mehcode): Better error message
       Log::get().error(
         pattern.span, "local binding must contain only irrefutable patterns");
 
@@ -47,9 +48,6 @@ static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern) {
 namespace pass {
 
 void Expose::visit_slot(ast::Slot& x) {
-  // TODO(mehcode): If we are inside a function this is a local; else, global
-  // NOTE: At the moment; all slots are assumed globals
-
   _expand_pattern(_scope, *x.pattern);
 }
 

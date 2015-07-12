@@ -53,7 +53,7 @@ class Analyze : public ast::Visitor {
   virtual void visit_or(ast::Or& x);
 
   // TODO(mehcode): Misc.
-  // virtual void visit_slot(ast::Slot& x);
+  virtual void visit_slot(ast::Slot& x);
   // virtual void visit_call(ast::Call& x);
   // virtual void visit_argument(ast::Argument& x);
   // virtual void visit_tuple(ast::Tuple&);

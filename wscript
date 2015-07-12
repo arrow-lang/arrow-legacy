@@ -56,6 +56,7 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Weffc++")
         # ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
+        ctx.env.append_unique("CXXFLAGS", "-Wno-unused-value")
 
         # This should be enabled only during testing; perhaps make two binaries
         ctx.env.append_unique("CXXFLAGS", "--coverage")

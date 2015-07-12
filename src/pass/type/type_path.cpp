@@ -8,8 +8,9 @@
 namespace arrow {
 namespace pass {
 
-void Type::visit_id(ast::Identifier& x) {
-  auto item = _scope->get(x.text);
+void Type::visit_type_path(ast::TypePath& x) {
+  // TODO(mehcode): Support a longer than 1 typepath
+  auto item = _scope->get(x.segments[0]);
   if (!item) {
     // TODO(mehcode): Error
     return;
@@ -23,6 +24,7 @@ void Type::visit_id(ast::Identifier& x) {
   // Pull the referred type out of the typename (and push to the stack)
   auto typename_ = item.as<code::Typename>();
   _stack.push_front(typename_->type);
+
 }
 
 }  // namespace pass

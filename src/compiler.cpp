@@ -38,6 +38,20 @@ void Compiler::initialize() {
   //   and attempt to initialize the right target.
   LLVMInitializeX86Target();
   LLVMInitializeX86TargetInfo();
+
+  // Declare builtin types
+
+  // Boolean
+  _scope->emplace(
+    new code::Typename(nullptr, "bool", new code::BooleanType()));
+
+  // Integer
+  _scope->emplace(
+    new code::Typename(nullptr, "int", new code::IntegerType(32)));
+
+  // Float
+  _scope->emplace(
+    new code::Typename(nullptr, "float", new code::FloatType()));
 }
 
 void Compiler::compile(const std::string& name, Ref<ast::Node> node) {

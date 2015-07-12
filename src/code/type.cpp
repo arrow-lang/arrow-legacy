@@ -13,15 +13,11 @@ LLVMTypeRef BooleanType::handle() const {
 }
 
 LLVMTypeRef FloatType::handle() const {
-  if (bits == 32) {
-    return LLVMFloatType();
-  } else if (bits == 64) {
-    return LLVMDoubleType();
-  }
+  return LLVMDoubleType();
 }
 
 LLVMTypeRef IntegerType::handle() const {
-  return LLVMIntNType(bits);
+  return LLVMIntType(bits);
 }
 
 }  // namespace code

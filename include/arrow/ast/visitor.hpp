@@ -17,7 +17,7 @@ struct Node;
 struct Visitor {
   virtual ~Visitor() noexcept;
 
-  virtual void run(Node&);
+  void run(Node&);
 
   virtual void visit_node(Node&) { }
 

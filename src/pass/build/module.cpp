@@ -16,6 +16,9 @@ void Build::visit_module(ast::Module& x) {
 
   // Analyze (usage analysis) the module block.
   Analyze(_scope).run(*x.block);
+
+  // Visit the module block with the builder.
+  x.block->accept(*this);
 }
 
 }  // namespace pass

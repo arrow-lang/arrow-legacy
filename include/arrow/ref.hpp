@@ -7,6 +7,7 @@
 #define ARROW_PTR_H 1
 
 #include <cstddef>
+#include <typeinfo>
 #include <algorithm>
 
 namespace arrow {
@@ -46,6 +47,11 @@ class Ref {
 
   inline operator bool() const noexcept {
     return _d != nullptr || _is_undefined;
+  }
+
+  template <typename U>
+  bool is() const noexcept {
+    return typeid(*_d) == typeid(U);
   }
 
   template <typename U>

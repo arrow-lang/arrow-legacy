@@ -4,20 +4,15 @@
 // See accompanying file LICENSE
 
 #include "arrow/pass/build.hpp"
-#include "arrow/pass/expose.hpp"
-#include "arrow/pass/analyze.hpp"
-#include "arrow/pass/type.hpp"
-
-#define IMPL(N) \
-  N::~N() noexcept { }
 
 namespace arrow {
 namespace pass {
 
-IMPL(Build)
-IMPL(Expose)
-IMPL(Analyze)
-IMPL(Type)
+void Build::visit_block(ast::Block& x) {
+  for (auto& node : x.statements) {
+    node->accept(*this);
+  }
+}
 
 }  // namespace pass
 }  // namespace arrow

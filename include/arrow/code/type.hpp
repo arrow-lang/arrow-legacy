@@ -6,6 +6,7 @@
 #ifndef ARROW_CODE_TYPE_H
 #define ARROW_CODE_TYPE_H 1
 
+#include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
 
 namespace arrow {
@@ -15,33 +16,28 @@ struct Type {
   virtual ~Type() noexcept;
 
   /// Get the LLVM type handle.
-  LLVMTypeRef handle() const = 0;
+  virtual LLVMTypeRef handle() const = 0;
 };
 
 struct BooleanType : Type {
   virtual ~BooleanType() noexcept;
 
-  LLVMTypeRef handle() const;
+  virtual LLVMTypeRef handle() const;
 };
 
 struct FloatType : Type {
-  FloatType(unsigned bits) : bits(bits) {
-  }
-
   virtual ~FloatType() noexcept;
 
-  LLVMTypeRef handle() const;
-
-  unsigned bits;
+  virtual LLVMTypeRef handle() const;
 };
 
 struct IntegerType : Type {
-  IntegerType(unsigned bits) : bits(bits) {
+  explicit IntegerType(unsigned bits) : bits(bits) {
   }
 
   virtual ~IntegerType() noexcept;
 
-  LLVMTypeRef handle() const;
+  virtual LLVMTypeRef handle() const;
 
   unsigned bits;
 };

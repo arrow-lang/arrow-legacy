@@ -21,8 +21,9 @@ class Build : public ast::Visitor {
 
   virtual ~Build() noexcept;
 
-  virtual void visit_module(ast::Module
-    &);
+  virtual void visit_module(ast::Module&);
+  virtual void visit_block(ast::Block&);
+  virtual void visit_slot(ast::Slot&);
 
  private:
   // The active compiler context.

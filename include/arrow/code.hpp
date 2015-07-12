@@ -8,6 +8,7 @@
 
 #include "arrow/code/scope.hpp"
 #include "arrow/code/item.hpp"
+#include "arrow/code/type.hpp"
 #include "arrow/code/slot.hpp"
 
 #endif  // ARROW_CODE_H

@@ -3,8 +3,8 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#ifndef ARROW_PASS_MODULE_H
-#define ARROW_PASS_MODULE_H 1
+#ifndef ARROW_PASS_TYPE_H
+#define ARROW_PASS_TYPE_H 1
 
 #include "arrow/ast.hpp"
 #include "arrow/code.hpp"
@@ -20,14 +20,23 @@ class Type : public ast::Visitor {
 
   virtual ~Type() noexcept;
 
+  Ref<code::Type> run(ast::Node& x) {
+    ast::Visitor::run(x);
+
+    return _stack.size() > 0 ? _stack.front() : nullptr;
+  }
+
   virtual void visit_id(ast::Identifier&);
+  virtual void visit_type_path(ast::TypePath&);
 
  private:
   // The scope to emplace the exposed items into.
   Ref<code::Scope> _scope;
+
+  std::deque<Ref<code::Type>> _stack;
 };
 
 }  // namespace pass
 }  // namespace arrow
 
-#endif  // ARROW_PASS_MODULE_H
+#endif  // ARROW_PASS_TYPE_H
