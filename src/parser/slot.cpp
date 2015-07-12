@@ -40,9 +40,9 @@ bool Parser::parse_slot() {
 
   // Check for an `=` which would indicate an initializer
   Ref<ast::Node> initializer = nullptr;
-  if (_t.peek()->type == Token::Type::Equals) {
-    _t.pop();
-
+  bool require_init = !pattern.is<ast::PatternIdentifier>();
+  if (require_init || _t.peek()->type == Token::Type::Equals) {
+    if (!expect(Token::Type::Equals)) return false;
     if (!parse_expression()) return false;
     initializer = _stack.front();
     _stack.pop_front();
