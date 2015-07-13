@@ -14,7 +14,9 @@ static bool _expand_pattern(
   ast::Pattern& pattern,
   Ref<code::Scope> scope,
   Ref<code::Type> type_annotation,
-  Ref<code::Type> type_initializer
+  Ref<ast::Node> ctx_annotation,
+  Ref<code::Type> type_initializer,
+  Ref<ast::Node> ctx_initializer
 ) {
   Match(pattern) {
     Case(ast::PatternWildcard& x) {
@@ -40,6 +42,68 @@ static bool _expand_pattern(
       }
 
       // TODO(mehcode): No explicit annotation
+    } break;
+
+    Case(ast::PatternTuple& x) {
+      // Check to see if the initializer is a tuple
+      if (!type_initializer.is<code::TypeTuple>()) {
+        Log::get().error(ctx_initializer->span,
+          "expected a %d-element tuple", x.elements.size());
+
+        return false;
+      } else if (!type_annotation.is<code::TypeTuple>()) {
+        Log::get().error(ctx_annotation->span,
+          "expected a %d-element tuple", x.elements.size());
+
+        return false;
+      }
+
+      // Check to see if we have the exact # of elements
+      auto type_tuple_init = type_initializer.as<code::TypeTuple>();
+      auto type_tuple_annt = type_annotation.as<code::TypeTuple>();
+      if (x.elements.size() != type_tuple_init->elements.size()) {
+        Log::get().error(
+          x.span, "expected a %d-element tuple",
+          type_tuple_init->elements.size());
+
+        return false;
+      } else if (x.elements.size() != type_tuple_annt->elements.size()) {
+        Log::get().error(
+          ctx_initializer->span, "expected a %d-element tuple",
+          type_tuple_init->elements.size());
+
+        return false;
+      }
+
+      std::printf("_expand_pattern\n");
+      unsigned index = 0;
+      for (auto& element : x.elements) {
+        Ref<code::Type> el_type_annotation = nullptr;
+        Ref<ast::Node> el_ctx_annotation = nullptr;
+        Ref<code::Type> el_type_initializer = nullptr;
+        Ref<ast::Node> el_ctx_initializer = nullptr;
+
+        if (type_annotation && ctx_annotation) {
+          el_type_annotation = type_tuple_annt->elements.at(index);
+          el_ctx_annotation =
+            ctx_annotation.as<ast::TypeTuple>()->elements.at(index);
+        }
+
+        if (type_initializer && ctx_initializer) {
+          el_type_initializer = type_tuple_init->elements.at(index);
+          el_ctx_initializer =
+            ctx_initializer.as<ast::TypeTuple>()->elements.at(index);
+        }
+
+        if (!_expand_pattern(
+            *element, scope,
+            el_type_annotation, el_ctx_annotation,
+            el_type_initializer, el_ctx_initializer)) {
+          return false;
+        }
+
+        index += 1;
+      }
     } break;
 
     Otherwise() {
@@ -72,7 +136,10 @@ void Analyze::visit_slot(ast::Slot& x) {
   }
 
   // Expand the pattern ..
-  _expand_pattern(*x.pattern, _scope, type_annotation, type_initializer);
+  _expand_pattern(
+    *x.pattern, _scope,
+    type_annotation, x.type,
+    type_initializer, x.initializer);
 }
 
 }  // namespace pass
