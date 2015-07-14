@@ -14,7 +14,7 @@
 #include "arrow/parser.hpp"
 #include "arrow/ast.hpp"
 #include "arrow/llvm.hpp"
-#include "arrow/code.hpp"
+#include "arrow/code/scope.hpp"
 
 namespace arrow {
 

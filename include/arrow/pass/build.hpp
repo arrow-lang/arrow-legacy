@@ -32,6 +32,7 @@ class Build : public ast::Visitor {
   virtual void visit_slot(ast::Slot&);
 
   // Literal
+  virtual void visit_id(ast::Identifier&);
   // virtual void visit_none(ast::None&);
   virtual void visit_bool(ast::Boolean&);
   // virtual void visit_str(ast::String&);

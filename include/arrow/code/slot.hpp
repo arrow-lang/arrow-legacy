@@ -8,23 +8,29 @@
 
 #include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
+#include "arrow/code/value.hpp"
 
 namespace arrow {
 namespace code {
 
-struct Slot : Item {
+struct Slot : Item, Value {
   Slot(ast::Node* context, std::string name, bool is_mutable)
     : Item(context, name),
-      is_mutable(is_mutable),
-      type(nullptr),
-      handle(nullptr) {
+      Value(nullptr, nullptr),
+      is_mutable(is_mutable) {
   }
 
   virtual ~Slot() noexcept;
 
+  void set_address(LLVMValueRef handle) {
+    _handle = handle;
+  }
+
+  virtual bool has_address() const {
+    return true;
+  }
+
   bool is_mutable;
-  Ref<code::Type> type;
-  LLVMValueRef handle;
 };
 
 }  // namespace code

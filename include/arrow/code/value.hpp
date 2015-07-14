@@ -6,20 +6,31 @@
 #ifndef ARROW_CODE_VALUE_H
 #define ARROW_CODE_VALUE_H 1
 
+#include "arrow/code/type.hpp"
 #include "arrow/llvm.hpp"
+#include "arrow/compiler.hpp"
 
 namespace arrow {
 namespace code {
 
 struct Value {
   Value(LLVMValueRef handle, Ref<code::Type> type)
-    : handle(handle), type(type) {
+    : type(type), _handle(handle) {
   }
 
   virtual ~Value() noexcept;
 
-  LLVMValueRef handle;
+  virtual LLVMValueRef get_address(Compiler::Context& ctx);
+  virtual LLVMValueRef get_value(Compiler::Context& ctx);
+
+  virtual bool has_address() const {
+    return LLVMGetTypeKind(LLVMTypeOf(_handle)) == LLVMPointerTypeKind;
+  }
+
   Ref<code::Type> type;
+
+ protected:
+  LLVMValueRef _handle;
 };
 
 }  // namespace code

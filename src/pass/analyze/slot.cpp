@@ -51,7 +51,7 @@ static bool _expand_pattern(
           "expected a %d-element tuple", x.elements.size());
 
         return false;
-      } else if (!type_annotation.is<code::TypeTuple>()) {
+      } else if (type_annotation && !type_annotation.is<code::TypeTuple>()) {
         Log::get().error(ctx_annotation->span,
           "expected a %d-element tuple", x.elements.size());
 
@@ -60,16 +60,22 @@ static bool _expand_pattern(
 
       // Check to see if we have the exact # of elements
       auto type_tuple_init = type_initializer.as<code::TypeTuple>();
-      auto type_tuple_annt = type_annotation.as<code::TypeTuple>();
+      decltype(type_tuple_init) type_tuple_annt = nullptr;
+
+      if (type_annotation) {
+        type_tuple_annt = type_annotation.as<code::TypeTuple>();
+      }
+
       if (x.elements.size() != type_tuple_init->elements.size()) {
         Log::get().error(
           x.span, "expected a %d-element tuple",
           type_tuple_init->elements.size());
 
         return false;
-      } else if (x.elements.size() != type_tuple_annt->elements.size()) {
+      } else if (type_tuple_annt &&
+                 x.elements.size() != type_tuple_annt->elements.size()) {
         Log::get().error(
-          ctx_initializer->span, "expected a %d-element tuple",
+          x.span, "expected a %d-element tuple",
           type_tuple_init->elements.size());
 
         return false;

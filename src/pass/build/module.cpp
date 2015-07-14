@@ -23,9 +23,11 @@ void Build::visit_module(ast::Module& x) {
 
   // Expose the module block (into the new module scope).
   Expose(_ctx, item->scope).run(*x.block);
+  if (Log::get().count("error") > 0) return;
 
   // Analyze (usage analysis) the module block.
   Analyze(item->scope).run(*x.block);
+  if (Log::get().count("error") > 0) return;
 
   // Add the module initializer basic block
   auto last_block = LLVMGetInsertBlock(_ctx.irb);
@@ -34,6 +36,7 @@ void Build::visit_module(ast::Module& x) {
 
   // Visit the module block with the builder.
   Build(_ctx, item->scope).run(*x.block);
+  if (Log::get().count("error") > 0) return;
 
   // Terminate the module initializer
   LLVMBuildRetVoid(_ctx.irb);

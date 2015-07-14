@@ -21,7 +21,7 @@ void Build::visit_tuple(ast::Tuple& x) {
     auto el_value = Build(_ctx, _scope).run_scalar(*element);
     if (!el_value) return;
 
-    values.push_back(el_value->handle);
+    values.push_back(el_value->get_value(_ctx));
   }
 
   // Build the LLVM value
