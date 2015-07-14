@@ -5,7 +5,24 @@
   ✔ Type: type_tuple @done(2015-07-12 08:28)
   ✔ Resolve: tuple @done(2015-07-12 08:51)
   ✔ Build: tuple @done(2015-07-12 08:51)
+  ✔ Build(Slot): zero initializer @done(2015-07-12 08:30)
   ☐ Analyze(Slot): unpack tuple
   ☐ Build(Slot): unpack tuple
-  ✔ Build(Slot): zero initializer @done(2015-07-12 08:30)
   ☐ Module initializer
+    ☐ `.value_of` vs. `.address_of` on a `code::Value`
+  ☐ Function / Call
+  ☐ Main
+  ☐ Extern Function
+  ☐ Extern Slot
+  ☐ Usage Analysis
+    ☐ Count Declare / Assign / Use
+    ☐ Warn for declare but no assign / use
+    ☐ Warn for declare / assign but no use
+    ☐ Error for use without declare and/or assign
+  ☐ Contextual inference — Aggregate "assigns" and determine the type of an untyped slot
+  ☐ Abritary block scoping ({..})
+  ☐ Optimize constant tuple unpack (llvm cannot)
+      let (a, b) = (1, 2)
+      // =
+      let a = 1
+      let b = 2

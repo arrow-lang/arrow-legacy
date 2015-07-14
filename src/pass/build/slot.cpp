@@ -68,17 +68,22 @@ static bool _expand_pattern(
       // Create an `unnamed_addr` constant of the initializer
       // NOTE: This is necessary because we cannot do "." direclty on
       //       a constant value (tuple); this all gets optimized away.
-      auto cval = LLVMAddGlobal(ctx.mod, initializer->type->handle(), "");
-      LLVMSetGlobalConstant(cval, true);
-      LLVMSetUnnamedAddr(cval, true);
-      LLVMSetLinkage(cval, LLVMInternalLinkage);
-      LLVMSetInitializer(cval, initializer->handle);
+      auto ptr = LLVMAddGlobal(ctx.mod, initializer->type->handle(), "~temp");
+      LLVMSetGlobalConstant(ptr, true);
+      LLVMSetUnnamedAddr(ptr, true);
+      LLVMSetLinkage(ptr, LLVMInternalLinkage);
+      if (LLVMIsConstant(initializer->handle)) {
+        LLVMSetInitializer(ptr, initializer->handle);
+      } else {
+        LLVMSetInitializer(ptr, LLVMConstNull(initializer->type->handle()));
+        LLVMBuildStore(ctx.irb, initializer->handle, ptr);
+      }
 
       auto type_tuple = initializer->type.as<code::TypeTuple>();
       unsigned idx = 0;
       for (auto& element : x.elements) {
         auto handle = LLVMBuildLoad(ctx.irb,
-          LLVMBuildStructGEP(ctx.irb, cval, idx, ""), "");
+          LLVMBuildStructGEP(ctx.irb, ptr, idx, ""), "");
 
         if (!_expand_pattern(*element,
             new code::Value(handle, type_tuple->elements.at(idx)),

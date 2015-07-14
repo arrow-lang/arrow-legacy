@@ -17,7 +17,7 @@ void Build::visit_module(ast::Module& x) {
   auto mod_init_fn = LLVMAddFunction(
     _ctx.mod, mod_init_name.c_str(), mod_init_ty);
 
-  // Create (and add to scope) the module item
+  // Create (and emplace) the module item
   Ref<code::Module> item = new code::Module(&x, x.name, mod_init_fn, _scope);
   _scope->emplace(item);
 
@@ -34,6 +34,9 @@ void Build::visit_module(ast::Module& x) {
 
   // Visit the module block with the builder.
   Build(_ctx, item->scope).run(*x.block);
+
+  // Terminate the module initializer
+  LLVMBuildRetVoid(_ctx.irb);
 
   // Move instruction ptr back to where it was (if it was somewhere)
   if (last_block) {

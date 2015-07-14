@@ -115,6 +115,37 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
 
   // Invoke the build pass on the given node (module)
   pass::Build(_ctx, _scope).run(*node);
+  if (Log::get().count("error") > 0) return;
+
+  // Get a reference to our top-level module main (if present)
+  auto top = _scope->get(name).as<code::Module>();
+  if (!top) return;
+
+  // Build the ABI main function (declaration)
+  // NOTE: The correct definition is: `int main(int, **int8, **int8)`
+  // TODO(mehcode): Revisit when we /know/ what type `c_int` is
+  std::vector<LLVMTypeRef> abi_main_params{
+    LLVMInt32Type(),
+    LLVMPointerType(LLVMPointerType(LLVMInt8Type(), 0), 0),
+    LLVMPointerType(LLVMPointerType(LLVMInt8Type(), 0), 0)};
+  auto abi_main_ty = LLVMFunctionType(
+    LLVMInt32Type(), abi_main_params.data(), abi_main_params.size(), 0);
+  auto abi_main = LLVMAddFunction(_ctx.mod, "main", abi_main_ty);
+
+  // Build the ABI main function (definition)
+  LLVMPositionBuilderAtEnd(_ctx.irb, LLVMAppendBasicBlock(abi_main, ""));
+
+  // TODO(mehcode): Build calls to each imported modules' module initializer
+
+  // Build a call to the top-level module initializer
+  LLVMBuildCall(_ctx.irb, top->initializer, nullptr, 0, "");
+
+  // TODO(mehcode): Discover and build a call to the module main function
+
+  // If we didn't terminate (by returning the value of module main) ..
+  if (!LLVMGetBasicBlockTerminator(LLVMGetLastBasicBlock(abi_main))) {
+    LLVMBuildRet(_ctx.irb, LLVMConstInt(LLVMInt32Type(), 0, false));
+  }
 }
 
 void Compiler::print() {
