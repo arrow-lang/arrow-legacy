@@ -37,16 +37,56 @@ static bool _expand_pattern(
       // If we have an initializer ..
       // TODO(mehcode): cast
       if (initializer) {
-        LLVMSetInitializer(item->handle, initializer->handle);
+        if (LLVMIsConstant(initializer->handle)) {
+          LLVMSetInitializer(item->handle, initializer->handle);
 
-        // If we have an initializer and are not mutable;
-        // this is a constant
-        if (!x.is_mutable) {
-          LLVMSetGlobalConstant(item->handle, true);
+          // If we have an initializer and are not mutable;
+          // this is a constant
+          if (!x.is_mutable) {
+            LLVMSetGlobalConstant(item->handle, true);
+          }
+        } else {
+          // For a non-constant initializer, we have to set an initial /zero/
+          // initializer and add a store to the module init function
+          LLVMSetInitializer(
+            item->handle, LLVMConstNull(item->type->handle()));
+
+          LLVMBuildStore(ctx.irb, initializer->handle, item->handle);
         }
       } else {
         // Without an initializer; need to set to be zero initialized
         LLVMSetInitializer(item->handle, LLVMConstNull(item->type->handle()));
+      }
+    } break;
+
+    Case(ast::PatternTuple& x) {
+      if (!initializer->type.is<code::TypeTuple>()) {
+        // Error already reported by `Analyze`
+        return false;
+      }
+
+      // Create an `unnamed_addr` constant of the initializer
+      // NOTE: This is necessary because we cannot do "." direclty on
+      //       a constant value (tuple); this all gets optimized away.
+      auto cval = LLVMAddGlobal(ctx.mod, initializer->type->handle(), "");
+      LLVMSetGlobalConstant(cval, true);
+      LLVMSetUnnamedAddr(cval, true);
+      LLVMSetLinkage(cval, LLVMInternalLinkage);
+      LLVMSetInitializer(cval, initializer->handle);
+
+      auto type_tuple = initializer->type.as<code::TypeTuple>();
+      unsigned idx = 0;
+      for (auto& element : x.elements) {
+        auto handle = LLVMBuildLoad(ctx.irb,
+          LLVMBuildStructGEP(ctx.irb, cval, idx, ""), "");
+
+        if (!_expand_pattern(*element,
+            new code::Value(handle, type_tuple->elements.at(idx)),
+            scope, ctx)) {
+          return false;
+        }
+
+        idx += 1;
       }
     } break;
 

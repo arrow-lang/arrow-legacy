@@ -75,7 +75,6 @@ static bool _expand_pattern(
         return false;
       }
 
-      std::printf("_expand_pattern\n");
       unsigned index = 0;
       for (auto& element : x.elements) {
         Ref<code::Type> el_type_annotation = nullptr;
@@ -92,7 +91,7 @@ static bool _expand_pattern(
         if (type_initializer && ctx_initializer) {
           el_type_initializer = type_tuple_init->elements.at(index);
           el_ctx_initializer =
-            ctx_initializer.as<ast::TypeTuple>()->elements.at(index);
+            ctx_initializer.as<ast::Tuple>()->elements.at(index);
         }
 
         if (!_expand_pattern(

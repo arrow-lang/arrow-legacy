@@ -7,6 +7,7 @@
 #define ARROW_CODE_ITEM_H 1
 
 #include "arrow/ast/nodes/node.hpp"
+#include "arrow/llvm.hpp"
 
 namespace arrow {
 namespace code {

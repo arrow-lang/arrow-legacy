@@ -12,6 +12,7 @@ namespace arrow {
 namespace code {
 
 IMPL(Item)
+IMPL(Module)
 IMPL(Slot)
 IMPL(Typename)
 
