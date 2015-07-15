@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include <cassert>
 #include "arrow/match.hpp"
 #include "arrow/pass/build.hpp"
 
@@ -60,35 +61,29 @@ static bool _expand_pattern(
     } break;
 
     Case(ast::PatternTuple& x) {
+      auto type_tuple = initializer->type.as<code::TypeTuple>();
+
       LLVMValueRef ptr = nullptr;
+      std::function<Ref<code::Value> (unsigned)> next = [&](unsigned index) {
+        auto handle = LLVMBuildStructGEP(ctx.irb, ptr, index, "");
+        Ref<code::Value> val = new code::Value(
+          handle, type_tuple->elements.at(index));
+
+        return val;
+      };
+
       if (initializer->has_address()) {
         ptr = initializer->get_address(ctx);
       } else {
-        // Create an `unnamed_addr` constant of the initializer
-        // NOTE: This is necessary because we cannot do "." direclty on
-        //       a constant value (tuple); this all gets optimized away.
-        auto iv = initializer->get_value(ctx);
-        ptr = LLVMAddGlobal(
-          ctx.mod, initializer->type->handle(), "~temp");
-        LLVMSetGlobalConstant(ptr, true);
-        LLVMSetUnnamedAddr(ptr, true);
-        LLVMSetLinkage(ptr, LLVMInternalLinkage);
-        if (LLVMIsConstant(iv)) {
-          LLVMSetInitializer(ptr, iv);
-        } else {
-          LLVMSetInitializer(
-            ptr, LLVMConstNull(initializer->type->handle()));
-
-          LLVMBuildStore(ctx.irb, iv, ptr);
-        }
+        // This must be a literal tuple
+        next = [&](unsigned index) {
+          return initializer.as<code::ValueTuple>()->elements.at(index);
+        };
       }
 
-      auto type_tuple = initializer->type.as<code::TypeTuple>();
       unsigned idx = 0;
       for (auto& element : x.elements) {
-        auto handle = LLVMBuildStructGEP(ctx.irb, ptr, idx, "");
-        Ref<code::Value> val = new code::Value(
-          handle, type_tuple->elements.at(idx));
+        auto val = next(idx);
 
         if (!_expand_pattern(*element, val, scope, ctx)) {
           return false;

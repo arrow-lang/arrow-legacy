@@ -1,19 +1,9 @@
-@"~temp" = internal unnamed_addr constant { i32, double, i1 } { i32 30, double 1.531000e+01, i1 false }
-@a = global i32 0
-@b = global double 0.000000e+00
-@c = global i1 false
-@"~temp1" = internal unnamed_addr constant { { { i32 } }, double } { { { i32 } } { { i32 } { i32 52 } }, double 4.012000e+01 }
-@g = global double 0.000000e+00
+@a = constant i32 30
+@b = constant double 1.531000e+01
+@c = constant i1 false
+@g = constant double 4.012000e+01
 
 define void @"slot-unpack-deduce.@init"() {
-  %1 = load i32* getelementptr inbounds ({ i32, double, i1 }* @"~temp", i32 0, i32 0)
-  store i32 %1, i32* @a
-  %2 = load double* getelementptr inbounds ({ i32, double, i1 }* @"~temp", i32 0, i32 1)
-  store double %2, double* @b
-  %3 = load i1* getelementptr inbounds ({ i32, double, i1 }* @"~temp", i32 0, i32 2)
-  store i1 %3, i1* @c
-  %4 = load double* getelementptr inbounds ({ { { i32 } }, double }* @"~temp1", i32 0, i32 1)
-  store double %4, double* @g
   ret void
 }
 
