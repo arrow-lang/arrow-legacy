@@ -20,7 +20,7 @@
 // [x] optimize literal tuple pack/unpack with `code::ValueTuple`
 // [x] pack non-constant values
 
-// [ ] assignment (refactor most of the slot code into a "do_assign" method)
+// [x] assignment (refactor most of the slot code into a "do_assign" method)
 
 // [ ] `None` type and value
 

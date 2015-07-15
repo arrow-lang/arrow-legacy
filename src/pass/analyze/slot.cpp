@@ -109,6 +109,7 @@ void Analyze::visit_slot(ast::Slot& x) {
   }
 
   // Check for mismatched types
+  // TODO(mehcode): Should be a util for this regardless
   if (type_initializer && type_annotation &&
       !type_annotation->equals(*type_initializer)) {
     Log::get().error(x.initializer->span,

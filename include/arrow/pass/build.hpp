@@ -40,6 +40,9 @@ class Build : public ast::Visitor {
   virtual void visit_float(ast::Float&);
   virtual void visit_tuple(ast::Tuple&);
 
+  // Binary
+  virtual void visit_assign(ast::Assign&);
+
  private:
   /// The active compiler context.
   Compiler::Context& _ctx;

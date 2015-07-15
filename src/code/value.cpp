@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include "arrow/match.hpp"
 #include "arrow/code/value.hpp"
 
 namespace arrow {
@@ -24,8 +25,37 @@ LLVMValueRef Value::get_value(Compiler::Context& ctx) {
   }
 }
 
+Ref<code::Value> Value::at(Compiler::Context& ctx, unsigned index) {
+  if (!has_address()) return nullptr;
+
+  // Ensure that `at` makes sense for the type
+  Ref<code::Value> res = nullptr;
+  Match(*type) {
+    Case(const code::TypeTuple& x) {
+      auto handle = LLVMBuildStructGEP(ctx.irb, get_address(ctx), index, "");
+      res = new code::Value(handle, x.elements.at(index));
+    } break;
+
+    Otherwise() {
+      return nullptr;
+    }
+  } EndMatch;
+
+  return res;
+}
+
 // Tuple
 // -----------------------------------------------------------------------------
+
+bool ValueTuple::is_assignable() const {
+  unsigned idx = 0;
+  for (auto& el : elements) {
+    if (!el->is_assignable()) return false;
+    idx += 1;
+  }
+
+  return idx > 0;
+}
 
 LLVMValueRef ValueTuple::get_value(Compiler::Context& ctx) {
   if (_handle) return _handle;
@@ -60,6 +90,9 @@ LLVMValueRef ValueTuple::get_value(Compiler::Context& ctx) {
   return _handle;
 }
 
+Ref<code::Value> ValueTuple::at(Compiler::Context&, unsigned index) {
+  return elements.at(index);
+}
 
 }  // namespace code
 }  // namespace arrow

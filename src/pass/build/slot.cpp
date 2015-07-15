@@ -61,29 +61,33 @@ static bool _expand_pattern(
     } break;
 
     Case(ast::PatternTuple& x) {
-      auto type_tuple = initializer->type.as<code::TypeTuple>();
-
-      LLVMValueRef ptr = nullptr;
-      std::function<Ref<code::Value> (unsigned)> next = [&](unsigned index) {
-        auto handle = LLVMBuildStructGEP(ctx.irb, ptr, index, "");
-        Ref<code::Value> val = new code::Value(
-          handle, type_tuple->elements.at(index));
-
-        return val;
-      };
-
-      if (initializer->has_address()) {
-        ptr = initializer->get_address(ctx);
-      } else {
-        // This must be a literal tuple
-        next = [&](unsigned index) {
-          return initializer.as<code::ValueTuple>()->elements.at(index);
-        };
-      }
+      // auto type_tuple = initializer->type.as<code::TypeTuple>();
+      //
+      // std::function<Ref<code::Value> (unsigned)> next;
+      // if (initializer.is<code::ValueTuple>()) {
+      //   // This must be a literal tuple
+      //   next = [&initializer](unsigned index) {
+      //     return initializer.as<code::ValueTuple>()->elements.at(index);
+      //   };
+      // } else if (initializer->has_address()) {
+      //   next = [&initializer, &type_tuple, &ctx](unsigned index) {
+      //     auto handle = LLVMBuildStructGEP(
+      //       ctx.irb, initializer->get_address(ctx), index, "");
+      //
+      //     Ref<code::Value> val = new code::Value(
+      //       handle, type_tuple->elements.at(index));
+      //
+      //     return val;
+      //   };
+      // } else {
+      //   // Unreachable (should be)
+      //   return false;
+      // }
 
       unsigned idx = 0;
       for (auto& element : x.elements) {
-        auto val = next(idx);
+        auto val = initializer->at(ctx, idx);
+        if (!val) return false;
 
         if (!_expand_pattern(*element, val, scope, ctx)) {
           return false;

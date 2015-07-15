@@ -10,7 +10,6 @@ namespace pass {
 
 void Analyze::visit_assign(ast::Assign&) {
   // TODO(mehcode): Expand pattern
-  std::printf("ASSIGN: ?\n");
 }
 
 }  // namespace pass

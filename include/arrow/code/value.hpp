@@ -27,6 +27,12 @@ struct Value {
     return LLVMGetTypeKind(LLVMTypeOf(_handle)) == LLVMPointerTypeKind;
   }
 
+  virtual bool is_assignable() const {
+    return has_address();
+  }
+
+  virtual Ref<code::Value> at(Compiler::Context& ctx, unsigned index);
+
   Ref<code::Type> type;
 
  protected:
@@ -43,11 +49,13 @@ struct ValueTuple : Value {
   virtual LLVMValueRef get_value(Compiler::Context& ctx);
 
   /// Check if all elements have addresses or are tuples and assignable
-  bool is_assignable() const;
+  virtual bool is_assignable() const;
 
   virtual bool has_address() const {
     return false;
   }
+
+  virtual Ref<code::Value> at(Compiler::Context& ctx, unsigned index);
 
   /// Ordered sequence of elements (in the literal tuple)
   std::deque<Ref<Value>> elements;
