@@ -25,6 +25,7 @@ IMPL(TypeSizedInteger)
 IMPL(TypeTuple)
 
 IMPL(Value)
+IMPL(ValueTuple)
 
 }  // namespace code
 }  // namespace arrow

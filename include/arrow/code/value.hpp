@@ -33,6 +33,26 @@ struct Value {
   LLVMValueRef _handle;
 };
 
+struct ValueTuple : Value {
+  explicit ValueTuple(Ref<TypeTuple> type)
+    : Value(nullptr, type), elements() {
+  }
+
+  virtual ~ValueTuple() noexcept;
+
+  virtual LLVMValueRef get_value(Compiler::Context& ctx);
+
+  /// Check if all elements have addresses or are tuples and assignable
+  bool is_assignable() const;
+
+  virtual bool has_address() const {
+    return false;
+  }
+
+  /// Ordered sequence of elements (in the literal tuple)
+  std::deque<Ref<Value>> elements;
+};
+
 }  // namespace code
 }  // namespace arrow
 

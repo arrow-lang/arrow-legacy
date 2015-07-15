@@ -15,21 +15,15 @@ void Build::visit_tuple(ast::Tuple& x) {
   if (!type) return;
 
   // Iterate through the elements; and build each
-  std::vector<LLVMValueRef> values;
-  values.reserve(x.elements.size());
+  Ref<code::ValueTuple> res = new code::ValueTuple(type);
   for (auto& element : x.elements) {
     auto el_value = Build(_ctx, _scope).run_scalar(*element);
     if (!el_value) return;
 
-    values.push_back(el_value->get_value(_ctx));
+    res->elements.push_back(el_value);
   }
 
-  // Build the LLVM value
-  // TODO(mehcode): non-constant elements
-  auto handle = LLVMConstStruct(values.data(), values.size(), false);
-
-  // Build and push the value
-  _stack.push_front(new code::Value(handle, type));
+  _stack.push_front(res);
 }
 
 }  // namespace pass
