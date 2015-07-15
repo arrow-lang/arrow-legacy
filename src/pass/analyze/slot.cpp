@@ -14,9 +14,7 @@ static bool _expand_pattern(
   ast::Pattern& pattern,
   Ref<code::Scope> scope,
   Ref<code::Type> type_annotation,
-  Ref<ast::Node> ctx_annotation,
-  Ref<code::Type> type_initializer,
-  Ref<ast::Node> ctx_initializer
+  Ref<code::Type> type_initializer
 ) {
   Match(pattern) {
     Case(ast::PatternWildcard& x) {
@@ -45,65 +43,35 @@ static bool _expand_pattern(
     } break;
 
     Case(ast::PatternTuple& x) {
-      // Check to see if the initializer is a tuple
-      if (!type_initializer.is<code::TypeTuple>()) {
-        Log::get().error(ctx_initializer->span,
-          "expected a %d-element tuple", x.elements.size());
-
-        return false;
-      } else if (type_annotation && !type_annotation.is<code::TypeTuple>()) {
-        Log::get().error(ctx_annotation->span,
-          "expected a %d-element tuple", x.elements.size());
-
-        return false;
-      }
-
       // Check to see if we have the exact # of elements
-      auto type_tuple_init = type_initializer.as<code::TypeTuple>();
-      decltype(type_tuple_init) type_tuple_annt = nullptr;
+      auto init_type_tuple = type_initializer.as<code::TypeTuple>();
+      if (x.elements.size() != init_type_tuple->elements.size()) {
+        Log::get().error(x.span,
+          "expected a tuple with %d elements, found one with %d elements",
+          init_type_tuple->elements.size(),
+          x.elements.size());
 
-      if (type_annotation) {
-        type_tuple_annt = type_annotation.as<code::TypeTuple>();
+        return false;
       }
 
-      if (x.elements.size() != type_tuple_init->elements.size()) {
-        Log::get().error(
-          x.span, "expected a %d-element tuple",
-          type_tuple_init->elements.size());
-
-        return false;
-      } else if (type_tuple_annt &&
-                 x.elements.size() != type_tuple_annt->elements.size()) {
-        Log::get().error(
-          x.span, "expected a %d-element tuple",
-          type_tuple_init->elements.size());
-
-        return false;
+      Ref<code::TypeTuple> annt_type_tuple = nullptr;
+      if (type_annotation) {
+        annt_type_tuple = type_annotation.as<code::TypeTuple>();
       }
 
       unsigned index = 0;
       for (auto& element : x.elements) {
         Ref<code::Type> el_type_annotation = nullptr;
-        Ref<ast::Node> el_ctx_annotation = nullptr;
         Ref<code::Type> el_type_initializer = nullptr;
-        Ref<ast::Node> el_ctx_initializer = nullptr;
 
-        if (type_annotation && ctx_annotation) {
-          el_type_annotation = type_tuple_annt->elements.at(index);
-          el_ctx_annotation =
-            ctx_annotation.as<ast::TypeTuple>()->elements.at(index);
+        if (type_annotation) {
+          el_type_annotation = annt_type_tuple->elements.at(index);
         }
 
-        if (type_initializer && ctx_initializer) {
-          el_type_initializer = type_tuple_init->elements.at(index);
-          el_ctx_initializer =
-            ctx_initializer.as<ast::Tuple>()->elements.at(index);
-        }
+        el_type_initializer = init_type_tuple->elements.at(index);
 
         if (!_expand_pattern(
-            *element, scope,
-            el_type_annotation, el_ctx_annotation,
-            el_type_initializer, el_ctx_initializer)) {
+            *element, scope, el_type_annotation, el_type_initializer)) {
           return false;
         }
 
@@ -140,11 +108,22 @@ void Analyze::visit_slot(ast::Slot& x) {
     if (!type_initializer) return;
   }
 
+  // Check for mismatched types
+  if (type_initializer && type_annotation &&
+      !type_annotation->equals(*type_initializer)) {
+    Log::get().error(x.initializer->span,
+      "mismatched types: expected `%s`, found `%s`",
+      type_annotation->name().c_str(),
+      type_initializer->name().c_str());
+
+    return;
+  }
+
   // Expand the pattern ..
   _expand_pattern(
     *x.pattern, _scope,
-    type_annotation, x.type,
-    type_initializer, x.initializer);
+    type_annotation,
+    type_initializer);
 }
 
 }  // namespace pass

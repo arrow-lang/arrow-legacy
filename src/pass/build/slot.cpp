@@ -37,8 +37,8 @@ static bool _expand_pattern(
       // If we have an initializer ..
       // TODO(mehcode): cast
       auto ptr = item->get_address(ctx);
-      auto handle = initializer->get_value(ctx);
       if (initializer) {
+        auto handle = initializer->get_value(ctx);
         if (LLVMIsConstant(handle)) {
           LLVMSetInitializer(ptr, handle);
 
@@ -59,41 +59,44 @@ static bool _expand_pattern(
       }
     } break;
 
-    // Case(ast::PatternTuple& x) {
-    //   if (!initializer->type.is<code::TypeTuple>()) {
-    //     // Error already reported by `Analyze`
-    //     return false;
-    //   }
-    //
-    //   // Create an `unnamed_addr` constant of the initializer
-    //   // NOTE: This is necessary because we cannot do "." direclty on
-    //   //       a constant value (tuple); this all gets optimized away.
-    //   // auto ptr = LLVMAddGlobal(ctx.mod, initializer->type->handle(), "~temp");
-    //   // LLVMSetGlobalConstant(ptr, true);
-    //   // LLVMSetUnnamedAddr(ptr, true);
-    //   // LLVMSetLinkage(ptr, LLVMInternalLinkage);
-    //   // if (LLVMIsConstant(initializer->handle)) {
-    //   //   LLVMSetInitializer(ptr, initializer->handle);
-    //   // } else {
-    //   //   LLVMSetInitializer(ptr, LLVMConstNull(initializer->type->handle()));
-    //   //   LLVMBuildStore(ctx.irb, initializer->handle, ptr);
-    //   // }
-    //
-    //   // auto type_tuple = initializer->type.as<code::TypeTuple>();
-    //   // unsigned idx = 0;
-    //   // for (auto& element : x.elements) {
-    //   //   auto handle = LLVMBuildLoad(ctx.irb,
-    //   //     LLVMBuildStructGEP(ctx.irb, ptr, idx, ""), "");
-    //   //
-    //   //   if (!_expand_pattern(*element,
-    //   //       new code::Value(handle, type_tuple->elements.at(idx)),
-    //   //       scope, ctx)) {
-    //   //     return false;
-    //   //   }
-    //   //
-    //   //   idx += 1;
-    //   // }
-    // } break;
+    Case(ast::PatternTuple& x) {
+      LLVMValueRef ptr = nullptr;
+      if (initializer->has_address()) {
+        ptr = initializer->get_address(ctx);
+      } else {
+        // Create an `unnamed_addr` constant of the initializer
+        // NOTE: This is necessary because we cannot do "." direclty on
+        //       a constant value (tuple); this all gets optimized away.
+        auto iv = initializer->get_value(ctx);
+        ptr = LLVMAddGlobal(
+          ctx.mod, initializer->type->handle(), "~temp");
+        LLVMSetGlobalConstant(ptr, true);
+        LLVMSetUnnamedAddr(ptr, true);
+        LLVMSetLinkage(ptr, LLVMInternalLinkage);
+        if (LLVMIsConstant(iv)) {
+          LLVMSetInitializer(ptr, iv);
+        } else {
+          LLVMSetInitializer(
+            ptr, LLVMConstNull(initializer->type->handle()));
+
+          LLVMBuildStore(ctx.irb, iv, ptr);
+        }
+      }
+
+      auto type_tuple = initializer->type.as<code::TypeTuple>();
+      unsigned idx = 0;
+      for (auto& element : x.elements) {
+        auto handle = LLVMBuildStructGEP(ctx.irb, ptr, idx, "");
+        Ref<code::Value> val = new code::Value(
+          handle, type_tuple->elements.at(idx));
+
+        if (!_expand_pattern(*element, val, scope, ctx)) {
+          return false;
+        }
+
+        idx += 1;
+      }
+    } break;
 
     Otherwise() {
       // FIXME(mehcode): Implement

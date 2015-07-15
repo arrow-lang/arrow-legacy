@@ -45,10 +45,14 @@ void Compiler::initialize() {
   _scope->emplace(
     new code::Typename(nullptr, "bool", new code::TypeBoolean()));
 
+  // Byte
+  _scope->emplace(
+    new code::Typename(nullptr, "byte", new code::TypeByte()));
+
   // Integer
   // TODO(mehcode): `int` to be variable percision
   _scope->emplace(
-    new code::Typename(nullptr, "int", new code::TypeInteger(32)));
+    new code::Typename(nullptr, "int", new code::TypeInteger()));
 
   // Float
   _scope->emplace(
@@ -56,26 +60,36 @@ void Compiler::initialize() {
 
   // Sized Integers
   _scope->emplace(
-    new code::Typename(nullptr, "int8", new code::TypeInteger(8)));
+    new code::Typename(
+    nullptr, "int8", new code::TypeSizedInteger(8)));
   _scope->emplace(
-    new code::Typename(nullptr, "int16", new code::TypeInteger(16)));
+    new code::Typename(
+    nullptr, "int16", new code::TypeSizedInteger(16)));
   _scope->emplace(
-    new code::Typename(nullptr, "int32", new code::TypeInteger(32)));
+    new code::Typename(
+    nullptr, "int32", new code::TypeSizedInteger(32)));
   _scope->emplace(
-    new code::Typename(nullptr, "int64", new code::TypeInteger(64)));
+    new code::Typename(
+    nullptr, "int64", new code::TypeSizedInteger(64)));
   _scope->emplace(
-    new code::Typename(nullptr, "int128", new code::TypeInteger(128)));
+    new code::Typename(
+    nullptr, "int128", new code::TypeSizedInteger(128)));
 
   _scope->emplace(
-    new code::Typename(nullptr, "uint8", new code::TypeInteger(8, false)));
+    new code::Typename(
+    nullptr, "uint8", new code::TypeSizedInteger(8, false)));
   _scope->emplace(
-    new code::Typename(nullptr, "uint16", new code::TypeInteger(16, false)));
+    new code::Typename(
+    nullptr, "uint16", new code::TypeSizedInteger(16, false)));
   _scope->emplace(
-    new code::Typename(nullptr, "uint32", new code::TypeInteger(32, false)));
+    new code::Typename(
+    nullptr, "uint32", new code::TypeSizedInteger(32, false)));
   _scope->emplace(
-    new code::Typename(nullptr, "uint64", new code::TypeInteger(64, false)));
+    new code::Typename(
+    nullptr, "uint64", new code::TypeSizedInteger(64, false)));
   _scope->emplace(
-    new code::Typename(nullptr, "uint128", new code::TypeInteger(128, false)));
+    new code::Typename(
+    nullptr, "uint128", new code::TypeSizedInteger(128, false)));
 }
 
 void Compiler::compile(const std::string& name, Ref<ast::Node> node) {

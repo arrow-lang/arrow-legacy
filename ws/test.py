@@ -98,10 +98,16 @@ def run_(name, ctx, binary_path):
     print()
     print_sep(name)
 
+    fail = name.endswith("-fail")
+    key = name
+    if fail:
+        key = name.split("-fail")[0]
+
     for file_ in ctx.path.ant_glob("test/%s/*.as" % name):
         # Execute the handler
-        handler = globals()["handle_%s" % name.replace("-", "_")]
-        test = handler(binary_path, file_.abspath())
+        handler = globals()["handle_%s" % key.replace("-", "_")]
+        test = handler(
+            handle_fail_ if fail else handle_, binary_path, file_.abspath())
 
         # Print result
         print_test(file_, test)
@@ -142,71 +148,59 @@ def handle_fail_(binary_path, filename, *args):
     return test
 
 
-def handle_read(binary_path, filename):
-    return handle_(binary_path, filename, "--read")
+def handle_read(fn, binary_path, filename):
+    return fn(binary_path, filename, "--read")
 
 
-def handle_tokenize(binary_path, filename):
-    return handle_(binary_path, filename, "--tokenize")
+def handle_tokenize(fn, binary_path, filename):
+    return fn(binary_path, filename, "--tokenize")
 
 
-def handle_tokenize_fail(binary_path, filename):
-    return handle_fail_(binary_path, filename, "--tokenize")
+def handle_parse(fn, binary_path, filename):
+    return fn(binary_path, filename, "--parse")
 
 
-def handle_parse(binary_path, filename):
-    return handle_(binary_path, filename, "--parse")
-
-
-def handle_parse_fail(binary_path, filename):
-    return handle_fail_(binary_path, filename, "--parse")
-
-
-def handle_compile(binary_path, filename):
+def handle_compile(fn, binary_path, filename):
     def transform(stdout):
         lines = stdout.strip().split("\n")[4:]
         lines.append("")
 
         return "\n".join(lines)
 
-    return handle_(binary_path, filename, "--compile",
-                   transform_stdout=transform)
+    return fn(binary_path, filename, "--compile",
+              transform_stdout=transform)
 
 
-def handle_compile_fail(binary_path, filename):
-    return handle_fail_(binary_path, filename, "--compile")
+# def handle_run(binary_path, filename):
+#     filename = path.relpath(filename)
+#     p = Popen(
+#         [binary_path, filename], stdout=PIPE, stderr=PIPE,
+#         cwd=path.join(path.dirname(__file__), ".."),
+#     )
+#     interpreter = Popen(["lli"], stdin=p.stdout, stdout=PIPE, stderr=PIPE)
+#
+#     stdout, _ = interpreter.communicate()
+#
+#     expected = get_expected(filename, "stdout")
+#     test = expected == stdout.decode('utf-8') and interpreter.returncode == 0
+#
+#     return test
 
 
-def handle_run(binary_path, filename):
-    filename = path.relpath(filename)
-    p = Popen(
-        [binary_path, filename], stdout=PIPE, stderr=PIPE,
-        cwd=path.join(path.dirname(__file__), ".."),
-    )
-    interpreter = Popen(["lli"], stdin=p.stdout, stdout=PIPE, stderr=PIPE)
-
-    stdout, _ = interpreter.communicate()
-
-    expected = get_expected(filename, "stdout")
-    test = expected == stdout.decode('utf-8') and interpreter.returncode == 0
-
-    return test
-
-
-def handle_run_fail(binary_path, filename):
-    filename = path.relpath(filename)
-    p = Popen(
-        [binary_path, filename], stdout=PIPE, stderr=PIPE,
-        cwd=path.join(path.dirname(__file__), ".."),
-    )
-    interpreter = Popen(["lli"], stdin=p.stdout, stdout=PIPE, stderr=PIPE)
-
-    stdout, _ = interpreter.communicate()
-
-    expected = get_expected(filename, "stdout")
-    test = expected == stdout.decode('utf-8') and interpreter.returncode != 0
-
-    return test
+# def handle_run_fail(binary_path, filename):
+#     filename = path.relpath(filename)
+#     p = Popen(
+#         [binary_path, filename], stdout=PIPE, stderr=PIPE,
+#         cwd=path.join(path.dirname(__file__), ".."),
+#     )
+#     interpreter = Popen(["lli"], stdin=p.stdout, stdout=PIPE, stderr=PIPE)
+#
+#     stdout, _ = interpreter.communicate()
+#
+#     expected = get_expected(filename, "stdout")
+#     test = expected == stdout.decode('utf-8') and interpreter.returncode != 0
+#
+#     return test
 
 
 def run(ctx):
@@ -221,9 +215,49 @@ def run(ctx):
     run_("parse-fail", ctx, binary_path)
     run_("compile", ctx, binary_path)
     # run_("compile-fail", ctx, binary_path)
-    # run_("run", ctx, binary_path)
-    # run_("run-fail", ctx, binary_path)
 
     print_report()
 
     return _failed == 0
+
+
+def generate(ctx):
+    binary_path = ctx.path.make_node("build/arrow").abspath()
+
+    # run_("read", ctx, binary_path)
+    # run_("tokenize", ctx, binary_path)
+    # run_("tokenize-fail", ctx, binary_path)
+    # run_("parse", ctx, binary_path)
+    # run_("parse-fail", ctx, binary_path)
+    generate_("compile", ctx, binary_path)
+
+
+def generate_handle_(binary_path, filename, *args, **kwargs):
+    transform_stdout = kwargs.pop("transform_stdout", None)
+
+    filename = path.relpath(filename)
+    process = Popen(
+        [binary_path] + list(args) + [filename], stdout=PIPE, stderr=PIPE,
+        cwd=path.join(path.dirname(__file__), ".."),
+    )
+
+    stdout, _ = process.communicate()
+    stdout = stdout.decode('utf-8')
+    if transform_stdout:
+        stdout = transform_stdout(stdout)
+
+    out = path.splitext(filename)[0] + ".stdout"
+    with open(out, "w") as stream:
+        stream.write(stdout)
+
+
+def generate_(name, ctx, binary_path):
+    fail = name.endswith("_fail")
+    key = name
+    if fail:
+        key = name.split("_fail")[0]
+
+    for file_ in ctx.path.ant_glob("test/%s/*.as" % name):
+        # Execute the handler
+        handler = globals()["handle_%s" % key.replace("-", "_")]
+        handler(generate_handle_, binary_path, file_.abspath())

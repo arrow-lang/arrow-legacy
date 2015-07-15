@@ -1,1 +1,10 @@
 @a = constant { i32, double, i1 } { i32 30, double 1.531000e+01, i1 false }
+
+define void @"slot-tuple-deduce.@init"() {
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @"slot-tuple-deduce.@init"()
+  ret i32 0
+}

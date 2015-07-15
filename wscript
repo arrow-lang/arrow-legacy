@@ -79,6 +79,10 @@ def test(ctx):
         sys.exit(1)
 
 
+def generate(ctx):
+    ws.test.generate(ctx)
+
+
 def coverage(ctx):
     with open(os.devnull) as nil:
         # Generate *.gcov files

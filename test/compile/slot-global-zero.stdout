@@ -2,3 +2,12 @@
 @b = global double 0.000000e+00
 @c = global i1 false
 @m = global { i32, double, i1 } zeroinitializer
+
+define void @"slot-global-zero.@init"() {
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @"slot-global-zero.@init"()
+  ret i32 0
+}

@@ -1,20 +1,21 @@
-// [ ] type->name()
+// [x] type->name()
+// [x] type->equals()
 
 // tuple unpack checks
 
-// [ ] fail #1 - match initializer against annotation (if present)
+// [x] fail #1 - match initializer against annotation (if present)
 // NOTE: This does NOT need recursive AST context for error reporting; it would
 //       be a simple type equality check
 //  => "expected `((int,), bool)`, found `(float,)`"
 
-// [ ] fail #2 - match pattern against initializer
+// [x] fail #2 - match pattern against initializer
 // NOTE: This does need recursive AST context for error reporting
 //  => "expected a tuple with 2 elements, found one with 3 elements"
 
-// [ ] unpack constant tuple
-// [ ] unpack slot (with tuple type)
-// [ ] recursive unpack constant tuple
-// [ ] recursive unpack slot (with tuple type)
+// [x] unpack constant tuple
+// [x] unpack slot (with tuple type)
+// [x] recursive unpack constant tuple
+// [x] recursive unpack slot (with tuple type)
 // [ ] pack non-constant values
 
 // [ ] assignment (refactor most of the slot code into a "do_assign" method)

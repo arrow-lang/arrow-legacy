@@ -20,6 +20,8 @@ IMPL(Type)
 IMPL(TypeBoolean)
 IMPL(TypeFloat)
 IMPL(TypeInteger)
+IMPL(TypeByte)
+IMPL(TypeSizedInteger)
 IMPL(TypeTuple)
 
 IMPL(Value)

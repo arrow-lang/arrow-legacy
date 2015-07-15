@@ -15,6 +15,12 @@ namespace code {
 struct Type {
   virtual ~Type() noexcept;
 
+  virtual bool equals(Type& other) const {
+    return typeid(other) == typeid(*this);
+  }
+
+  virtual std::string name() const = 0;
+
   /// Get the LLVM type handle.
   virtual LLVMTypeRef handle() = 0;
 };
@@ -22,23 +28,55 @@ struct Type {
 struct TypeBoolean : Type {
   virtual ~TypeBoolean() noexcept;
 
+  virtual std::string name() const {
+    return "bool";
+  }
+
   virtual LLVMTypeRef handle();
 };
 
 struct TypeFloat : Type {
   virtual ~TypeFloat() noexcept;
 
+  virtual std::string name() const {
+    return "float";
+  }
+
+  virtual LLVMTypeRef handle();
+};
+
+struct TypeByte : Type {
+  virtual ~TypeByte() noexcept;
+
+  virtual std::string name() const {
+    return "byte";
+  }
+
   virtual LLVMTypeRef handle();
 };
 
 struct TypeInteger : Type {
-  explicit TypeInteger(unsigned bits, bool is_signed = true)
-    : bits(bits), is_signed(is_signed) {
-  }
-
   virtual ~TypeInteger() noexcept;
 
   virtual LLVMTypeRef handle();
+
+  virtual std::string name() const {
+    return "int";
+  }
+};
+
+struct TypeSizedInteger : Type {
+  explicit TypeSizedInteger(unsigned bits, bool is_signed = true)
+    : bits(bits), is_signed(is_signed) {
+  }
+
+  virtual ~TypeSizedInteger() noexcept;
+
+  virtual bool equals(Type& other) const;
+
+  virtual LLVMTypeRef handle();
+
+  virtual std::string name() const;
 
   unsigned bits;
   bool is_signed;
@@ -48,6 +86,10 @@ struct TypeTuple : Type {
   virtual ~TypeTuple() noexcept;
 
   virtual LLVMTypeRef handle();
+
+  virtual bool equals(Type& other) const;
+
+  virtual std::string name() const;
 
   std::vector<Ref<code::Type>> elements;
 
