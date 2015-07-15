@@ -16,6 +16,8 @@
 // [x] unpack slot (with tuple type)
 // [x] recursive unpack constant tuple
 // [x] recursive unpack slot (with tuple type)
+
+// [ ] optimize literal tuple pack/unpack with `code::ValueTuple`
 // [ ] pack non-constant values
 
 // [ ] assignment (refactor most of the slot code into a "do_assign" method)
