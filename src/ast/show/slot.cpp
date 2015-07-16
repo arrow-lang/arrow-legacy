@@ -43,5 +43,26 @@ void Show::visit_slot(Slot& x) {
   _w.EndObject();
 }
 
+void Show::visit_extern_slot(ExternSlot& x) {
+  _w.StartObject();
+
+  _w.Key("tag");
+  _w.String("ExternSlot");
+
+  _w.Key("span");
+  _w.String(x.span.to_string().c_str());
+
+  _w.Key("exported");
+  _w.Bool(x.exported);
+
+  _w.Key("name");
+  _w.String(x.name.c_str());
+
+  _w.Key("type");
+  x.type->accept(*this);
+
+  _w.EndObject();
+}
+
 }  // namespace ast
 }  // namespace arrow

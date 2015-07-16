@@ -78,6 +78,7 @@ struct Show : Visitor {
   virtual void visit_argument(Argument&);
 
   virtual void visit_slot(Slot&);
+  virtual void visit_extern_slot(ExternSlot&);
 
   virtual void visit_pattern_wildcard(PatternWildcard&);
   virtual void visit_pattern_identifier(PatternIdentifier&);
