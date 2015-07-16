@@ -102,10 +102,7 @@ static bool _expand_pattern(
     } break;
 
     Otherwise() {
-      // FIXME(mehcode): Implement
-      Log::get().error(
-        pattern.span, "not (yet) implemented");
-
+      // Unreachable
       return false;
     }
   } EndMatch;
