@@ -28,7 +28,7 @@ class Resolve : public ast::Visitor {
 
   // Literal
   virtual void visit_id(ast::Identifier&);
-  // virtual void visit_none(ast::None&);
+  virtual void visit_none(ast::None&);
   virtual void visit_bool(ast::Boolean&);
   // virtual void visit_str(ast::String&);
   virtual void visit_int(ast::Integer&);

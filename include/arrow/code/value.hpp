@@ -39,6 +39,14 @@ struct Value {
   LLVMValueRef _handle;
 };
 
+struct ValueNone : Value {
+  ValueNone()
+    : Value(nullptr, new code::TypeNone()) {
+  }
+
+  virtual ~ValueNone() noexcept;
+};
+
 struct ValueTuple : Value {
   explicit ValueTuple(Ref<TypeTuple> type)
     : Value(nullptr, type), elements() {

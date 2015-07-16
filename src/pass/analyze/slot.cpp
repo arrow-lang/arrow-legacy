@@ -9,10 +9,10 @@
 #include "arrow/pass/type.hpp"
 
 namespace arrow {
+namespace pass {
 
-static bool _expand_pattern(
+bool Analyze::_expand_pattern(
   ast::Pattern& pattern,
-  Ref<code::Scope> scope,
   Ref<code::Type> type_annotation,
   Ref<code::Type> type_initializer
 ) {
@@ -27,19 +27,34 @@ static bool _expand_pattern(
       XTL_UNUSED(x);
 
       // Pull out the previously-exposed item
-      auto item = scope->get(&pattern).as<code::Slot>();
+      auto item = _scope->get(&pattern).as<code::Slot>();
       if (!item) return false;
 
       // If we have an explicit type annotation ..
       if (type_annotation) {
         // .. mark this slot with the annotated type
         item->type = type_annotation;
-      } else if (type_initializer) {
-        // .. else if we have an initializer type
-        item->type = type_initializer;
       }
 
-      // TODO(mehcode): No explicit annotation
+      // Mark [declare]
+      _x_name[item->name] = &pattern;
+      _x_declare.insert({&pattern, {
+        type_annotation,
+        item->name,
+        item->is_mutable
+      }});
+
+      // If we have an initializer ..
+      if (type_initializer) {
+        // Mark [assign]
+        // Emplace the assignment
+        _x_assign[&pattern] = {};
+        _x_assign[&pattern].push_back({
+          true,
+          0,
+          type_initializer
+        });
+      }
     } break;
 
     Case(ast::PatternTuple& x) {
@@ -71,7 +86,7 @@ static bool _expand_pattern(
         el_type_initializer = init_type_tuple->elements.at(index);
 
         if (!_expand_pattern(
-            *element, scope, el_type_annotation, el_type_initializer)) {
+            *element, el_type_annotation, el_type_initializer)) {
           return false;
         }
 
@@ -80,18 +95,12 @@ static bool _expand_pattern(
     } break;
 
     Otherwise() {
-      // FIXME(mehcode): Implement
-      Log::get().error(
-        pattern.span, "not (yet) implemented");
-
       return false;
     }
   } EndMatch;
 
   return true;
 }
-
-namespace pass {
 
 void Analyze::visit_slot(ast::Slot& x) {
   // Check for an explicit type annotation ..
@@ -105,11 +114,18 @@ void Analyze::visit_slot(ast::Slot& x) {
   Ref<code::Type> type_initializer = nullptr;
   if (x.initializer) {
     type_initializer = Resolve(_scope).run(*x.initializer);
-    if (!type_initializer) return;
+    if (!type_initializer) {
+      if (Log::get().count("error") == 0) {
+        _incomplete = true;
+      }
+
+      return;
+    }
   }
 
   // Check for mismatched types
   // TODO(mehcode): Should be a util for this regardless
+  // TODO(mehcode): Should check for `compatible` types (not `equals`)
   if (type_initializer && type_annotation &&
       !type_annotation->equals(*type_initializer)) {
     Log::get().error(x.initializer->span,
@@ -122,7 +138,7 @@ void Analyze::visit_slot(ast::Slot& x) {
 
   // Expand the pattern ..
   _expand_pattern(
-    *x.pattern, _scope,
+    *x.pattern,
     type_annotation,
     type_initializer);
 }

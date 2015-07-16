@@ -48,5 +48,9 @@ void Build::visit_float(ast::Float& x) {
   _stack.push_front(new code::Value(handle, type));
 }
 
+void Build::visit_none(ast::None&) {
+  _stack.push_front(new code::ValueNone());
+}
+
 }  // namespace pass
 }  // namespace arrow

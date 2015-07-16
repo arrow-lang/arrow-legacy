@@ -26,6 +26,7 @@ class Type : public ast::Visitor {
     return _stack.size() > 0 ? _stack.front() : nullptr;
   }
 
+  virtual void visit_type_none(ast::TypeNone&);
   virtual void visit_type_path(ast::TypePath&);
   virtual void visit_type_tuple(ast::TypeTuple&);
 

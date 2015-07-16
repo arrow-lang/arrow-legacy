@@ -22,21 +22,41 @@
 
 // [x] assignment (refactor most of the slot code into a "do_assign" method)
 
-// [ ] `None` type and value
+// [x] `None` type and value
 
+// ------------ function
 // [ ] function declaration
 // [ ] function type resolution
 // [ ] parameters
 // [ ] mutable parameters
 // [ ] result type / return statement
 
+// ------------ extern
 // [ ] extern slot
 // [ ] extern function
 
+// ------------ call
 // [ ] call
 // [ ] call: keyword arguments
 // [ ] call: default arguments
 
+// ------------ import
 // [ ] import
 // [ ] mutually recursive import (for functions)
 // [ ] mutually recursive import (for slots)
+
+// ------------ contextual inference
+// [x] initial
+// [x] error for unresolved
+// [ ] error for use without assign
+// [ ] warn for no use for assign
+// [ ] warn for no assign for declare
+// [ ] block scoping (*)
+// [ ] closures
+
+// ------------ atom-arrow
+// [ ] float
+// [ ] variables shouldn't require space before "let"
+// [ ] export/extern before "let" and "def"
+// [ ] 0-prefixed numbers don't highlight
+// [ ] patterns

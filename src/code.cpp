@@ -17,6 +17,7 @@ IMPL(Slot)
 IMPL(Typename)
 
 IMPL(Type)
+IMPL(TypeNone)
 IMPL(TypeBoolean)
 IMPL(TypeFloat)
 IMPL(TypeInteger)
@@ -25,6 +26,7 @@ IMPL(TypeSizedInteger)
 IMPL(TypeTuple)
 
 IMPL(Value)
+IMPL(ValueNone)
 IMPL(ValueTuple)
 
 }  // namespace code

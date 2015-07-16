@@ -29,6 +29,7 @@ static bool _expand_pattern(
       // TODO(mehcode): `scope->get<T>`
       auto item = scope->get(&pattern).as<code::Slot>();
       if (!item || !item->type) return false;
+      if (item->type.is<code::TypeNone>()) return true;
 
       // TODO(mehcode): If we are inside a function this is a local, else global
       // NOTE: At the moment; all slots are assumed globals

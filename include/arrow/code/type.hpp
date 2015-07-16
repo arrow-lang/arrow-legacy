@@ -25,6 +25,18 @@ struct Type {
   virtual LLVMTypeRef handle() = 0;
 };
 
+struct TypeNone : Type {
+  virtual ~TypeNone() noexcept;
+
+  virtual std::string name() const {
+    return "None";
+  }
+
+  virtual LLVMTypeRef handle() {
+    return nullptr;
+  }
+};
+
 struct TypeBoolean : Type {
   virtual ~TypeBoolean() noexcept;
 

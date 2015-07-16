@@ -15,10 +15,12 @@ namespace pass {
 
 class Analyze : public ast::Visitor {
  public:
-  explicit Analyze(Ref<code::Scope> scope) : _scope(scope) {
+  explicit Analyze(Ref<code::Scope> scope) : _scope(scope), _incomplete(false) {
   }
 
   virtual ~Analyze() noexcept;
+
+  void run(ast::Node& x);
 
   // Blocks (or nodes containing blocks)
   virtual void visit_block(ast::Block& x);
@@ -70,8 +72,43 @@ class Analyze : public ast::Visitor {
   void do_unary(ast::Unary& x);
   void do_binary(ast::Binary& x);
 
+  bool _expand_pattern(
+    ast::Pattern& pattern,
+    Ref<code::Type> type_annotation,
+    Ref<code::Type> type_initializer);
+
+  bool _expand_assign(ast::Assign& node, ast::Node& lhs, Ref<code::Type> type);
+
   // The scope to emplace the exposed items into.
   Ref<code::Scope> _scope;
+
+  // Data flow analysis
+  struct Assignment {
+    /// A definite assignment is one that will /always/ happen.
+    bool is_definite;
+
+    /// Usage count of the value from this assignment.
+    unsigned uses;
+
+    /// Type of the assignment.
+    Ref<code::Type> type;
+  };
+
+  struct Declaration {
+    /// Type of the declaration (can be null if there was no annotation).
+    Ref<code::Type> type;
+
+    /// Name of the declaration.
+    std::string name;
+
+    /// If the declaration refers to a mutable slot.
+    bool is_mutable;
+  };
+
+  bool _incomplete;
+  std::unordered_map<std::string, ast::Node*> _x_name;
+  std::unordered_map<ast::Node*, Declaration> _x_declare;
+  std::unordered_map<ast::Node*, std::vector<Assignment>> _x_assign;
 };
 
 }  // namespace pass
