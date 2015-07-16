@@ -1,9 +1,9 @@
-@value = constant i32 10
-@box = global { i32 } zeroinitializer
-@a = global i32 0
-@b = global i32 0
+@value = internal constant i32 10
+@box = internal global { i32 } zeroinitializer
+@a = internal global i32 0
+@b = internal global i32 0
 
-define void @"tuple-pack.@init"() {
+define internal void @"tuple-pack.@init"() {
   %1 = load i32* @value
   %2 = insertvalue { i32 } undef, i32 %1, 0
   store { i32 } %2, { i32 }* @box

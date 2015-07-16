@@ -1,9 +1,9 @@
-@a = constant i32 30
-@b = constant double 1.531000e+01
-@c = constant i1 false
-@val = constant i32 42
+@a = internal constant i32 30
+@b = internal constant double 1.531000e+01
+@c = internal constant i1 false
+@val = internal constant i32 42
 
-define void @"slot-unpack-explicit.@init"() {
+define internal void @"slot-unpack-explicit.@init"() {
   ret void
 }
 

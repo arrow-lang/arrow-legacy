@@ -1,9 +1,9 @@
-@a = constant i32 30
-@b = constant double 1.531000e+01
-@c = constant i1 false
-@g = constant double 4.012000e+01
+@a = internal constant i32 30
+@b = internal constant double 1.531000e+01
+@c = internal constant i1 false
+@g = internal constant double 4.012000e+01
 
-define void @"slot-unpack-deduce.@init"() {
+define internal void @"slot-unpack-deduce.@init"() {
   ret void
 }
 

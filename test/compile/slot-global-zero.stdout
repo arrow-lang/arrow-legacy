@@ -1,9 +1,9 @@
-@a = global i32 0
-@b = global double 0.000000e+00
-@c = global i1 false
-@m = global { i32, double, i1 } zeroinitializer
+@a = internal global i32 0
+@b = internal global double 0.000000e+00
+@c = internal global i1 false
+@m = internal global { i32, double, i1 } zeroinitializer
 
-define void @"slot-global-zero.@init"() {
+define internal void @"slot-global-zero.@init"() {
   ret void
 }
 

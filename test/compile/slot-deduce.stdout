@@ -1,8 +1,8 @@
-@a = constant i32 30
-@b = constant double 1.531000e+01
-@c = constant i1 false
+@a = internal constant i32 30
+@b = internal constant double 1.531000e+01
+@c = internal constant i1 false
 
-define void @"slot-deduce.@init"() {
+define internal void @"slot-deduce.@init"() {
   ret void
 }
 

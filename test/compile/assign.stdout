@@ -1,10 +1,10 @@
-@a = global i32 30
-@box = global { { i32 }, i32, i1 } zeroinitializer
-@x = global i32 0
-@y = global i32 0
-@z = global i1 false
+@a = internal global i32 30
+@box = internal global { { i32 }, i32, i1 } zeroinitializer
+@x = internal global i32 0
+@y = internal global i32 0
+@z = internal global i1 false
 
-define void @"assign.@init"() {
+define internal void @"assign.@init"() {
   store i32 40, i32* @a
   %1 = load i32* @a
   %2 = insertvalue { { i32 }, i32, i1 } { { i32 } { i32 1 }, i32 undef, i1 true }, i32 %1, 1

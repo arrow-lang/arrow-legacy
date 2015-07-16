@@ -1,6 +1,6 @@
-@a = constant { i32, double, i1 } { i32 30, double 1.531000e+01, i1 false }
+@a = internal constant { i32, double, i1 } { i32 30, double 1.531000e+01, i1 false }
 
-define void @"slot-tuple-deduce.@init"() {
+define internal void @"slot-tuple-deduce.@init"() {
   ret void
 }
 
