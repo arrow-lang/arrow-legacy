@@ -17,6 +17,9 @@ void Build::visit_module(ast::Module& x) {
   auto mod_init_fn = LLVMAddFunction(
     _ctx.mod, mod_init_name.c_str(), mod_init_ty);
 
+  // TODO(mehcode): If we're building a library and this is exported..
+  LLVMSetLinkage(mod_init_fn, LLVMInternalLinkage);
+
   // Create (and emplace) the module item
   Ref<code::Module> item = new code::Module(&x, x.name, mod_init_fn, _scope);
   _scope->emplace(item);

@@ -36,6 +36,9 @@ static bool _expand_pattern(
       item->set_address(LLVMAddGlobal(
         ctx.mod, item->type->handle(), item->name.c_str()));
 
+      // TODO(mehcode): If we're building a library and this is exported..
+      LLVMSetLinkage(item->get_address(ctx), LLVMInternalLinkage);
+
       // If we have an initializer ..
       // TODO(mehcode): cast
       auto ptr = item->get_address(ctx);
