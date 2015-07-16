@@ -24,6 +24,8 @@
 
 // [x] `None` type and value
 
+// [ ] Type coercion and promotion (int32 -> int64 -> float / etc.) [*]
+
 // ------------ function
 // [ ] function declaration
 // [ ] function type resolution
@@ -31,11 +33,11 @@
 // [ ] mutable parameters
 // [ ] result type / return statement
 
-// ------------ extern (*)
+// ------------ extern [**]
 // [x] extern slot
 // [ ] extern function
 
-// ------------ call (**)
+// ------------ call [***]
 // [ ] call
 // [ ] call: keyword arguments
 // [ ] call: default arguments
@@ -51,12 +53,13 @@
 // [ ] error for use without assign
 // [ ] warn for no use for assign
 // [ ] warn for no assign for declare
-// [ ] block scoping (***)
+// [ ] block scoping [****]
 // [ ] closures
 
 // ------------ atom-arrow
-// [ ] float
-// [ ] variables shouldn't require space before "let"
-// [ ] export/extern before "let" and "def"
-// [ ] 0-prefixed numbers don't highlight
-// [ ] patterns
+// [x] float
+// [x] variables shouldn't require space before "let"
+// [x] export/extern before "let" and "def"
+// [x] 0-prefixed numbers don't highlight
+// [x] patterns
+// [ ] function parameters
