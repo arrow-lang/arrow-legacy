@@ -65,29 +65,6 @@ static bool _expand_pattern(
     } break;
 
     Case(ast::PatternTuple& x) {
-      // auto type_tuple = initializer->type.as<code::TypeTuple>();
-      //
-      // std::function<Ref<code::Value> (unsigned)> next;
-      // if (initializer.is<code::ValueTuple>()) {
-      //   // This must be a literal tuple
-      //   next = [&initializer](unsigned index) {
-      //     return initializer.as<code::ValueTuple>()->elements.at(index);
-      //   };
-      // } else if (initializer->has_address()) {
-      //   next = [&initializer, &type_tuple, &ctx](unsigned index) {
-      //     auto handle = LLVMBuildStructGEP(
-      //       ctx.irb, initializer->get_address(ctx), index, "");
-      //
-      //     Ref<code::Value> val = new code::Value(
-      //       handle, type_tuple->elements.at(index));
-      //
-      //     return val;
-      //   };
-      // } else {
-      //   // Unreachable (should be)
-      //   return false;
-      // }
-
       unsigned idx = 0;
       for (auto& element : x.elements) {
         auto val = initializer->at(ctx, idx);
