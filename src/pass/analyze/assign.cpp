@@ -34,7 +34,7 @@ bool Analyze::_expand_assign(
       // Are we immutable and have been assigned previously ..
       auto& decl = _x_declare[ref->second];
       auto& assign_set = _x_assign[ref->second];
-      if (assign_set.size() > 0 && !decl.is_mutable) {
+      if (assign_set.size() > 0 && !decl.is_mutable && !decl.is_external) {
         Log::get().error(
           node.span, "re-assignment of immutable variable `%s`",
           x.text.c_str());

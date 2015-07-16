@@ -14,6 +14,7 @@ namespace code {
 IMPL(Item)
 IMPL(Module)
 IMPL(Slot)
+IMPL(ExternSlot)
 IMPL(Typename)
 
 IMPL(Type)

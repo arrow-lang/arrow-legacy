@@ -33,6 +33,35 @@ struct Slot : Item, Value {
   bool is_mutable;
 };
 
+struct ExternSlot : Item, Value {
+  ExternSlot(
+    ast::Node* context, std::string name, Ref<code::Type> type, bool is_mutable
+  )
+    : Item(context, name),
+      Value(nullptr, type),
+      is_mutable(is_mutable) {
+  }
+
+  virtual ~ExternSlot() noexcept;
+
+  virtual LLVMValueRef get_value(Compiler::Context& ctx);
+  virtual LLVMValueRef get_address(Compiler::Context& ctx);
+
+  void set_address(LLVMValueRef handle) {
+    _handle = handle;
+  }
+
+  virtual bool has_address() const {
+    return true;
+  }
+
+  bool is_mutable;
+
+ private:
+  LLVMValueRef handle(Compiler::Context& ctx);
+
+};
+
 }  // namespace code
 }  // namespace arrow
 

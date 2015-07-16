@@ -56,6 +56,7 @@ class Analyze : public ast::Visitor {
 
   // TODO(mehcode): Misc.
   virtual void visit_slot(ast::Slot& x);
+  virtual void visit_extern_slot(ast::ExternSlot& x);
   // virtual void visit_call(ast::Call& x);
   // virtual void visit_argument(ast::Argument& x);
   // virtual void visit_tuple(ast::Tuple&);
@@ -103,6 +104,9 @@ class Analyze : public ast::Visitor {
 
     /// If the declaration refers to a mutable slot.
     bool is_mutable;
+
+    /// If the declaration is external.
+    bool is_external;
   };
 
   bool _incomplete;

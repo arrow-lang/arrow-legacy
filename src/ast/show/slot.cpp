@@ -55,6 +55,9 @@ void Show::visit_extern_slot(ExternSlot& x) {
   _w.Key("exported");
   _w.Bool(x.exported);
 
+  _w.Key("mutable");
+  _w.Bool(x.is_mutable);
+
   _w.Key("name");
   _w.String(x.name.c_str());
 

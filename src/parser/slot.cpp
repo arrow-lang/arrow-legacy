@@ -85,6 +85,13 @@ bool Parser::parse_extern_slot() {
   // Expect `let`
   if (!expect(Token::Type::Let)) return false;
 
+  // Check for `mutable`
+  bool mut = false;
+  if (_t.peek()->type == Token::Type::Mutable) {
+    _t.pop();
+    mut = true;
+  }
+
   // Expect an identifier
   auto id = expect<ast::Identifier>(&Parser::parse_identifier);
   if (!id) return false;
@@ -107,7 +114,8 @@ bool Parser::parse_extern_slot() {
     initial_tok->span.extend(last_tok->span),
     exported,
     name,
-    annotation
+    annotation,
+    mut
   ));
 
   return true;

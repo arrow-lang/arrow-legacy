@@ -21,6 +21,9 @@ void Resolve::visit_id(ast::Identifier& x) {
   if (item.is<code::Slot>()) {
     // This item -is- a slot
     _stack.push_front(item.as<code::Slot>()->type);
+  } else if (item.is<code::ExternSlot>()) {
+    // This item -is- an external slot
+    _stack.push_front(item.as<code::ExternSlot>()->type);
   } else {
     // TODO: Error?
     return;

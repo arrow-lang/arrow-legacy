@@ -22,6 +22,8 @@ void Analyze::run(ast::Node& x) {
     // Enumerate through each decl. and ensure that all types have been
     // annotated through context
     for (auto& decl : _x_declare) {
+      if (decl.second.is_external) continue;
+
       auto item = _scope->get(decl.first).as<code::Slot>();
       if (!item->type) {
         if (_x_assign.find(decl.first) != _x_assign.end()) {

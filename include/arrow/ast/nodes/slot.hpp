@@ -44,10 +44,12 @@ struct ExternSlot : Item {
     Span span,
     bool exported,
     std::string name,
-    Ref<Node> type
+    Ref<Node> type,
+    bool is_mutable
   ) : Item(span, exported),
       name(name),
-      type(type) {
+      type(type),
+      is_mutable(is_mutable) {
   }
 
   virtual ~ExternSlot() noexcept;
@@ -59,6 +61,8 @@ struct ExternSlot : Item {
 
   /// The required (for external slots) type annotation.
   Ref<Type> type;
+
+  bool is_mutable;
 };
 
 }  // namespace ast

@@ -41,7 +41,8 @@ bool Analyze::_expand_pattern(
       _x_declare.insert({&pattern, {
         type_annotation,
         item->name,
-        item->is_mutable
+        item->is_mutable,
+        false
       }});
 
       // If we have an initializer ..
