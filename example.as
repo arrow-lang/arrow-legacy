@@ -32,7 +32,7 @@
 // [ ] result type / return statement
 
 // ------------ extern (*)
-// [ ] extern slot
+// [x] extern slot
 // [ ] extern function
 
 // ------------ call (**)
