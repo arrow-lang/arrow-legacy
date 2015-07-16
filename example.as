@@ -31,11 +31,11 @@
 // [ ] mutable parameters
 // [ ] result type / return statement
 
-// ------------ extern
+// ------------ extern (*)
 // [ ] extern slot
 // [ ] extern function
 
-// ------------ call
+// ------------ call (**)
 // [ ] call
 // [ ] call: keyword arguments
 // [ ] call: default arguments
@@ -51,7 +51,7 @@
 // [ ] error for use without assign
 // [ ] warn for no use for assign
 // [ ] warn for no assign for declare
-// [ ] block scoping (*)
+// [ ] block scoping (***)
 // [ ] closures
 
 // ------------ atom-arrow
