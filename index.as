@@ -2,13 +2,17 @@
 // let (_, banana, cabbage): (int, bool, float) = (30, name, 1.2);
 
 // TONIGHT!! :tada:
-// extern def exit(status: int32);
+// extern def exit(status: int32 = 0);
+// extern def printf(format: str, ...args) -> int32;
 //
 // exit(40);
+// exit(status=0);
+// exit();
+// printf("%d", 40);
 
 // let i: int = 0;
 
-let i8: int8 = 10;
+let i8: int = 10;
 let i16: int16 = 2000;
 let i32: int32 = 300000;
 let i64: int64 = 4000000000;
