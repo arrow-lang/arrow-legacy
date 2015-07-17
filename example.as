@@ -25,11 +25,12 @@
 // [x] `None` type and value
 
 // [.] Type coercion and promotion (int32 -> int64 -> float / etc.) [*]
-//    [ ] Generate integer literals to the smallest type
-//    [ ] Enforce that slots have `int` unless with explicit annotation
+//    [x] Generate integer literals to the smallest type
 //    [ ] Implement is_coerciable_to
+//    [ ] Enforce that slots have `int` unless with explicit annotation
 //    [ ] Implement common_type (better name?)
 //    [ ] Use common_type (?) to reduce assignment types in analyze
+//    [ ] Implement cast (implicit and explicit)
 
 // ------------ function
 // [ ] function declaration
