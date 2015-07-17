@@ -70,6 +70,13 @@ class Analyze : public ast::Visitor {
   virtual void visit_assign(ast::Assign& x);
 
  private:
+  bool is_coercible_to(ast::Node& from, ast::Node& to);
+  bool is_coercible_to(ast::Node& from, ast::Type& to);
+  bool is_coercible_to(Ref<code::Type> from, Ref<code::Type> to);
+
+  bool require_is_coercible_to(ast::Node& from, ast::Node& to);
+  bool require_is_coercible_to(ast::Node& from, ast::Type& to);
+
   void do_unary(ast::Unary& x);
   void do_binary(ast::Binary& x);
 

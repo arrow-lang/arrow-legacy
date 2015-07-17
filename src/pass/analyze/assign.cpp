@@ -95,24 +95,11 @@ void Analyze::visit_assign(ast::Assign& x) {
   // Expand the assignment
   if (!_expand_assign(x, *x.lhs, type)) return;
 
-  // Resolve the type of the LHS
-  auto lhs_type = Resolve(_scope).run(*x.lhs);
-  if (!lhs_type) {
+  // Check for mismatched types
+  if (!require_is_coercible_to(*x.rhs, *x.lhs)) {
     if (Log::get().count("error") == 0) {
       _incomplete = true;
     }
-
-    return;
-  }
-
-  // Check for mismatched types
-  // TODO(mehcode): Should be a util for this regardless
-  // TODO(mehcode): Should check for `compatible` types (not `equals`)
-  if (!lhs_type->equals(*type)) {
-    Log::get().error(x.rhs->span,
-      "mismatched types: expected `%s`, found `%s`",
-      lhs_type->name().c_str(),
-      type->name().c_str());
 
     return;
   }

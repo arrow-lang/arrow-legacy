@@ -26,11 +26,13 @@
 
 // [.] Type coercion and promotion (int32 -> int64 -> float / etc.) [*]
 //    [x] Generate integer literals to the smallest type
-//    [ ] Implement is_coerciable_to
+//    [x] Implement is_coercible_to
 //    [ ] Enforce that slots have `int` unless with explicit annotation
 //    [ ] Implement common_type (better name?)
 //    [ ] Use common_type (?) to reduce assignment types in analyze
-//    [ ] Implement cast (implicit and explicit)
+//    [-] Implement cast (implicit and explicit)
+//    [ ] Add (tuple,) to (tuple,) logic to is_coercible_to and do_cast
+//    [ ] Allow [ast::Slot] to be type-resolved
 
 // ------------ function
 // [ ] function declaration

@@ -44,6 +44,10 @@ class Build : public ast::Visitor {
   virtual void visit_assign(ast::Assign&);
 
  private:
+  Ref<code::Value> do_cast(
+    Ref<code::Value> value, ast::Node& node, Ref<code::Type> to_type,
+    bool explicit_);
+
   /// The active compiler context.
   Compiler::Context& _ctx;
 

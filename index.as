@@ -8,7 +8,7 @@ let i8: int8 = 10;
 let i16: int16 = i8;
 let i32: int32 = i16;
 let i64: int64 = i32;
-let i128: int128 = i128;
+let i128: int128 = i64;
 
 let u8: uint8 = 10;
 let u16: uint16 = 2000;

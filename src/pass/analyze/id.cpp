@@ -9,7 +9,16 @@ namespace arrow {
 namespace pass {
 
 void Analyze::visit_id(ast::Identifier& x) {
-  std::printf("USE: %s\n", x.text.c_str());
+  // Check for a declared name
+  auto ref = _x_name.find(x.text);
+  if (ref == _x_name.end()) {
+    Log::get().error(
+      x.span, "use of unresolved name '%s'", x.text.c_str());
+
+    return;
+  }
+
+  // TODO(mehcode): Check for at least one definite assignment
 }
 
 }  // namespace pass

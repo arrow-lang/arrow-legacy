@@ -114,6 +114,11 @@ void Analyze::visit_slot(ast::Slot& x) {
   // Check for an initializer ..
   Ref<code::Type> type_initializer = nullptr;
   if (x.initializer) {
+    // Analyze the initializer
+    x.initializer->accept(*this);
+    if (Log::get().count("error") > 0) return;
+
+    // Resolve the type of the initializer
     type_initializer = Resolve(_scope).run(*x.initializer);
     if (!type_initializer) {
       if (Log::get().count("error") == 0) {
@@ -124,17 +129,15 @@ void Analyze::visit_slot(ast::Slot& x) {
     }
   }
 
-  // Check for mismatched types
-  // TODO(mehcode): Should be a util for this regardless
-  // TODO(mehcode): Should check for `compatible` types (not `equals`)
-  if (type_initializer && type_annotation &&
-      !type_annotation->equals(*type_initializer)) {
-    Log::get().error(x.initializer->span,
-      "mismatched types: expected `%s`, found `%s`",
-      type_annotation->name().c_str(),
-      type_initializer->name().c_str());
+  if (type_initializer && type_annotation) {
+    // Check for mismatched types
+    if (!require_is_coercible_to(*x.initializer, *x.type)) {
+      if (Log::get().count("error") == 0) {
+        _incomplete = true;
+      }
 
-    return;
+      return;
+    }
   }
 
   // Expand the pattern ..

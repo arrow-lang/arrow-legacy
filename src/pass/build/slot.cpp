@@ -43,6 +43,7 @@ static bool _expand_pattern(
       // TODO(mehcode): cast
       auto ptr = item->get_address(ctx);
       if (initializer) {
+        // Get the value of the initializer
         auto handle = initializer->get_value(ctx);
         if (LLVMIsConstant(handle)) {
           LLVMSetInitializer(ptr, handle);
