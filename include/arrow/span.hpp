@@ -21,7 +21,7 @@ struct Position {
   }
 
   inline Position operator -(std::size_t offset) {
-    return Position(row, column + offset);
+    return Position(row, column - offset);
   }
 
   std::string to_string() const noexcept;

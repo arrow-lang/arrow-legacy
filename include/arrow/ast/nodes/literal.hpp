@@ -53,8 +53,8 @@ struct Boolean : Literal {
 
 /// An integer literal (`321`, `0xaffb`, '0B0100101', etc.).
 struct Integer : Literal {
-  Integer(Span span, std::string text)
-    : Literal(span), text(text) {
+  Integer(Span span, std::string text, bool is_negative = false)
+    : Literal(span), text(text), is_negative(is_negative) {
   }
 
   virtual ~Integer() noexcept;
@@ -64,6 +64,8 @@ struct Integer : Literal {
   std::uint64_t minimum_bits() const;
 
   std::string text;
+
+  bool is_negative;
 };
 
 /// A float literal (`3.123`, `3e+10`, etc.)

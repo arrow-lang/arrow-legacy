@@ -24,7 +24,12 @@
 
 // [x] `None` type and value
 
-// [ ] Type coercion and promotion (int32 -> int64 -> float / etc.) [*]
+// [.] Type coercion and promotion (int32 -> int64 -> float / etc.) [*]
+//    [ ] Generate integer literals to the smallest type
+//    [ ] Enforce that slots have `int` unless with explicit annotation
+//    [ ] Implement is_coerciable_to
+//    [ ] Implement common_type (better name?)
+//    [ ] Use common_type (?) to reduce assignment types in analyze
 
 // ------------ function
 // [ ] function declaration
@@ -63,3 +68,5 @@
 // [x] 0-prefixed numbers don't highlight
 // [x] patterns
 // [ ] function parameters
+// [ ] Capture keywords outside of meta patterns
+// [ ] Annotations

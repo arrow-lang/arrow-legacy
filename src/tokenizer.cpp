@@ -205,7 +205,7 @@ bool Tokenizer::_read(std::size_t count) {
   utf8::append(ch, std::back_inserter(bytes));
   std::string text(bytes.data(), bytes.size());
 
-  Log::get().error("unexpected token: `%s`", text.c_str());
+  Log::get().error(Span(_filename, _b.pos() - 1, _b.pos()), "unexpected token: `%s`", text.c_str());
 
   // Keep going .. (until we get EOF)
   return _read(count);

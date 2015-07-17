@@ -49,18 +49,6 @@ void Build::visit_assign(ast::Assign& x) {
     return;
   }
 
-  // Check for mismatched types ..
-  // TODO(mehcode): This may make more sense to do in `Analyze`
-  // TODO(mehcode): Should be a util for this regardless
-  if (!lhs->type->equals(*rhs->type)) {
-    Log::get().error(x.rhs->span,
-      "mismatched types: expected `%s`, found `%s`",
-      lhs->type->name().c_str(),
-      rhs->type->name().c_str());
-
-    return;
-  }
-
   // Perform the assignment ..
   if (!do_assign(_ctx, lhs, rhs)) return;
 
