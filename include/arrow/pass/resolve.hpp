@@ -35,6 +35,9 @@ class Resolve : public ast::Visitor {
   virtual void visit_float(ast::Float&);
   virtual void visit_tuple(ast::Tuple&);
 
+  // Misc.
+  virtual void visit_slot(ast::Slot&);
+
  private:
   // The scope to emplace the exposed items into.
   Ref<code::Scope> _scope;

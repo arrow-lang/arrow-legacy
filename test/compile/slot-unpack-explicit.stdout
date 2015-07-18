@@ -1,7 +1,7 @@
-@a = internal constant i32 30
+@a = internal constant i128 30
 @b = internal constant double 1.531000e+01
 @c = internal constant i1 false
-@val = internal constant i32 42
+@val = internal constant i128 42
 
 define internal void @"slot-unpack-explicit.@init"() {
   ret void

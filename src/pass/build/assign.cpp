@@ -49,6 +49,10 @@ void Build::visit_assign(ast::Assign& x) {
     return;
   }
 
+  // Cast the RHS to the type of the LHS
+  rhs = do_cast(rhs, *x.rhs, lhs->type, false);
+  if (!rhs) return;
+
   // Perform the assignment ..
   if (!do_assign(_ctx, lhs, rhs)) return;
 

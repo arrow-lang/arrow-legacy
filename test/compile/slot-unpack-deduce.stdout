@@ -1,9 +1,11 @@
-@a = internal constant i32 30
+@a = internal constant i128 30
 @b = internal constant double 1.531000e+01
 @c = internal constant i1 false
-@g = internal constant double 4.012000e+01
+@g = internal global double 0.000000e+00
 
 define internal void @"slot-unpack-deduce.@init"() {
+  %1 = load double* @b
+  store double %1, double* @g
   ret void
 }
 

@@ -20,7 +20,11 @@ void Resolve::visit_id(ast::Identifier& x) {
   // Determine the type of said item
   if (item.is<code::Slot>()) {
     // This item -is- a slot
-    _stack.push_front(item.as<code::Slot>()->type);
+    auto type = item.as<code::Slot>()->type;
+    if (!type) {
+      type = new code::TypeUnknown();
+    }
+    _stack.push_front(type);
   } else if (item.is<code::ExternSlot>()) {
     // This item -is- an external slot
     _stack.push_front(item.as<code::ExternSlot>()->type);

@@ -46,7 +46,7 @@ class Ref {
   }
 
   inline operator bool() const noexcept {
-    return _d != nullptr || _is_undefined;
+    return _d != nullptr && !_is_undefined;
   }
 
   template <typename U>
@@ -121,6 +121,10 @@ class Ref {
 
   const T& operator *() const noexcept {
     return *_d;
+  }
+
+  bool is_undef() const noexcept {
+    return _is_undefined;
   }
 
  private:

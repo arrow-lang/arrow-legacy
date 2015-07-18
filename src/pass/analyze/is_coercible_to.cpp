@@ -16,6 +16,7 @@ bool Analyze::require_is_coercible_to(ast::Node& from, ast::Node& to) {
     auto from_type = Resolve(_scope).run(from);
     auto to_type = Resolve(_scope).run(to);
     if (!from_type || !to_type) return false;
+    if (from_type->is_unknown() || to_type->is_unknown()) return false;
 
     Log::get().error(to.span,
       "mismatched types: expected `%s`, found `%s`",
@@ -34,6 +35,7 @@ bool Analyze::require_is_coercible_to(ast::Node& from, ast::Type& to) {
     auto from_type = Resolve(_scope).run(from);
     auto to_type = Type(_scope).run(to);
     if (!from_type || !to_type) return false;
+    if (from_type->is_unknown() || to_type->is_unknown()) return false;
 
     Log::get().error(to.span,
       "mismatched types: expected `%s`, found `%s`",
@@ -51,6 +53,7 @@ bool Analyze::is_coercible_to(ast::Node& from, ast::Node& to) {
   auto from_type = Resolve(_scope).run(from);
   auto to_type = Resolve(_scope).run(to);
   if (!from_type || !to_type) return false;
+  if (from_type->is_unknown() || to_type->is_unknown()) return false;
 
   return is_coercible_to(from_type, to_type);
 }
@@ -60,6 +63,7 @@ bool Analyze::is_coercible_to(ast::Node& from, ast::Type& to) {
   auto from_type = Resolve(_scope).run(from);
   auto to_type = Type(_scope).run(to);
   if (!from_type || !to_type) return false;
+  if (from_type->is_unknown() || to_type->is_unknown()) return false;
 
   return is_coercible_to(from_type, to_type);
 }

@@ -18,6 +18,8 @@ IMPL(ExternSlot)
 IMPL(Typename)
 
 IMPL(Type)
+IMPL(TypeAny)
+IMPL(TypeUnknown)
 IMPL(TypeNone)
 IMPL(TypeBoolean)
 IMPL(TypeFloat)

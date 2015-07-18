@@ -53,12 +53,17 @@ bool Analyze::_expand_pattern(
         _x_assign[&pattern].push_back({
           true,
           0,
-          type_initializer
+          type_initializer ? type_initializer : nullptr
         });
       }
     } break;
 
     Case(ast::PatternTuple& x) {
+      if (!type_initializer || type_initializer->is_unknown()) {
+        // Initializer type is not ready (yet)
+        return false;
+      }
+
       // Check to see if we have the exact # of elements
       auto init_type_tuple = type_initializer.as<code::TypeTuple>();
       if (x.elements.size() != init_type_tuple->elements.size()) {
@@ -120,12 +125,13 @@ void Analyze::visit_slot(ast::Slot& x) {
 
     // Resolve the type of the initializer
     type_initializer = Resolve(_scope).run(*x.initializer);
-    if (!type_initializer) {
+    if (!type_initializer || type_initializer->is_unknown()) {
       if (Log::get().count("error") == 0) {
         _incomplete = true;
+        type_initializer = new code::TypeUnknown();
+      } else {
+        return;
       }
-
-      return;
     }
   }
 

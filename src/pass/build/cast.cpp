@@ -15,6 +15,11 @@ Ref<code::Value> Build::do_cast(
   auto from_type = value->type;
   LLVMValueRef res = nullptr;
 
+  // If the to-type is `any` ..
+  if (to_type.is<code::TypeAny>()) {
+    return value;
+  }
+
   // If the types are equivalent ..
   if (from_type->equals(*to_type)) {
     return value;
@@ -75,6 +80,27 @@ Ref<code::Value> Build::do_cast(
 
   // TODO(mehcode): Explicit cast from float to (sized) integer
   // TODO(mehcode): Explicit cast from ptr to int and int to ptr
+
+  // If we're both tuples ..
+  if (from_type.is<code::TypeTuple>() && to_type.is<code::TypeTuple>()) {
+    auto from_t = from_type.as<code::TypeTuple>();
+    auto to_t = to_type.as<code::TypeTuple>();
+
+    // Of the same length ..
+    if (from_t->elements.size() == to_t->elements.size()) {
+      // Iterate through the elements; and cast each
+      Ref<code::ValueTuple> result = new code::ValueTuple(to_t);
+      for (unsigned idx = 0; idx < from_t->elements.size(); ++idx) {
+        auto el_value = do_cast(
+          value->at(_ctx, idx), node, to_t->elements.at(idx), explicit_);
+        if (!el_value) return nullptr;
+
+        result->elements.push_back(el_value);
+      }
+
+      return result;
+    }
+  }
 
   // If we didn't manage to cast the expression
   if (!res) {

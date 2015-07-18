@@ -6,6 +6,7 @@
 #include <cassert>
 #include "arrow/match.hpp"
 #include "arrow/pass/build.hpp"
+#include "arrow/pass/resolve.hpp"
 
 namespace arrow {
 
@@ -40,7 +41,6 @@ static bool _expand_pattern(
       LLVMSetLinkage(item->get_address(ctx), LLVMInternalLinkage);
 
       // If we have an initializer ..
-      // TODO(mehcode): cast
       auto ptr = item->get_address(ctx);
       if (initializer) {
         // Get the value of the initializer
@@ -95,6 +95,14 @@ void Build::visit_slot(ast::Slot& x) {
   Ref<code::Value> initializer = nullptr;
   if (x.initializer) {
     initializer = Build(_ctx, _scope).run_scalar(*x.initializer);
+    if (!initializer) return;
+
+    // Resolve the type of the `slot`
+    auto slot_type = Resolve(_scope).run(x);
+    if (!slot_type) return;
+
+    // Cast the initializer to the `slot` type
+    initializer = do_cast(initializer, *x.initializer, slot_type, false);
     if (!initializer) return;
   }
 

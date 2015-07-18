@@ -29,7 +29,11 @@ std::string TypeTuple::name() const {
       stream << ",";
     }
 
-    stream << elements.at(idx)->name();
+    if (elements.at(idx).is_undef()) {
+      stream << "?";
+    } else {
+      stream << elements.at(idx)->name();
+    }
   }
   if (idx == 1) {
     stream << ",";
@@ -85,7 +89,7 @@ LLVMTypeRef TypeByte::handle() {
 
 LLVMTypeRef TypeInteger::handle() {
   // TODO(mehcode): Arbitrary percision integer type
-  return LLVMIntType(32);
+  return LLVMIntType(128);
 }
 
 LLVMTypeRef TypeSizedInteger::handle() {

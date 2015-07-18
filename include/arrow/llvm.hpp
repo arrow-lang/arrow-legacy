@@ -9,5 +9,6 @@
 #include "llvm-c/Core.h"
 #include "llvm-c/Target.h"
 #include "llvm-c/TargetMachine.h"
+#include "llvm-c/Analysis.h"
 
 #endif  // ARROW_LLVM_H

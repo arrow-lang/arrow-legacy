@@ -12,7 +12,7 @@ namespace fs = boost::filesystem;
 
 namespace arrow {
 
-Compiler::Compiler() : _scope(new code::Scope()) {
+Compiler::Compiler(bool verify) : _scope(new code::Scope()), _verify(verify) {
 }
 
 Compiler::~Compiler() noexcept {
@@ -159,6 +159,13 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   // If we didn't terminate (by returning the value of module main) ..
   if (!LLVMGetBasicBlockTerminator(LLVMGetLastBasicBlock(abi_main))) {
     LLVMBuildRet(_ctx.irb, LLVMConstInt(LLVMInt32Type(), 0, false));
+  }
+
+  // Verify the built module
+  if (_verify) {
+    error = nullptr;
+    LLVMVerifyModule(_ctx.mod, LLVMAbortProcessAction, &error);
+    LLVMDisposeMessage(error);
   }
 }
 

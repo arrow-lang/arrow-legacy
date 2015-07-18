@@ -19,10 +19,34 @@ struct Type {
     return typeid(other) == typeid(*this);
   }
 
+  virtual bool is_unknown() const {
+    return false;
+  }
+
   virtual std::string name() const = 0;
 
   /// Get the LLVM type handle.
   virtual LLVMTypeRef handle() = 0;
+};
+
+struct TypeUnknown : Type {
+  virtual ~TypeUnknown() noexcept;
+
+  virtual std::string name() const {
+    return "?";
+  }
+
+  virtual bool is_unknown() const {
+    return true;
+  }
+
+  virtual bool equals(Type&) const {
+    return false;
+  }
+
+  virtual LLVMTypeRef handle() {
+    return nullptr;
+  }
 };
 
 struct TypeNone : Type {
@@ -30,6 +54,22 @@ struct TypeNone : Type {
 
   virtual std::string name() const {
     return "None";
+  }
+
+  virtual LLVMTypeRef handle() {
+    return nullptr;
+  }
+};
+
+struct TypeAny : Type {
+  virtual ~TypeAny() noexcept;
+
+  virtual std::string name() const {
+    return "_";
+  }
+
+  virtual bool equals(Type&) const {
+    return true;
   }
 
   virtual LLVMTypeRef handle() {
@@ -102,6 +142,14 @@ struct TypeTuple : Type {
   virtual bool equals(Type& other) const;
 
   virtual std::string name() const;
+
+  virtual bool is_unknown() const {
+    for (auto& e : elements) {
+      if (e->is_unknown()) return true;
+    }
+
+    return false;
+  }
 
   std::vector<Ref<code::Type>> elements;
 

@@ -1,7 +1,7 @@
-@a = internal global i32 0
+@a = internal global i128 0
 @b = internal global double 0.000000e+00
 @c = internal global i1 false
-@m = internal global { i32, double, i1 } zeroinitializer
+@m = internal global { i128, double, i1 } zeroinitializer
 
 define internal void @"slot-global-zero.@init"() {
   ret void

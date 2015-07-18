@@ -32,7 +32,7 @@ int Compile::run(
   }
 
   // Build a compiler
-  arrow::Compiler compiler;
+  arrow::Compiler compiler(true);
   compiler.initialize();
 
   // Compile the top-level node (module)

@@ -35,7 +35,7 @@ class Compiler {
     LLVMTargetDataRef data_layout;
   };
 
-  Compiler();
+  Compiler(bool verify);
 
   ~Compiler() noexcept;
 
@@ -50,6 +50,8 @@ class Compiler {
 
   /// Top-level scope (contains built-ins)
   Ref<code::Scope> _scope;
+
+  bool _verify;
 };
 
 }  // namespace arrow

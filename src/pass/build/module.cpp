@@ -25,7 +25,9 @@ void Build::visit_module(ast::Module& x) {
   _scope->emplace(item);
 
   // Expose the module block (into the new module scope).
+  // std::printf("[expose] before\n");
   Expose(_ctx, item->scope).run(*x.block);
+  // std::printf("[expose] after\n");
   if (Log::get().count("error") > 0) return;
 
   // Analyze (usage analysis) the module block.
