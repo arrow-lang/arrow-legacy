@@ -12,9 +12,10 @@
 #include "arrow/ref.hpp"
 #include "arrow/log.hpp"
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv, char** environ) {
   // Register available commands
   std::deque<arrow::Ref<arrow::Command>> commands;
+  commands.push_back(new arrow::command::Run(argc, argv, environ));
   commands.push_back(new arrow::command::Compile());
   commands.push_back(new arrow::command::Parse());
   commands.push_back(new arrow::command::Tokenize());

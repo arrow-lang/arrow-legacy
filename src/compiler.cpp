@@ -36,8 +36,10 @@ void Compiler::initialize() {
   // Ensure the x86 target is initialized.
   // NOTE: We should first ask configuration what our target is
   //   and attempt to initialize the right target.
+  LLVMInitializeNativeTarget();
   LLVMInitializeX86Target();
   LLVMInitializeX86TargetInfo();
+  LLVMInitializeNativeAsmPrinter();
 
   // Declare builtin types
 
@@ -174,6 +176,38 @@ void Compiler::print() {
   auto bytes = LLVMPrintModuleToString(_ctx.mod);
   std::printf("%s\n", bytes);
   LLVMDisposeMessage(bytes);
+}
+
+int Compiler::run(int argc, char** argv, char** environ) {
+  // Create an execution engine ..
+  char* error = nullptr;
+  LLVMExecutionEngineRef engine = nullptr;
+  LLVMCreateExecutionEngineForModule(&engine, _ctx.mod, &error);
+  if (!engine) {
+    std::printf("error: %s\n", error);
+    LLVMDisposeMessage(error);
+    return -1;
+    return -1;
+  } else {
+    LLVMDisposeMessage(error);
+  }
+
+  // Run static initialization ..
+  LLVMRunStaticConstructors(engine);
+
+  // Run `main`
+  auto res = LLVMRunFunctionAsMain(
+    engine,
+    LLVMGetNamedFunction(_ctx.mod, "main"),
+    argc, argv, environ);
+
+  // Run static finalization ..
+  LLVMRunStaticConstructors(engine);
+
+  // Release execution engine ..
+  LLVMDisposeExecutionEngine(engine);
+
+  return res;
 }
 
 }  // namespace arrow

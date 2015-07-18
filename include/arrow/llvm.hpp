@@ -9,7 +9,12 @@
 #include "llvm-c/Core.h"
 #include "llvm-c/Target.h"
 #include "llvm-c/TargetMachine.h"
+#include "llvm-c/ExecutionEngine.h"
 #include "llvm-c/Analysis.h"
+
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/ExecutionEngine/MCJIT.h"
+#include "llvm/ExecutionEngine/Interpreter.h"
 
 extern void LLVMAddResultAttribute(LLVMValueRef Fn, LLVMAttribute PA);
 extern void LLVMRemoveResultAttribute(LLVMValueRef Fn, LLVMAttribute PA);

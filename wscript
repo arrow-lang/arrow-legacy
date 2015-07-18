@@ -29,12 +29,13 @@ def configure(ctx):
     ctx.check(lib='tinfo', mandatory=True, uselib_store='TINFO')
     ctx.check(lib='z', mandatory=True, uselib_store='Z')
     ctx.check(lib='gmp', mandatory=True, uselib_store='GMP')
+    ctx.check(lib='ffi', mandatory=True, uselib_store='FFI')
 
     ctx.check_boost(lib="system program_options filesystem")
 
     ctx.check_cfg(
         path=ctx.options.with_llvm_config, package='',
-        args='--ldflags --cflags --libs',
+        args='--ldflags --cflags --libs all',
         uselib_store='LLVM'
     )
 
@@ -57,6 +58,7 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
         ctx.env.append_unique("CXXFLAGS", "-Wno-unused-value")
+        ctx.env.append_unique("CXXFLAGS", "-Wno-unused-parameter")
 
         # This should be enabled only during testing; perhaps make two binaries
         ctx.env.append_unique("CXXFLAGS", "--coverage")
@@ -70,7 +72,8 @@ def build(ctx):
                     "vendor",
                 ],
                 target="arrow",
-                use=["BOOST", "LLVM", "PTHREAD", "DL", "TINFO", "Z", "GMP"])
+                use=["BOOST", "LLVM", "PTHREAD", "DL", "TINFO", "Z", "GMP",
+                     "FFI"])
 
 
 def test(ctx):

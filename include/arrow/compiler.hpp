@@ -44,6 +44,7 @@ class Compiler {
   void compile(const std::string& name, Ref<ast::Node> node);
 
   void print();
+  int run(int argc, char** argv, char** environ);
 
  private:
   Context _ctx;
