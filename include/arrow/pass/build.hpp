@@ -27,8 +27,13 @@ class Build : public ast::Visitor {
     return _stack.size() == 1 ? _stack.front() : nullptr;
   }
 
+  // Module (top-level)
   virtual void visit_module(ast::Module&);
+
+  // Block (scope)
   virtual void visit_block(ast::Block&);
+
+  // Slot
   virtual void visit_slot(ast::Slot&);
 
   // Literal
@@ -42,6 +47,9 @@ class Build : public ast::Visitor {
 
   // Binary
   virtual void visit_assign(ast::Assign&);
+
+  // Call
+  virtual void visit_call(ast::Call& x);
 
  private:
   Ref<code::Value> do_cast(
