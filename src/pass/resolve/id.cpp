@@ -28,6 +28,9 @@ void Resolve::visit_id(ast::Identifier& x) {
   } else if (item.is<code::ExternSlot>()) {
     // This item -is- an external slot
     _stack.push_front(item.as<code::ExternSlot>()->type);
+  } else if (item.is<code::ExternFunction>()) {
+    // This item -is- an external function
+    _stack.push_front(item.as<code::ExternFunction>()->type);
   } else {
     // TODO: Error?
     return;

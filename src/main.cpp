@@ -40,9 +40,6 @@ int main(int argc, char** argv) {
       if (found) {
         // Remove the command argument
         args.erase(args.begin() + 1);
-      } else {
-        arrow::Log::get().error("unrecognised option '%s'", a1.c_str());
-        return EXIT_FAILURE;
       }
     }
   }

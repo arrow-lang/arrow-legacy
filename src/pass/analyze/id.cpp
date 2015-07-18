@@ -18,6 +18,9 @@ void Analyze::visit_id(ast::Identifier& x) {
     return;
   }
 
+  // If this is externally defined; get out
+  if (_x_declare[ref->second].is_external) return;
+
   // Check for at least one definite assignment
   bool is_assigned = false;
   if (_x_assign.find(ref->second) != _x_assign.end()) {

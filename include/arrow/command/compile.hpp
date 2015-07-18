@@ -21,6 +21,8 @@ class Compile : public Command {
   }
 
  private:
+  virtual void add_options(boost::program_options::options_description&);
+
   virtual int run(
     std::shared_ptr<std::istream> is,
     const boost::program_options::variables_map& vm);

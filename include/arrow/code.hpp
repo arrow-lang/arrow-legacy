@@ -12,5 +12,6 @@
 #include "arrow/code/type.hpp"
 #include "arrow/code/slot.hpp"
 #include "arrow/code/value.hpp"
+#include "arrow/code/function.hpp"
 
 #endif  // ARROW_CODE_H

@@ -57,7 +57,7 @@ struct TypeNone : Type {
   }
 
   virtual LLVMTypeRef handle() {
-    return nullptr;
+    return LLVMVoidType();
   }
 };
 
@@ -143,15 +143,64 @@ struct TypeTuple : Type {
 
   virtual std::string name() const;
 
-  virtual bool is_unknown() const {
-    for (auto& e : elements) {
-      if (e->is_unknown()) return true;
-    }
-
-    return false;
-  }
+  virtual bool is_unknown() const;
 
   std::vector<Ref<code::Type>> elements;
+
+ private:
+  LLVMTypeRef _handle;
+};
+
+struct TypeParameter : Type {
+  explicit TypeParameter(std::string keyword, Ref<code::Type> type)
+    : keyword(keyword), type(type) {
+  }
+
+  virtual ~TypeParameter() noexcept;
+
+  virtual LLVMTypeRef handle();
+
+  virtual bool equals(Type& other) const;
+
+  virtual std::string name() const;
+
+  virtual bool is_unknown() const;
+
+  /// Name of the parameter
+  std::string keyword;
+
+  /// Actual type
+  Ref<code::Type> type;
+};
+
+struct TypeFunction : Type {
+  enum class Abi {
+    Native,
+    C
+  };
+
+  TypeFunction(Abi abi, Ref<code::Type> result)
+    : parameters(), result(result), abi(abi) {
+  }
+
+  virtual ~TypeFunction() noexcept;
+
+  virtual LLVMTypeRef handle();
+
+  virtual bool equals(Type& other) const;
+
+  virtual std::string name() const;
+
+  virtual bool is_unknown() const;
+
+  /// Ordered sequence of parameter types
+  std::vector<Ref<code::TypeParameter>> parameters;
+
+  /// Result type
+  Ref<code::Type> result;
+
+  /// ABI of the function
+  Abi abi;
 
  private:
   LLVMTypeRef _handle;

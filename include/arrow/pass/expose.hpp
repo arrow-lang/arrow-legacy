@@ -25,6 +25,7 @@ class Expose : public ast::Visitor {
 
   // virtual void visit_import(ast::Import&);
   virtual void visit_extern_slot(ast::ExternSlot&);
+  virtual void visit_extern_function(ast::ExternFunction&);
   virtual void visit_slot(ast::Slot&);
 
  private:

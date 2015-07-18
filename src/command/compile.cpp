@@ -17,10 +17,18 @@ namespace po = boost::program_options;
 namespace arrow {
 namespace command {
 
+void Compile::add_options(boost::program_options::options_description& desc) {
+  desc.add_options()
+    ("no-verify", "");
+}
+
 int Compile::run(
   std::shared_ptr<std::istream> is,
   const po::variables_map& vm
 ) {
+  // Check if verification has been requested to be disabled
+  auto no_verify = vm.count("no-verify") > 0;
+
   // Build and bind a parser to the input file
   auto filename = vm["input-file"].as<std::string>();
   arrow::Parser parser{is, filename};
@@ -32,7 +40,7 @@ int Compile::run(
   }
 
   // Build a compiler
-  arrow::Compiler compiler(true);
+  arrow::Compiler compiler(!no_verify);
   compiler.initialize();
 
   // Compile the top-level node (module)
