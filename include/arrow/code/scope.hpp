@@ -33,11 +33,12 @@ class Scope {
   /// Attempt to get an item from the current scope.
   /// @param traverse Indicate if we should recurse upwards to find a match
   ///                 if not available in the current scope.
-  Ref<code::Item> get(const std::string& name, bool traverse = true) const;
-  Ref<code::Item> get(ast::Node* context, bool traverse = true) const;
+  Ref<code::Item> get(const std::string& name, bool traverse = true);
+  Ref<code::Item> get(
+    ast::Node* context, bool traverse = true, bool unshadow = true);
 
-  bool exists(const std::string& name, bool traverse = true) const;
-  bool exists(ast::Node* context, bool traverse = true) const;
+  bool exists(const std::string& name, bool traverse = true);
+  bool exists(ast::Node* context, bool traverse = true);
 
  private:
   Ref<Scope> _parent;

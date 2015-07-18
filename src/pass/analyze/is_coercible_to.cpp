@@ -11,8 +11,6 @@ namespace arrow {
 namespace pass {
 
 bool Analyze::require_is_coercible_to(ast::Node& from, ast::Node& to) {
-  std::printf("require_is_coercible_to(Node, Node)\n");
-
   if (!is_coercible_to(from, to)) {
     // Resolve the from/to types
     auto from_type = Resolve(_scope).run(from);
@@ -31,8 +29,6 @@ bool Analyze::require_is_coercible_to(ast::Node& from, ast::Node& to) {
 }
 
 bool Analyze::require_is_coercible_to(ast::Node& from, ast::Type& to) {
-  std::printf("require_is_coercible_to(Node, Type)\n");
-
   if (!is_coercible_to(from, to)) {
     // Resolve the from/to types
     auto from_type = Resolve(_scope).run(from);
@@ -108,6 +104,26 @@ bool Analyze::is_coercible_to(Ref<code::Type> from, Ref<code::Type> to) {
        from.is<code::TypeInteger>()) &&
       to.is<code::TypeFloat>()) {
     return true;
+  }
+
+  // If we're both tuples ..
+  if (from.is<code::TypeTuple>() && to.is<code::TypeTuple>()) {
+    auto from_t = from.as<code::TypeTuple>();
+    auto to_t = to.as<code::TypeTuple>();
+
+    // Of the same length ..
+    if (from_t->elements.size() == to_t->elements.size()) {
+      // And each element is coercible to the other (in sequence)
+      for (unsigned idx = 0; idx < from_t->elements.size(); ++idx) {
+        if (!is_coercible_to(
+              from_t->elements.at(idx),
+              to_t->elements.at(idx))) {
+          return false;
+        }
+      }
+
+      return true;
+    }
   }
 
   return false;

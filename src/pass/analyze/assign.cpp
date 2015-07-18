@@ -92,6 +92,10 @@ void Analyze::visit_assign(ast::Assign& x) {
     return;
   }
 
+  // Analyze the assignment operand
+  x.rhs->accept(*this);
+  if (Log::get().count("error") > 0) return;
+
   // Expand the assignment
   if (!_expand_assign(x, *x.lhs, type)) return;
 

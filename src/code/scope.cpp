@@ -33,15 +33,15 @@ void Scope::emplace(Ref<code::Item> item) {
   }
 }
 
-bool Scope::exists(ast::Node* context, bool traverse) const {
-  return get(context, traverse) != nullptr;
+bool Scope::exists(ast::Node* context, bool traverse) {
+  return get(context, traverse, false) != nullptr;
 }
 
-bool Scope::exists(const std::string& name, bool traverse) const {
+bool Scope::exists(const std::string& name, bool traverse) {
   return get(name, traverse) != nullptr;
 }
 
-auto Scope::get(ast::Node* context, bool traverse) const
+auto Scope::get(ast::Node* context, bool traverse, bool unshadow)
     -> Ref<code::Item> {
   auto ref = _items_by_ctx.find(context);
   if (ref == _items_by_ctx.end()) {
@@ -49,10 +49,19 @@ auto Scope::get(ast::Node* context, bool traverse) const
     return nullptr;
   }
 
-  return _items.at(ref->second);
+  // Emplace the name
+  // NOTE: Get by context is intended for visitors to explicitly
+  //       request an item (and at the same time pushing that item
+  //       to be unshadowed)
+  auto item = _items.at(ref->second);
+  if (unshadow) {
+    _items_by_name[item->name] = ref->second;
+  }
+
+  return item;
 }
 
-auto Scope::get(const std::string& name, bool traverse) const
+auto Scope::get(const std::string& name, bool traverse)
     -> Ref<code::Item> {
   auto ref = _items_by_name.find(name);
   if (ref == _items_by_name.end()) {
