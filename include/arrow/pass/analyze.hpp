@@ -58,8 +58,8 @@ class Analyze : public ast::Visitor {
   virtual void visit_slot(ast::Slot& x);
   virtual void visit_extern_slot(ast::ExternSlot& x);
   virtual void visit_extern_function(ast::ExternFunction& x);
-  // virtual void visit_call(ast::Call& x);
-  // virtual void visit_argument(ast::Argument& x);
+  virtual void visit_call(ast::Call& x);
+  virtual void visit_argument(ast::Argument& x);
   // virtual void visit_tuple(ast::Tuple&);
   // virtual void visit_path(ast::Path& x);
   // virtual void visit_cast(ast::Cast& x);
