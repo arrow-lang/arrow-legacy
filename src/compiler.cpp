@@ -184,12 +184,8 @@ int Compiler::run(int argc, char** argv, char** environ) {
   LLVMExecutionEngineRef engine = nullptr;
   LLVMCreateExecutionEngineForModule(&engine, _ctx.mod, &error);
   if (!engine) {
-    std::printf("error: %s\n", error);
     LLVMDisposeMessage(error);
     return -1;
-    return -1;
-  } else {
-    LLVMDisposeMessage(error);
   }
 
   // Run static initialization ..
@@ -202,10 +198,7 @@ int Compiler::run(int argc, char** argv, char** environ) {
     argc, argv, environ);
 
   // Run static finalization ..
-  LLVMRunStaticConstructors(engine);
-
-  // Release execution engine ..
-  LLVMDisposeExecutionEngine(engine);
+  LLVMRunStaticDestructors(engine);
 
   return res;
 }

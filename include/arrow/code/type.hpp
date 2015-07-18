@@ -135,6 +135,9 @@ struct TypeSizedInteger : Type {
 };
 
 struct TypeTuple : Type {
+  TypeTuple() : _handle(nullptr) {
+  }
+
   virtual ~TypeTuple() noexcept;
 
   virtual LLVMTypeRef handle();
@@ -180,7 +183,7 @@ struct TypeFunction : Type {
   };
 
   TypeFunction(Abi abi, Ref<code::Type> result)
-    : parameters(), result(result), abi(abi) {
+    : parameters(), result(result), abi(abi), _handle(nullptr) {
   }
 
   virtual ~TypeFunction() noexcept;

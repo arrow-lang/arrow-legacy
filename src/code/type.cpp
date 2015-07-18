@@ -173,6 +173,7 @@ LLVMTypeRef TypeFunction::handle() {
     // Prepare the result type
     auto result_handle = result->handle();
 
+
     // Construct the LLVM type
     _handle = LLVMFunctionType(
       result_handle, parameter_handles.data(), parameter_handles.size(),

@@ -31,7 +31,9 @@ void Build::visit_module(ast::Module& x) {
   if (Log::get().count("error") > 0) return;
 
   // Analyze (usage analysis) the module block.
+  // std::printf("[analyze] before\n");
   Analyze(item->scope).run(*x.block);
+  // std::printf("[analyze] after\n");
   if (Log::get().count("error") > 0) return;
 
   // Add the module initializer basic block
@@ -40,7 +42,9 @@ void Build::visit_module(ast::Module& x) {
   LLVMPositionBuilderAtEnd(_ctx.irb, block);
 
   // Visit the module block with the builder.
+  // std::printf("[build] before\n");
   Build(_ctx, item->scope).run(*x.block);
+  // std::printf("[build] after\n");
   if (Log::get().count("error") > 0) return;
 
   // Terminate the module initializer
