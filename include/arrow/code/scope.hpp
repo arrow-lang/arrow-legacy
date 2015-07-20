@@ -15,9 +15,68 @@
 namespace arrow {
 namespace code {
 
+
+// Assignments need to be hierarchial ..
+/*
+
+let a;          // <decl>
+if cond {       // scope.enter / scope.enter
+  a = 30;       // <assign>
+} else {        // scope.exit / scope.enter
+  if other {    // scope.enter / scope.enter
+    a = 40;     // <assign>
+  }             // scope.exit / scope.exit
+}               // scope.exit / scope.exit
+
+ */
+
+class Block {
+ public:
+  explicit Block(Ref<Block> parent = nullptr)
+    : _parent(parent),
+      _items(),
+      _items_by_name(),
+      _items_by_ctx() {
+  }
+
+  Block(const Block&) = delete;
+  Block(Block&&) = delete;
+
+  ~Block() noexcept;
+
+  Block& operator=(const Block&) = delete;
+  Block& operator=(Block&&) = delete;
+
+  /// Add an assignment to an item (in this specific scope-block).
+  void add_assign(ast::Node* context, bool is_definite);
+
+  /// Insert an item (to this specific scope-block).
+  void insert(Ref<Item> item);
+
+  /// Check for an item in the current scope-block.
+  bool contains(const std::string& name, bool traverse = true);
+  bool contains(ast::Node* context, bool traverse = true);
+
+  /// Attempt to get an item from the current scope-block.
+  ///
+  /// @param traverse Indicate if we should recurse upwards to find a match
+  ///                 if not available in the current scope-block.
+  ///
+  /// @param unshadow Indicate if we should unshadow a reference (if it was)
+  ///                 even shadowed before).
+  Ref<code::Item> get(const std::string& name, bool traverse = true);
+  Ref<code::Item> get(
+    ast::Node* context, bool traverse = true, bool unshadow = true);
+};
+
 class Scope {
  public:
-  explicit Scope(Ref<Scope> parent = nullptr) : _parent(parent) {
+  explicit Scope(Scope* parent = nullptr)
+    : _current(nullptr), _parent(parent),
+      _children(),
+      _items(),
+      _items_by_name(),
+      _items_by_ctx() {
   }
 
   Scope(const Scope&) = delete;
@@ -40,8 +99,18 @@ class Scope {
   bool exists(const std::string& name, bool traverse = true);
   bool exists(ast::Node* context, bool traverse = true);
 
+  void enter(ast::Node* context);
+  void exit();
+
  private:
-  Ref<Scope> _parent;
+  /// Current scope reference.
+  Scope* _current;
+
+  /// Direct (named) parent of this scope.
+  Scope* _parent;
+
+  /// Anonymous scopes contained within this scope.
+  std::unordered_map<ast::Node*, Ref<Scope>> _children;
 
   /// Items that have been added to this scope.
   std::deque<Ref<code::Item>> _items;

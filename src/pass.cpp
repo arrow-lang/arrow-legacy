@@ -5,9 +5,9 @@
 
 #include "arrow/pass/build.hpp"
 #include "arrow/pass/expose.hpp"
-#include "arrow/pass/analyze.hpp"
 #include "arrow/pass/type.hpp"
 #include "arrow/pass/resolve.hpp"
+#include "arrow/pass/analyze-usage.hpp"
 
 #define IMPL(N) \
   N::~N() noexcept { }
@@ -17,9 +17,9 @@ namespace pass {
 
 IMPL(Build)
 IMPL(Expose)
-IMPL(Analyze)
 IMPL(Type)
 IMPL(Resolve)
+IMPL(AnalyzeUsage)
 
 }  // namespace pass
 }  // namespace arrow

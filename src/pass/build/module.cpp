@@ -5,7 +5,8 @@
 
 #include "arrow/pass/build.hpp"
 #include "arrow/pass/expose.hpp"
-#include "arrow/pass/analyze.hpp"
+#include "arrow/pass/analyze-usage.hpp"
+// #include "arrow/pass/analyze-type.hpp"
 
 namespace arrow {
 namespace pass {
@@ -32,7 +33,7 @@ void Build::visit_module(ast::Module& x) {
 
   // Analyze (usage analysis) the module block.
   // std::printf("[analyze] before\n");
-  Analyze(item->scope).run(*x.block);
+  AnalyzeUsage(item->scope).run(*x.block);
   // std::printf("[analyze] after\n");
   if (Log::get().count("error") > 0) return;
 
@@ -43,7 +44,7 @@ void Build::visit_module(ast::Module& x) {
 
   // Visit the module block with the builder.
   // std::printf("[build] before\n");
-  Build(_ctx, item->scope).run(*x.block);
+  // TODO: Build(_ctx, item->scope).run(*x.block);
   // std::printf("[build] after\n");
   if (Log::get().count("error") > 0) return;
 

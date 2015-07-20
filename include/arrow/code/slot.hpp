@@ -6,6 +6,8 @@
 #ifndef ARROW_CODE_SLOT_H
 #define ARROW_CODE_SLOT_H 1
 
+#include <unordered_set>
+
 #include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
 #include "arrow/code/value.hpp"
@@ -30,6 +32,7 @@ struct Slot : Item, Value {
     return true;
   }
 
+  /// Whether this is mutable or immutable.
   bool is_mutable;
 };
 
@@ -59,7 +62,6 @@ struct ExternSlot : Item, Value {
 
  private:
   LLVMValueRef handle(Compiler::Context& ctx);
-
 };
 
 }  // namespace code
