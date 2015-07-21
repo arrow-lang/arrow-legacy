@@ -9,9 +9,14 @@ namespace arrow {
 namespace pass {
 
 void Expose::visit_block(ast::Block& x) {
-  for (auto& node : x.statements) {
-    node->accept(*this);
-  }
+  // Enter the <anonymous> scope block ..
+  _scope->enter(&x);
+
+  // Run the base method (which iterates over the statements)
+  Visitor::visit_block(x);
+
+  // Exit the <anonymous> scope block
+  _scope->exit();
 }
 
 }  // namespace pass

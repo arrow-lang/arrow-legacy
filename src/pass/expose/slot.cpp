@@ -19,7 +19,7 @@ static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern) {
 
     Case(ast::PatternIdentifier& x) {
       // Add this (undefined and un-analyzed) to the current scope
-      s->emplace(new code::Slot(
+      s->insert(new code::Slot(
         /*context=*/&pattern,
         /*name=*/x.text,
         /*is_mutable=*/x.is_mutable));

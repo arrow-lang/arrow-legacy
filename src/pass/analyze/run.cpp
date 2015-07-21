@@ -45,7 +45,7 @@
 //     for (auto& decl : _x_declare) {
 //       if (decl.second.is_external) continue;
 //
-//       auto item = _scope->get(decl.first).as<code::Slot>();
+//       auto item = _scope->find(decl.first).as<code::Slot>();
 //       if (!item->type) {
 //         if (_x_assign.find(decl.first) != _x_assign.end()) {
 //           auto& assign_set = _x_assign[decl.first];

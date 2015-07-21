@@ -25,7 +25,7 @@ bool AnalyzeUsage::_expand_pattern(
       XTL_UNUSED(x);
 
       // Pull out the previously-exposed item
-      auto item = _scope->get(&pattern).as<code::Slot>();
+      auto item = _scope->find(&pattern).as<code::Slot>();
       if (!item) return false;
 
       // Mark [declare]

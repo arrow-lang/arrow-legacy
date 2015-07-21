@@ -16,7 +16,7 @@ void Expose::visit_extern_function(ast::ExternFunction& x) {
   if (!type) return;
 
   // Expose this into the current scope
-  _scope->emplace(new code::ExternFunction(
+  _scope->insert(new code::ExternFunction(
     /*context=*/&x,
     /*name=*/x.name,
     /*type=*/type));

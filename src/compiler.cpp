@@ -12,7 +12,9 @@ namespace fs = boost::filesystem;
 
 namespace arrow {
 
-Compiler::Compiler(bool verify) : _scope(new code::Scope()), _verify(verify) {
+Compiler::Compiler(bool verify) : _scope(new code::Scope("")), _verify(verify) {
+  // Create a built-in scope-block
+  _scope->enter(nullptr);
 }
 
 Compiler::~Compiler() noexcept {
@@ -44,52 +46,52 @@ void Compiler::initialize() {
   // Declare builtin types
 
   // Boolean
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(nullptr, "bool", new code::TypeBoolean()));
 
   // Byte
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(nullptr, "byte", new code::TypeByte()));
 
   // Integer
   // TODO(mehcode): `int` to be variable percision
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(nullptr, "int", new code::TypeInteger()));
 
   // Float
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(nullptr, "float", new code::TypeFloat()));
 
   // Sized Integers
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "int8", new code::TypeSizedInteger(8)));
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "int16", new code::TypeSizedInteger(16)));
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "int32", new code::TypeSizedInteger(32)));
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "int64", new code::TypeSizedInteger(64)));
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "int128", new code::TypeSizedInteger(128)));
 
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "uint8", new code::TypeSizedInteger(8, false)));
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "uint16", new code::TypeSizedInteger(16, false)));
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "uint32", new code::TypeSizedInteger(32, false)));
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "uint64", new code::TypeSizedInteger(64, false)));
-  _scope->emplace(
+  _scope->insert(
     new code::Typename(
     nullptr, "uint128", new code::TypeSizedInteger(128, false)));
 }
@@ -134,7 +136,7 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   if (Log::get().count("error") > 0) return;
 
   // Get a reference to our top-level module main (if present)
-  auto top = _scope->get(name).as<code::Module>();
+  auto top = _scope->find(name).as<code::Module>();
   if (!top) return;
 
   // Build the ABI main function (declaration)

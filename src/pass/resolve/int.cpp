@@ -40,7 +40,7 @@ void Resolve::visit_int(ast::Integer& x) {
   std::stringstream stream;
   stream << "int" << bits;
 
-  auto item = _scope->get(stream.str()).as<code::Typename>();
+  auto item = _scope->find(stream.str()).as<code::Typename>();
   if (!item) return;
 
   _stack.push_front(item->type);

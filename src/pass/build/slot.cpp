@@ -27,8 +27,8 @@ static bool _expand_pattern(
       XTL_UNUSED(x);
 
       // Pull out the previously-exposed item
-      // TODO(mehcode): `scope->get<T>`
-      auto item = scope->get(&pattern).as<code::Slot>();
+      // TODO(mehcode): `scope->find<T>`
+      auto item = scope->find(&pattern).as<code::Slot>();
       if (!item || !item->type) return false;
       if (item->type.is<code::TypeNone>()) return true;
 

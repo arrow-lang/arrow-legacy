@@ -9,7 +9,7 @@ namespace arrow {
 namespace pass {
 
 void Build::visit_id(ast::Identifier& x) {
-  auto item = _scope->get(x.text);
+  auto item = _scope->find(x.text);
   if (item == nullptr) {
     Log::get().error(
       x.span, "use of unresolved name '%s'", x.text.c_str());

@@ -15,7 +15,7 @@ void Expose::visit_extern_slot(ast::ExternSlot& x) {
   if (!type) return;
 
   // Expose this into the current scope
-  _scope->emplace(new code::ExternSlot(
+  _scope->insert(new code::ExternSlot(
     /*context=*/&x,
     /*name=*/x.name,
     /*type=*/type,

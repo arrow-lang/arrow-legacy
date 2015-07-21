@@ -13,7 +13,7 @@
 //
 // void Analyze::visit_extern_slot(ast::ExternSlot& x) {
 //   // Pull out the previously-exposed item
-//   auto item = _scope->get(&x).as<code::ExternSlot>();
+//   auto item = _scope->find(&x).as<code::ExternSlot>();
 //   if (!item) return;
 //
 //   // Mark [declare]

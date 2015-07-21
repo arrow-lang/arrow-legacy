@@ -21,7 +21,7 @@ static Ref<code::Type> _resolve_pattern(code::Scope& s, ast::Pattern& pattern) {
     Case(ast::PatternIdentifier& x) {
       // Pull out the previously-exposed item
       // TODO(mehcode): `scope->get<T>`
-      auto item = s.get(&x).as<code::Slot>();
+      auto item = s.find(&x).as<code::Slot>();
       if (!item || !item->type) return nullptr;
 
       // Return its bound type

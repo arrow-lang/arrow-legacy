@@ -13,7 +13,7 @@
 //
 // void Analyze::visit_extern_function(ast::ExternFunction& x) {
 //   // Pull out the previously-exposed item
-//   auto item = _scope->get(&x).as<code::ExternFunction>();
+//   auto item = _scope->find(&x).as<code::ExternFunction>();
 //   if (!item) return;
 //
 //   // Mark [declare]

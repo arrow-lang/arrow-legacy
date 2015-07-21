@@ -10,7 +10,7 @@ namespace pass {
 
 void Type::visit_type_path(ast::TypePath& x) {
   // TODO(mehcode): Support a longer than 1 typepath
-  auto item = _scope->get(x.segments[0]);
+  auto item = _scope->find(x.segments[0]);
   if (!item) {
     Log::get().error(
       x.span, "use of unresolved name '%s'", x.segments[0].c_str());

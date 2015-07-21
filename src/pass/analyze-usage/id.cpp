@@ -11,7 +11,7 @@ namespace pass {
 
 void AnalyzeUsage::visit_id(ast::Identifier& x) {
   // Check for a declared item (by-name)
-  auto item = _scope->get(x.text);
+  auto item = _scope->find(x.text);
   if (!item) {
     Log::get().error(
       x.span, "use of unresolved name '%s'", x.text.c_str());

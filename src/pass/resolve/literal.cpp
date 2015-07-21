@@ -12,14 +12,14 @@ namespace arrow {
 namespace pass {
 
 void Resolve::visit_bool(ast::Boolean&) {
-  auto item = _scope->get("bool").as<code::Typename>();
+  auto item = _scope->find("bool").as<code::Typename>();
   if (!item) return;
 
   _stack.push_front(item->type);
 }
 
 void Resolve::visit_float(ast::Float&) {
-  auto item = _scope->get("float").as<code::Typename>();
+  auto item = _scope->find("float").as<code::Typename>();
   if (!item) return;
 
   _stack.push_front(item->type);

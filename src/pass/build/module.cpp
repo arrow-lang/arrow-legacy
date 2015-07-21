@@ -23,7 +23,10 @@ void Build::visit_module(ast::Module& x) {
 
   // Create (and emplace) the module item
   Ref<code::Module> item = new code::Module(&x, x.name, mod_init_fn, _scope);
-  _scope->emplace(item);
+  _scope->insert(item);
+
+  // Enter the module-scope block
+  _scope->enter(&x);
 
   // Expose the module block (into the new module scope).
   // std::printf("[expose] before\n");
@@ -55,6 +58,9 @@ void Build::visit_module(ast::Module& x) {
   if (last_block) {
     LLVMPositionBuilderAtEnd(_ctx.irb, last_block);
   }
+
+  // Leave the module scope-block
+  _scope->exit();
 }
 
 }  // namespace pass
