@@ -16,7 +16,7 @@
 // immutable variables are treated as immutable only within the current
 // named scope; they become constant once we leave that
 
-// [ ] Rewrite code::Scope to code::Block (what scope was) / code::Scope (stack of blocks)
+// [x] Rewrite code::Scope to code::Block (what scope was) / code::Scope (stack of blocks)
 // [ ] AnalyzeUsage: Block-scoping
 // [ ] AnalyzeUsage: Select
 // [ ] AnalyzeUsage: Loop
