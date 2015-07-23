@@ -48,6 +48,10 @@ void AnalyzeType::run(ast::Node& x) {
       if (item.is<code::ExternSlot>()) continue;
 
       auto slot = item.as<code::Slot>();
+
+      // If this slot already has a type; get out
+      if (slot->type && !slot->type->is_unknown()) continue;
+
       auto& assign_set = ref.second;
 
       // FIXME: Reduce the COMMON type among all types

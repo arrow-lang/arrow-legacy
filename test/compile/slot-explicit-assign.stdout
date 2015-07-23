@@ -1,0 +1,11 @@
+@value = internal global i8 0
+
+define internal void @"slot-explicit-assign.@init"() {
+  store i8 3, i8* @value
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @"slot-explicit-assign.@init"()
+  ret i32 0
+}
