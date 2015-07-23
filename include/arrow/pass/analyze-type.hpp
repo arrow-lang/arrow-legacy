@@ -23,15 +23,14 @@ class AnalyzeType : public ast::Visitor {
 
   void run(ast::Node& x);
 
+  // Block
+  virtual void visit_block(ast::Block& x);
+
   // Slot
   virtual void visit_slot(ast::Slot& x);
-  virtual void visit_extern_slot(ast::ExternSlot& x);
-
-  // Function
-  virtual void visit_extern_function(ast::ExternFunction& x);
 
   // Use [!]
-  virtual void visit_id(ast::Identifier& x);
+  // virtual void visit_id(ast::Identifier& x);
 
   // Assign [!]
   virtual void visit_assign(ast::Assign& x);
@@ -47,36 +46,19 @@ class AnalyzeType : public ast::Visitor {
 
   Ref<code::Scope> _scope;
 
-  // // Data flow analysis
-  // struct Assignment {
-  //   /// A definite assignment is one that will /always/ happen.
-  //   bool is_definite;
-  //
-  //   /// Usage count of the value from this assignment.
-  //   unsigned uses;
-  //
-  //   /// Type of the assignment.
-  //   Ref<code::Type> type;
-  // };
-  //
-  // struct Declaration {
-  //   /// Type of the declaration (can be null if there was no annotation).
-  //   Ref<code::Type> type;
-  //
-  //   /// Name of the declaration.
-  //   std::string name;
-  //
-  //   /// If the declaration refers to a mutable slot.
-  //   bool is_mutable;
-  //
-  //   /// If the declaration is external.
-  //   bool is_external;
-  // };
+  struct Assignment {
+    /// Type of the assignment.
+    Ref<code::Type> type;
+  };
+
+  struct Use {
+    /// Type of the use.
+    Ref<code::Type> type;
+  };
 
   bool _incomplete;
-  // std::unordered_map<std::string, ast::Node*> _x_name;
-  // std::unordered_map<ast::Node*, Declaration> _x_declare;
-  // std::unordered_map<ast::Node*, std::vector<Assignment>> _x_assign;
+  std::unordered_map<ast::Node*, std::vector<Assignment>> _assign;
+  std::unordered_map<ast::Node*, std::vector<Use>> _use;
 };
 
 }  // namespace pass

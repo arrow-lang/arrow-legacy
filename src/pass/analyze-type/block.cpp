@@ -3,12 +3,13 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#include "arrow/pass/build.hpp"
+#include "arrow/match.hpp"
+#include "arrow/pass/analyze-type.hpp"
 
 namespace arrow {
 namespace pass {
 
-void Build::visit_block(ast::Block& x) {
+void AnalyzeType::visit_block(ast::Block& x) {
   // Enter the <anonymous> scope block ..
   _scope->enter(&x);
 

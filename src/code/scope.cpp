@@ -123,6 +123,14 @@ Ref<code::Item> Scope::find(ast::Node* context, bool traverse, bool unshadow) {
   // Proxy to the top-most scope-block
   auto item = top ? top->find(context, traverse, unshadow) : nullptr;
 
+  // Iterate through /each/ block if we don't have an item
+  if (!item) {
+    for (auto& ref : _blocks) {
+      item = ref.second->find(context, false, false);
+      if (item) break;
+    }
+  }
+
   // Check the parent (if we can and should)
   if (!item && _parent && traverse) {
     return _parent->find(context, traverse, unshadow);
