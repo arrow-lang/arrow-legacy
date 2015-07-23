@@ -36,6 +36,7 @@ class Resolve : public ast::Visitor {
   virtual void visit_tuple(ast::Tuple&);
 
   // Function
+  virtual void visit_function(ast::Function&);
   virtual void visit_extern_function(ast::ExternFunction&);
   virtual void visit_parameter(ast::Parameter&);
 

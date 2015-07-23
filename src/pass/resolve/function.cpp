@@ -10,6 +10,29 @@
 namespace arrow {
 namespace pass {
 
+// FIXME: Looks a lot like Resolve::visit_extern_function
+void Resolve::visit_function(ast::Function& x) {
+  // Get the result type
+  auto result = Type(_scope).run(*x.result_type);
+  if (!result) return;
+
+  // Declare the initial function type
+  Ref<code::TypeFunction> type = new code::TypeFunction(
+    code::TypeFunction::Abi::Native, result);
+
+  // Iterate over parameters and resolve each type
+  type->parameters.reserve(x.parameters.size());
+  for (auto& param : x.parameters) {
+    auto ptype = Resolve(_scope).run(*param);
+    if (!ptype) return;
+
+    type->parameters.push_back(ptype);
+  }
+
+  _stack.push_front(type);
+}
+
+// FIXME: Looks a lot like Resolve::visit_function
 void Resolve::visit_extern_function(ast::ExternFunction& x) {
   // Get the result type
   auto result = Type(_scope).run(*x.result_type);

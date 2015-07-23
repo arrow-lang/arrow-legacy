@@ -29,6 +29,9 @@ class AnalyzeType : public ast::Visitor {
   // Slot
   virtual void visit_slot(ast::Slot& x);
 
+  // Function
+  virtual void visit_function(ast::Function& x);
+
   // Use [!]
   // virtual void visit_id(ast::Identifier& x);
 

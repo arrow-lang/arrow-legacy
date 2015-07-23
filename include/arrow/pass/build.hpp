@@ -36,6 +36,9 @@ class Build : public ast::Visitor {
   // Slot
   virtual void visit_slot(ast::Slot&);
 
+  // Function
+  virtual void visit_function(ast::Function&);
+
   // Literal
   virtual void visit_id(ast::Identifier&);
   virtual void visit_none(ast::None&);

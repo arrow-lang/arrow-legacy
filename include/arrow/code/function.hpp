@@ -13,9 +13,27 @@
 namespace arrow {
 namespace code {
 
-// TODO: Functions
+struct Function : Item, Value {
+  Function(ast::Node* context, std::string name, Ref<code::Scope> parent_scope)
+    : Item(context, name),
+      Value(nullptr, nullptr),
+      scope(parent_scope) {
+  }
 
-// TODO(mehcode): Make this a value as well
+  virtual ~Function() noexcept;
+
+  void set_address(LLVMValueRef handle) {
+    _handle = handle;
+  }
+
+  virtual bool has_address() const {
+    return false;
+  }
+
+  /// Function scope
+  Ref<code::Scope> scope;
+};
+
 struct ExternFunction : Item, Value {
   ExternFunction(ast::Node* context, std::string name, Ref<TypeFunction> type)
     : Item(context, name),
