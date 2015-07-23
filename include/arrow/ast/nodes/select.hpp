@@ -39,7 +39,7 @@ struct Select : Node {
   Ref<Block> else_block;
 
   /// The ordered sequence of branches.
-  std::deque<Ref<Node>> branches;
+  std::deque<Ref<SelectBranch>> branches;
 };
 
 }  // namespace ast

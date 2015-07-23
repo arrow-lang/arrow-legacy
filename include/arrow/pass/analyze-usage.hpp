@@ -26,6 +26,9 @@ class AnalyzeUsage : public ast::Visitor {
   // Block (scope)
   virtual void visit_block(ast::Block& x);
 
+  // Select
+  virtual void visit_select(ast::Select& x);
+
   // Slot
   virtual void visit_slot(ast::Slot& x);
   // virtual void visit_extern_slot(ast::ExternSlot& x);
@@ -44,6 +47,9 @@ class AnalyzeUsage : public ast::Visitor {
 
   bool _expand_assign(ast::Node& lhs, ast::Assign* context);
 
+  void _enter_block(arrow::ast::Block& x);
+  void _exit_block(bool is_definite = true);
+
   Ref<code::Scope> _scope;
 
   struct Assignment {
@@ -56,7 +62,8 @@ class AnalyzeUsage : public ast::Visitor {
     bool is_definite;
   };
 
-  std::unordered_map<ast::Node*, std::deque<Assignment>> _assign;
+  std::unordered_map<code::Block*, std::unordered_map<ast::Node*, std::deque<Assignment>>> _assign;
+  std::unordered_map<code::Block*, std::unordered_set<ast::Node*>> _non_local_assign;
 };
 
 }  // namespace pass

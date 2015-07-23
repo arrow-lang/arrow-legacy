@@ -29,12 +29,12 @@ bool AnalyzeUsage::_expand_pattern(
       if (!item) return false;
 
       // Mark [declare]
-      _assign[item->context] = {};
+      _assign[_scope->top().get()][item->context] = {};
 
       // If we have an initializer ..
       if (has_initializer) {
         // Mark [assign]
-        _assign[item->context].emplace_back(true);
+        _assign[_scope->top().get()][item->context].emplace_back(true);
       }
     } break;
 

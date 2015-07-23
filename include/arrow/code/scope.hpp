@@ -15,21 +15,6 @@
 namespace arrow {
 namespace code {
 
-
-// Assignments need to be hierarchial ..
-/*
-
-let a;          // <decl>
-if cond {       // scope.enter / scope.enter
-  a = 30;       // <assign>
-} else {        // scope.exit / scope.enter
-  if other {    // scope.enter / scope.enter
-    a = 40;     // <assign>
-  }             // scope.exit / scope.exit
-}               // scope.exit / scope.exit
-
- */
-
 class Scope;
 
 class Block {
@@ -102,8 +87,13 @@ class Scope {
   Scope& operator=(const Scope&) = delete;
   Scope& operator=(Scope&&) = delete;
 
+  /// Grab the top-most scope-block.
+  Ref<Block> top() const {
+    return _stack.size() > 0 ? _stack.front() : nullptr;
+  }
+
   /// Enter a scope-block.
-  void enter(ast::Node* context);
+  Ref<Block> enter(ast::Node* context);
 
   /// Leave the last-entered scope-block.
   void exit();

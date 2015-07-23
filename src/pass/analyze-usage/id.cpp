@@ -21,18 +21,31 @@ void AnalyzeUsage::visit_id(ast::Identifier& x) {
 
   Match(*item) {
     Case(code::Slot& slot)  {
+      XTL_UNUSED(slot);
+
       // Check for at least one definite assignment
       bool is_assigned = false;
-      if (_assign.find(item->context) != _assign.end()) {
-        for (auto& assignment : _assign[item->context]) {
+      bool possible = false;
+      auto& ba = _assign[_scope->top().get()];
+      auto assign_set_ref = ba.find(item->context);
+      if (assign_set_ref != ba.end()) {
+        for (auto& assignment : assign_set_ref->second) {
           if (assignment.is_definite) {
             is_assigned = true;
             break;
+          } else {
+            possible = true;
           }
         }
       }
 
-      if (!is_assigned) {
+      if (!is_assigned && possible) {
+        Log::get().error(
+          x.span, "use of possibly uninitialized variable '%s'",
+          x.text.c_str());
+
+        return;
+      } else if (!is_assigned) {
         Log::get().error(
           x.span, "use of uninitialized variable '%s'", x.text.c_str());
 
