@@ -72,11 +72,13 @@ class Block {
 
 class Scope {
  public:
-  explicit Scope(std::string name, Ref<Scope> parent = nullptr)
+  explicit Scope(std::string name, Ref<Scope> parent = nullptr,
+                 Item* owner = nullptr)
     : _name(name),
       _parent(parent),
       _blocks(),
-      _stack() {
+      _stack(),
+      _owner(owner) {
   }
 
   Scope(const Scope&) = delete;
@@ -94,6 +96,9 @@ class Scope {
 
   /// Enter a scope-block.
   Ref<Block> enter(ast::Node* context);
+
+  /// Get the owner of this scope (module/function).
+  Item* get_owner() const { return _owner; }
 
   /// Leave the last-entered scope-block.
   void exit();
@@ -122,6 +127,10 @@ class Scope {
 
   /// Stack of active scope-blocks.
   std::deque<Ref<Block>> _stack;
+
+  /// Owner of the scope (referential)
+  /// FIXME: weak_ref
+  Item* _owner;
 };
 
 }  // namespace code

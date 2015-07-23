@@ -23,6 +23,12 @@ void Visitor::visit_block(ast::Block& x) {
   }
 }
 
+// Return
+// -----------------------------------------------------------------------------
+void Visitor::visit_return(ast::Return& x) {
+  x.expression->accept(*this);
+}
+
 // Select
 // -----------------------------------------------------------------------------
 void Visitor::visit_select(ast::Select& x) {

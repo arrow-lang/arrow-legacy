@@ -34,6 +34,7 @@ class AnalyzeUsage : public ast::Visitor {
   // virtual void visit_extern_slot(ast::ExternSlot& x);
 
   // Function
+  virtual void visit_function(ast::Function& x);
   // virtual void visit_extern_function(ast::ExternFunction& x);
 
   // Use [!]

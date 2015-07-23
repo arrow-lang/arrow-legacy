@@ -32,34 +32,45 @@ static bool _expand_pattern(
       if (!item || !item->type) return false;
       if (item->type.is<code::TypeNone>()) return true;
 
-      // TODO(mehcode): If we are inside a function this is a local, else global
-      // NOTE: At the moment; all slots are assumed globals
-      item->set_address(LLVMAddGlobal(
-        ctx.mod, item->type->handle(), item->name.c_str()));
+      // Determine if this is a global or local slot
+      bool local = false;
+      if (scope->get_owner()) {
+        local = typeid(*scope->get_owner()) == typeid(code::Function);
+      }
+      if (local) {
+        item->set_address(LLVMBuildAlloca(
+          ctx.irb, item->type->handle(), item->name.c_str()));
+      } else {
+        item->set_address(LLVMAddGlobal(
+          ctx.mod, item->type->handle(), item->name.c_str()));
 
-      // TODO(mehcode): If we're building a library and this is exported..
-      LLVMSetLinkage(item->get_address(ctx), LLVMInternalLinkage);
+        // TODO(mehcode): If we're building a library and this is exported..
+        LLVMSetLinkage(item->get_address(ctx), LLVMInternalLinkage);
+      }
 
       // If we have an initializer ..
       auto ptr = item->get_address(ctx);
       if (initializer) {
         // Get the value of the initializer
         auto handle = initializer->get_value(ctx);
-        if (LLVMIsConstant(handle)) {
+        if (!local && LLVMIsConstant(handle)) {
           LLVMSetInitializer(ptr, handle);
 
           // If we have an initializer and are not mutable;
           // this is a constant
-          if (!x.is_mutable) {
+          if (!local && !x.is_mutable) {
             LLVMSetGlobalConstant(ptr, true);
           }
         } else {
           // For a non-constant initializer, we have to set an initial /zero/
           // initializer and add a store to the module init function
-          LLVMSetInitializer(ptr, LLVMConstNull(item->type->handle()));
+          if (!local) {
+            LLVMSetInitializer(ptr, LLVMConstNull(item->type->handle()));
+          }
+
           LLVMBuildStore(ctx.irb, handle, ptr);
         }
-      } else {
+      } else if (!local) {
         // Without an initializer; need to set to be zero initialized
         LLVMSetInitializer(ptr, LLVMConstNull(item->type->handle()));
       }

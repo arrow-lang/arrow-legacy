@@ -17,7 +17,7 @@ struct Function : Item, Value {
   Function(ast::Node* context, std::string name, Ref<code::Scope> parent_scope)
     : Item(context, name),
       Value(nullptr, nullptr),
-      scope(parent_scope) {
+      scope(new Scope(name, parent_scope, dynamic_cast<Item*>(this))) {
   }
 
   virtual ~Function() noexcept;

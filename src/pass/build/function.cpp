@@ -28,6 +28,10 @@ void Build::visit_function(ast::Function& x) {
   auto block = LLVMAppendBasicBlock(handle, "");
   LLVMPositionBuilderAtEnd(_ctx.irb, block);
 
+  // Build the function body
+  Build(_ctx, item->scope).run(*x.block);
+  if (Log::get().count("error") > 0) return;
+
   // Has the function been terminated?
   if (!LLVMGetBasicBlockTerminator(LLVMGetLastBasicBlock(handle))) {
     // No; we need to terminate

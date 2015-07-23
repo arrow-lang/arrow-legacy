@@ -3,28 +3,20 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#include "arrow/pass/analyze-type.hpp"
-#include "arrow/pass/resolve.hpp"
+#include "arrow/match.hpp"
+#include "arrow/pass/analyze-usage.hpp"
 
 namespace arrow {
 namespace pass {
 
-void AnalyzeType::visit_function(ast::Function& x) {
+void AnalyzeUsage::visit_function(ast::Function& x) {
   // Pull out the previously-exposed item
+  // TODO(mehcode): `scope->find<T>`
   auto item = _scope->find(&x).as<code::Function>();
   if (!item) return;
 
-  // Attempt to resolve the type of this ..
-  auto type = Resolve(_scope).run(x);
-  if (type->is_unknown()) {
-    _incomplete = true;
-  } else {
-    // Place the type on the item
-    item->type = type;
-  }
-
   // Create a child analyzer
-  auto child = AnalyzeType(item->scope);
+  auto child = AnalyzeUsage(item->scope);
 
   // Analyze the function body
   child.run(*x.block);

@@ -12,10 +12,14 @@ namespace pass {
 
 void Expose::visit_function(ast::Function& x) {
   // Add this (undefined and un-analyzed) to the current scope
-  _scope->insert(new code::Function(
+  Ref<code::Function> item = new code::Function(
     /*context=*/&x,
     /*name=*/x.name,
-    /*parent_scope=*/_scope));
+    /*parent_scope=*/_scope);
+  _scope->insert(item);
+
+  // Expose the function body
+  Expose(_ctx, item->scope).run(*x.block);
 }
 
 }  // namespace pass

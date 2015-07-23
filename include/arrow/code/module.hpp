@@ -18,7 +18,8 @@ struct Module : Item {
     LLVMValueRef initializer,
     Ref<code::Scope> parent_scope
   )
-    : Item(context, name), initializer(initializer), scope(parent_scope) {
+    : Item(context, name), initializer(initializer),
+      scope(new Scope(name, parent_scope, dynamic_cast<Item*>(this))) {
   }
 
   virtual ~Module() noexcept;

@@ -57,7 +57,7 @@ struct Visitor {
   virtual void visit_function(Function&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_extern_function(ExternFunction&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_parameter(Parameter&) { /* LCOV_EXCL_LINE */ }
-  virtual void visit_return(Return&) { /* LCOV_EXCL_LINE */ }
+  virtual void visit_return(Return&);
 
   // Slot
   virtual void visit_slot(Slot&) { /* LCOV_EXCL_LINE */ }

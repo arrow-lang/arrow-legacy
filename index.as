@@ -1,15 +1,29 @@
 // AnalyzeUsage
 //  [ ] Function
-//    [ ] Basic: nested analyze
+//    [x] Basic: nested analyze
+//    [ ] Non-local assignment/use
 //  [ ] Loop
 //  [ ] Import
-//  [ ] L-Value (Pointer)
+//  [ ] Pointers
 
 // Build
-//  [-] Function
+//  [x] Function
+//  [ ] Return (Explicit)
+//  [ ] Return (Implicit)
 
-def method(a: int, b: int, c: int) {
+// Case 1
+// ======
+
+let a;
+
+def method() {
+  a = 10;
 }
 
-let a: int8 = 30;
-method(a, a, a);
+method(); // ok
+method(); // error
+
+// Case 2
+// ======
+
+let a;
