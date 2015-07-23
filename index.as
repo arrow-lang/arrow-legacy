@@ -1,7 +1,15 @@
-let a;
+// AnalyzeUsage
+//  [ ] Function
+//    [ ] Basic: nested analyze
+//  [ ] Loop
+//  [ ] Import
+//  [ ] L-Value (Pointer)
 
-if { a = 20; a > 50; } {
-  // Doesn't come in here
+// Build
+//  [-] Function
+
+def method(a: int, b: int, c: int) {
 }
 
-let b = a;
+let a: int8 = 30;
+method(a, a, a);
