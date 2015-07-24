@@ -32,8 +32,20 @@ struct Slot : Item, Value {
     return true;
   }
 
+  /// Add an assignment (from a block)
+  void add_assignment(Ref<Block> block, bool is_definite);
+
+  /// Check if this is assigned and definte or not (in the passed block)
+  /// Returns &true if defintely assigned, &false if possibly assigned, and
+  /// null if not assigned.
+  bool* is_assigned(Ref<Block> block);
+
   /// Whether this is mutable or immutable.
   bool is_mutable;
+
+ private:
+  /// Map of Block to Assignment state
+  std::unordered_map<Ref<Block>, bool> _assign;
 };
 
 struct ExternSlot : Item, Value {

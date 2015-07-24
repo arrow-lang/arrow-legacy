@@ -156,4 +156,15 @@ Ref<T> make_undef() {
 
 }  // namespace arrow
 
+namespace std {
+
+template <typename T>
+struct hash<arrow::Ref<T>> {
+  std::size_t operator()(const arrow::Ref<T>& k) const {
+    return reinterpret_cast<std::size_t>(k.get());
+  }
+};
+
+}  // namespace std
+
 #endif  // ARROW_PTR_H

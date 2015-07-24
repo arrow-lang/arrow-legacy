@@ -97,6 +97,9 @@ class Scope {
   /// Enter a scope-block.
   Ref<Block> enter(ast::Node* context);
 
+  /// Lookup a previously-entered scope-block.
+  Ref<Block> at(ast::Node* context);
+
   /// Get the owner of this scope (module/function).
   Item* get_owner() const { return _owner; }
 

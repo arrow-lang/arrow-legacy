@@ -27,38 +27,26 @@ bool AnalyzeUsage::_expand_assign(
 
       Match(*item) {
         Case(code::Slot& slot)  {
-          // Are we immutable and have been assigned previously
-          auto& ba = _assign[_scope->top().get()];
+          // Are we immutable and have we been assigned previously
           if (!slot.is_mutable) {
-            auto assign_set_ref = ba.find(item->context);
-            if (assign_set_ref != ba.end()) {
-              if (assign_set_ref->second.size() > 0) {
-                // We have been assigned before (possibly)
-                // TODO(mehcode): Check if this is a possible or definite
-                //                re-assignment
-                Log::get().error(
-                  lhs.span, "re-assignment of immutable variable `%s`",
-                  x.text.c_str());
+            auto is_assigned = slot.is_assigned(_scope->top());
+            if (is_assigned) {
+              Log::get().error(
+                lhs.span, "re-assignment of immutable variable `%s`",
+                x.text.c_str());
 
-                return false;
-              }
+              return false;
             }
           }
 
           // Mark [assign]
-          ba[item->context].emplace_back(true);
-
-          // Check if this is a non-local assignment ..
-          if (!_scope->top()->contains(item->context, false)) {
-            // Mark [non-local-assign]
-            _non_local_assign[_scope->top().get()].insert(item->context);
-          }
+          slot.add_assignment(_scope->top(), true);
         } break;
 
         Case(code::ExternSlot& slot) {
           if (!slot.is_mutable) {
             Log::get().error(
-              lhs.span, "assignment of immutable, external variable `%s`",
+              lhs.span, "assignment of immutable external variable `%s`",
               x.text.c_str());
 
             return false;

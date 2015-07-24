@@ -10,16 +10,22 @@ namespace arrow {
 namespace pass {
 
 void AnalyzeUsage::visit_function(ast::Function& x) {
-  // Pull out the previously-exposed item
-  // TODO(mehcode): `scope->find<T>`
-  auto item = _scope->find(&x).as<code::Function>();
-  if (!item) return;
-
-  // Create a child analyzer
-  auto child = AnalyzeUsage(item->scope);
-
-  // Analyze the function body
-  child.run(*x.block);
+  // // Pull out the previously-exposed item
+  // // TODO(mehcode): `scope->find<T>`
+  // auto item = _scope->find(&x).as<code::Function>();
+  // if (!item) return;
+  //
+  // // Create a child analyzer
+  // auto child = AnalyzeUsage(item->scope);
+  //
+  // // Analyze the function body
+  // child.run(*x.block);
+  //
+  // // Check for non-local variable assignment ..
+  // auto fblock = item->scope->at(x.block.get());
+  // for (auto& nl : child._non_local_assign[fblock.get()]) {
+  //   std::printf("non-local-assign\n");
+  // }
 }
 
 }  // namespace pass

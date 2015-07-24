@@ -205,6 +205,10 @@ struct TypeFunction : Type {
   /// ABI of the function
   Abi abi;
 
+  /// TODO: Non-local variables of this function
+  // std::unordered_map<Ref<Item>, Assignment> _non_local_assign;
+  // std::deque<Ref<Item>> _non_local_use;
+
  private:
   LLVMTypeRef _handle;
 };

@@ -80,6 +80,18 @@ auto Block::find(const std::string& name, bool traverse)
 Scope::~Scope() noexcept {
 }
 
+Ref<code::Block> Scope::at(ast::Node* context) {
+  // Has this been entered before
+  auto ref = _blocks.find(context);
+  if (ref == _blocks.end()) {
+    // No; return nil
+    return nullptr;
+  }
+
+  // Return the block
+  return _blocks[context];
+}
+
 Ref<code::Block> Scope::enter(ast::Node* context) {
   // Has this been entered before
   auto ref = _blocks.find(context);
