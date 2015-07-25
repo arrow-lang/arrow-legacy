@@ -9,7 +9,7 @@ def method() {
     if false {
       a = 30;
     } else {
-      a = 30;
+      a = 32;
     }
   } else {
     a = 40;

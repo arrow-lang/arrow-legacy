@@ -35,7 +35,8 @@
     ☐ Parameters
     ✔ Return @done(2015-07-25 06:52) @project([build] / [function])
 
-  ☐ Select
+  ✔ Select @done(2015-07-25 07:21) @project([build])
+  ☐ Cast each branch in a select expression (that has a value)
   ☐ Loop
   ☐ Import
 

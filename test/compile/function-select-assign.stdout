@@ -1,0 +1,49 @@
+define internal void @"function-select-assign.@init"() {
+  call void @method()
+  ret void
+}
+
+define internal void @method() {
+  %a = alloca i128
+  br i1 false, label %1, label %2
+
+; <label>:1                                       ; preds = %0
+  store i128 34, i128* %a
+  br label %8
+
+; <label>:2                                       ; preds = %0
+  br i1 true, label %3, label %7
+
+; <label>:3                                       ; preds = %2
+  br i1 false, label %4, label %5
+
+; <label>:4                                       ; preds = %3
+  store i128 30, i128* %a
+  br label %6
+
+; <label>:5                                       ; preds = %3
+  store i128 32, i128* %a
+  br label %6
+
+; <label>:6                                       ; preds = %5, %4
+  br label %8
+
+; <label>:7                                       ; preds = %2
+  store i128 40, i128* %a
+  br label %8
+
+; <label>:8                                       ; preds = %7, %6, %1
+  %b = alloca i128
+  %9 = load i128* %a
+  store i128 %9, i128* %b
+  %10 = load i128* %b
+  call void @exit(i128 %10)
+  ret void
+}
+
+declare void @exit(i128 signext)
+
+define i32 @main(i32, i8**, i8**) {
+  call void @"function-select-assign.@init"()
+  ret i32 0
+}

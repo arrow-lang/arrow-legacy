@@ -1,5 +1,8 @@
-let value = if false {
-  4.12;
+let mutable x = 40;
+let mutable y = 10;
+
+let m = if false {
+  20;
 } else {
-  56;
+  10.41;
 };
