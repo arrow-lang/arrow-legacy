@@ -1,10 +1,12 @@
-extern def exit(a: int);
+let c;
 
 def method() {
   let a;
   a = 20;
 
-  exit(a);
+  let b = c;
 }
+
+c = 50;
 
 method();
