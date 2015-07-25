@@ -1,5 +1,4 @@
-let a;
+def method((a,): (int,)) {
+}
 
-def method() { a = 20; }
-
-let b = a;
+method((1,));

@@ -1,0 +1,51 @@
+[analyze-usage]:
+  [function]:
+    ✔ Mark non-local -use/assign @done(2015-07-24 23:43) @project([analyze-usage] / [function])
+    ✔ Check non-local use/assign validity on call @done(2015-07-24 23:43) @project([analyze-usage] / [function])
+    ☐ Recursion
+    ☐ Parameters
+
+  ☐ Loop
+  ☐ Import
+
+
+[analyze-type]:
+  ☐ Scope crossing doesn't work for variable contextual deduce
+  ☐ CTA
+
+
+[check-type]:
+  ☐ Assign (initializer and assign)
+  ☐ Call (operand)
+  ☐ Call (parameters)
+  ☐ Cast (explicit)
+  ☐ Return
+
+
+[resolve]:
+  ☐ Function
+  ☐ Select
+  ☐ CTA
+  ☐ When CTA is applied to two compatible function types; merge the assign/use pools
+
+
+[build]:
+  [function]:
+    ☐ Parameters
+    ☐ Return
+
+  ☐ Select
+  ☐ Loop
+  ☐ Import
+
+
+[error-checking]:
+  ☐ Duplicate function names in same module (error)
+  ☐ Duplicate exported slot names in same module (error)
+  ☐ Attempting to unpack a non-tuple or a tuple of the wrong size (error)
+  ☐ Use/Assign before declare (should error; segfaults currently)
+
+
+language-arrow:
+  ☐ Add underscores (`1_3_4`) to number patterns
+  ☐ Add function parameters
