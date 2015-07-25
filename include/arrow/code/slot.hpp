@@ -19,7 +19,8 @@ struct Slot : Item, Value {
   Slot(ast::Node* context, std::string name, bool is_mutable)
     : Item(context, name),
       Value(nullptr, nullptr),
-      is_mutable(is_mutable) {
+      is_mutable(is_mutable),
+      is_constant(false) {
   }
 
   virtual ~Slot() noexcept;
@@ -42,6 +43,9 @@ struct Slot : Item, Value {
 
   /// Whether this is mutable or immutable.
   bool is_mutable;
+
+  /// Whether this is constant or not.
+  bool is_constant;
 
  private:
   /// Map of Block to Assignment state

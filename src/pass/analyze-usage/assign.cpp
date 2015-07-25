@@ -40,6 +40,7 @@ bool AnalyzeUsage::_expand_assign(
           }
 
           // Mark [assign]
+          _assign[_scope->top()].push_back(item.as<code::Slot>());
           slot.add_assignment(_scope->top(), true);
         } break;
 

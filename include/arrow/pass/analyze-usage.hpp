@@ -47,6 +47,8 @@ class AnalyzeUsage : public ast::Visitor {
   void _exit_block(bool is_definite = true);
 
   Ref<code::Scope> _scope;
+
+  std::unordered_map<Ref<code::Block>, std::deque<Ref<code::Slot>>> _assign;
 };
 
 }  // namespace pass

@@ -12,7 +12,9 @@ Ref<code::Value> Build::do_cast(
   Ref<code::Value> value, ast::Node& node, Ref<code::Type> to_type,
   bool explicit_
 ) {
-  auto from_type = value->type;
+  Ref<code::Type> from_type =
+    value->type ? value->type : (new code::TypeNone());
+
   LLVMValueRef res = nullptr;
 
   // If the to-type is `any` ..

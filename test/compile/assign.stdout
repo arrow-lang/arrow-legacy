@@ -1,0 +1,24 @@
+@a = internal global i128 30
+@box = internal global { { i128 }, i128, i1 } zeroinitializer
+@x = internal global i128 0
+@y = internal global i128 0
+@z = internal global i1 false
+
+define internal void @"assign.@init"() {
+  store i128 40, i128* @a
+  %1 = load i128* @a
+  %2 = insertvalue { { i128 }, i128, i1 } { { i128 } { i128 1 }, i128 undef, i1 true }, i128 %1, 1
+  store { { i128 }, i128, i1 } %2, { { i128 }, i128, i1 }* @box
+  %3 = load i128* getelementptr inbounds ({ { i128 }, i128, i1 }* @box, i32 0, i32 0, i32 0)
+  store i128 %3, i128* @x
+  %4 = load i128* getelementptr inbounds ({ { i128 }, i128, i1 }* @box, i32 0, i32 1)
+  store i128 %4, i128* @y
+  %5 = load i1* getelementptr inbounds ({ { i128 }, i128, i1 }* @box, i32 0, i32 2)
+  store i1 %5, i1* @z
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @"assign.@init"()
+  ret i32 0
+}

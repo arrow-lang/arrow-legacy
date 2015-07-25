@@ -30,10 +30,14 @@ static Ref<code::Type> promote(Ref<code::Type> type) {
 }
 
 void AnalyzeType::run(ast::Node& x) {
+  // Maximum # of times we can run and do nothing
+  int max_null_run = 5;
   do {
     // Clear slate
     _incomplete = false;
     _assign.clear();
+    unsigned cnt = 0;
+    unsigned req = 0;
 
     // Run the base visitor
     ast::Visitor::run(x);
@@ -44,7 +48,6 @@ void AnalyzeType::run(ast::Node& x) {
       auto item = _scope->find(ref.first);
 
       // Skip this if its an external slot (for now)
-      // TODO: Make these part of the process
       if (item.is<code::ExternSlot>()) continue;
 
       auto slot = item.as<code::Slot>();
@@ -53,25 +56,42 @@ void AnalyzeType::run(ast::Node& x) {
       if (slot->type && !slot->type->is_unknown()) continue;
 
       auto& assign_set = ref.second;
-
-      // FIXME: Reduce the COMMON type among all types
+      req += 1;
 
       // If the type of this assignment is invalid (undefined);
       // we're not done yet ..
-      if (assign_set.size() == 0) {
-        // No assignments .. type is None
-        slot->type = new code::TypeNone();
-      } else if (!assign_set[0].type || assign_set[0].type->is_unknown()) {
-        _incomplete = true;
-        continue;
-      } else {
-        // Mark the type
-        slot->type = assign_set[0].type;
+      if (assign_set.size() > 0) {
+        // FIXME: Reduce the COMMON type among all types
+        if (!assign_set[0].type || assign_set[0].type->is_unknown()) {
+          if (max_null_run <= 0) {
+            slot->type = new code::TypeNone();
+          } else {
+            _incomplete = true;
+          }
+        } else {
+          // We did something
+          cnt += 1;
+          max_null_run = 5;
 
-        // Ensure that integral slots always end up as `int` without
-        // an explicit type annotation
-        slot->type = promote(slot->type);
+          // Mark the type
+          slot->type = assign_set[0].type;
+
+          // Ensure that integral slots always end up as `int` without
+          // an explicit type annotation
+          slot->type = promote(slot->type);
+        }
+      } else if (max_null_run <= 0) {
+        // We're done ..
+        slot->type = new code::TypeNone();
       }
+    }
+
+    if (cnt == 0) {
+      max_null_run -= 1;
+    }
+
+    if (req == 0 && max_null_run <= 0) {
+      break;
     }
 
     if (Log::get().count("error") > 0) break;

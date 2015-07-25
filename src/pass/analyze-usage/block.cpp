@@ -12,58 +12,27 @@ namespace pass {
 void AnalyzeUsage::_enter_block(ast::Block& x) {
   // Enter the <anonymous> scope block ..
   _scope->enter(&x);
-
-  // auto prev_block = _scope->top();
-  // auto prev = prev_block ? prev_block.get() : nullptr;
-  // auto bp = block.get();
-  //
-  // // Intialize the assign-sets (if needed)
-  // if (_assign.find(bp) == _assign.end()) {
-  //   if (prev) {
-  //     _assign[bp] = _assign[prev];
-  //   } else {
-  //     _assign[bp] = {};
-  //   }
-  // }
-  //
-  // if (_non_local_assign.find(bp) == _non_local_assign.end()) {
-  //   _non_local_assign[bp] = {};
-  // }
 }
 
 void AnalyzeUsage::_exit_block(bool is_definite) {
   // Grab our current block
-  // auto bp = _scope->top().get();
+  auto current = _scope->top();
 
   // Exit the <anonymous> scope block
   _scope->exit();
 
   // If we are not yet at the top ..
-  // auto top = _scope->top();
-  // if (top != nullptr) {
-  //   // Move all non-local variable assignments up-one ..
-  //   for (auto& nl : _non_local_assign[bp]) {
-  //     auto& ref = _assign[top.get()][nl];
-  //     bool is_assigned = false;
-  //     for (auto& assign : _assign[bp][nl]) {
-  //       if (assign.is_definite) {
-  //         is_assigned = true;
-  //         break;
-  //       }
-  //     }
-  //
-  //     if (is_assigned && is_definite) {
-  //       ref.emplace_back(true);
-  //     } else {
-  //       ref.emplace_back(false);
-  //     }
-  //
-  //     // Are we still non-local.. ?
-  //     if (!top->contains(nl, false)) {
-  //       _non_local_assign[top.get()].insert(nl);
-  //     }
-  //   }
-  // }
+  auto top = _scope->top();
+  if (top != nullptr) {
+    // Move all non-local variable assignments up-one ..
+    for (auto& item : _assign[current]) {
+      if (!current->find(item->context, false)) {
+        // Non-local assignment; push
+        auto is_assigned = item->is_assigned(current);
+        item->add_assignment(top, *is_assigned);
+      }
+    }
+  }
 }
 
 void AnalyzeUsage::visit_block(ast::Block& x) {

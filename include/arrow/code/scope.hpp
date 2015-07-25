@@ -34,6 +34,9 @@ class Block {
   Block& operator=(const Block&) = delete;
   Block& operator=(Block&&) = delete;
 
+  /// Get the parent block for this block.
+  Ref<Block> parent() const { return _parent; }
+
   /// Insert an item (to this specific scope-block).
   void insert(Ref<Item> item);
 
@@ -90,7 +93,7 @@ class Scope {
   Scope& operator=(Scope&&) = delete;
 
   /// Grab the top-most scope-block.
-  Ref<Block> top() const {
+  Ref<Block> top() {
     return _stack.size() > 0 ? _stack.front() : nullptr;
   }
 

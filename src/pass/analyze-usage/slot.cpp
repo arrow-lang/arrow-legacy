@@ -28,13 +28,14 @@ bool AnalyzeUsage::_expand_pattern(
       auto item = _scope->find(&pattern).as<code::Slot>();
       if (!item) return false;
 
-      // Mark [declare]
-      _assign[_scope->top().get()][item->context] = {};
-
       // If we have an initializer ..
       if (has_initializer) {
         // Mark [assign]
-        _assign[_scope->top().get()][item->context].emplace_back(true);
+        _assign[_scope->top()].push_back(item);
+        item->add_assignment(_scope->top(), true);
+
+        // Slot is constant (from our standpoint)
+        item->is_constant = true;
       }
     } break;
 

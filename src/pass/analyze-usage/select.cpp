@@ -12,7 +12,7 @@ namespace arrow {
 namespace pass {
 
 void AnalyzeUsage::visit_select(ast::Select& x) {
-  std::vector<code::Block*> blocks;
+  std::vector<Ref<code::Block>> blocks;
   unsigned idx = 0;
 
   for (auto& br : x.branches) {
@@ -37,7 +37,7 @@ void AnalyzeUsage::visit_select(ast::Select& x) {
     Visitor::visit_block(*br->block);
 
     // Remember the block
-    blocks.push_back(_scope->top().get());
+    blocks.push_back(_scope->top());
 
     // Exit the <anonymous> scope block
     _scope->exit();
@@ -53,49 +53,36 @@ void AnalyzeUsage::visit_select(ast::Select& x) {
     Visitor::visit_block(*x.else_block);
 
     // Remember the block
-    blocks.push_back(_scope->top().get());
+    blocks.push_back(_scope->top());
 
     // Exit the <anonymous> scope block
     _scope->exit();
   }
 
-  // Iterate through each branchs' block ..
-  std::unordered_map<ast::Node*, int> set;
+  // Compile a list of slots that have been (possibly) assigned
+  std::unordered_map<code::Slot*, int> block_assign;
   for (auto& block : blocks) {
-    // Iterate through it's non-local variables
-    for (auto& nl : _non_local_assign[block]) {
-      // We know this non-local was assigned; but was it definitely assigned?
-      bool is_definite = false;
-      for (auto& assign : _assign[block][nl]) {
-        if (assign.is_definite) {
-          is_definite = true;
-          break;
-        }
+    for (auto& item : _assign[block]) {
+      if (block_assign.find(item.get()) != block_assign.end() &&
+          block_assign[item.get()] == -1) {
+        // If we've already been marked as possibly assigned;
+        // get out
+        continue;
       }
 
-      if (is_definite) {
-        if (set.find(nl) == set.end()) {
-          set[nl] = 1;
-        } else if (set[nl] >= 0) {
-          set[nl] += 1;
-        }
-      } else {
-        set[nl] = -1;
+      auto is_assigned = item->is_assigned(block);
+      if (is_assigned && *is_assigned) {
+        block_assign[item.get()] += 1;
+      } else if (!*is_assigned) {
+        block_assign[item.get()] = -1;
       }
     }
   }
 
   // Iterate through the non-local assignments (in total)
-  auto top = _scope->top();
-  auto& top_assign = _assign[top.get()];
   int required = (x.branches.size() + 1);
-  for (auto& item : set) {
-    top_assign[item.first].emplace_back(item.second == required);
-
-    // Are we still non-local.. ?
-    if (!top->contains(item.first, false)) {
-      _non_local_assign[top.get()].insert(item.first);
-    }
+  for (auto& item : block_assign) {
+    item.first->add_assignment(_scope->top(), item.second == required);
   }
 }
 

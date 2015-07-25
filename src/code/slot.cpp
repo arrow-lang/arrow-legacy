@@ -8,6 +8,33 @@
 namespace arrow {
 namespace code {
 
+// Slot
+// -----------------------------------------------------------------------------
+
+void Slot::add_assignment(Ref<code::Block> block, bool is_definite) {
+  _assign[block] = is_definite;
+}
+
+bool* Slot::is_assigned(Ref<code::Block> block) {
+  // Check for an assignment in /this/ block
+  if (_assign.find(block) != _assign.end()) {
+    return &(_assign[block]);
+  }
+
+  // Iterate up the block's ancestry to determine if
+  // it was assigned in a prior block
+  auto parent = block->parent();
+  if (parent != nullptr) {
+    return is_assigned(parent);
+  }
+
+  // Cannot find an assignment
+  return nullptr;
+}
+
+// External Slot
+// -----------------------------------------------------------------------------
+
 LLVMValueRef ExternSlot::handle(Compiler::Context& ctx) {
   if (!_handle) {
     _handle = LLVMAddGlobal(ctx.mod, type->handle(), name.c_str());
@@ -24,7 +51,6 @@ LLVMValueRef ExternSlot::get_value(Compiler::Context& ctx) {
 LLVMValueRef ExternSlot::get_address(Compiler::Context& ctx) {
   return handle(ctx);
 }
-
 
 }  // namespace code
 }  // namespace arrow
