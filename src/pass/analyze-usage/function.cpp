@@ -11,7 +11,6 @@ namespace pass {
 
 void AnalyzeUsage::visit_function(ast::Function& x) {
   // Pull out the previously-exposed item
-  // TODO(mehcode): `scope->find<T>`
   auto item = _scope->find(&x).as<code::Function>();
   if (!item) return;
 
@@ -20,6 +19,21 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
 
   // Analyze the function body
   child.run(*x.block);
+
+  // Push non-local assignments and uses onto the function type
+  auto top = child._scope->at(x.block.get());
+  auto type = item->type.as<code::TypeFunction>();
+  for (auto& item : child._assign[top]) {
+    if (!item->is_local(child._scope)) {
+      bool is_assigned = *(item->is_assigned(top));
+      type->_assign[item.get()] = is_assigned;
+    }
+  }
+
+  // Push non-local uses onto the function type
+  for (auto& item : child._use) {
+    type->_use.insert(item);
+  }
 }
 
 }  // namespace pass

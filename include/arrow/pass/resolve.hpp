@@ -40,6 +40,9 @@ class Resolve : public ast::Visitor {
   virtual void visit_extern_function(ast::ExternFunction&);
   virtual void visit_parameter(ast::Parameter&);
 
+  // Call
+  virtual void visit_call(ast::Call&);
+
   // Misc.
   virtual void visit_slot(ast::Slot&);
 

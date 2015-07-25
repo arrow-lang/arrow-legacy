@@ -128,7 +128,9 @@ bool Scope::contains(const std::string& name, bool traverse) {
   return find(name, traverse) != nullptr;
 }
 
-Ref<code::Item> Scope::find(ast::Node* context, bool traverse, bool unshadow) {
+Ref<code::Item> Scope::find(
+  ast::Node* context, bool traverse, bool unshadow, bool check_parent
+) {
   // Grab the top-most scope-block
   Ref<Block> top = _stack.size() > 0 ? _stack.front() : nullptr;
 
@@ -144,8 +146,8 @@ Ref<code::Item> Scope::find(ast::Node* context, bool traverse, bool unshadow) {
   }
 
   // Check the parent (if we can and should)
-  if (!item && _parent && traverse) {
-    return _parent->find(context, traverse, unshadow);
+  if (!item && _parent && check_parent) {
+    return _parent->find(context, traverse, unshadow, check_parent);
   }
 
   // Just return what we found

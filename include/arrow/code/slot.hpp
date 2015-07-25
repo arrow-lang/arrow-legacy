@@ -41,6 +41,9 @@ struct Slot : Item, Value {
   /// null if not assigned.
   bool* is_assigned(Ref<Block> block);
 
+  /// Check if this slot is local to the given scope.
+  bool is_local(Ref<Scope> scope);
+
   /// Whether this is mutable or immutable.
   bool is_mutable;
 

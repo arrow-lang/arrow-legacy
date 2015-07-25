@@ -1,0 +1,15 @@
+@a = internal constant i128 10
+
+define internal void @"function-nonlocal-assign-no-call.@init"() {
+  ret void
+}
+
+define internal void @method() {
+  store i128 230, i128* @a
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @"function-nonlocal-assign-no-call.@init"()
+  ret i32 0
+}

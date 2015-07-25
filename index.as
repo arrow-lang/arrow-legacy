@@ -1,31 +1,6 @@
-// AnalyzeUsage
-//  [ ] Function
-//    [x] Basic: nested analyze
-//    [ ] Non-local assignment/use
-//  [ ] Loop
-//  [ ] Import
-//  [ ] Pointers
+// Case 2
+// ======
 
-// Build
-//  [x] Function
-//  [ ] Return (Explicit)
-//  [ ] Return (Implicit)
-//
-// // Case 1
-// // ======
-//
-// let a;
-//
-// def method() {
-//   a = 10;
-// }
-//
-// method(); // ok
-// method(); // error
-//
-// // Case 2
-// // ======
-//
 // let a;
 // let b;
 //
@@ -36,41 +11,20 @@
 // def methodB() {
 //   b = 10;
 // }
-//
-// // possible assignment to A and B
-// (if condition {
+
+// possible assignment to A and B
+// (if false {
 //   // ...
 //   methodA;
 // } else {
 //   // ....
 //   methodB;
 // })(); // ok
-//
+
 // a = 20; // error
 // b = 20; // error
 // b; // error
 // a; // error
-//
-// // Case 3
-// // ======
-//
-// let a;
-//
-// def methodA() {
-//   a = 10;
-// }
-//
-// let fn = methodA; // ok
-// fn(); // ok
-
-
-// ---------------------------------------------------------------------------
-
-// [ ] Record non-local use/assign on a per-function-TYPE basis
-// [ ] On a CALL we use the function TYPE to determine if any use/assign
-//     would be in conflict
-
-// ---------------------------------------------------------------------------
 
 // // Case 1 (error)
 // // =====================

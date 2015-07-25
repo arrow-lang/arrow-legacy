@@ -32,6 +32,10 @@ bool* Slot::is_assigned(Ref<code::Block> block) {
   return nullptr;
 }
 
+bool Slot::is_local(Ref<code::Scope> scope) {
+  return !!scope->find(context, true, true, false);
+}
+
 // External Slot
 // -----------------------------------------------------------------------------
 

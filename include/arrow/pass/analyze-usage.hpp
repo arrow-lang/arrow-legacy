@@ -33,6 +33,9 @@ class AnalyzeUsage : public ast::Visitor {
   // Function
   virtual void visit_function(ast::Function& x);
 
+  // Call
+  virtual void visit_call(ast::Call& x);
+
   // Use [!]
   virtual void visit_id(ast::Identifier& x);
 
@@ -46,9 +49,14 @@ class AnalyzeUsage : public ast::Visitor {
   void _enter_block(arrow::ast::Block& x);
   void _exit_block(bool is_definite = true);
 
+  void do_use(ast::Node& context, code::Slot& item);
+  void do_assign(
+    ast::Node& context, Ref<code::Slot> item, bool is_definite);
+
   Ref<code::Scope> _scope;
 
   std::unordered_map<Ref<code::Block>, std::deque<Ref<code::Slot>>> _assign;
+  std::unordered_set<code::Slot*> _use;
 };
 
 }  // namespace pass

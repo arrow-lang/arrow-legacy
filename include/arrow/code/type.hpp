@@ -6,11 +6,17 @@
 #ifndef ARROW_CODE_TYPE_H
 #define ARROW_CODE_TYPE_H 1
 
+#include <unordered_map>
+#include <unordered_set>
+#include <deque>
+
 #include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
 
 namespace arrow {
 namespace code {
+
+struct Slot;
 
 struct Type {
   virtual ~Type() noexcept;
@@ -154,6 +160,9 @@ struct TypeTuple : Type {
   LLVMTypeRef _handle;
 };
 
+// Function
+// -----------------------------------------------------------------------------
+
 struct TypeParameter : Type {
   explicit TypeParameter(std::string keyword, Ref<code::Type> type)
     : keyword(keyword), type(type) {
@@ -205,9 +214,10 @@ struct TypeFunction : Type {
   /// ABI of the function
   Abi abi;
 
-  /// TODO: Non-local variables of this function
-  // std::unordered_map<Ref<Item>, Assignment> _non_local_assign;
-  // std::deque<Ref<Item>> _non_local_use;
+  /// Non-local assignments and uses (for a function decorated by this type)
+  // FIXME: weak_ref<T>
+  std::unordered_map<Slot*, bool> _assign;
+  std::unordered_set<Slot*> _use;
 
  private:
   LLVMTypeRef _handle;

@@ -32,12 +32,6 @@ void Build::visit_call(ast::Call& x) {
     auto arg = Build(_ctx, _scope).run_scalar(*arg_node->expression);
     if (!arg) return;
 
-    // On a `None` argument; complete ignore
-    if (arg->type.is<code::TypeNone>()) {
-      arg_index += 1;
-      continue;
-    }
-
     // Cast the argument to the appropriate type
     arg = do_cast(arg, *arg_node->expression,
                   type->parameters.at(arg_index)->type, false);

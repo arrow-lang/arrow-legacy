@@ -16,17 +16,17 @@ void AnalyzeUsage::visit_select(ast::Select& x) {
   unsigned idx = 0;
 
   for (auto& br : x.branches) {
-    // Accept the condition
     if (idx > 0 && br->condition.is<ast::Block>()) {
       // Enter the <anonymous> scope block
       _enter_block(*br->condition.as<ast::Block>());
 
-      // Run the base method (which iterates over the statements)
-      Visitor::visit_block(*br->condition.as<ast::Block>());
+      // Accept the condition ..
+      br->condition->accept(*this);
 
       // Exit the block and forget what happened
       _exit_block(false);
     } else {
+      // Accept the condition (without forgetting about it)
       br->condition->accept(*this);
     }
 
@@ -60,21 +60,26 @@ void AnalyzeUsage::visit_select(ast::Select& x) {
   }
 
   // Compile a list of slots that have been (possibly) assigned
-  std::unordered_map<code::Slot*, int> block_assign;
+  std::unordered_map<ast::Node*, Ref<code::Slot>> slots;
+  std::map<ast::Node*, int> block_assign;
+
   for (auto& block : blocks) {
     for (auto& item : _assign[block]) {
-      if (block_assign.find(item.get()) != block_assign.end() &&
-          block_assign[item.get()] == -1) {
-        // If we've already been marked as possibly assigned;
-        // get out
+      if (slots.find(item->context) == slots.end()) {
+        slots[item->context] = item;
+        block_assign[item->context] = 0;
+      }
+
+      if (block_assign[item->context] == -1) {
+        // We've been previously marked as possibly assigned ..
         continue;
       }
 
       auto is_assigned = item->is_assigned(block);
       if (is_assigned && *is_assigned) {
-        block_assign[item.get()] += 1;
+        block_assign[item->context] += 1;
       } else if (!*is_assigned) {
-        block_assign[item.get()] = -1;
+        block_assign[item->context] = -1;
       }
     }
   }
@@ -82,7 +87,9 @@ void AnalyzeUsage::visit_select(ast::Select& x) {
   // Iterate through the non-local assignments (in total)
   int required = (x.branches.size() + 1);
   for (auto& item : block_assign) {
-    item.first->add_assignment(_scope->top(), item.second == required);
+    auto slot = slots[item.first];
+    slot->add_assignment(_scope->top(), item.second == required);
+    _assign[_scope->top()].push_back(slot);
   }
 }
 

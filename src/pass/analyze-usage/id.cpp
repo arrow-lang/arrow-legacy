@@ -21,20 +21,9 @@ void AnalyzeUsage::visit_id(ast::Identifier& x) {
 
   Match(*item) {
     Case(code::Slot& slot)  {
-      auto is_assigned = slot.is_assigned(_scope->top());
-      if (is_assigned && !(*is_assigned)) {
-        Log::get().error(
-          x.span, "use of possibly uninitialized variable '%s'",
-          x.text.c_str());
+      XTL_UNUSED(slot);
 
-        return;
-      } else if (!is_assigned) {
-        Log::get().error(
-          x.span, "use of uninitialized variable '%s'",
-          x.text.c_str());
-
-        return;
-      }
+      do_use(x, *(item.as<code::Slot>()));
     } break;
   } EndMatch;
 }

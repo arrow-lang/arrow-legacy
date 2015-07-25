@@ -24,7 +24,7 @@ void AnalyzeUsage::_exit_block(bool is_definite) {
   // If we are not yet at the top ..
   auto top = _scope->top();
   if (top != nullptr) {
-    // Move all non-local variable assignments up-one ..
+    // Move all variable assignments up-one ..
     for (auto& item : _assign[current]) {
       if (!current->find(item->context, false)) {
         // Non-local assignment; push

@@ -31,6 +31,9 @@ void Resolve::visit_id(ast::Identifier& x) {
   } else if (item.is<code::ExternFunction>()) {
     // This item -is- an external function
     _stack.push_front(item.as<code::ExternFunction>()->type);
+  } else if (item.is<code::Function>()) {
+    // This item -is- a function
+    _stack.push_front(item.as<code::Function>()->type);
   } else {
     // TODO: Error?
     return;

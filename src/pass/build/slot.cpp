@@ -27,7 +27,8 @@ static bool _expand_pattern(
       XTL_UNUSED(x);
 
       // Pull out the previously-exposed item
-      // TODO(mehcode): `scope->find<T>`
+      auto check = scope->find(&pattern);
+
       auto item = scope->find(&pattern).as<code::Slot>();
       if (!item || !item->type) return false;
       if (item->type.is<code::TypeNone>()) return true;
@@ -37,6 +38,7 @@ static bool _expand_pattern(
       if (scope->get_owner()) {
         local = typeid(*scope->get_owner()) == typeid(code::Function);
       }
+
       if (local) {
         item->set_address(LLVMBuildAlloca(
           ctx.irb, item->type->handle(), item->name.c_str()));

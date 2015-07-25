@@ -119,7 +119,8 @@ class Scope {
   /// Attempt to get an item from the current scope-block.
   Ref<code::Item> find(const std::string& name, bool traverse = true);
   Ref<code::Item> find(
-    ast::Node* context, bool traverse = true, bool unshadow = true);
+    ast::Node* context, bool traverse = true, bool unshadow = true,
+    bool check_parent = true);
 
  private:
   /// Name of this scope.

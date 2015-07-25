@@ -16,7 +16,7 @@ bool AnalyzeUsage::_expand_assign(
 ) {
   Match(lhs) {
     Case(ast::Identifier& x) {
-      // Check for a declared item (by-name)
+      // Check for a declared iztem (by-name)
       auto item = _scope->find(x.text);
       if (!item) {
         Log::get().error(
@@ -27,21 +27,9 @@ bool AnalyzeUsage::_expand_assign(
 
       Match(*item) {
         Case(code::Slot& slot)  {
-          // Are we immutable and have we been assigned previously
-          if (!slot.is_mutable) {
-            auto is_assigned = slot.is_assigned(_scope->top());
-            if (is_assigned) {
-              Log::get().error(
-                lhs.span, "re-assignment of immutable variable `%s`",
-                x.text.c_str());
+          XTL_UNUSED(slot);
 
-              return false;
-            }
-          }
-
-          // Mark [assign]
-          _assign[_scope->top()].push_back(item.as<code::Slot>());
-          slot.add_assignment(_scope->top(), true);
+          do_assign(lhs, item.as<code::Slot>(), true);
         } break;
 
         Case(code::ExternSlot& slot) {

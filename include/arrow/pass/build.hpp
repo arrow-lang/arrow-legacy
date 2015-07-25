@@ -38,6 +38,7 @@ class Build : public ast::Visitor {
 
   // Function
   virtual void visit_function(ast::Function&);
+  virtual void visit_return(ast::Return&);
 
   // Literal
   virtual void visit_id(ast::Identifier&);
