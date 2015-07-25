@@ -39,6 +39,8 @@
   ☐ Cast each branch in a select expression (that has a value)
   ☐ Loop
   ☐ Import
+  ☐ Unary
+  ☐ Binary
 
 
 [error-checking]:
