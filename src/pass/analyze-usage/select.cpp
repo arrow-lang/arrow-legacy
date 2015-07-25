@@ -16,9 +16,9 @@ void AnalyzeUsage::visit_select(ast::Select& x) {
   unsigned idx = 0;
 
   for (auto& br : x.branches) {
-    if (idx > 0 && br->condition.is<ast::Block>()) {
+    if (idx > 0) {
       // Enter the <anonymous> scope block
-      _enter_block(*br->condition.as<ast::Block>());
+      _enter_block(*(br->condition));
 
       // Accept the condition ..
       br->condition->accept(*this);

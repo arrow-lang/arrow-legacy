@@ -133,7 +133,7 @@ def handle_(binary_path, filename, *args, **kwargs):
     return test
 
 
-def handle_fail_(binary_path, filename, *args):
+def handle_fail_(binary_path, filename, *args, **kwargs):
     filename = path.relpath(filename)
     process = Popen(
         [binary_path] + list(args) + [filename], stdout=PIPE, stderr=PIPE,
@@ -214,7 +214,7 @@ def run(ctx):
     run_("parse", ctx, binary_path)
     run_("parse-fail", ctx, binary_path)
     run_("compile", ctx, binary_path)
-    # run_("compile-fail", ctx, binary_path)
+    run_("compile-fail", ctx, binary_path)
 
     print_report()
 

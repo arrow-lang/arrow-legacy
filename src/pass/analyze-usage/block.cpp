@@ -9,7 +9,7 @@
 namespace arrow {
 namespace pass {
 
-void AnalyzeUsage::_enter_block(ast::Block& x) {
+void AnalyzeUsage::_enter_block(ast::Node& x) {
   // Enter the <anonymous> scope block ..
   _scope->enter(&x);
 }
@@ -29,7 +29,7 @@ void AnalyzeUsage::_exit_block(bool is_definite) {
       if (!current->find(item->context, false)) {
         // Non-local assignment; push
         auto is_assigned = item->is_assigned(current);
-        item->add_assignment(top, *is_assigned);
+        item->add_assignment(top, is_definite && *is_assigned);
       }
     }
   }

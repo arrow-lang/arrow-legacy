@@ -46,7 +46,7 @@ class AnalyzeUsage : public ast::Visitor {
   bool _expand_pattern(ast::Pattern& pattern, bool has_initializer);
   bool _expand_assign(ast::Node& lhs, ast::Assign* context);
 
-  void _enter_block(arrow::ast::Block& x);
+  void _enter_block(arrow::ast::Node& x);
   void _exit_block(bool is_definite = true);
 
   void do_use(ast::Node& context, code::Slot& item);
