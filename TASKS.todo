@@ -11,7 +11,7 @@
 
 [analyze-type]:
   ☐ Scope crossing doesn't work for variable contextual deduce
-  ☐ CTA
+  ✔ CTA @done(2015-07-25 06:52) @project([analyze-type])
 
 
 [check-type]:
@@ -20,19 +20,20 @@
   ☐ Call (parameters)
   ☐ Cast (explicit)
   ☐ Return
+  ☐ Select (condition)
 
 
 [resolve]:
   ☐ Function
-  ☐ Select
-  ☐ CTA
+  ✔ Select @done(2015-07-25 06:52) @project([resolve])
+  ✔ CTA @done(2015-07-25 06:52) @project([resolve])
   ☐ When CTA is applied to two compatible function types; merge the assign/use pools
 
 
 [build]:
   [function]:
     ☐ Parameters
-    ☐ Return
+    ✔ Return @done(2015-07-25 06:52) @project([build] / [function])
 
   ☐ Select
   ☐ Loop

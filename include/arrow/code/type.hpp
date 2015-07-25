@@ -25,6 +25,16 @@ struct Type {
     return typeid(other) == typeid(*this);
   }
 
+  virtual Ref<code::Type> intersect(Ref<code::Type> other) const {
+    // If types are equal ..
+    if (equals(*other)) {
+      // Return the other
+      return other;
+    }
+
+    return nullptr;
+  }
+
   virtual bool is_unknown() const {
     return false;
   }
@@ -78,6 +88,10 @@ struct TypeAny : Type {
     return true;
   }
 
+  virtual Ref<code::Type> intersect(Ref<code::Type> other) const {
+    return other;
+  }
+
   virtual LLVMTypeRef handle() {
     return nullptr;
   }
@@ -100,6 +114,8 @@ struct TypeFloat : Type {
     return "float";
   }
 
+  virtual Ref<code::Type> intersect(Ref<code::Type> other) const;
+
   virtual LLVMTypeRef handle();
 };
 
@@ -118,6 +134,8 @@ struct TypeInteger : Type {
 
   virtual LLVMTypeRef handle();
 
+  virtual Ref<code::Type> intersect(Ref<code::Type> other) const;
+
   virtual std::string name() const {
     return "int";
   }
@@ -131,6 +149,8 @@ struct TypeSizedInteger : Type {
   virtual ~TypeSizedInteger() noexcept;
 
   virtual bool equals(Type& other) const;
+
+  virtual Ref<code::Type> intersect(Ref<code::Type> other) const;
 
   virtual LLVMTypeRef handle();
 
@@ -232,6 +252,9 @@ struct Typename : Item {
 
   Ref<Type> type;
 };
+
+extern Ref<code::Type> instersect_all(
+  const std::vector<Ref<code::Type>>& types);
 
 }  // namespace code
 }  // namespace arrow

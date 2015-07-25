@@ -1,15 +1,5 @@
-let a;
-
-if false {
-  a = 34;
-} else if true {
-  if false {
-    a = 30;
-  } else {
-    a = 30;
-  }
+let value = if false {
+  4.12;
 } else {
-  a = 50;
-}
-
-let b = a; // ok
+  56;
+};

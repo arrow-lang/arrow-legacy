@@ -55,6 +55,10 @@ class Build : public ast::Visitor {
   // Call
   virtual void visit_call(ast::Call& x);
 
+  // Select
+  virtual void visit_select(ast::Select&);
+  // virtual void visit_select_branch(ast::SelectBranch&);
+
  private:
   Ref<code::Value> do_cast(
     Ref<code::Value> value, ast::Node& node, Ref<code::Type> to_type,

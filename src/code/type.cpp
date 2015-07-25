@@ -4,6 +4,7 @@
 // See accompanying file LICENSE
 
 #include <sstream>
+#include "arrow/match.hpp"
 #include "arrow/code/type.hpp"
 
 namespace arrow {
@@ -210,6 +211,102 @@ bool TypeFunction::is_unknown() const {
 
 bool TypeParameter::is_unknown() const {
   return type->is_unknown();
+}
+
+// Intersect
+// -----------------------------------------------------------------------------
+
+Ref<code::Type> TypeFloat::intersect(Ref<code::Type> other) const {
+  // Float has the highest matching power
+  Match(*other) {
+    Case(TypeFloat& _) {
+      XTL_UNUSED(_);
+      return other;
+    }
+
+    Case(TypeInteger& _) {
+      XTL_UNUSED(_);
+      return (new code::TypeFloat());
+    }
+
+    Case(TypeSizedInteger& _) {
+      XTL_UNUSED(_);
+      return (new code::TypeFloat());
+    }
+  } EndMatch;
+
+  return nullptr;
+}
+
+Ref<code::Type> TypeInteger::intersect(Ref<code::Type> other) const {
+  Match(*other) {
+    Case(TypeFloat& _) {
+      XTL_UNUSED(_);
+      return other;
+    }
+
+    Case(TypeInteger& _) {
+      XTL_UNUSED(_);
+      return (new code::TypeInteger());
+    }
+
+    Case(TypeSizedInteger& _) {
+      XTL_UNUSED(_);
+      return (new code::TypeInteger());
+    }
+  } EndMatch;
+
+  return nullptr;
+}
+
+Ref<code::Type> TypeSizedInteger::intersect(Ref<code::Type> other) const {
+  Match(*other) {
+    Case(TypeFloat& _) {
+      XTL_UNUSED(_);
+      return other;
+    }
+
+    Case(TypeInteger& _) {
+      XTL_UNUSED(_);
+      return other;
+    }
+
+    Case(TypeSizedInteger& x) {
+      if (is_signed == x.is_signed) {
+        return (bits > x.bits) ?
+          (new code::TypeSizedInteger(bits, is_signed)) : other;
+     }
+
+      if (is_signed && bits > x.bits) {
+        return (new code::TypeSizedInteger(bits, is_signed));
+      }
+
+      if (x.is_signed && x.bits > bits) {
+        return other;
+      }
+    }
+  } EndMatch;
+
+  return nullptr;
+}
+
+Ref<code::Type> instersect_all(const std::vector<Ref<code::Type>>& types) {
+  // If we have no types; return nil
+  if (types.size() == 0) return nullptr;
+
+  // If we have a single type; return that
+  if (types.size() == 1) return types.at(0);
+
+  // Reduce the list of types
+  auto result = types.at(0);
+  for (unsigned i = 1; i < types.size(); ++i) {
+    result = result->intersect(types.at(i));
+    if (!result) {
+      break;
+    }
+  }
+
+  return result;
 }
 
 }  // namespace code

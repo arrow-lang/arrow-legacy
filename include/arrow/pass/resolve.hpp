@@ -26,6 +26,9 @@ class Resolve : public ast::Visitor {
     return _stack.size() > 0 ? _stack.front() : nullptr;
   }
 
+  // Block (scope)
+  virtual void visit_block(ast::Block&);
+
   // Literal
   virtual void visit_id(ast::Identifier&);
   virtual void visit_none(ast::None&);
@@ -42,6 +45,10 @@ class Resolve : public ast::Visitor {
 
   // Call
   virtual void visit_call(ast::Call&);
+
+  // Select
+  virtual void visit_select(ast::Select&);
+  virtual void visit_select_branch(ast::SelectBranch&);
 
   // Misc.
   virtual void visit_slot(ast::Slot&);

@@ -61,8 +61,32 @@ void AnalyzeType::run(ast::Node& x) {
       // If the type of this assignment is invalid (undefined);
       // we're not done yet ..
       if (assign_set.size() > 0) {
+        std::vector<Ref<code::Type>> type_set;
+
+        // Check if any of the types are unknown or invalid
+        bool invalid = false;
+        for (auto& assign : assign_set) {
+          if (!assign.type || assign.type->is_unknown()) {
+            invalid = true;
+            break;
+          }
+
+          type_set.push_back(assign.type);
+        }
+
+        Ref<code::Type> type = nullptr;
+        if (!invalid) {
+          // Resolve the common type ..
+          type = code::instersect_all(type_set);
+          if (!type) {
+            Log::get().error(item->context->span,
+              "unable to infer a type for variable %s",
+              item->name.c_str());
+          }
+        }
+
         // FIXME: Reduce the COMMON type among all types
-        if (!assign_set[0].type || assign_set[0].type->is_unknown()) {
+        if (invalid) {
           if (max_null_run <= 0) {
             slot->type = new code::TypeNone();
           } else {
@@ -74,7 +98,7 @@ void AnalyzeType::run(ast::Node& x) {
           max_null_run = 5;
 
           // Mark the type
-          slot->type = assign_set[0].type;
+          slot->type = type;
 
           // Ensure that integral slots always end up as `int` without
           // an explicit type annotation
