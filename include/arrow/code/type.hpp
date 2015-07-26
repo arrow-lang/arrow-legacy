@@ -212,7 +212,9 @@ struct TypeFunction : Type {
   };
 
   TypeFunction(Abi abi, Ref<code::Type> result)
-    : parameters(), result(result), abi(abi), _handle(nullptr) {
+    : parameters(), result(result), abi(abi),
+      _is_analyzed(false),
+      _handle(nullptr) {
   }
 
   virtual ~TypeFunction() noexcept;
@@ -236,6 +238,7 @@ struct TypeFunction : Type {
 
   /// Non-local assignments and uses (for a function decorated by this type)
   // FIXME: weak_ref<T>
+  bool _is_analyzed;
   std::unordered_map<Slot*, bool> _assign;
   std::unordered_set<Slot*> _use;
 

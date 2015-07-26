@@ -14,6 +14,10 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
   auto item = _scope->find(&x).as<code::Function>();
   if (!item) return;
 
+  // Check if we've analyzed the function (and exit early if we have)
+  auto type = item->type.as<code::TypeFunction>();
+  if (type->_is_analyzed) return;
+
   // Create a child analyzer
   auto child = AnalyzeUsage(item->scope);
 
@@ -22,7 +26,6 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
 
   // Push non-local assignments and uses onto the function type
   auto top = child._scope->at(x.block.get());
-  auto type = item->type.as<code::TypeFunction>();
   for (auto& item : child._assign[top]) {
     if (!item->is_local(child._scope)) {
       bool is_assigned = *(item->is_assigned(top));
@@ -34,6 +37,9 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
   for (auto& item : child._use) {
     type->_use.insert(item);
   }
+
+  // Mark analyzed
+  type->_is_analyzed = true;
 }
 
 }  // namespace pass

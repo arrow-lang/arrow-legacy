@@ -20,10 +20,19 @@ void AnalyzeUsage::visit_id(ast::Identifier& x) {
   }
 
   Match(*item) {
-    Case(code::Slot& slot)  {
+    Case(code::Slot& slot) {
       XTL_UNUSED(slot);
 
       do_use(x, *(item.as<code::Slot>()));
+    } break;
+
+    Case(code::Function& function) {
+      // Check if we've analyzed the function ..
+      auto func_type = function.type.as<code::TypeFunction>();
+      if (func_type->_is_analyzed) return;
+
+      // Analyze the function context ..
+      function.context->accept(*this);
     } break;
   } EndMatch;
 }

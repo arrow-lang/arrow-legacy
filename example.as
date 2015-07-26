@@ -45,11 +45,3 @@ def methodB() {
   a3 = 50;
   methodA(); // error
 }
-
-
-
-
-
-
-def test() {
-}
