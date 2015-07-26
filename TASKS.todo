@@ -2,16 +2,18 @@
   [function]:
     ✔ Mark non-local -use/assign @done(2015-07-24 23:43) @project([analyze-usage] / [function])
     ✔ Check non-local use/assign validity on call @done(2015-07-24 23:43) @project([analyze-usage] / [function])
-    ☐ Recursion
-    ☐ Parameters
+    ☐ Parameters (**)
+    ☐ Recursion (*)
 
   ☐ Loop
   ☐ Import
 
 
 [analyze-type]:
-  ☐ Scope crossing doesn't work for variable contextual deduce
+  ☐ Scope crossing doesn't work for variable contextual deduce (***)
   ✔ CTA @done(2015-07-25 06:52) @project([analyze-type])
+  ☐ type(..) expression (****)
+  ☐ CTA for tuples
 
 
 [check-type]:
@@ -27,7 +29,7 @@
   ☐ Function
   ✔ Select @done(2015-07-25 06:52) @project([resolve])
   ✔ CTA @done(2015-07-25 06:52) @project([resolve])
-  ☐ When CTA is applied to two compatible function types; merge the assign/use pools
+  ☐ When CTA is applied to two compatible function types; merge the assign/use pools (*****)
 
 
 [build]:
@@ -53,3 +55,4 @@
 language-arrow:
   ☐ Add underscores (`1_3_4`) to number patterns
   ☐ Add function parameters
+  ☐ Make `;` optional
