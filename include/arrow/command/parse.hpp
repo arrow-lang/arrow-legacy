@@ -19,7 +19,7 @@ class Parse : public Command {
 
   const char* name() const noexcept { return "parse"; }
   const char* description() const noexcept {
-    return "";
+    return "Parse the input file and print the AST (encoded in JSON)";
   }
 
  private:

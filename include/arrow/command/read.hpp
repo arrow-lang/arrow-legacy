@@ -19,7 +19,7 @@ class Read : public Command {
 
   const char* name() const noexcept { return "read"; }
   const char* description() const noexcept {
-    return "Read the input file and print each interpreted UTF-32 character";
+    return "Read the input file and print each UTF-32 character";
   }
 
  private:

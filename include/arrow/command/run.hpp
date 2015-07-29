@@ -21,7 +21,7 @@ class Run : public Command {
 
   const char* name() const noexcept { return "run"; }
   const char* description() const noexcept {
-    return "Compile (and execute) the input file";
+    return "Interpret the input file [default]";
   }
 
  private:

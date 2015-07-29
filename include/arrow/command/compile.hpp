@@ -17,7 +17,7 @@ class Compile : public Command {
 
   const char* name() const noexcept { return "compile"; }
   const char* description() const noexcept {
-    return "Compile (and assemble) the input file";
+    return "Compile and assemble the input file";
   }
 
  private:
