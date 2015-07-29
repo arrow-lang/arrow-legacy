@@ -3,7 +3,7 @@
     ✔ Mark non-local -use/assign @done(2015-07-24 23:43) @project([analyze-usage] / [function])
     ✔ Check non-local use/assign validity on call @done(2015-07-24 23:43) @project([analyze-usage] / [function])
     ☐ Parameters (**)
-    ☐ Recursion (*)
+    ✔ Recursion (*) @done(2015-07-29 10:13) @project([analyze-usage] / [function])
 
   ☐ Loop
   ☐ Import
