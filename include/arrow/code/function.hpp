@@ -13,6 +13,27 @@
 namespace arrow {
 namespace code {
 
+struct Parameter : Item, Value {
+  Parameter(ast::Node* context, std::string name, bool is_mutable)
+    : Item(context, name),
+      Value(nullptr, nullptr),
+      is_mutable(is_mutable) {
+  }
+
+  virtual ~Parameter() noexcept;
+
+  void set_address(LLVMValueRef handle) {
+    _handle = handle;
+  }
+
+  virtual bool has_address() const {
+    return true;
+  }
+
+  /// Whether this is mutable or immutable.
+  bool is_mutable;
+};
+
 struct Function : Item, Value {
   Function(ast::Node* context, std::string name, Ref<code::Scope> parent_scope)
     : Item(context, name),

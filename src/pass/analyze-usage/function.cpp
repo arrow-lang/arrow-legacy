@@ -18,6 +18,9 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
   auto type = item->type.as<code::TypeFunction>();
   if (type->_is_analyzed) return;
 
+  // Enter the function scope-block
+  item->scope->enter(&x);
+
   // Create a child analyzer
   auto child = AnalyzeUsage(item->scope);
 
@@ -43,6 +46,9 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
 
   // Mark analyzed
   type->_is_analyzed = true;
+
+  // Exit the function scope-block
+  item->scope->exit();
 }
 
 }  // namespace pass

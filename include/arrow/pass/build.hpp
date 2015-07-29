@@ -64,6 +64,9 @@ class Build : public ast::Visitor {
     Ref<code::Value> value, ast::Node& node, Ref<code::Type> to_type,
     bool explicit_);
 
+  bool _expand_parameter_pattern(
+    ast::Pattern& pattern, Ref<code::Value> value, Ref<code::Scope> scope);
+
   /// The active compiler context.
   Compiler::Context& _ctx;
 

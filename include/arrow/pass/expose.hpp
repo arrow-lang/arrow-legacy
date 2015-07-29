@@ -30,6 +30,9 @@ class Expose : public ast::Visitor {
   virtual void visit_slot(ast::Slot&);
 
  private:
+  bool _expand_parameter_pattern(
+    ast::Pattern& pattern, Ref<code::Scope> scope);
+
   // The active compiler context.
   Compiler::Context& _ctx;
 

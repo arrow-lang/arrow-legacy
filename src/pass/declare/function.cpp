@@ -14,7 +14,6 @@ void Declare::visit_function(ast::Function& x) {
   auto item = _scope->find(&x).as<code::Function>();
   if (!item) return;
 
-
   // Create the actual LLVM function
   auto type = item->type.as<code::TypeFunction>();
   auto type_handle = LLVMGetElementType(type->handle());

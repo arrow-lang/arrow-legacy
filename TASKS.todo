@@ -2,7 +2,7 @@
   [function]:
     ✔ Mark non-local -use/assign @done(2015-07-24 23:43) @project([analyze-usage] / [function])
     ✔ Check non-local use/assign validity on call @done(2015-07-24 23:43) @project([analyze-usage] / [function])
-    ☐ Parameters (**)
+    ✔ Parameters (**) @done(2015-07-29 10:51) @project([analyze-usage] / [function])
     ✔ Recursion (*) @done(2015-07-29 10:13) @project([analyze-usage] / [function])
 
   ☐ Loop
@@ -34,7 +34,7 @@
 
 [build]:
   [function]:
-    ☐ Parameters
+    ✔ Parameters @done(2015-07-29 10:51) @project([build] / [function])
     ✔ Return @done(2015-07-25 06:52) @project([build] / [function])
 
   ✔ Select @done(2015-07-25 07:21) @project([build])
@@ -44,6 +44,9 @@
   ☐ Unary
   ☐ Binary
 
+
+[...]:
+  ☐ Parameter (Unpack)
 
 [error-checking]:
   ☐ Duplicate function names in same module (error)

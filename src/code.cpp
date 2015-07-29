@@ -16,6 +16,7 @@ IMPL(Module)
 IMPL(Slot)
 IMPL(ExternSlot)
 IMPL(Function)
+IMPL(Parameter)
 IMPL(ExternFunction)
 IMPL(Typename)
 

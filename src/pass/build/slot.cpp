@@ -27,8 +27,6 @@ static bool _expand_pattern(
       XTL_UNUSED(x);
 
       // Pull out the previously-exposed item
-      auto check = scope->find(&pattern);
-
       auto item = scope->find(&pattern).as<code::Slot>();
       if (!item || !item->type) return false;
       if (item->type.is<code::TypeNone>()) return true;

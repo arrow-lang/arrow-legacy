@@ -44,6 +44,9 @@ class AnalyzeType : public ast::Visitor {
     Ref<code::Type> type_annotation,
     Ref<code::Type> type_initializer);
 
+  bool _expand_parameter_pattern(
+    ast::Pattern& pattern, Ref<code::Type> type, Ref<code::Scope> scope);
+
   bool _expand_assign(
     ast::Assign& node, ast::Node& lhs, Ref<code::Type> type);
 
