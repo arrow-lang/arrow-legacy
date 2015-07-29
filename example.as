@@ -1,24 +1,5 @@
 
 // -----------------------------------------------------------------------------
-// Case 1
-
-let a1;
-let b1;
-
-def methodA() {
-  methodB(); // STOP and go analyze methodB
-}
-
-// check if we've been analyzed before analyzing
-def methodB() {
-  a1 = 20;
-}
-
-methodA(); // ok
-
-b1 = a1; // ok
-
-// -----------------------------------------------------------------------------
 // Case 2
 
 let a2;

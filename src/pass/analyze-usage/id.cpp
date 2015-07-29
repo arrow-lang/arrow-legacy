@@ -32,6 +32,7 @@ void AnalyzeUsage::visit_id(ast::Identifier& x) {
       if (func_type->_is_analyzed) return;
 
       // Analyze the function context ..
+      std::printf("analyze: %s\n", function.name.c_str());
       function.context->accept(*this);
     } break;
   } EndMatch;

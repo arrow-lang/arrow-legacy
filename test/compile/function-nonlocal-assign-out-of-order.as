@@ -10,6 +10,6 @@ def methodB() {
   a = 20;
 }
 
-// methodA(); // ok
+methodA(); // ok
 
-// b = a; // ok
+b = a; // ok

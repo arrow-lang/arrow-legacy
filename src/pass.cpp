@@ -7,6 +7,7 @@
 #include "arrow/pass/expose.hpp"
 #include "arrow/pass/type.hpp"
 #include "arrow/pass/resolve.hpp"
+#include "arrow/pass/declare.hpp"
 #include "arrow/pass/analyze-usage.hpp"
 #include "arrow/pass/analyze-type.hpp"
 
@@ -22,6 +23,7 @@ IMPL(Type)
 IMPL(Resolve)
 IMPL(AnalyzeUsage)
 IMPL(AnalyzeType)
+IMPL(Declare)
 
 }  // namespace pass
 }  // namespace arrow

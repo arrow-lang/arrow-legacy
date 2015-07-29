@@ -5,6 +5,7 @@
 
 #include "arrow/pass/build.hpp"
 #include "arrow/pass/expose.hpp"
+#include "arrow/pass/declare.hpp"
 #include "arrow/pass/analyze-usage.hpp"
 #include "arrow/pass/analyze-type.hpp"
 
@@ -38,6 +39,10 @@ void Build::visit_module(ast::Module& x) {
 
   // Analyze (usage analysis) the module block.
   AnalyzeUsage(item->scope).run(*x.block);
+  if (Log::get().count("error") > 0) return;
+
+  // Declare any items that need forward declarations.
+  Declare(_ctx, item->scope).run(*x.block);
   if (Log::get().count("error") > 0) return;
 
   // Add the module initializer basic block

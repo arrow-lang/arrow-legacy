@@ -3,8 +3,8 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#ifndef ARROW_PASS_MODULE_H
-#define ARROW_PASS_MODULE_H 1
+#ifndef ARROW_PASS_BUILD_H
+#define ARROW_PASS_BUILD_H 1
 
 #include "arrow/ast.hpp"
 #include "arrow/compiler.hpp"
@@ -77,4 +77,4 @@ class Build : public ast::Visitor {
 }  // namespace pass
 }  // namespace arrow
 
-#endif  // ARROW_PASS_MODULE_H
+#endif  // ARROW_PASS_BUILD_H
