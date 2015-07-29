@@ -1,4 +1,4 @@
-let a;
+let mutable a;
 
 def methodA() {
   a = 10;

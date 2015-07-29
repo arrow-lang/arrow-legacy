@@ -1,4 +1,4 @@
-let a: int;
+let mutable a: int;
 let b: int;
 
 def methodA() {

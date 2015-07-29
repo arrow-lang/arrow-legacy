@@ -37,6 +37,9 @@ bool AnalyzeUsage::_expand_pattern(
         // Slot is constant (from our standpoint)
         item->is_constant = true;
       }
+
+      // We are now declared
+      item->is_declared = true;
     } break;
 
     Case(ast::PatternTuple& x) {

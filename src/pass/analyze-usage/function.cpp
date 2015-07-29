@@ -21,6 +21,9 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
   // Create a child analyzer
   auto child = AnalyzeUsage(item->scope);
 
+  // Mark us as in-the-middle of analyzing
+  type->_is_analyzing = true;
+
   // Analyze the function body
   child.run(*x.block);
 

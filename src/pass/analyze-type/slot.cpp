@@ -24,7 +24,7 @@ void AnalyzeType::visit_slot(ast::Slot& x) {
   if (x.initializer) {
     // Resolve the type of the initializer
     type_initializer = Resolve(_scope).run(*x.initializer);
-    if (type_initializer->is_unknown()) {
+    if (type_initializer && type_initializer->is_unknown()) {
       _incomplete = true;
     }
   }

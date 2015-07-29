@@ -106,7 +106,7 @@ void Build::visit_select(ast::Select& x) {
   if (has_value) {
     // Resolve the type of us (in full)
     auto type = Resolve(_scope).run(x);
-    if (!type) return;
+    if (!type || type.is<code::TypeNone>()) return;
 
     // TODO(_): Iterate through each value-handle and cast to the expected type
 

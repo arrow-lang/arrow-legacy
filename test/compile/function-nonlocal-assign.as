@@ -1,4 +1,4 @@
-let value;
+let mutable value;
 def method() { value = 20; }
 
 method(); // ok

@@ -1,0 +1,1 @@
+[0;37mtest/compile-fail/variable-uninitialized.as:2.13-18: [0;31merror: [1;37muse of uninitialized variable 'value'[0m

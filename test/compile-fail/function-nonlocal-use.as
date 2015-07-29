@@ -1,4 +1,4 @@
-let mutable a: int;
+let a: int;
 
 def do(_: int) { }
 
@@ -12,13 +12,11 @@ def methodA() {
 }
 
 methodB(); // error
-let b = a;
-// methodC and methodB fully analyzed now
 
 // use: `a`
 def methodC() {
   methodA();
-  a = 30;
+  do(a);
 }
 
 // use: `a`

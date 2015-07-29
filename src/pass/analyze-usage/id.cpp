@@ -16,6 +16,7 @@ void AnalyzeUsage::visit_id(ast::Identifier& x) {
     Log::get().error(
       x.span, "use of unresolved name '%s'", x.text.c_str());
 
+
     return;
   }
 
@@ -30,9 +31,9 @@ void AnalyzeUsage::visit_id(ast::Identifier& x) {
       // Check if we've analyzed the function ..
       auto func_type = function.type.as<code::TypeFunction>();
       if (func_type->_is_analyzed) return;
+      if (func_type->_is_analyzing) return;
 
       // Analyze the function context ..
-      std::printf("analyze: %s\n", function.name.c_str());
       function.context->accept(*this);
     } break;
   } EndMatch;

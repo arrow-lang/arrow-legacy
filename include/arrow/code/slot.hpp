@@ -20,7 +20,8 @@ struct Slot : Item, Value {
     : Item(context, name),
       Value(nullptr, nullptr),
       is_mutable(is_mutable),
-      is_constant(false) {
+      is_constant(false),
+      is_declared(false) {
   }
 
   virtual ~Slot() noexcept;
@@ -49,6 +50,10 @@ struct Slot : Item, Value {
 
   /// Whether this is constant or not.
   bool is_constant;
+
+  /// Whether this has been declared (yet) or not (in respect to the
+  /// usage analyzer)
+  bool is_declared;
 
  private:
   /// Map of Block to Assignment state

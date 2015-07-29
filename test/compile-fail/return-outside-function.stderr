@@ -1,0 +1,1 @@
+[0;37mtest/compile-fail/return-outside-function.as:1.1-11: [0;31merror: [1;37m`return` outside of function[0m

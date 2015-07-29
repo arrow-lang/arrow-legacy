@@ -1,6 +1,6 @@
 extern def exit(a: int);
 
-let a;
+let mutable a;
 
 def method() {
   if false {

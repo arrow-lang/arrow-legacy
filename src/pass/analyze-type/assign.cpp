@@ -60,7 +60,7 @@ bool AnalyzeType::_expand_assign(
 void AnalyzeType::visit_assign(ast::Assign& x) {
   // Resolve the type of the RHS
   auto type = Resolve(_scope).run(*x.rhs);
-  if (type->is_unknown()) {
+  if (type && type->is_unknown()) {
     if (Log::get().count("error") == 0) {
       _incomplete = true;
     }

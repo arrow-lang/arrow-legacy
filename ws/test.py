@@ -141,9 +141,10 @@ def handle_fail_(binary_path, filename, *args, **kwargs):
     )
 
     _, stderr = process.communicate()
+    stderr = stderr.decode('utf-8')
 
-    # TODO: expected = get_expected(filename, "stderr")
-    test = process.returncode != 0
+    expected = get_expected(filename, "stderr")
+    test = len(expected) > 0 and expected == stderr and process.returncode == 1
 
     return test
 

@@ -1,7 +1,7 @@
-let a = 10;
+let a;
 
 def method() {
-  a = 230;
+  let b = a;
 }
 
 // calling `method` would be an error but its not /now/

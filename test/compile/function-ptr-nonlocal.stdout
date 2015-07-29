@@ -2,7 +2,7 @@
 @fn = internal constant void ()* @methodA
 @b = internal global i128 0
 
-define internal void @"function-object-nonlocal.@init"() {
+define internal void @"function-ptr-nonlocal.@init"() {
   %1 = load void ()** @fn
   call void %1()
   %2 = load i128* @a
@@ -16,6 +16,6 @@ define internal void @methodA() {
 }
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"function-object-nonlocal.@init"()
+  call void @"function-ptr-nonlocal.@init"()
   ret i32 0
 }

@@ -10,17 +10,21 @@ namespace arrow {
 namespace pass {
 
 void AnalyzeUsage::do_use(ast::Node& context, code::Slot& item) {
+  if (!item.is_declared) {
+    Log::get().error(
+      context.span, "use of unresolved name '%s'",
+      item.name.c_str());
+
+    return;
+  }
+
   auto is_assigned = item.is_assigned(_scope->top());
 
   if ((is_assigned && !(*is_assigned)) || !is_assigned) {
     // If we will error AND we are non-local
     if (!item.is_local(_scope)) {
       // Mark the use and ignore error
-      // Ensure that we don't double-add
-      if (std::find(_use.begin(), _use.end(), &item) == _use.end()) {
-        _use.insert(&item);
-      }
-
+      _use.insert(&item);
       return;
     }
   }
@@ -43,13 +47,25 @@ void AnalyzeUsage::do_use(ast::Node& context, code::Slot& item) {
 void AnalyzeUsage::do_assign(
   ast::Node& context, Ref<code::Slot> item, bool is_definite
 ) {
-  // Are we immutable and have we been assigned previously
+  // Are we immutable ..
   if (!item->is_mutable) {
+    // Are we non-local ..
+    if (!item->is_local(_scope)) {
+      Log::get().error(
+        context.span, "cannot assign immutable non-local variable `%s`",
+        item->name.c_str());
+
+      return;
+    }
+
+    // Have we been assigned previously ..
     auto is_assigned = item->is_assigned(_scope->top());
     if (is_assigned) {
       Log::get().error(
         context.span, "re-assignment of immutable variable `%s`",
         item->name.c_str());
+
+      return;
     }
   }
 
