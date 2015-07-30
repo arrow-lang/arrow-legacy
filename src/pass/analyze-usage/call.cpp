@@ -17,7 +17,7 @@ void AnalyzeUsage::visit_call(ast::Call& x) {
 
   // Resolve the function-type of the operand
   auto type = Resolve(_scope).run(*x.operand);
-  if (!type.is<code::TypeFunction>()) return;
+  if (!type || !type.is<code::TypeFunction>()) return;
   auto function = type.as<code::TypeFunction>();
 
   // Use: Iterate through each non-local initial-use and ensure
