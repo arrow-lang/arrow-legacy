@@ -40,7 +40,7 @@ void AnalyzeType::visit_function(ast::Function& x) {
   }
 
   // Create a child analyzer
-  auto child = AnalyzeType(item->scope);
+  auto child = AnalyzeType(_ctx, item->scope);
 
   // Analyze the function body
   child.run(*x.block);

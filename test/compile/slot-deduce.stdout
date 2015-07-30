@@ -2,11 +2,11 @@
 @b = internal constant double 1.531000e+01
 @c = internal constant i1 false
 
-define internal void @"slot-deduce.@init"() {
+define internal void @slot-deduce..init() {
   ret void
 }
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"slot-deduce.@init"()
+  call void @slot-deduce..init()
   ret i32 0
 }

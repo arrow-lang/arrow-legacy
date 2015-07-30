@@ -1,8 +1,3 @@
-define internal void @"function-select-assign.@init"() {
-  call void @method()
-  ret void
-}
-
 define internal void @method() {
   %a = alloca i128
   br i1 false, label %1, label %2
@@ -41,9 +36,14 @@ define internal void @method() {
   ret void
 }
 
+define internal void @function-select-assign..init() {
+  call void @method()
+  ret void
+}
+
 declare void @exit(i128 signext)
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"function-select-assign.@init"()
+  call void @function-select-assign..init()
   ret i32 0
 }

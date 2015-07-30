@@ -24,6 +24,9 @@ class Declare : public ast::Visitor {
   // Function
   virtual void visit_function(ast::Function&);
 
+  // Module
+  virtual void visit_module(ast::Module&);
+
  private:
   /// The active compiler context.
   Compiler::Context& _ctx;

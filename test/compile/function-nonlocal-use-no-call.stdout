@@ -1,12 +1,12 @@
-define internal void @"function-nonlocal-use-no-call.@init"() {
-  ret void
-}
-
 define internal void @method() {
   ret void
 }
 
+define internal void @function-nonlocal-use-no-call..init() {
+  ret void
+}
+
 define i32 @main(i32, i8**, i8**) {
-  call void @"function-nonlocal-use-no-call.@init"()
+  call void @function-nonlocal-use-no-call..init()
   ret i32 0
 }

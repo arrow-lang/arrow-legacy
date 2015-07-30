@@ -47,12 +47,15 @@
 
 [...]:
   ☐ Parameter (Unpack)
+  ☐ Qualified names `x.method` (for functions and global variables)
+
 
 [error-checking]:
   ☐ Duplicate function names in same module (error)
   ☐ Duplicate exported slot names in same module (error)
   ☐ Attempting to unpack a non-tuple or a tuple of the wrong size (error)
   ☐ Use/Assign before declare (should error; segfaults currently)
+  ☐ Relativize (from CWD) all error message filenames
 
 
 language-arrow:

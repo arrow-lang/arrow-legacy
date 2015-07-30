@@ -3,7 +3,7 @@
 @a = internal global i128 0
 @b = internal global i128 0
 
-define internal void @"tuple-pack.@init"() {
+define internal void @tuple-pack..init() {
   %1 = load i128* @value
   %2 = insertvalue { i128 } undef, i128 %1, 0
   store { i128 } %2, { i128 }* @box
@@ -15,6 +15,6 @@ define internal void @"tuple-pack.@init"() {
 }
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"tuple-pack.@init"()
+  call void @tuple-pack..init()
   ret i32 0
 }

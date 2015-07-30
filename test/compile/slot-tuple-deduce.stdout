@@ -1,10 +1,10 @@
 @a = internal constant { i128, double, i1 } { i128 30, double 1.531000e+01, i1 false }
 
-define internal void @"slot-tuple-deduce.@init"() {
+define internal void @slot-tuple-deduce..init() {
   ret void
 }
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"slot-tuple-deduce.@init"()
+  call void @slot-tuple-deduce..init()
   ret i32 0
 }

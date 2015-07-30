@@ -22,7 +22,7 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
   item->scope->enter(&x);
 
   // Create a child analyzer
-  auto child = AnalyzeUsage(item->scope);
+  auto child = AnalyzeUsage(_ctx, item->scope);
 
   // Mark us as in-the-middle of analyzing
   type->_is_analyzing = true;

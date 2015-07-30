@@ -15,6 +15,7 @@
 #include "arrow/ast.hpp"
 #include "arrow/llvm.hpp"
 #include "arrow/code/scope.hpp"
+#include "arrow/code/module.hpp"
 
 namespace arrow {
 
@@ -33,6 +34,9 @@ class Compiler {
 
     /// LLVM target data (layout)
     LLVMTargetDataRef data_layout;
+
+    /// Map of native modules that are / have been compiled
+    std::unordered_map<ast::Node*, Ref<code::Module>> modules;
   };
 
   Compiler(bool verify);

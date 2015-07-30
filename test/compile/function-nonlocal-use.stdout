@@ -1,7 +1,12 @@
 @value = internal global i128 0
 @value1 = internal global i128 0
 
-define internal void @"function-nonlocal-use.@init"() {
+define internal i128 @get() {
+  %1 = load i128* @value
+  ret i128 %1
+}
+
+define internal void @function-nonlocal-use..init() {
   store i128 20, i128* @value
   %1 = call i128 @get()
   store i128 %1, i128* @value1
@@ -10,14 +15,9 @@ define internal void @"function-nonlocal-use.@init"() {
   ret void
 }
 
-define internal i128 @get() {
-  %1 = load i128* @value
-  ret i128 %1
-}
-
 declare void @exit(i128 signext)
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"function-nonlocal-use.@init"()
+  call void @function-nonlocal-use..init()
   ret i32 0
 }

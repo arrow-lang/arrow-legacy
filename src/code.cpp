@@ -13,6 +13,7 @@ namespace code {
 
 IMPL(Item)
 IMPL(Module)
+IMPL(Import)
 IMPL(Slot)
 IMPL(ExternSlot)
 IMPL(Function)

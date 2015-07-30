@@ -15,14 +15,17 @@ namespace pass {
 
 class AnalyzeUsage : public ast::Visitor {
  public:
-  explicit AnalyzeUsage(Ref<code::Scope> scope)
-    : _scope(scope) {
+  explicit AnalyzeUsage(Compiler::Context& ctx, Ref<code::Scope> scope)
+    : _ctx(ctx), _scope(scope) {
   }
 
   virtual ~AnalyzeUsage() noexcept;
 
   // Block (scope)
   virtual void visit_block(ast::Block& x);
+
+  // Module
+  virtual void visit_module(ast::Module& x);
 
   // Select
   virtual void visit_select(ast::Select& x);
@@ -52,6 +55,9 @@ class AnalyzeUsage : public ast::Visitor {
   void do_use(ast::Node& context, code::Slot& item);
   void do_assign(
     ast::Node& context, Ref<code::Slot> item, bool is_definite);
+
+  // The active compiler context.
+  Compiler::Context& _ctx;
 
   Ref<code::Scope> _scope;
 

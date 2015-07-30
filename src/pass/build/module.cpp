@@ -13,8 +13,12 @@ namespace arrow {
 namespace pass {
 
 void Build::visit_module(ast::Module& x) {
+  // Get the existing module-item
+  auto item = _ctx.modules[&x];
+  if (!item) return;
+
   // Create the LLVM module initialization function
-  auto mod_init_name = x.name + ".@init";
+  auto mod_init_name = x.name + "..init";
   auto mod_init_ty = LLVMFunctionType(LLVMVoidType(), nullptr, 0, false);
   auto mod_init_fn = LLVMAddFunction(
     _ctx.mod, mod_init_name.c_str(), mod_init_ty);
@@ -22,28 +26,27 @@ void Build::visit_module(ast::Module& x) {
   // TODO(mehcode): If we're building a library and this is exported..
   LLVMSetLinkage(mod_init_fn, LLVMInternalLinkage);
 
-  // Create (and emplace) the module item
-  Ref<code::Module> item = new code::Module(&x, x.name, mod_init_fn, _scope);
-  _scope->insert(item);
+  // Set the module initializer
+  item->initializer = mod_init_fn;
 
   // Enter the module-scope block
   _scope->enter(&x);
 
-  // Expose the module block (into the new module scope).
-  Expose(_ctx, item->scope).run(*x.block);
-  if (Log::get().count("error") > 0) return;
-
-  // Analyze (type) the module block.
-  AnalyzeType(item->scope).run(*x.block);
-  if (Log::get().count("error") > 0) return;
-
-  // Analyze (usage analysis) the module block.
-  AnalyzeUsage(item->scope).run(*x.block);
-  if (Log::get().count("error") > 0) return;
-
-  // Declare any items that need forward declarations.
-  Declare(_ctx, item->scope).run(*x.block);
-  if (Log::get().count("error") > 0) return;
+  // // Expose the module block (into the new module scope).
+  // Expose(_ctx, item->scope).run(*x.block);
+  // if (Log::get().count("error") > 0) return;
+  //
+  // // Analyze (type) the module block.
+  // AnalyzeType(item->scope).run(*x.block);
+  // if (Log::get().count("error") > 0) return;
+  //
+  // // Analyze (usage analysis) the module block.
+  // AnalyzeUsage(item->scope).run(*x.block);
+  // if (Log::get().count("error") > 0) return;
+  //
+  // // Declare any items that need forward declarations.
+  // Declare(_ctx, item->scope).run(*x.block);
+  // if (Log::get().count("error") > 0) return;
 
   // Add the module initializer basic block
   auto last_block = LLVMGetInsertBlock(_ctx.irb);

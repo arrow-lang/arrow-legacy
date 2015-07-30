@@ -1,15 +1,6 @@
 @a = internal global i128 0
 @b = internal global i128 0
 
-define internal void @"function-nonlocal-assign-select.@init"() {
-  call void @method()
-  %1 = load i128* @a
-  store i128 %1, i128* @b
-  %2 = load i128* @b
-  call void @exit(i128 %2)
-  ret void
-}
-
 define internal void @method() {
   br i1 false, label %1, label %2
 
@@ -42,9 +33,18 @@ define internal void @method() {
   ret void
 }
 
+define internal void @function-nonlocal-assign-select..init() {
+  call void @method()
+  %1 = load i128* @a
+  store i128 %1, i128* @b
+  %2 = load i128* @b
+  call void @exit(i128 %2)
+  ret void
+}
+
 declare void @exit(i128 signext)
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"function-nonlocal-assign-select.@init"()
+  call void @function-nonlocal-assign-select..init()
   ret i32 0
 }

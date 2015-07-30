@@ -15,8 +15,8 @@ namespace pass {
 
 class AnalyzeType : public ast::Visitor {
  public:
-  explicit AnalyzeType(Ref<code::Scope> scope)
-    : _scope(scope), _incomplete(false) {
+  explicit AnalyzeType(Compiler::Context& ctx, Ref<code::Scope> scope)
+    : _ctx(ctx), _scope(scope), _incomplete(false) {
   }
 
   virtual ~AnalyzeType() noexcept;
@@ -25,6 +25,9 @@ class AnalyzeType : public ast::Visitor {
 
   // Block
   virtual void visit_block(ast::Block& x);
+
+  // Module
+  virtual void visit_module(ast::Module& x);
 
   // Slot
   virtual void visit_slot(ast::Slot& x);
@@ -49,6 +52,9 @@ class AnalyzeType : public ast::Visitor {
 
   bool _expand_assign(
     ast::Assign& node, ast::Node& lhs, Ref<code::Type> type);
+
+  // The active compiler context.
+  Compiler::Context& _ctx;
 
   Ref<code::Scope> _scope;
 

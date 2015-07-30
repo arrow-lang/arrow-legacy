@@ -30,7 +30,7 @@
 @i20 = internal global i128 0
 @i21 = internal global i128 0
 
-define internal void @"integer.@init"() {
+define internal void @integer..init() {
   %1 = load i8* @i81
   %2 = sext i8 %1 to i16
   store i16 %2, i16* @i162
@@ -87,6 +87,6 @@ define internal void @"integer.@init"() {
 }
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"integer.@init"()
+  call void @integer..init()
   ret i32 0
 }

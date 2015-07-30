@@ -7,6 +7,10 @@
 
 #include "arrow/compiler.hpp"
 #include "arrow/pass/build.hpp"
+#include "arrow/pass/expose.hpp"
+#include "arrow/pass/analyze-type.hpp"
+#include "arrow/pass/analyze-usage.hpp"
+#include "arrow/pass/declare.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -131,13 +135,38 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   // Construct the instruction builder
   _ctx.irb = LLVMCreateBuilder();
 
-  // Invoke the build pass on the given node (module)
-  pass::Build(_ctx, _scope).run(*node);
+  // Create (and emplace) the top-level module item
+  Ref<code::Module> top = new code::Module(node, name, nullptr, _scope);;
+  _ctx.modules[node.get()] = top;
+
+  // Invoke the initial pass: expose
+  pass::Expose(_ctx, _scope).run(*node);
   if (Log::get().count("error") > 0) return;
 
-  // Get a reference to our top-level module main (if present)
-  auto top = _scope->find(name).as<code::Module>();
-  if (!top) return;
+  // Iterate through each now-exposed module and invoke each subsequent pass
+  // Analyze Type
+  for (auto& item : _ctx.modules) {
+    pass::AnalyzeType(_ctx, _scope).run(*item.second->context);
+    if (Log::get().count("error") > 0) return;
+  }
+
+  // Analyze Usage
+  for (auto& item : _ctx.modules) {
+    pass::AnalyzeUsage(_ctx, _scope).run(*item.second->context);
+    if (Log::get().count("error") > 0) return;
+  }
+
+  // Declare
+  for (auto& item : _ctx.modules) {
+    pass::Declare(_ctx, _scope).run(*item.second->context);
+    if (Log::get().count("error") > 0) return;
+  }
+
+  // Build
+  for (auto& item : _ctx.modules) {
+    pass::Build(_ctx, _scope).run(*item.second->context);
+    if (Log::get().count("error") > 0) return;
+  }
 
   // Build the ABI main function (declaration)
   // NOTE: The correct definition is: `int main(int, **int8, **int8)`

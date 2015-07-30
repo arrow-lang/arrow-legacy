@@ -4,7 +4,7 @@
 @y = internal global i128 0
 @z = internal global i1 false
 
-define internal void @"assign.@init"() {
+define internal void @assign..init() {
   store i128 40, i128* @a
   %1 = load i128* @a
   %2 = insertvalue { { i128 }, i128, i1 } { { i128 } { i128 1 }, i128 undef, i1 true }, i128 %1, 1
@@ -19,6 +19,6 @@ define internal void @"assign.@init"() {
 }
 
 define i32 @main(i32, i8**, i8**) {
-  call void @"assign.@init"()
+  call void @assign..init()
   ret i32 0
 }
