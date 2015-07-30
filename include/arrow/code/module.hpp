@@ -7,20 +7,24 @@
 #define ARROW_CODE_MODULE_H 1
 
 #include "arrow/code/item.hpp"
+#include "arrow/code/scope.hpp"
+#include "arrow/code/container.hpp"
 #include "arrow/ast/nodes.hpp"
 
 namespace arrow {
 namespace code {
 
-struct Module {
+struct Module : Container {
   Module(
     Ref<ast::Module> context,
     std::string name,
     LLVMValueRef initializer,
     Ref<code::Scope> parent_scope
   )
-    : context(context), name(name), initializer(initializer),
-      scope(new Scope(name, parent_scope, dynamic_cast<Item*>(this))) {
+    : Container(name, parent_scope),
+      context(context),
+      name(name),
+      initializer(initializer) {
   }
 
   virtual ~Module() noexcept;
@@ -34,9 +38,6 @@ struct Module {
   /// Module initializer.
   // TODO(mehcode): Use code::Function when available
   LLVMValueRef initializer;
-
-  /// Module scope
-  Ref<code::Scope> scope;
 };
 
 struct Import : Item {

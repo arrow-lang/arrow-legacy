@@ -73,10 +73,12 @@ class Block {
   std::unordered_map<ast::Node*, unsigned> _items_by_ctx;
 };
 
+class Container;
+
 class Scope {
  public:
   explicit Scope(std::string name, Ref<Scope> parent = nullptr,
-                 Item* owner = nullptr)
+                 Container* owner = nullptr)
     : _name(name),
       _parent(parent),
       _blocks(),
@@ -104,7 +106,7 @@ class Scope {
   Ref<Block> at(ast::Node* context);
 
   /// Get the owner of this scope (module/function).
-  Item* get_owner() const { return _owner; }
+  Container* get_owner() const { return _owner; }
 
   /// Leave the last-entered scope-block.
   void exit();
@@ -137,7 +139,7 @@ class Scope {
 
   /// Owner of the scope (referential)
   /// FIXME: weak_ref
-  Item* _owner;
+  Container* _owner;
 };
 
 }  // namespace code

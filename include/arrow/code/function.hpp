@@ -8,6 +8,7 @@
 
 #include "arrow/llvm.hpp"
 #include "arrow/code/item.hpp"
+#include "arrow/code/container.hpp"
 #include "arrow/code/value.hpp"
 
 namespace arrow {
@@ -34,11 +35,11 @@ struct Parameter : Item, Value {
   bool is_mutable;
 };
 
-struct Function : Item, Value {
+struct Function : Item, Value, Container {
   Function(ast::Node* context, std::string name, Ref<code::Scope> parent_scope)
     : Item(context, name),
       Value(nullptr, nullptr),
-      scope(new Scope(name, parent_scope, dynamic_cast<Item*>(this))) {
+      Container(name, parent_scope) {
   }
 
   virtual ~Function() noexcept;
@@ -50,9 +51,6 @@ struct Function : Item, Value {
   virtual bool has_address() const {
     return false;
   }
-
-  /// Function scope
-  Ref<code::Scope> scope;
 };
 
 struct ExternFunction : Item, Value {
