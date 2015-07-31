@@ -6,7 +6,7 @@
     ✔ Recursion (*) @done(2015-07-29 10:13) @project([analyze-usage] / [function])
 
   ☐ Loop
-  ☐ Import
+  ✔ Import @done(2015-07-31 14:48) @project([analyze-usage])
 
 
 [analyze-type]:
@@ -40,9 +40,30 @@
   ✔ Select @done(2015-07-25 07:21) @project([build])
   ☐ Cast each branch in a select expression (that has a value)
   ☐ Loop
-  ☐ Import
   ☐ Unary
   ☐ Binary
+
+  ☐ Import
+    ✔ Function @done(2015-07-31 14:48) @project([build] / [function])
+    ✔ Extern Function @done(2015-07-31 14:48) @project([build] / [function])
+    ✔ Extern Slot @done(2015-07-31 14:48) @project([build] / [function])
+    ☐ Slot (Bug)
+    ☐ Initializer Resolution (Hard Mode)
+      ☐ All "constant" initialization (that is exported) goes into a
+        common list (that is sorted as we go along); at the end, this
+        list is pushed into a global ".init" that is run before any module
+        initializers
+      ☐ Detect "constant" initializers that cyclically depend on another
+        "constant" initializer (eg. "(in a) let a = b.b; (in b) let b = a.a")
+        and error the fuck out
+      ☐ All module initializers (that got imported at some point) are ran
+        in an arbitrary order with the "entry" module being last
+    ☐ Test: Function
+    ☐ Test: Extern Function
+    ☐ Test: Extern Slot
+    ☐ Test: Slot (Basic)
+    ☐ Test: Slot (Cyclical)
+    ☐ Test: Slot (Unresolvable)
 
 
 [...]:
