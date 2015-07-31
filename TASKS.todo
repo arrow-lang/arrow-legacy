@@ -82,4 +82,5 @@
 language-arrow:
   ☐ Add underscores (`1_3_4`) to number patterns
   ☐ Add function parameters
+  ☐ Fix `export/extern let x` (not pushing `x` as a variable)
   ☐ Make `;` optional

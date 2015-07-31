@@ -88,7 +88,6 @@ static std::map<Token::Type, const char*> token_str_map = {
   {Token::Type::LessThan_Equals,          "`<=`"},
   {Token::Type::Arrow,                    "`->`"},
   {Token::Type::FatArrow,                 "`=>`"},
-  
 
   /// Punctuators (3-character)
   {Token::Type::Ellipsis,                 "`...`"},
