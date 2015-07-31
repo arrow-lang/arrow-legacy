@@ -38,6 +38,9 @@ struct Module : Container {
   /// Module initializer.
   // TODO(mehcode): Use code::Function when available
   LLVMValueRef initializer;
+
+  /// Exported items in the module.
+  std::unordered_map<std::string, Ref<code::Item>> items;
 };
 
 struct Import : Item {

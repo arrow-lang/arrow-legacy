@@ -4,13 +4,12 @@
 // See accompanying file LICENSE
 
 // #include "arrow/match.hpp"
-#include "arrow/pass/analyze-usage.hpp"
 #include "arrow/pass/resolve.hpp"
 
 namespace arrow {
 namespace pass {
 
-void AnalyzeUsage::visit_path(ast::Path& x) {
+void Resolve::visit_path(ast::Path& x) {
   // Run the base method (analyze the operand and each argument)
   Visitor::visit_path(x);
   if (Log::get().count("error") > 0) return;
@@ -33,20 +32,14 @@ void AnalyzeUsage::visit_path(ast::Path& x) {
         return;
       }
 
+      auto type = type_of(member->second);
+      if (type) {
+        _stack.push_front(type);
+      }
 
       return;
     }
   }
-
-  // Resolve the type of the operand
-  auto type = Resolve(_scope).run(*x.operand);
-  if (!type) return;
-
-  // FIXME: Not implemented!
-  Log::get().error(
-    x.span, "type '%s' has no member '%s'",
-    type->name().c_str(),
-    x.member.c_str());
 }
 
 }  // namespace pass

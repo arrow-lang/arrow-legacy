@@ -16,10 +16,18 @@ void Expose::visit_extern_function(ast::ExternFunction& x) {
   if (!type) return;
 
   // Expose this into the current scope
-  _scope->insert(new code::ExternFunction(
+  Ref<code::Item> item = new code::ExternFunction(
     /*context=*/&x,
     /*name=*/x.name,
-    /*type=*/type));
+    /*type=*/type);
+
+  _scope->insert(item);
+
+  // If exported; push into the module items
+  if (x.exported) {
+    auto mod = dynamic_cast<code::Module*>(_scope->get_owner());
+    mod->items.emplace(x.name, item);
+  }
 }
 
 }  // namespace pass

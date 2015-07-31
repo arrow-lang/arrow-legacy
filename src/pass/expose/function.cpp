@@ -19,6 +19,14 @@ void Expose::visit_function(ast::Function& x) {
     /*parent_scope=*/_scope);
   _scope->insert(item);
 
+  // If exported; push into the module items
+  if (x.exported) {
+    auto mod = dynamic_cast<code::Module*>(_scope->get_owner());
+    if (mod) {
+      mod->items.emplace(x.name, item);
+    }
+  }
+
   // Enter the function scope-block
   item->scope->enter(&x);
 

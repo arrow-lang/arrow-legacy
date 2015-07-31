@@ -18,25 +18,9 @@ void Resolve::visit_id(ast::Identifier& x) {
   }
 
   // Determine the type of said item
-  if (item.is<code::Slot>()) {
-    // This item -is- a slot
-    auto type = item.as<code::Slot>()->type;
-    if (!type) {
-      type = new code::TypeUnknown();
-    }
+  auto type = type_of(item);
+  if (type) {
     _stack.push_front(type);
-  } else if (item.is<code::ExternSlot>()) {
-    // This item -is- an external slot
-    _stack.push_front(item.as<code::ExternSlot>()->type);
-  } else if (item.is<code::ExternFunction>()) {
-    // This item -is- an external function
-    _stack.push_front(item.as<code::ExternFunction>()->type);
-  } else if (item.is<code::Function>()) {
-    // This item -is- a function
-    _stack.push_front(item.as<code::Function>()->type);
-  } else {
-    // TODO: Error?
-    return;
   }
 }
 

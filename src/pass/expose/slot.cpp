@@ -8,7 +8,8 @@
 
 namespace arrow {
 
-static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern) {
+static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern,
+                            bool exported) {
   Match(pattern) {
     Case(ast::PatternWildcard& x) {
       XTL_UNUSED(x);
@@ -19,17 +20,27 @@ static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern) {
 
     Case(ast::PatternIdentifier& x) {
       // Add this (undefined and un-analyzed) to the current scope
-      s->insert(new code::Slot(
+      Ref<code::Item> item = new code::Slot(
         /*context=*/&pattern,
         /*name=*/x.text,
-        /*is_mutable=*/x.is_mutable));
+        /*is_mutable=*/x.is_mutable);
+
+      s->insert(item);
+
+      // If exported; push into the module items
+      if (exported) {
+        auto mod = dynamic_cast<code::Module*>(s->get_owner());
+        if (mod) {
+          mod->items.emplace(x.text, item);
+        }
+      }
     } break;
 
     Case(ast::PatternTuple& x) {
       // A tuple-pattern (in this instance) is just a
       // sequence of identifiers/wildcards to be exposed
       for (auto& elem : x.elements) {
-        _expand_pattern(s, *elem);
+        _expand_pattern(s, *elem, exported);
       }
     } break;
 
@@ -48,7 +59,7 @@ static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern) {
 namespace pass {
 
 void Expose::visit_slot(ast::Slot& x) {
-  _expand_pattern(_scope, *x.pattern);
+  _expand_pattern(_scope, *x.pattern, x.exported);
 }
 
 }  // namespace pass

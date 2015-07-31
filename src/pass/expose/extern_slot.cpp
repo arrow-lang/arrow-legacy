@@ -15,11 +15,21 @@ void Expose::visit_extern_slot(ast::ExternSlot& x) {
   if (!type) return;
 
   // Expose this into the current scope
-  _scope->insert(new code::ExternSlot(
+  Ref<code::Item> item = new code::ExternSlot(
     /*context=*/&x,
     /*name=*/x.name,
     /*type=*/type,
-    /*is_mutable=*/x.is_mutable));
+    /*is_mutable=*/x.is_mutable);
+
+  _scope->insert(item);
+
+  // If exported; push into the module items
+  if (x.exported) {
+    auto mod = dynamic_cast<code::Module*>(_scope->get_owner());
+    if (mod) {
+      mod->items.emplace(x.name, item);
+    }
+  }
 }
 
 }  // namespace pass

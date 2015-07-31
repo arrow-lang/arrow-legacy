@@ -52,8 +52,11 @@ class Resolve : public ast::Visitor {
 
   // Misc.
   virtual void visit_slot(ast::Slot&);
+  virtual void visit_path(ast::Path&);
 
  private:
+  Ref<code::Type> type_of(Ref<code::Item> item);
+
   // The scope to emplace the exposed items into.
   Ref<code::Scope> _scope;
 

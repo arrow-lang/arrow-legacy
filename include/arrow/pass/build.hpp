@@ -51,9 +51,10 @@ class Build : public ast::Visitor {
 
   // Binary
   virtual void visit_assign(ast::Assign&);
+  virtual void visit_path(ast::Path&);
 
   // Call
-  virtual void visit_call(ast::Call& x);
+  virtual void visit_call(ast::Call&);
 
   // Select
   virtual void visit_select(ast::Select&);
