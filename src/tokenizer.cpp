@@ -215,6 +215,15 @@ bool Tokenizer::_consume_line_comment() {
   // Check if we are at a single-line comment indicator and
   // consume the comment.
   auto in_comment = false;
+  bool is_beginning = _b.pos().row == 0;
+
+  // If we are on the first line, and equals "#!" (shebang)
+  if (is_beginning && (_b.peek(0) == 0x23 && _b.peek(1) == 0x21)) {
+    in_comment = true;
+    _b.pop();
+    _b.pop();
+  }
+
   if (_b.peek(0) == 0x2f && _b.peek(1) == 0x2f) {  // '//'
     in_comment = true;
     _b.pop();
