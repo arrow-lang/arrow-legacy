@@ -41,6 +41,7 @@ class AnalyzeUsage : public ast::Visitor {
 
   // Use [!]
   virtual void visit_id(ast::Identifier& x);
+  virtual void visit_path(ast::Path& x);
 
   // Assign [!]
   virtual void visit_assign(ast::Assign& x);

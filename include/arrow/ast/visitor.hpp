@@ -96,7 +96,7 @@ struct Visitor {
   virtual void visit_cast(Cast&) { /* LCOV_EXCL_LINE */ }
 
   // Path (member-of)
-  virtual void visit_path(Path&) { /* LCOV_EXCL_LINE */ }
+  virtual void visit_path(Path&);
 
   // Pattern
   virtual void visit_pattern_wildcard(PatternWildcard&) { /* LCOV_EXCL_LINE */ }

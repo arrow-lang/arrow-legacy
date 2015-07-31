@@ -107,5 +107,9 @@ void Visitor::visit_bit_or(ast::BitOr& x)            { do_binary(x); }
 void Visitor::visit_and(ast::And& x)                 { do_binary(x); }
 void Visitor::visit_or(ast::Or& x)                   { do_binary(x); }
 
+void Visitor::visit_path(ast::Path& x) {
+  x.operand->accept(*this);
+}
+
 }  // namespace ast
 }  // namespace arrow
