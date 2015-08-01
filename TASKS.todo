@@ -58,12 +58,6 @@
         and error the fuck out
       ☐ All module initializers (that got imported at some point) are ran
         in an arbitrary order with the "entry" module being last
-    ☐ Test: Function
-    ☐ Test: Extern Function
-    ☐ Test: Extern Slot
-    ☐ Test: Slot (Basic)
-    ☐ Test: Slot (Cyclical)
-    ☐ Test: Slot (Unresolvable)
 
 
 [...]:
