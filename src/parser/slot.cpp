@@ -40,7 +40,7 @@ bool Parser::parse_slot() {
 
   // Check for an `=` which would indicate an initializer
   Ref<ast::Node> initializer = nullptr;
-  bool require_init = !pattern.is<ast::PatternIdentifier>();
+  bool require_init = !pattern.is<ast::PatternIdentifier>() || exported;
   if (require_init || _t.peek()->type == Token::Type::Equals) {
     if (!expect(Token::Type::Equals)) return false;
     if (!parse_expression()) return false;
