@@ -47,7 +47,7 @@
     ✔ Function @done(2015-07-31 14:48) @project([build] / [function])
     ✔ Extern Function @done(2015-07-31 14:48) @project([build] / [function])
     ✔ Extern Slot @done(2015-07-31 14:48) @project([build] / [function])
-    ☐ Slot (Bug)
+    ✔ Slot (..) @done(2015-07-31 18:15) @project([build] / [function])
     ☐ Initializer Resolution (Hard Mode)
       ☐ All "constant" initialization (that is exported) goes into a
         common list (that is sorted as we go along); at the end, this
@@ -84,3 +84,4 @@ language-arrow:
   ☐ Add function parameters
   ☐ Fix `export/extern let x` (not pushing `x` as a variable)
   ☐ Make `;` optional
+  ☐ Add shebang as a comment-type
