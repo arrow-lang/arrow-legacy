@@ -26,7 +26,7 @@
 
 
 [resolve]:
-  ☐ Function
+  ✔ Function @done(2015-07-31 21:44) @project([resolve])
   ✔ Select @done(2015-07-25 06:52) @project([resolve])
   ✔ CTA @done(2015-07-25 06:52) @project([resolve])
   ☐ When CTA is applied to two compatible function types; merge the assign/use pools (*****)
