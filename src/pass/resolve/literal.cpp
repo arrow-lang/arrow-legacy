@@ -25,6 +25,13 @@ void Resolve::visit_float(ast::Float&) {
   _stack.push_front(item->type);
 }
 
+void Resolve::visit_str(ast::String&) {
+  auto item = _scope->find("str").as<code::Typename>();
+  if (!item) return;
+
+  _stack.push_front(item->type);
+}
+
 void Resolve::visit_none(ast::None&) {
   _stack.push_front(new code::TypeNone());
 }

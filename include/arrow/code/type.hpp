@@ -180,6 +180,19 @@ struct TypeTuple : Type {
   LLVMTypeRef _handle;
 };
 
+// String
+// -----------------------------------------------------------------------------
+
+struct TypeString : Type {
+  virtual ~TypeString() noexcept;
+
+  virtual std::string name() const {
+    return "str";
+  }
+
+  virtual LLVMTypeRef handle();
+};
+
 // Function
 // -----------------------------------------------------------------------------
 

@@ -49,6 +49,10 @@ void Compiler::initialize() {
 
   // Declare builtin types
 
+  // String
+  _scope->insert(
+    new code::Typename(nullptr, "str", new code::TypeString()));
+
   // Boolean
   _scope->insert(
     new code::Typename(nullptr, "bool", new code::TypeBoolean()));

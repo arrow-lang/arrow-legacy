@@ -379,8 +379,7 @@ auto Tokenizer::_scan_string() -> Ref<Token> {
 
   // Iterate through the string token
   // Keep in mind escape sequences; the token text stores the
-  // unescaped version (so the rest of the compiler can ignore
-  // escapes)
+  // _escaped_ version
   auto in_escape = false;
   auto in_byte_escape = false;
 

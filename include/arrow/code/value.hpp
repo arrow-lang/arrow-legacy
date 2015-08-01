@@ -24,7 +24,13 @@ struct Value {
   virtual LLVMValueRef get_value(Compiler::Context& ctx);
 
   virtual bool has_address() const {
-    return LLVMGetTypeKind(LLVMTypeOf(_handle)) == LLVMPointerTypeKind;
+    auto type_handle = LLVMTypeOf(_handle);
+
+    if (type.is<TypeString>()) {
+      type_handle = LLVMGetElementType(type_handle);
+    }
+
+    return LLVMGetTypeKind(type_handle) == LLVMPointerTypeKind;
   }
 
   virtual bool is_assignable() const {

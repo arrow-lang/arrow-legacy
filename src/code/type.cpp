@@ -139,6 +139,12 @@ LLVMTypeRef TypeByte::handle() {
   return LLVMIntType(8);
 }
 
+LLVMTypeRef TypeString::handle() {
+  // TODO(_): Eventually we will use string /objects/ that contain the
+  //          length.
+  return LLVMPointerType(LLVMInt8Type(), 0);
+}
+
 LLVMTypeRef TypeInteger::handle() {
   // TODO(mehcode): Arbitrary percision integer type
   return LLVMIntType(128);

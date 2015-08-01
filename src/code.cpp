@@ -34,6 +34,7 @@ IMPL(TypeSizedInteger)
 IMPL(TypeTuple)
 IMPL(TypeFunction)
 IMPL(TypeParameter)
+IMPL(TypeString)
 
 IMPL(Value)
 IMPL(ValueNone)

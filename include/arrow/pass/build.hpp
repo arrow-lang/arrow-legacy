@@ -44,7 +44,7 @@ class Build : public ast::Visitor {
   virtual void visit_id(ast::Identifier&);
   virtual void visit_none(ast::None&);
   virtual void visit_bool(ast::Boolean&);
-  // virtual void visit_str(ast::String&);
+  virtual void visit_str(ast::String&);
   virtual void visit_int(ast::Integer&);
   virtual void visit_float(ast::Float&);
   virtual void visit_tuple(ast::Tuple&);

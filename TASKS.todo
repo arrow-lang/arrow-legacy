@@ -85,3 +85,4 @@ language-arrow:
   ☐ Fix `export/extern let x` (not pushing `x` as a variable)
   ☐ Make `;` optional
   ☐ Add shebang as a comment-type
+  ☐ Escape sequences in strings
