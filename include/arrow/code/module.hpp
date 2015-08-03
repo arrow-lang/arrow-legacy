@@ -6,6 +6,8 @@
 #ifndef ARROW_CODE_MODULE_H
 #define ARROW_CODE_MODULE_H 1
 
+#include <unordered_set>
+
 #include "arrow/code/item.hpp"
 #include "arrow/code/scope.hpp"
 #include "arrow/code/container.hpp"
@@ -24,7 +26,9 @@ struct Module : Container {
     : Container(name, parent_scope),
       context(context),
       name(name),
-      initializer(initializer) {
+      initializer(initializer),
+      items(),
+      dependencies() {
   }
 
   virtual ~Module() noexcept;
@@ -41,6 +45,9 @@ struct Module : Container {
 
   /// Exported items in the module.
   std::unordered_map<std::string, Ref<code::Item>> items;
+
+  /// Modules that this module depends on (imports).
+  std::unordered_set<Ref<code::Module>> dependencies;
 };
 
 struct Import : Item {

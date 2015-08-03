@@ -10,6 +10,7 @@
 #include "arrow/pass/declare.hpp"
 #include "arrow/pass/analyze-usage.hpp"
 #include "arrow/pass/analyze-type.hpp"
+#include "arrow/pass/analyze-module.hpp"
 
 #define IMPL(N) \
   N::~N() noexcept { }
@@ -23,6 +24,7 @@ IMPL(Type)
 IMPL(Resolve)
 IMPL(AnalyzeUsage)
 IMPL(AnalyzeType)
+IMPL(AnalyzeModule)
 IMPL(Declare)
 
 }  // namespace pass

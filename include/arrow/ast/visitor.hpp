@@ -90,10 +90,10 @@ struct Visitor {
   virtual void visit_or(Or&);
 
   // Assignment
-  virtual void visit_assign(Assign&) { /* LCOV_EXCL_LINE */ }
+  virtual void visit_assign(Assign&);
 
   // Cast
-  virtual void visit_cast(Cast&) { /* LCOV_EXCL_LINE */ }
+  virtual void visit_cast(Cast&);
 
   // Path (member-of)
   virtual void visit_path(Path&);

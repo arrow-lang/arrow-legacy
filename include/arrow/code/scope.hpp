@@ -94,6 +94,9 @@ class Scope {
   Scope& operator=(const Scope&) = delete;
   Scope& operator=(Scope&&) = delete;
 
+  /// Get the parent scope for this scope.
+  Ref<Scope> parent() const { return _parent; }
+
   /// Grab the top-most scope-block.
   Ref<Block> top() {
     return _stack.size() > 0 ? _stack.front() : nullptr;

@@ -33,9 +33,6 @@ bool AnalyzeUsage::_expand_pattern(
         // Mark [assign]
         _assign[_scope->top()].push_back(item);
         item->add_assignment(_scope->top(), true);
-
-        // Slot is constant (from our standpoint)
-        item->is_constant = true;
       }
 
       // We are now declared

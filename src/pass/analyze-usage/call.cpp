@@ -34,8 +34,9 @@ void AnalyzeUsage::visit_call(ast::Call& x) {
   for (auto& ref : function->_assign) {
     auto ptr = ref.first;
     auto item = _scope->find(ptr->context).as<code::Slot>();
-
-    do_assign(x, item, ref.second);
+    if (item) {
+      do_assign(x, item, ref.second);
+    }
   }
 }
 

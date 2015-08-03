@@ -106,6 +106,12 @@ void Visitor::visit_bit_xor(ast::BitXor& x)          { do_binary(x); }
 void Visitor::visit_bit_or(ast::BitOr& x)            { do_binary(x); }
 void Visitor::visit_and(ast::And& x)                 { do_binary(x); }
 void Visitor::visit_or(ast::Or& x)                   { do_binary(x); }
+void Visitor::visit_assign(ast::Assign& x)           { do_binary(x); }
+
+void Visitor::visit_cast(ast::Cast& x) {
+  x.lhs->accept(*this);
+  x.rhs->accept(*this);
+}
 
 void Visitor::visit_path(ast::Path& x) {
   x.operand->accept(*this);

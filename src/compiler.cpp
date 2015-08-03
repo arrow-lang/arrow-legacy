@@ -9,6 +9,7 @@
 #include "arrow/pass/build.hpp"
 #include "arrow/pass/expose.hpp"
 #include "arrow/pass/analyze-type.hpp"
+#include "arrow/pass/analyze-module.hpp"
 #include "arrow/pass/analyze-usage.hpp"
 #include "arrow/pass/declare.hpp"
 
@@ -141,7 +142,9 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
 
   // Create (and emplace) the top-level module item
   Ref<code::Module> top = new code::Module(node, name, nullptr, _scope);;
+  auto pathname = fs::canonical(fs::absolute(node->span.filename)).string();
   _ctx.modules[node.get()] = top;
+  _ctx.modules_by_pathname[pathname] = top;
 
   // Invoke the initial pass: expose
   pass::Expose(_ctx, _scope).run(*node);
@@ -159,6 +162,25 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
     pass::AnalyzeUsage(_ctx, _scope).run(*item.second->context);
     if (Log::get().count("error") > 0) return;
   }
+
+  // Analyze Module(s)
+  for (auto& item : _ctx.modules) {
+    pass::AnalyzeModule(_ctx, _scope).run(*item.second->context);
+    if (Log::get().count("error") > 0) return;
+  }
+
+  // DEBUG: Analyze module dependency graph
+  // for (auto& item : _ctx.modules) {
+  //   std::printf("\x1b[1;33m%s:", item.second->name.c_str());
+  //   if (item.second->dependencies.size() == 0) {
+  //     std::printf(" (none)");
+  //   } else {
+  //     for (auto& dependency : item.second->dependencies) {
+  //       std::printf(" %s", dependency->name.c_str());
+  //     }
+  //   }
+  //   std::printf("\n\x1b[0m");
+  // }
 
   // Declare
   for (auto& item : _ctx.modules) {

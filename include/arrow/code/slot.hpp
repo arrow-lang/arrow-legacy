@@ -16,11 +16,15 @@ namespace arrow {
 namespace code {
 
 struct Slot : Item, Value {
-  Slot(ast::Node* context, std::string name, bool is_mutable)
+  Slot(ast::Node* context, std::string name,
+       bool is_mutable,
+       bool is_constant,
+       bool is_static)
     : Item(context, name),
       Value(nullptr, nullptr),
       is_mutable(is_mutable),
-      is_constant(false),
+      is_constant(is_constant),
+      is_static(is_static),
       is_declared(false) {
   }
 
@@ -50,6 +54,9 @@ struct Slot : Item, Value {
 
   /// Whether this is constant or not.
   bool is_constant;
+
+  /// Whether this is static or not.
+  bool is_static;
 
   /// Whether this has been declared (yet) or not (in respect to the
   /// usage analyzer)

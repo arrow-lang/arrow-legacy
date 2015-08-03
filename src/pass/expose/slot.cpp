@@ -4,12 +4,15 @@
 // See accompanying file LICENSE
 
 #include "arrow/match.hpp"
+#include "arrow/util.hpp"
 #include "arrow/pass/expose.hpp"
 
 namespace arrow {
 
 static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern,
-                            bool exported) {
+                            bool exported,
+                            bool is_constant,
+                            bool is_static) {
   Match(pattern) {
     Case(ast::PatternWildcard& x) {
       XTL_UNUSED(x);
@@ -21,9 +24,11 @@ static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern,
     Case(ast::PatternIdentifier& x) {
       // Add this (undefined and un-analyzed) to the current scope
       Ref<code::Item> item = new code::Slot(
-        /*context=*/&pattern,
-        /*name=*/x.text,
-        /*is_mutable=*/x.is_mutable);
+        &pattern,
+        x.text,
+        x.is_mutable,
+        is_constant,
+        is_static);
 
       s->insert(item);
 
@@ -40,7 +45,7 @@ static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern,
       // A tuple-pattern (in this instance) is just a
       // sequence of identifiers/wildcards to be exposed
       for (auto& elem : x.elements) {
-        _expand_pattern(s, *elem, exported);
+        _expand_pattern(s, *elem, exported, is_constant, is_static);
       }
     } break;
 
@@ -59,7 +64,12 @@ static bool _expand_pattern(Ref<code::Scope> s, ast::Pattern& pattern,
 namespace pass {
 
 void Expose::visit_slot(ast::Slot& x) {
-  _expand_pattern(_scope, *x.pattern, x.exported);
+  // Check if we have an initializer and it is static
+  bool is_constant = !!x.initializer;
+  bool is_static = x.initializer ? util::is_static(*x.initializer) : false;
+
+  // Expand slot pattern
+  _expand_pattern(_scope, *x.pattern, x.exported, is_constant, is_static);
 }
 
 }  // namespace pass
