@@ -49,7 +49,7 @@
     ✔ Extern Slot @done(2015-07-31 14:48) @project([build] / [function])
     ✔ Slot (..) @done(2015-07-31 18:15) @project([build] / [function])
     ☐ Initializer Resolution (Hard Mode)
-      ☐ Analyze module dependencies (line-174 of compiler.cpp)
+      ✔ Analyze module dependencies (line-174 of compiler.cpp) @done(2015-08-04 16:20) @project([build] / [function])
       ☐ All "constant" initialization (that is exported) goes into a
         common list (that is sorted as we go along); at the end, this
         list is pushed into a global ".init" that is run before any module
@@ -57,22 +57,22 @@
       ☐ Detect "constant" initializers that cyclically depend on another
         "constant" initializer (eg. "(in a) let a = b.b; (in b) let b = a.a")
         and error the fuck out
-      ☐ Sort module initializers (on dependency order)
-      ☐ All module initializers (that got imported at some point) are ran
-        with the "entry" module being last
+      ✔ Sort module initializers (on dependency order) @done(2015-08-04 16:20) @project([build] / [function])
+      ✔ All module initializers (that got imported at some point) are ran @done(2015-08-04 16:20) @project([build] / [function])
 
 
 [...]:
   ☐ Parameter (Unpack)
   ☐ Qualified names `x.method` (for functions and global variables)
+  ☐ Do not use colors on the log when piped (allow readable .stderr expected results on tests)
 
 
 [error-checking]:
   ☐ Duplicate function names in same module (error)
   ☐ Duplicate exported slot names in same module (error)
   ☐ Attempting to unpack a non-tuple or a tuple of the wrong size (error)
-  ☐ Use/Assign before declare (should error; segfaults currently)
-  ☐ Relativize (from CWD) all error message filenames
+  ✔ Use/Assign before declare (should error; segfaults currently) @done(2015-08-04 14:01) @project([error-checking])
+  ✔ Relativize (from CWD) all error message filenames @done(2015-08-04 14:01) @project([error-checking])
 
 
 language-arrow:

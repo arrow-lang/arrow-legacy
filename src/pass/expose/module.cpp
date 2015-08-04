@@ -13,7 +13,7 @@ namespace pass {
 
 void Expose::visit_module(ast::Module& x) {
   // Get the existing module-item
-  auto item = _ctx.modules[&x];
+  auto item = _ctx.modules_by_context[&x];
   if (!item) return;
 
   // Expose the module block (into the new module scope).

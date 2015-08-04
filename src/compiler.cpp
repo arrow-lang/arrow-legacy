@@ -143,7 +143,8 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   // Create (and emplace) the top-level module item
   Ref<code::Module> top = new code::Module(node, name, nullptr, _scope);
   auto pathname = fs::canonical(fs::absolute(node->span.filename)).string();
-  _ctx.modules[node.get()] = top;
+  _ctx.modules.push_back(top);
+  _ctx.modules_by_context[node.get()] = top;
   _ctx.modules_by_pathname[pathname] = top;
 
   // Invoke the initial pass: expose
@@ -153,7 +154,7 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   // Iterate through each now-exposed module and invoke each subsequent pass
   // Analyze Type
   for (auto& item : _ctx.modules) {
-    pass::AnalyzeType(_ctx, _scope).run(*item.second->context);
+    pass::AnalyzeType(_ctx, _scope).run(*item->context);
 
     // TODO(_): Should only return if errors happened during this iteration
     if (Log::get().count("error") > 0) return;
@@ -161,22 +162,22 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
 
   // Analyze Usage
   for (auto& item : _ctx.modules) {
-    pass::AnalyzeUsage(_ctx, _scope).run(*item.second->context);
+    pass::AnalyzeUsage(_ctx, _scope).run(*item->context);
     if (Log::get().count("error") > 0) return;
   }
 
   // Analyze Module(s)
   for (auto& item : _ctx.modules) {
-    pass::AnalyzeModule(_ctx, _scope).run(*item.second->context);
+    pass::AnalyzeModule(_ctx, _scope).run(*item->context);
     if (Log::get().count("error") > 0) return;
   }
 
-  // TODO(_): Analyze module dependency graph
+  // Analyze module dependency graph
   // A module cannot /depend/ on the top-level module; we provide
   // a guarantee that the top-level (or entry) module is ran last.
   for (auto& item : _ctx.modules) {
-    if (item.second.get() != top.get()) {
-      for (auto& dependency : item.second->dependencies) {
+    if (item.get() != top.get()) {
+      for (auto& dependency : item->dependencies) {
         if (dependency == top.get()) {
           Log::get().error("cannot depend on the entry module\n");
         }
@@ -186,29 +187,69 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
 
   // Finally; modules must be able to be ordered. There cannot be
   // circular dependencies.
+  std::deque<code::Module*> ordered_modules;
+  std::deque<code::Module*> incoming;
+  std::unordered_map<code::Module*, std::unordered_set<code::Module*>> graph;
 
-  // DEBUG: List module dependency graph
-  // for (auto& item : _ctx.modules) {
-  //   std::printf("\x1b[1;33m%s:", item.second->name.c_str());
-  //   if (item.second->dependencies.size() == 0) {
-  //     std::printf(" (none)");
-  //   } else {
-  //     for (auto& dependency : item.second->dependencies) {
-  //       std::printf(" %s", dependency->name.c_str());
-  //     }
-  //   }
-  //   std::printf("\n\x1b[0m");
-  // }
+  for (auto& module : _ctx.modules) {
+    if (module.get() == top.get()) continue;
+    if (module->dependencies.size() == 0) {
+      incoming.push_back(module.get());
+    } else {
+      graph.emplace(module.get(), module->dependencies);
+
+      // Ensure we don't have a dependency to ourself (this doesn't matter)
+      graph[module.get()].erase(module.get());
+    }
+  }
+
+  while (!incoming.empty()) {
+    auto mod = incoming.front();
+    incoming.pop_front();
+    ordered_modules.push_back(mod);
+
+    std::deque<code::Module*> collect;
+    for (auto& node : graph) {
+      node.second.erase(mod);
+      if (node.second.size() == 0) {
+        collect.push_back(node.first);
+      }
+    }
+
+    for (auto& mod_item : collect) {
+      graph.erase(mod_item);
+      incoming.push_back(mod_item);
+    }
+  }
+
+  if (graph.size() > 0) {
+    for (auto& node : graph) {
+      for (auto& mod : node.second) {
+        // Find the <Import> For this module
+        for (auto& imp : node.first->imports) {
+          if (imp->module.get() == mod) {
+            // Display the error message
+            Log::get().error(
+              imp->context->span,
+              "unresolvable circular dependency with module: '%s'",
+              mod->name.c_str());
+
+            break;
+          }
+        }
+      }
+    }
+  }
 
   // Declare
   for (auto& item : _ctx.modules) {
-    pass::Declare(_ctx, _scope).run(*item.second->context);
+    pass::Declare(_ctx, _scope).run(*item->context);
     if (Log::get().count("error") > 0) return;
   }
 
   // Build
   for (auto& item : _ctx.modules) {
-    pass::Build(_ctx, _scope).run(*item.second->context);
+    pass::Build(_ctx, _scope).run(*item->context);
     if (Log::get().count("error") > 0) return;
   }
 
@@ -226,7 +267,10 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   // Build the ABI main function (definition)
   LLVMPositionBuilderAtEnd(_ctx.irb, LLVMAppendBasicBlock(abi_main, ""));
 
-  // TODO(mehcode): Build calls to each imported modules' module initializer
+  // Build calls to each imported modules' module initializer
+  for (auto& module : ordered_modules) {
+    LLVMBuildCall(_ctx.irb, module->initializer, nullptr, 0, "");
+  }
 
   // Build a call to the top-level module initializer
   LLVMBuildCall(_ctx.irb, top->initializer, nullptr, 0, "");

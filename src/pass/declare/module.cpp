@@ -10,7 +10,7 @@ namespace pass {
 
 void Declare::visit_module(ast::Module& x) {
   // Get the existing module-item
-  auto item = _ctx.modules[&x];
+  auto item = _ctx.modules_by_context[&x];
   if (!item) return;
 
   // Enter the module-scope block

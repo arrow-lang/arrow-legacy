@@ -14,7 +14,7 @@ namespace pass {
 
 void Build::visit_module(ast::Module& x) {
   // Get the existing module-item
-  auto item = _ctx.modules[&x];
+  auto item = _ctx.modules_by_context[&x];
   if (!item) return;
 
   // Create the LLVM module initialization function

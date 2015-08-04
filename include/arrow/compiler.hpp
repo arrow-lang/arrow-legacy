@@ -36,8 +36,9 @@ class Compiler {
     LLVMTargetDataRef data_layout;
 
     /// Map of native modules that are / have been compiled
-    std::unordered_map<ast::Node*, Ref<code::Module>> modules;
+    std::unordered_map<ast::Node*, Ref<code::Module>> modules_by_context;
     std::unordered_map<std::string, Ref<code::Module>> modules_by_pathname;
+    std::deque<Ref<code::Module>> modules;
   };
 
   Compiler(bool verify);

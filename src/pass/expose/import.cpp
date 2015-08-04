@@ -115,7 +115,8 @@ void Expose::visit_import(ast::Import& x) {
     // Create (and emplace) the module item
     mod_item = new code::Module(imp, imp->name, nullptr, _scope);
     _ctx.modules_by_pathname[pathname] = mod_item;
-    _ctx.modules[imp.get()] = mod_item;
+    _ctx.modules_by_context[imp.get()] = mod_item;
+    _ctx.modules.push_back(mod_item);
 
     // Expose the now-imported module
     Expose(_ctx, _scope).run(*imp);

@@ -1,0 +1,2 @@
+[0;37mtest/compile-fail/fixtures/recursive-b.as:1.1-31: [0;31merror: [1;37munresolvable circular dependency with module: 'recursive-a'[0m
+[0;37mtest/compile-fail/fixtures/recursive-a.as:1.1-31: [0;31merror: [1;37munresolvable circular dependency with module: 'recursive-b'[0m
