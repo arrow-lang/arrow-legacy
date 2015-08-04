@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from subprocess import Popen, PIPE, PIPE, check_call
 from os import path
@@ -23,7 +24,7 @@ def options(ctx):
     ctx.add_option(
         '--release',
         action='store_true',
-        default='release'
+        default=False
     )
 
 

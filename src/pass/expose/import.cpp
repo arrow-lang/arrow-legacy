@@ -15,6 +15,39 @@
 
 namespace fs = boost::filesystem;
 
+// NOTE: Taken from: http://stackoverflow.com/a/29221546
+static fs::path relativeTo(fs::path from, fs::path to)
+{
+   // Start at the root path and while they are the same then do nothing then
+   // when they first diverge take the remainder of the two path and replace
+   // the entire from path with ".."
+   // segments.
+   fs::path::const_iterator fromIter = from.begin();
+   fs::path::const_iterator toIter = to.begin();
+
+   // Loop through both
+   while (fromIter != from.end() && toIter != to.end() && (*toIter) == (*fromIter))
+   {
+      ++toIter;
+      ++fromIter;
+   }
+
+   fs::path finalPath;
+   while (fromIter != from.end())
+   {
+      finalPath /= "..";
+      ++fromIter;
+   }
+
+   while (toIter != to.end())
+   {
+      finalPath /= *toIter;
+      ++toIter;
+   }
+
+   return finalPath;
+}
+
 static bool ends_with(const std::string& value, const std::string& ending) {
   if (ending.size() > value.size()) return false;
   return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
@@ -69,10 +102,14 @@ void Expose::visit_import(ast::Import& x) {
       }
     }
   } else {
+    // Relativize the filename from the CWD
+    boost::filesystem::path full_path(boost::filesystem::current_path());
+    auto relpath = relativeTo(full_path, pathname);
+
     // Parse the AST from this file
     auto input_fs = new std::ifstream(pathname);
     std::shared_ptr<std::istream> input_stream(input_fs);
-    arrow::Parser parser(input_stream, pathname);
+    arrow::Parser parser(input_stream, relpath.string());
     auto imp = parser.parse().as<ast::Module>();
 
     // Create (and emplace) the module item

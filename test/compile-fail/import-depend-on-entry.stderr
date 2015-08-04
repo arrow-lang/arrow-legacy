@@ -1,1 +1,1 @@
-[0;37m/home/ryan/Workspace/arrow/test/compile-fail/fixtures/depend-on-entry.as:1.1-40: [0;31merror: [1;37mno module found for "../depend-on-entry"[0m
+[0;37mtest/compile-fail/fixtures/depend-on-entry.as:1.1-40: [0;31merror: [1;37mno module found for "../depend-on-entry"[0m
