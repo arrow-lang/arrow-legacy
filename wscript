@@ -141,25 +141,3 @@ def coverage(ctx):
             "lcov",
             "--summary", "coverage.info",
         ])
-
-
-def lint(ctx):
-    import cpplint
-
-    include = ctx.path.ant_glob("include/**/*.hpp")
-    source = ctx.path.ant_glob("src/**/*.cpp")
-
-    filenames = [x.abspath() for x in chain(source, include)]
-    filters = [
-        "-runtime/references",
-    ]
-
-    cpplint.ParseArguments(["--filter=%s" % ",".join(filters)] + filenames)
-    cpplint._cpplint_state.ResetErrorCounts()
-
-    for filename in filenames:
-        ext = path.splitext(filename)[1][1:]
-        with open(filename, "rb") as stream:
-            lines = stream.read().decode("utf8").split("\n")
-
-        cpplint.ProcessFileData(filename, ext, lines, cpplint.Error, [])
