@@ -20,6 +20,12 @@ def options(ctx):
         default='llvm-config'
     )
 
+    ctx.add_option(
+        '--release',
+        action='store_true',
+        default='release'
+    )
+
 
 def configure(ctx):
     ctx.load(" ".join(WAF_TOOLS))
@@ -41,13 +47,21 @@ def configure(ctx):
 
     if ctx.env["CXX_NAME"] in ("gcc", "clang"):
         ctx.env.append_unique("CXXFLAGS", "-std=gnu++1y")
-        # TODO: Release and Debug builds
-        ctx.env.append_unique("CXXFLAGS", "-g")
-        ctx.env.append_unique("CXXFLAGS", "-O0")
-        # ctx.env.append_unique("CXXFLAGS", "-Ofast")
+
+        if ctx.options.release:
+            ctx.env.append_unique("CXXFLAGS", "-Ofast")
+
+        else:
+            ctx.env.append_unique("CXXFLAGS", "-g")
+            ctx.env.append_unique("CXXFLAGS", "-O0")
+            ctx.env.append_unique("CXXFLAGS", "--coverage")
+
+            ctx.env.append_unique("LINKFLAGS", "--coverage")
+
         ctx.env.append_unique("CXXFLAGS", "-Wall")
         ctx.env.append_unique("CXXFLAGS", "-Wextra")
         ctx.env.append_unique("CXXFLAGS", "-Wfatal-errors")
+
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-final-types")
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-final-methods")
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-override")
@@ -56,13 +70,10 @@ def configure(ctx):
         # ctx.env.append_unique("CXXFLAGS", "-Wsuggest-attribute=noreturn")
         # ctx.env.append_unique("CXXFLAGS", "-Weffc++")
         # ctx.env.append_unique("CXXFLAGS", "-Wpedantic")
+
         ctx.env.append_unique("CXXFLAGS", "-Woverloaded-virtual")
         ctx.env.append_unique("CXXFLAGS", "-Wno-unused-value")
         ctx.env.append_unique("CXXFLAGS", "-Wno-unused-parameter")
-
-        # This should be enabled only during testing; perhaps make two binaries
-        ctx.env.append_unique("CXXFLAGS", "--coverage")
-        ctx.env.append_unique("LINKFLAGS", "--coverage")
 
 
 def build(ctx):
