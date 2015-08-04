@@ -141,7 +141,7 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   _ctx.irb = LLVMCreateBuilder();
 
   // Create (and emplace) the top-level module item
-  Ref<code::Module> top = new code::Module(node, name, nullptr, _scope);;
+  Ref<code::Module> top = new code::Module(node, name, nullptr, _scope);
   auto pathname = fs::canonical(fs::absolute(node->span.filename)).string();
   _ctx.modules[node.get()] = top;
   _ctx.modules_by_pathname[pathname] = top;
@@ -154,6 +154,8 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   // Analyze Type
   for (auto& item : _ctx.modules) {
     pass::AnalyzeType(_ctx, _scope).run(*item.second->context);
+
+    // TODO(_): Should only return if errors happened during this iteration
     if (Log::get().count("error") > 0) return;
   }
 
@@ -169,7 +171,23 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
     if (Log::get().count("error") > 0) return;
   }
 
-  // DEBUG: Analyze module dependency graph
+  // TODO(_): Analyze module dependency graph
+  // A module cannot /depend/ on the top-level module; we provide
+  // a guarantee that the top-level (or entry) module is ran last.
+  for (auto& item : _ctx.modules) {
+    if (item.second.get() != top.get()) {
+      for (auto& dependency : item.second->dependencies) {
+        if (dependency == top.get()) {
+          Log::get().error("cannot depend on the entry module\n");
+        }
+      }
+    }
+  }
+
+  // Finally; modules must be able to be ordered. There cannot be
+  // circular dependencies.
+
+  // DEBUG: List module dependency graph
   // for (auto& item : _ctx.modules) {
   //   std::printf("\x1b[1;33m%s:", item.second->name.c_str());
   //   if (item.second->dependencies.size() == 0) {

@@ -10,63 +10,71 @@ namespace arrow {
 namespace pass {
 
 void AnalyzeUsage::do_use(ast::Node& context, code::Slot& item) {
-  if (!item.is_declared) {
-    Log::get().error(
-      context.span, "use of unresolved name '%s'",
-      item.name.c_str());
+  // If this a local variable ..
+  if (item.is_local(_scope)) {
+    // Check for errors ..
+    // Is it declared (yet) ..
+    if (!item.is_declared) {
+      Log::get().error(
+        context.span, "use of variable '%s' before declaration",
+        item.name.c_str());
 
-    return;
-  }
-
-  auto is_assigned = item.is_assigned(_scope->top());
-
-  if ((is_assigned && !(*is_assigned)) || !is_assigned) {
-    // If we will error AND we are non-local
-    if (!item.is_local(_scope)) {
-      // Mark the use and ignore error
-      _use.insert(&item);
       return;
     }
-  }
 
-  if (is_assigned && !(*is_assigned)) {
-    Log::get().error(
-      context.span, "use of possibly uninitialized variable '%s'",
-      item.name.c_str());
+    // Check for uninitialized errors
+    auto is_assigned = item.is_assigned(_scope->top());
+    if (is_assigned && !(*is_assigned)) {
+      Log::get().error(
+        context.span, "use of possibly uninitialized variable '%s'",
+        item.name.c_str());
 
-    return;
-  } else if (!is_assigned) {
-    Log::get().error(
-      context.span, "use of uninitialized variable '%s'",
-      item.name.c_str());
+      return;
+    } else if (!is_assigned) {
+      Log::get().error(
+        context.span, "use of uninitialized variable '%s'",
+        item.name.c_str());
 
-    return;
+      return;
+    }
+  } else {
+    // Mark the use ..
+    _use.insert(&item);
   }
 }
 
 void AnalyzeUsage::do_assign(
-  ast::Node& context, Ref<code::Slot> item, bool is_definite
+  ast::Node& context, code::Slot* item, bool is_definite
 ) {
-  // Are we immutable ..
-  if (!item->is_mutable) {
-    // Are we non-local ..
-    if (!item->is_local(_scope)) {
+  // If we are local .. determine errors
+  if (item->is_local(_scope)) {
+    // Are we declared ..
+    if (!item->is_declared) {
       Log::get().error(
-        context.span, "cannot assign immutable non-local variable `%s`",
+        context.span, "use of variable '%s' before declaration",
         item->name.c_str());
 
       return;
     }
 
-    // Have we been assigned previously ..
-    auto is_assigned = item->is_assigned(_scope->top());
-    if (is_assigned) {
-      Log::get().error(
-        context.span, "re-assignment of immutable variable `%s`",
-        item->name.c_str());
+    // Are we immutable ..
+    if (!item->is_mutable) {
+      // Have we been assigned previously ..
+      auto is_assigned = item->is_assigned(_scope->top());
+      if (is_assigned) {
+        Log::get().error(
+          context.span, "re-assignment of immutable variable `%s`",
+          item->name.c_str());
 
-      return;
+        return;
+      }
     }
+  } else if (!item->is_mutable) {
+    Log::get().error(
+      context.span, "cannot assign immutable non-local variable `%s`",
+      item->name.c_str());
+
+    return;
   }
 
   // Mark [assign]

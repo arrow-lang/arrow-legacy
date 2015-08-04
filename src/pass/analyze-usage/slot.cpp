@@ -31,7 +31,7 @@ bool AnalyzeUsage::_expand_pattern(
       // If we have an initializer ..
       if (has_initializer) {
         // Mark [assign]
-        _assign[_scope->top()].push_back(item);
+        _assign[_scope->top()].push_back(item.get());
         item->add_assignment(_scope->top(), true);
       }
 

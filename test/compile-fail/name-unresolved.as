@@ -1,1 +1,1 @@
-let value = value;  // error
+let a = b;

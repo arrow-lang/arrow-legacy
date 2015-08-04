@@ -7,6 +7,7 @@
 #define ARROW_CODE_SCOPE_H 1
 
 #include <deque>
+#include <map>
 #include <unordered_map>
 
 #include "arrow/ast/nodes/node.hpp"
@@ -135,7 +136,7 @@ class Scope {
   Ref<Scope> _parent;
 
   /// Anonymous scope-blocks contained within this scope.
-  std::unordered_map<ast::Node*, Ref<Block>> _blocks;
+  std::map<ast::Node*, Ref<Block>> _blocks;
 
   /// Stack of active scope-blocks.
   std::deque<Ref<Block>> _stack;

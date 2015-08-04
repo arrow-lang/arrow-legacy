@@ -32,11 +32,7 @@ void AnalyzeUsage::visit_call(ast::Call& x) {
   //         them as assigned).
   // TODO(_): Should we use the span from the item use or the call?
   for (auto& ref : function->_assign) {
-    auto ptr = ref.first;
-    auto item = _scope->find(ptr->context).as<code::Slot>();
-    if (item) {
-      do_assign(x, item, ref.second);
-    }
+    do_assign(x, ref.first, ref.second);
   }
 }
 

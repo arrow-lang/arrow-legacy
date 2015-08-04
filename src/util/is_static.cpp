@@ -22,8 +22,8 @@ bool is_static(ast::Node& node) {
 
   // Tuple
   if (is<ast::Tuple>(node)) {
-    auto& tuple = as<ast::Tuple&>(node);
-    for (auto& element : tuple.elements) {
+    auto tuple = as<ast::Tuple*>(&node);
+    for (auto& element : tuple->elements) {
       if (!is_static(*element)) return false;
     }
   }

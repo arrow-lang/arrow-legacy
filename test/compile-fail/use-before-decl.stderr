@@ -1,0 +1,1 @@
+[0;37mtest/compile-fail/use-before-decl.as:1.13-18: [0;31merror: [1;37muse of variable 'value' before declaration[0m

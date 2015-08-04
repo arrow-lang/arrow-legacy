@@ -34,48 +34,16 @@ void AnalyzeUsage::visit_path(ast::Path& x) {
         return;
       }
 
-      // bool is_static_use = false;
-      // Match(*member->second) {
-      //   Case(code::Slot& slot) {
-      //     is_static_use = slot.is_static;
-      //   } break;
-      //
-      //   Case(code::ExternSlot& slot) {
-      //     XTL_UNUSED(slot);
-      //     is_static_use = true;
-      //   } break;
-      //
-      //   Case(code::ExternFunction& fn) {
-      //     XTL_UNUSED(fn);
-      //     is_static_use = true;
-      //   } break;
-      //
-      //   Case(code::Function& fn) {
-      //     auto type = fn.type.as<code::TypeFunction>();
-      //
-      //     is_static_use = true;
-      //     for (auto& slot : type->_use) {
-      //       if (!slot->is_static) {
-      //         is_static_use = false;
-      //         break;
-      //       }
-      //     }
-      //
-      //     for (auto& slot : type->_assign) {
-      //       if (!slot.first->is_static) {
-      //         is_static_use = false;
-      //         break;
-      //       }
-      //     }
-      //   } break;
-      // } EndMatch;
-      //
-      // auto cur = util::current_module(_scope);
-      // if (!is_static_use) {
-      //   // Module used a non-static from another module
-      //   // Record a dependency
-      //   cur->dependencies.insert(mod);
-      // }
+      Match(*member->second) {
+        Case(code::Function& fn) {
+          // Check if we've analyzed the function ..
+          auto func_type = fn.type.as<code::TypeFunction>();
+          if (func_type->_is_analyzed) return;
+
+          // Analyze the function context ..
+          AnalyzeUsage(_ctx, fn.scope->parent()).run(*fn.context);
+        } break;
+      } EndMatch;
 
       return;
     }

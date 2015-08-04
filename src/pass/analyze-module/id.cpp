@@ -17,6 +17,7 @@ void AnalyzeModule::visit_id(ast::Identifier& x) {
   Match(*item) {
     Case(code::Function& function) {
       // Check if we've analyzed the function ..
+
       auto func_type = function.type.as<code::TypeFunction>();
       if (func_type->_is_module_analyzed) return;
 

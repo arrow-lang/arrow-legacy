@@ -250,6 +250,9 @@ struct TypeFunction : Type {
   /// ABI of the function
   Abi abi;
 
+  /// Originating module(s) of this function type
+  std::unordered_set<code::Module*> _modules;
+
   /// Non-local assignments and uses (for a function decorated by this type)
   // FIXME: weak_ref<T>
   bool _is_analyzed;
@@ -258,7 +261,7 @@ struct TypeFunction : Type {
 
   /// Module dependencies
   bool _is_module_analyzed;
-  std::unordered_set<code::Module*> dependencies;
+  std::unordered_set<code::Module*> _dependencies;
 
  private:
   LLVMTypeRef _handle;

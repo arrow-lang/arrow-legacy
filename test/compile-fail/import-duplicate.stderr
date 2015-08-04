@@ -1,0 +1,1 @@
+[0;37mtest/compile-fail/import-duplicate.as:2.1-42: [0;31merror: [1;37mduplicate import for "./fixtures/empty"[0m

@@ -35,7 +35,7 @@ void AnalyzeUsage::visit_function(ast::Function& x) {
   for (auto& item : child._assign[top]) {
     if (!item->is_local(child._scope)) {
       bool is_assigned = *(item->is_assigned(top));
-      type->_assign[item.get()] = is_assigned;
+      type->_assign[item] = is_assigned;
     }
   }
 

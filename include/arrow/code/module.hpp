@@ -16,6 +16,8 @@
 namespace arrow {
 namespace code {
 
+struct Import;
+
 struct Module : Container {
   Module(
     Ref<ast::Module> context,
@@ -47,7 +49,10 @@ struct Module : Container {
   std::unordered_map<std::string, Ref<code::Item>> items;
 
   /// Modules that this module depends on (imports).
-  std::unordered_set<Ref<code::Module>> dependencies;
+  std::unordered_set<code::Module*> dependencies;
+
+  // Modules that this module has imported.
+  std::unordered_set<Import*> imports;
 };
 
 struct Import : Item {

@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include "arrow/match.hpp"
+#include "arrow/util.hpp"
 #include "arrow/parser.hpp"
 #include "arrow/pass/expose.hpp"
 #include "arrow/pass/type.hpp"
@@ -38,16 +39,35 @@ void Expose::visit_import(ast::Import& x) {
     pathname = fs::canonical(path).string();
   } catch (fs::filesystem_error) {
     Log::get().error(
-      "no module found for \"%s\"", x.source.c_str());
+      x.span, "no module found for \"%s\"", x.source.c_str());
 
     return;
   }
 
-  // Check if this has been imported before
+  // Check if this has been imported before (by the whole program)
+  auto current_mod = util::current_module(_scope);
   Ref<code::Module> mod_item = nullptr;
   auto ref = _ctx.modules_by_pathname.find(pathname);
   if (ref != _ctx.modules_by_pathname.end()) {
     mod_item = ref->second;
+
+    // Check if this is this module
+    if (current_mod == mod_item.get()) {
+      // It is an error to import yourself
+      Log::get().error(x.span, "module cannot import itself");
+      return;
+    }
+
+    // Check if this has been imported before (by this module)
+    for (auto& imp : current_mod->imports) {
+      if (imp->module.get() == mod_item.get()) {
+        // It is an error to double import
+        Log::get().error(
+          x.span, "duplicate import for \"%s\"", x.source.c_str());
+
+        return;
+      }
+    }
   } else {
     // Parse the AST from this file
     auto input_fs = new std::ifstream(pathname);
@@ -65,7 +85,9 @@ void Expose::visit_import(ast::Import& x) {
   }
 
   // Emplace the imported module in scope of the current module
-  _scope->insert(new code::Import(&x, x.name, mod_item));
+  Ref<code::Import> imported_item = new code::Import(&x, x.name, mod_item);
+  _scope->insert(imported_item);
+  current_mod->imports.insert(imported_item.get());
 }
 
 }  // namespace pass

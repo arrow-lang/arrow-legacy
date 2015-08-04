@@ -29,7 +29,7 @@ bool AnalyzeUsage::_expand_assign(
         Case(code::Slot& slot)  {
           XTL_UNUSED(slot);
 
-          do_assign(lhs, item.as<code::Slot>(), true);
+          do_assign(lhs, item.as<code::Slot>().get(), true);
         } break;
 
         Case(code::ExternSlot& slot) {

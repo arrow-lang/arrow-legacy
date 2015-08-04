@@ -55,14 +55,14 @@ class AnalyzeUsage : public ast::Visitor {
 
   void do_use(ast::Node& context, code::Slot& item);
   void do_assign(
-    ast::Node& context, Ref<code::Slot> item, bool is_definite);
+    ast::Node& context, code::Slot* item, bool is_definite);
 
   // The active compiler context.
   Compiler::Context& _ctx;
 
   Ref<code::Scope> _scope;
 
-  std::unordered_map<Ref<code::Block>, std::deque<Ref<code::Slot>>> _assign;
+  std::unordered_map<Ref<code::Block>, std::deque<code::Slot*>> _assign;
   std::unordered_set<code::Slot*> _use;
 };
 

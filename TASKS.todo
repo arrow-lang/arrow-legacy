@@ -49,6 +49,7 @@
     ✔ Extern Slot @done(2015-07-31 14:48) @project([build] / [function])
     ✔ Slot (..) @done(2015-07-31 18:15) @project([build] / [function])
     ☐ Initializer Resolution (Hard Mode)
+      ☐ Analyze module dependencies (line-174 of compiler.cpp)
       ☐ All "constant" initialization (that is exported) goes into a
         common list (that is sorted as we go along); at the end, this
         list is pushed into a global ".init" that is run before any module
@@ -56,8 +57,9 @@
       ☐ Detect "constant" initializers that cyclically depend on another
         "constant" initializer (eg. "(in a) let a = b.b; (in b) let b = a.a")
         and error the fuck out
+      ☐ Sort module initializers (on dependency order)
       ☐ All module initializers (that got imported at some point) are ran
-        in an arbitrary order with the "entry" module being last
+        with the "entry" module being last
 
 
 [...]:

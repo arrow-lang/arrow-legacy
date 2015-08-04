@@ -161,6 +161,11 @@ Ref<code::Item> Scope::find(const std::string& name, bool traverse) {
   // Proxy to the top-most scope-block
   auto item = top ? top->find(name, traverse) : nullptr;
 
+  // Check the first block if needed
+  if (!item && !top && (_blocks.size() > 0)) {
+    item = _blocks.begin()->second->find(name, traverse);
+  }
+
   // Check the parent (if we can and should)
   if (!item && _parent && traverse) {
     return _parent->find(name, traverse);

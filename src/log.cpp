@@ -110,6 +110,34 @@ void Log::info(arrow::Span span, const char* format, va_list arguments) {
   std::fprintf(stderr, "\x1b[0m\n");
 }
 
+void Log::trace(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  this->trace(format, args);
+  va_end(args);
+}
+
+void Log::trace(arrow::Span span, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  this->trace(span, format, args);
+  va_end(args);
+}
+
+void Log::trace(const char* format, va_list arguments) {
+  std::fprintf(stderr, "\x1b[0;37m%s", "arrow: ");
+  std::fprintf(stderr, "\x1b[1;30m%s\x1b[1;37m", "trace: ");
+  std::vfprintf(stderr, format, arguments);
+  std::fprintf(stderr, "\x1b[0m\n");
+}
+
+void Log::trace(arrow::Span span, const char* format, va_list arguments) {
+  std::fprintf(stderr, "\x1b[0;37m%s%s", span.to_string().c_str(), ": ");
+  std::fprintf(stderr, "\x1b[1;30m%s\x1b[1;37m", "trace: ");
+  std::vfprintf(stderr, format, arguments);
+  std::fprintf(stderr, "\x1b[0m\n");
+}
+
 unsigned Log::count(const char* level) {
   return _counters[level];
 }

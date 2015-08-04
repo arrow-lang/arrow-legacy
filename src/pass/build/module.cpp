@@ -29,9 +29,6 @@ void Build::visit_module(ast::Module& x) {
   // Set the module initializer
   item->initializer = mod_init_fn;
 
-  // Enter the module-scope block
-  _scope->enter(&x);
-
   // // Expose the module block (into the new module scope).
   // Expose(_ctx, item->scope).run(*x.block);
   // if (Log::get().count("error") > 0) return;
@@ -64,9 +61,6 @@ void Build::visit_module(ast::Module& x) {
   if (last_block) {
     LLVMPositionBuilderAtEnd(_ctx.irb, last_block);
   }
-
-  // Leave the module scope-block
-  _scope->exit();
 }
 
 }  // namespace pass

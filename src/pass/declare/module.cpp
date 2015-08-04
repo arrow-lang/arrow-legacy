@@ -14,13 +14,13 @@ void Declare::visit_module(ast::Module& x) {
   if (!item) return;
 
   // Enter the module-scope block
-  _scope->enter(&x);
+  item->scope->enter(&x);
 
   // Declare any items that need forward declarations.
   Declare(_ctx, item->scope).run(*x.block);
 
   // Leave the module scope-block
-  _scope->exit();
+  item->scope->exit();
 }
 
 }  // namespace pass

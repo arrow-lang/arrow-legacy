@@ -16,14 +16,8 @@ void Expose::visit_module(ast::Module& x) {
   auto item = _ctx.modules[&x];
   if (!item) return;
 
-  // Enter the module-scope block
-  _scope->enter(&x);
-
   // Expose the module block (into the new module scope).
   Expose(_ctx, item->scope).run(*x.block);
-
-  // Leave the module scope-block
-  _scope->exit();
 }
 
 }  // namespace pass

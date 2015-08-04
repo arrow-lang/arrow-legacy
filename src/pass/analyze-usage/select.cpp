@@ -60,7 +60,7 @@ void AnalyzeUsage::visit_select(ast::Select& x) {
   }
 
   // Compile a list of slots that have been (possibly) assigned
-  std::unordered_map<ast::Node*, Ref<code::Slot>> slots;
+  std::unordered_map<ast::Node*, code::Slot*> slots;
   std::map<ast::Node*, int> block_assign;
 
   for (auto& block : blocks) {

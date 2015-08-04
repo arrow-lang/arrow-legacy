@@ -6,6 +6,7 @@
 #include "arrow/pass/analyze-type.hpp"
 #include "arrow/pass/resolve.hpp"
 #include "arrow/match.hpp"
+#include "arrow/util.hpp"
 
 namespace arrow {
 namespace pass {
@@ -22,6 +23,10 @@ void AnalyzeType::visit_function(ast::Function& x) {
   } else {
     // Place the type on the item
     item->type = type;
+
+    // Add the current module to the type
+    auto module = util::current_module(_scope);
+    type.as<code::TypeFunction>()->_modules.insert(module);
   }
 
   // Enter the function scope-block

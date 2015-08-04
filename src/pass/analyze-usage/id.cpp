@@ -33,7 +33,7 @@ void AnalyzeUsage::visit_id(ast::Identifier& x) {
       if (func_type->_is_analyzed) return;
 
       // Analyze the function context ..
-      function.context->accept(*this);
+      AnalyzeUsage(_ctx, function.scope->parent()).run(*function.context);
     } break;
   } EndMatch;
 }

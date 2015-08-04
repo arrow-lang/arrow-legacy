@@ -13,14 +13,8 @@ void AnalyzeType::visit_module(ast::Module& x) {
   auto item = _ctx.modules[&x];
   if (!item) return;
 
-  // Enter the module-scope block
-  _scope->enter(&x);
-
   // Declare any items that need forward declarations.
   AnalyzeType(_ctx, item->scope).run(*x.block);
-
-  // Leave the module scope-block
-  _scope->exit();
 }
 
 }  // namespace pass

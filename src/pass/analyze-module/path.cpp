@@ -40,10 +40,10 @@ void AnalyzeModule::visit_path(ast::Path& x) {
 
         Case(code::Function& fn) {
           auto func_type = fn.type.as<code::TypeFunction>();
-          if (func_type->_is_module_analyzed) return;
-
-          // Analyze the function context ..
-          AnalyzeModule(_ctx, mod->scope).run(*fn.context);
+          if (!func_type->_is_module_analyzed) {
+            // Analyze the function context ..
+            AnalyzeModule(_ctx, mod->scope).run(*fn.context);
+          }
         } break;
       } EndMatch;
 
@@ -52,11 +52,11 @@ void AnalyzeModule::visit_path(ast::Path& x) {
         auto owner = _scope->get_owner();
         if (util::is<code::Module>(*owner)) {
           auto current = util::as<code::Module*>(owner);
-          current->dependencies.insert(mod);
+          current->dependencies.insert(mod.get());
         } else {  // Function
           auto fn = util::as<code::Function*>(owner);
           auto fn_type = fn->type.as<code::TypeFunction>();
-          fn_type->dependencies.insert(mod.get());
+          fn_type->_dependencies.insert(mod.get());
         }
       }
 

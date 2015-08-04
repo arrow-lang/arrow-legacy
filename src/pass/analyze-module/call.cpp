@@ -4,6 +4,7 @@
 // See accompanying file LICENSE
 
 #include "arrow/match.hpp"
+#include "arrow/util.hpp"
 #include "arrow/pass/analyze-module.hpp"
 #include "arrow/pass/resolve.hpp"
 
@@ -24,7 +25,7 @@ void AnalyzeModule::visit_call(ast::Call& x) {
   // if it assigns, has non-static uses, or has dependencies
   bool is_static = true;
   if (function->_assign.size() > 0) is_static = false;
-  if (function->dependencies.size() > 0) is_static = false;
+  if (function->_dependencies.size() > 0) is_static = false;
   if (is_static && function->_use.size() > 0) {
     for (auto& use : function->_use) {
       if (!use->is_static) {
@@ -34,20 +35,34 @@ void AnalyzeModule::visit_call(ast::Call& x) {
     }
   }
 
-  // TODO(_): Record what module(s) a function-type originates from
+  // Retrieve what module(s) a function-type originates from
+  auto owner = _scope->get_owner();
+  auto cur_mod = util::as<code::Module*>(owner);
+  auto& modules = function->_modules;
 
-  // if (!is_static) {
-  //   // Used a non-static from another module; record the dependency
-  //   auto owner = _scope->get_owner();
-  //   if (util::is<code::Module>(*owner)) {
-  //     auto current = util::as<code::Module*>(owner);
-  //     current->dependencies.insert(mod);
-  //   } else {  // Function
-  //     auto fn = util::as<code::Function*>(owner);
-  //     auto fn_type = fn->type.as<code::TypeFunction>();
-  //     fn_type->dependencies.insert(mod.get());
-  //   }
-  // }
+  // NOTE: Do not add the module dependency if the current module
+  //       is the only defined module for this function type;
+  //       we have other ways of ensuring safety within the module
+  if (function->_dependencies.size() == 0 && modules.size() == 1) {
+    if (*(modules.begin()) == cur_mod) {
+      return;
+    }
+  }
+
+  if (!is_static) {
+    // Used a non-static from another module; record the dependency
+    if (util::is<code::Module>(*owner)) {
+      cur_mod->dependencies.insert(modules.begin(), modules.end());
+      cur_mod->dependencies.insert(
+        function->_dependencies.begin(), function->_dependencies.end());
+    } else {  // Function
+      auto fn = util::as<code::Function*>(owner);
+      auto fn_type = fn->type.as<code::TypeFunction>();
+      fn_type->_dependencies.insert(modules.begin(), modules.end());
+      fn_type->_dependencies.insert(
+        function->_dependencies.begin(), function->_dependencies.end());
+    }
+  }
 }
 
 }  // namespace pass
