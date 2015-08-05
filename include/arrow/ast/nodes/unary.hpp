@@ -18,21 +18,24 @@ struct Unary : Node {
 
   virtual ~Unary() noexcept;
 
+  virtual const char* punctuator() const noexcept = 0;
+
   Ref<Node> operand;
 };
 
-#define DEF_UNARY(Name) \
+#define DEF_UNARY(Name, P) \
   struct Name : Unary { \
     using Unary::Unary; \
     virtual ~Name() noexcept; \
+    virtual const char* punctuator() const noexcept override { return P; } \
     void accept(Visitor&) override; \
   }
 
-DEF_UNARY(Identity);
-DEF_UNARY(Negate);
-DEF_UNARY(BitNot);
-DEF_UNARY(Not);
-DEF_UNARY(Dereference);
+DEF_UNARY(Identity, "+");
+DEF_UNARY(Negate, "-");
+DEF_UNARY(BitNot, "!");
+DEF_UNARY(Not, "not");
+DEF_UNARY(Dereference, "*");
 
 #undef DEF_UNARY
 
@@ -44,6 +47,10 @@ struct AddressOf : Unary {
   virtual ~AddressOf() noexcept;
 
   void accept(Visitor&) override;
+
+  virtual const char* punctuator() const noexcept override {
+    return "&";
+  }
 
   bool is_mutable;
 };

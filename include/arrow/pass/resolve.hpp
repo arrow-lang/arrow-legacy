@@ -50,12 +50,23 @@ class Resolve : public ast::Visitor {
   virtual void visit_select(ast::Select&);
   virtual void visit_select_branch(ast::SelectBranch&);
 
+  // Unary
+  virtual void visit_identity(ast::Identity&);
+  // virtual void visit_negate(ast::Negate&);
+  // virtual void visit_bit_not(ast::BitNot&);
+  // virtual void visit_deref(ast::Dereference&);
+  // virtual void visit_not(ast::Not&);
+  // virtual void visit_address_of(ast::AddressOf&);
+
   // Misc.
   virtual void visit_slot(ast::Slot&);
   virtual void visit_path(ast::Path&);
   virtual void visit_assign(ast::Assign&);
 
  private:
+  void do_unary(
+    ast::Unary& x, std::function<Ref<code::Type>(Ref<code::Type>)> c);
+
   Ref<code::Type> type_of(Ref<code::Item> item);
 
   // The scope to emplace the exposed items into.

@@ -68,5 +68,6 @@ language-arrow:
   ☐ Add function parameters
   ☐ Fix `export/extern let x` (not pushing `x` as a variable)
   ☐ Make `;` optional
+  ☐ Add "x = *" and "(x,y,z) = *" patterns
   ☐ Add shebang as a comment-type
   ☐ Escape sequences in strings
