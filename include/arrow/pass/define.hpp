@@ -3,8 +3,8 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#ifndef ARROW_PASS_DECLARE_H
-#define ARROW_PASS_DECLARE_H 1
+#ifndef ARROW_PASS_DEFINE_H
+#define ARROW_PASS_DEFINE_H 1
 
 #include "arrow/ast.hpp"
 #include "arrow/compiler.hpp"
@@ -13,13 +13,13 @@
 namespace arrow {
 namespace pass {
 
-class Declare : public ast::Visitor {
+class Define : public ast::Visitor {
  public:
-  Declare(Compiler::Context& ctx, Ref<code::Scope> scope)
+  Define(Compiler::Context& ctx, Ref<code::Scope> scope)
     : _ctx(ctx), _scope(scope) {
   }
 
-  virtual ~Declare() noexcept;
+  virtual ~Define() noexcept;
 
   // Block
   virtual void visit_block(ast::Block&);
@@ -34,7 +34,7 @@ class Declare : public ast::Visitor {
   virtual void visit_slot(ast::Slot&);
 
  private:
-  bool _expand_pattern(ast::Pattern& pattern);
+   bool _expand_pattern(ast::Pattern& pattern, Ref<code::Value> initializer);
 
   /// The active compiler context.
   Compiler::Context& _ctx;
@@ -46,4 +46,4 @@ class Declare : public ast::Visitor {
 }  // namespace pass
 }  // namespace arrow
 
-#endif  // ARROW_PASS_DECLARE_H
+#endif  // ARROW_PASS_DEFINE_H

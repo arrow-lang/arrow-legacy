@@ -26,6 +26,8 @@ bool is_static(ast::Node& node) {
     for (auto& element : tuple->elements) {
       if (!is_static(*element)) return false;
     }
+
+    return true;
   }
 
   return false;

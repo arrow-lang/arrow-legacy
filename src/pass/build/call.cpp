@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include "arrow/util.hpp"
 #include "arrow/pass/build.hpp"
 #include "arrow/pass/resolve.hpp"
 
@@ -33,8 +34,9 @@ void Build::visit_call(ast::Call& x) {
     if (!arg) return;
 
     // Cast the argument to the appropriate type
-    arg = do_cast(arg, *arg_node->expression,
-                  type->parameters.at(arg_index)->type, false);
+    arg = util::cast(
+      _ctx, arg, *arg_node->expression,
+      type->parameters.at(arg_index)->type, false);
 
     if (!arg) return;
 

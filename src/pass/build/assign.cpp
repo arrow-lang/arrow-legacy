@@ -4,6 +4,7 @@
 // See accompanying file LICENSE
 
 #include "arrow/match.hpp"
+#include "arrow/util.hpp"
 #include "arrow/pass/build.hpp"
 
 namespace arrow {
@@ -50,7 +51,7 @@ void Build::visit_assign(ast::Assign& x) {
   }
 
   // Cast the RHS to the type of the LHS
-  rhs = do_cast(rhs, *x.rhs, lhs->type, false);
+  rhs = util::cast(_ctx, rhs, *x.rhs, lhs->type, false);
   if (!rhs) return;
 
   // Perform the assignment ..

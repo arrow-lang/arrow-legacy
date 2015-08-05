@@ -3,12 +3,13 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#include "arrow/pass/build.hpp"
+#include "arrow/util.hpp"
 
 namespace arrow {
-namespace pass {
+namespace util {
 
-Ref<code::Value> Build::do_cast(
+Ref<code::Value> cast(
+  Compiler::Context& _ctx,
   Ref<code::Value> value, ast::Node& node, Ref<code::Type> to_type,
   bool explicit_
 ) {
@@ -93,7 +94,8 @@ Ref<code::Value> Build::do_cast(
       // Iterate through the elements; and cast each
       Ref<code::ValueTuple> result = new code::ValueTuple(to_t);
       for (unsigned idx = 0; idx < from_t->elements.size(); ++idx) {
-        auto el_value = do_cast(
+        auto el_value = cast(
+          _ctx,
           value->at(_ctx, idx), node, to_t->elements.at(idx), explicit_);
         if (!el_value) return nullptr;
 
@@ -122,5 +124,5 @@ Ref<code::Value> Build::do_cast(
 // void Build::visit_cast(ast::Cast& x) {
 // }
 
-}  // namespace pass
+}  // namespace util
 }  // namespace arrow

@@ -61,10 +61,6 @@ class Build : public ast::Visitor {
   // virtual void visit_select_branch(ast::SelectBranch&);
 
  private:
-  Ref<code::Value> do_cast(
-    Ref<code::Value> value, ast::Node& node, Ref<code::Type> to_type,
-    bool explicit_);
-
   bool _expand_parameter_pattern(
     ast::Pattern& pattern, Ref<code::Value> value, Ref<code::Scope> scope);
 

@@ -28,6 +28,12 @@ extern bool is_static(ast::Node&);
 /// Find the nearest enclosing module (of the passed scope).
 extern code::Module* current_module(Ref<code::Scope> scope);
 
+/// Cast a `Value` to a `Type`.
+Ref<code::Value> cast(
+  Compiler::Context& ctx,
+  Ref<code::Value> value, ast::Node& node, Ref<code::Type> to_type,
+  bool explicit_ = false);
+
 }  // namespace util
 }  // namespace arrow
 

@@ -1,6 +1,13 @@
 @a = internal global i128 0
 @b = internal global i128 0
 
+define internal void @function-nonlocal-assign-out-of-order..init() {
+  call void @methodA()
+  %1 = load i128* @a
+  store i128 %1, i128* @b
+  ret void
+}
+
 define internal void @methodA() {
   call void @methodB()
   ret void
@@ -8,13 +15,6 @@ define internal void @methodA() {
 
 define internal void @methodB() {
   store i128 20, i128* @a
-  ret void
-}
-
-define internal void @function-nonlocal-assign-out-of-order..init() {
-  call void @methodA()
-  %1 = load i128* @a
-  store i128 %1, i128* @b
   ret void
 }
 

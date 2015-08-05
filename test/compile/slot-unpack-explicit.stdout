@@ -1,9 +1,10 @@
 @a = internal constant i128 30
 @b = internal constant double 1.531000e+01
 @c = internal constant i1 false
-@val = internal constant i128 42
+@val = internal global i128 0
 
 define internal void @slot-unpack-explicit..init() {
+  store i128 42, i128* @val
   ret void
 }
 

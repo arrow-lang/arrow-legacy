@@ -5,6 +5,7 @@
 
 #include "arrow/pass/build.hpp"
 #include "arrow/pass/resolve.hpp"
+#include "arrow/util.hpp"
 
 namespace arrow {
 namespace pass {
@@ -28,7 +29,7 @@ void Build::visit_return(ast::Return& x) {
     if (!op) return;
 
     // Cast the expression to the appropriate type
-    op = do_cast(op, *x.expression, function->result, false);
+    op = util::cast(_ctx, op, *x.expression, function->result, false);
     if (!op) return;
   }
 

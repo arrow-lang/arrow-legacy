@@ -119,10 +119,12 @@ void Build::visit_str(ast::String& x) {
     } else if (in_byte_escape) {
       std::stringstream convert;
       unsigned result = 0;
+      convert << std::hex;
       convert << byte << x.text[i + 1];
       convert >> result;
 
       bytes.push_back(result);
+      i += 1;
 
       // No longer in an byte escape sequence.
       in_byte_escape = false;

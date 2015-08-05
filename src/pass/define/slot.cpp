@@ -7,15 +7,15 @@
 #include "arrow/match.hpp"
 #include "arrow/util.hpp"
 #include "arrow/pass/build.hpp"
+#include "arrow/pass/define.hpp"
 #include "arrow/pass/resolve.hpp"
 
 namespace arrow {
+namespace pass {
 
-static bool _expand_pattern(
+bool Define::_expand_pattern(
   ast::Pattern& pattern,
-  Ref<code::Value> initializer,
-  Ref<code::Scope> scope,
-  Compiler::Context& ctx
+  Ref<code::Value> initializer
 ) {
   Match(pattern) {
     Case(ast::PatternWildcard& x) {
@@ -28,31 +28,30 @@ static bool _expand_pattern(
       XTL_UNUSED(x);
 
       // Pull out the previously-exposed item
-      auto item = scope->find(&pattern).as<code::Slot>();
+      auto item = _scope->find(&pattern).as<code::Slot>();
       if (!item || !item->type) return false;
       if (item->type.is<code::TypeNone>()) return true;
 
       // Determine if this is a global or local slot
       bool local = false;
-      if (scope->get_owner()) {
-        local = typeid(*scope->get_owner()) == typeid(code::Function);
+      if (_scope->get_owner()) {
+        local = typeid(*_scope->get_owner()) == typeid(code::Function);
       }
 
-      // If local variable ..
-      if (local) {
-        // Allocate space for it now
-        item->set_address(LLVMBuildAlloca(
-          ctx.irb, item->type->handle(), item->name.c_str()));
-      }
-
-      // If we have an initializer ..
-      auto ptr = item->get_address(ctx);
+      // If we have a (static) initializer ..
+      auto ptr = item->get_address(_ctx);
       if (initializer) {
         // Get the value of the initializer
-        auto handle = initializer->get_value(ctx);
-        // if (local) {
-          LLVMBuildStore(ctx.irb, handle, ptr);
-        // }
+        auto handle = initializer->get_value(_ctx);
+        if (!local && LLVMIsConstant(handle)) {
+          LLVMSetInitializer(ptr, handle);
+
+          // If we have an initializer and are not mutable;
+          // this is a constant
+          if (!local && !x.is_mutable) {
+            LLVMSetGlobalConstant(ptr, true);
+          }
+        }
       }
     } break;
 
@@ -61,10 +60,10 @@ static bool _expand_pattern(
 
       unsigned idx = 0;
       for (auto& element : x.elements) {
-        auto val = initializer->at(ctx, idx);
+        auto val = initializer->at(_ctx, idx);
         if (!val) return false;
 
-        if (!_expand_pattern(*element, val, scope, ctx)) {
+        if (!_expand_pattern(*element, val)) {
           return false;
         }
 
@@ -81,12 +80,10 @@ static bool _expand_pattern(
   return true;
 }
 
-namespace pass {
-
-void Build::visit_slot(ast::Slot& x) {
-  // Check for an initializer ..
+void Define::visit_slot(ast::Slot& x) {
+  // Check for a STATIC initializer ..
   Ref<code::Value> initializer = nullptr;
-  if (x.initializer && !util::is_static(*x.initializer)) {
+  if (x.initializer && util::is_static(*x.initializer)) {
     initializer = Build(_ctx, _scope).run_scalar(*x.initializer);
     if (!initializer) return;
 
@@ -102,7 +99,7 @@ void Build::visit_slot(ast::Slot& x) {
   }
 
   // Expand the pattern ..
-  _expand_pattern(*x.pattern, initializer, _scope, _ctx);
+  _expand_pattern(*x.pattern, initializer);
 }
 
 }  // namespace pass

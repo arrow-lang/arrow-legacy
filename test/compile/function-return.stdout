@@ -1,14 +1,14 @@
 @value = internal global i128 0
 
-define internal i8 @method() {
-  ret i8 30
-}
-
 define internal void @function-return..init() {
   %1 = call i8 @method()
   %2 = sext i8 %1 to i128
   store i128 %2, i128* @value
   ret void
+}
+
+define internal i8 @method() {
+  ret i8 30
 }
 
 define i32 @main(i32, i8**, i8**) {

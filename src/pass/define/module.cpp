@@ -3,31 +3,29 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#include "arrow/pass/build.hpp"
-#include "arrow/pass/expose.hpp"
-#include "arrow/pass/declare.hpp"
-#include "arrow/pass/analyze-usage.hpp"
-#include "arrow/pass/analyze-type.hpp"
+#include "arrow/pass/define.hpp"
 
 namespace arrow {
 namespace pass {
 
-void Build::visit_module(ast::Module& x) {
+void Define::visit_module(ast::Module& x) {
   // Get the existing module-item
   auto item = _ctx.modules_by_context[&x];
   if (!item) return;
 
-  // Activate the module initializer
+  // Add the module initializer basic block
   auto last_block = LLVMGetInsertBlock(_ctx.irb);
-  auto block = LLVMGetLastBasicBlock(item->initializer);
+  auto block = LLVMAppendBasicBlock(item->initializer, "");
   LLVMPositionBuilderAtEnd(_ctx.irb, block);
 
-  // Visit the module block with the builder.
-  Build(_ctx, item->scope).run(*x.block);
-  if (Log::get().count("error") > 0) return;
+  // Enter the module-scope block
+  item->scope->enter(&x);
 
-  // Terminate the module initializer
-  LLVMBuildRetVoid(_ctx.irb);
+  // Define any items that need forward declarations.
+  Define(_ctx, item->scope).run(*x.block);
+
+  // Leave the module scope-block
+  item->scope->exit();
 
   // Move instruction ptr back to where it was (if it was somewhere)
   if (last_block) {

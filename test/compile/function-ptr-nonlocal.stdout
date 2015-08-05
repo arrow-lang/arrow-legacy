@@ -1,17 +1,18 @@
 @a = internal global i128 0
-@fn = internal constant void ()* @methodA
+@fn = internal global void ()* null
 @b = internal global i128 0
 
-define internal void @methodA() {
-  store i128 10, i128* @a
-  ret void
-}
-
 define internal void @function-ptr-nonlocal..init() {
+  store void ()* @methodA, void ()** @fn
   %1 = load void ()** @fn
   call void %1()
   %2 = load i128* @a
   store i128 %2, i128* @b
+  ret void
+}
+
+define internal void @methodA() {
+  store i128 10, i128* @a
   ret void
 }
 

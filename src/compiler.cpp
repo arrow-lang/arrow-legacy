@@ -12,6 +12,7 @@
 #include "arrow/pass/analyze-module.hpp"
 #include "arrow/pass/analyze-usage.hpp"
 #include "arrow/pass/declare.hpp"
+#include "arrow/pass/define.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -244,6 +245,12 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   // Declare
   for (auto& item : _ctx.modules) {
     pass::Declare(_ctx, _scope).run(*item->context);
+    if (Log::get().count("error") > 0) return;
+  }
+
+  // Define
+  for (auto& item : _ctx.modules) {
+    pass::Define(_ctx, _scope).run(*item->context);
     if (Log::get().count("error") > 0) return;
   }
 

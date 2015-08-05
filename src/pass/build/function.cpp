@@ -23,7 +23,7 @@ void Build::visit_function(ast::Function& x) {
 
   // Add the top basic block
   auto last_block = LLVMGetInsertBlock(_ctx.irb);
-  auto block = LLVMAppendBasicBlock(handle, "");
+  auto block = LLVMGetLastBasicBlock(handle);
   LLVMPositionBuilderAtEnd(_ctx.irb, block);
 
   // Iterate and emplace parameters (in the function scope)
