@@ -1,0 +1,1 @@
+[0;37mtest/compile-fail/use-and-assign-before-decl.as:1.1-9: [0;31merror: [1;37muse of variable 'counter' before declaration[0m
