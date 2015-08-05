@@ -27,7 +27,8 @@ class AnalyzeType : public ast::Visitor {
   virtual void visit_block(ast::Block& x);
 
   // Module
-  virtual void visit_module(ast::Module& x);
+  virtual void visit_module(ast::Module&);
+  virtual void visit_import(ast::Import&);
 
   // Slot
   virtual void visit_slot(ast::Slot& x);
@@ -71,6 +72,7 @@ class AnalyzeType : public ast::Visitor {
   bool _incomplete;
   std::unordered_map<code::Slot*, std::vector<Assignment>> _assign;
   std::unordered_map<code::Slot*, std::vector<Use>> _use;
+  std::unordered_set<code::Module*> _modules;
 };
 
 }  // namespace pass

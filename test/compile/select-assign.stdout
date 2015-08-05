@@ -6,10 +6,10 @@ define internal void @select-assign..init() {
 
 ; <label>:1                                       ; preds = %0
   store i128 34, i128* @a
-  br label %8
+  br label %9
 
 ; <label>:2                                       ; preds = %0
-  br i1 true, label %3, label %7
+  br i1 true, label %3, label %8
 
 ; <label>:3                                       ; preds = %2
   br i1 false, label %4, label %5
@@ -23,15 +23,17 @@ define internal void @select-assign..init() {
   br label %6
 
 ; <label>:6                                       ; preds = %5, %4
-  br label %8
+  %7 = phi i128 [ 30, %4 ], [ 30, %5 ]
+  br label %9
 
-; <label>:7                                       ; preds = %2
+; <label>:8                                       ; preds = %2
   store i128 50, i128* @a
-  br label %8
+  br label %9
 
-; <label>:8                                       ; preds = %7, %6, %1
-  %9 = load i128* @a
-  store i128 %9, i128* @b
+; <label>:9                                       ; preds = %8, %6, %1
+  %10 = phi i128 [ 34, %1 ], [ %7, %6 ], [ 50, %8 ]
+  %11 = load i128* @a
+  store i128 %11, i128* @b
   ret void
 }
 

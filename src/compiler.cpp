@@ -154,12 +154,8 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
 
   // Iterate through each now-exposed module and invoke each subsequent pass
   // Analyze Type
-  for (auto& item : _ctx.modules) {
-    pass::AnalyzeType(_ctx, _scope).run(*item->context);
-
-    // TODO(_): Should only return if errors happened during this iteration
-    if (Log::get().count("error") > 0) return;
-  }
+  pass::AnalyzeType(_ctx, _scope).run(*node);
+  if (Log::get().count("error") > 0) return;
 
   // Analyze Usage
   for (auto& item : _ctx.modules) {

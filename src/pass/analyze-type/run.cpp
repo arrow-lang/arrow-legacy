@@ -36,6 +36,7 @@ void AnalyzeType::run(ast::Node& x) {
     // Clear slate
     _incomplete = false;
     _assign.clear();
+    _modules.clear();
     unsigned cnt = 0;
     unsigned req = 0;
 

@@ -10,9 +10,8 @@
 
 
 [analyze-type]:
-  ☐ Scope crossing doesn't work for variable contextual deduce (***)
+  ✔ Scope crossing doesn't work for variable contextual deduce (*) @done(2015-08-04 23:39) @project([analyze-type])
   ✔ CTA @done(2015-07-25 06:52) @project([analyze-type])
-  ☐ type(..) expression (****)
   ☐ CTA for tuples
 
 
@@ -38,7 +37,7 @@
     ✔ Return @done(2015-07-25 06:52) @project([build] / [function])
 
   ✔ Select @done(2015-07-25 07:21) @project([build])
-  ☐ Cast each branch in a select expression (that has a value)
+  ✔ Cast each branch in a select expression (that has a value) @done(2015-08-04 23:39) @project([build])
   ☐ Loop
   ☐ Unary
   ☐ Binary

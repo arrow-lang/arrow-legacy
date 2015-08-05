@@ -13,8 +13,23 @@ void AnalyzeType::visit_module(ast::Module& x) {
   auto item = _ctx.modules_by_context[&x];
   if (!item) return;
 
-  // Declare any items that need forward declarations.
-  AnalyzeType(_ctx, item->scope).run(*x.block);
+  // Ensure that we don't analyze a single module more than once on the
+  // same pass-through
+  if (_modules.find(item.get()) == _modules.end()) {
+    _modules.insert(item.get());
+  } else {
+    return;
+  }
+
+  // Save the current-scope and set the item-scope
+  auto current_scope = _scope;
+  _scope = item->scope;
+
+  // Analyze the module body
+  x.block->accept(*this);
+
+  // Restore the previous scope
+  _scope = current_scope;
 }
 
 }  // namespace pass

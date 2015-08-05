@@ -53,6 +53,7 @@ class Resolve : public ast::Visitor {
   // Misc.
   virtual void visit_slot(ast::Slot&);
   virtual void visit_path(ast::Path&);
+  virtual void visit_assign(ast::Assign&);
 
  private:
   Ref<code::Type> type_of(Ref<code::Item> item);

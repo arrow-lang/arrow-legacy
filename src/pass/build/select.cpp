@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include "arrow/util.hpp"
 #include "arrow/pass/build.hpp"
 #include "arrow/pass/resolve.hpp"
 
@@ -18,16 +19,23 @@ void Build::visit_select(ast::Select& x) {
   std::vector<LLVMValueRef> values;
   std::vector<LLVMBasicBlockRef> value_blocks;
 
+  // Resolve the type of us (in full; only used if we have a value)
+  auto type = Resolve(_scope).run(x);
+
   // A Select expression has a value IIF it has an else and
   // each of its branches have a value
-  bool has_value = true;
+  bool has_value = !!type;
 
-  auto do_select_branch = [&](ast::Block& block) {
+  auto do_select_branch = [&](ast::Block& block) -> bool {
     // Build the block
     auto value = Build(_ctx, _scope).run_scalar(block);
     auto iblock = LLVMGetInsertBlock(_ctx.irb);
 
     if (has_value && value) {
+      // Cast the value to the type analyzed result
+      value = util::cast(_ctx, value, block, type, false);
+      if (!value) return false;
+
       // Append to the value chain
       values.push_back(value->get_value(_ctx));
       value_blocks.push_back(iblock);
@@ -39,6 +47,8 @@ void Build::visit_select(ast::Select& x) {
 
     // Append to the block chain
     blocks.push_back(iblock);
+
+    return true;
   };
 
   // Iterate through each branch and build its contained block ..
@@ -58,7 +68,7 @@ void Build::visit_select(ast::Select& x) {
     LLVMPositionBuilderAtEnd(_ctx.irb, then_block);
 
     // Process the branch ..
-    do_select_branch(*br->block);
+    if (!do_select_branch(*br->block)) return;
 
     // Insert the `next` block after our current block.
     LLVMMoveBasicBlockAfter(next_block, LLVMGetInsertBlock(_ctx.irb));
@@ -104,12 +114,6 @@ void Build::visit_select(ast::Select& x) {
 
   // If we still have a value ..
   if (has_value) {
-    // Resolve the type of us (in full)
-    auto type = Resolve(_scope).run(x);
-    if (!type || type.is<code::TypeNone>()) return;
-
-    // TODO(_): Iterate through each value-handle and cast to the expected type
-
     // Make the PHI value
     auto res = LLVMBuildPhi(_ctx.irb, type->handle(), "");
     LLVMAddIncoming(res, values.data(), value_blocks.data(), values.size());
