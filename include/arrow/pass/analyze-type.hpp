@@ -69,8 +69,8 @@ class AnalyzeType : public ast::Visitor {
   };
 
   bool _incomplete;
-  std::unordered_map<ast::Node*, std::vector<Assignment>> _assign;
-  std::unordered_map<ast::Node*, std::vector<Use>> _use;
+  std::unordered_map<code::Slot*, std::vector<Assignment>> _assign;
+  std::unordered_map<code::Slot*, std::vector<Use>> _use;
 };
 
 }  // namespace pass

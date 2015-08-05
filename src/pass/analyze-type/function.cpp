@@ -16,42 +16,55 @@ void AnalyzeType::visit_function(ast::Function& x) {
   auto item = _scope->find(&x).as<code::Function>();
   if (!item) return;
 
-  // Attempt to resolve the type of this ..
-  auto type = Resolve(_scope).run(x);
-  if (type->is_unknown()) {
-    _incomplete = true;
-  } else {
-    // Place the type on the item
-    item->type = type;
+  bool resolve_params = false;
+  Ref<code::TypeFunction> type;
+  if (!item->type) {
+    // Attempt to resolve the type of this ..
+    resolve_params = true;
+    type = Resolve(_scope).run(x);
+    if (type->is_unknown()) {
+      _incomplete = true;
+    } else {
+      // Place the type on the item
+      item->type = type;
 
-    // Add the current module to the type
-    auto module = util::current_module(_scope);
-    type.as<code::TypeFunction>()->_modules.insert(module);
+      // Add the current module to the type
+      auto module = util::current_module(_scope);
+      type.as<code::TypeFunction>()->_modules.insert(module);
+    }
+  } else {
+    type = item->type.as<code::TypeFunction>();
   }
 
   // Enter the function scope-block
   item->scope->enter(&x);
 
-  // Iterate and set the parameters' types (in the function scope)
-  for (unsigned param_idx = 0; param_idx < x.parameters.size(); ++param_idx) {
-    auto& param = x.parameters.at(param_idx);
-    auto param_type = type.as<code::TypeFunction>()->parameters.at(param_idx);
+  if (resolve_params) {
+    // Iterate and set the parameters' types (in the function scope)
+    for (unsigned param_idx = 0; param_idx < x.parameters.size(); ++param_idx) {
+      auto& param = x.parameters.at(param_idx);
+      auto param_type = type.as<code::TypeFunction>()->parameters.at(param_idx);
 
-    // Expand the parameter
-    if (!_expand_parameter_pattern(
-        *param->pattern, param_type->type, item->scope)) {
-      return;
+      // Expand the parameter
+      if (!_expand_parameter_pattern(
+          *param->pattern, param_type->type, item->scope)) {
+        return;
+      }
     }
   }
 
-  // Create a child analyzer
-  auto child = AnalyzeType(_ctx, item->scope);
+  // Save the current-scope and set the item-scope
+  auto current_scope = _scope;
+  _scope = item->scope;
 
   // Analyze the function body
-  child.run(*x.block);
+  x.block->accept(*this);
 
   // Exit the function scope-block
   item->scope->exit();
+
+  // Restore the previous scope
+  _scope = current_scope;
 }
 
 bool AnalyzeType::_expand_parameter_pattern(

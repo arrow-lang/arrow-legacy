@@ -1,0 +1,21 @@
+@c = internal global i128 0
+
+define internal void @function-slot-deduce..init() {
+  store i128 50, i128* @c
+  call void @method()
+  ret void
+}
+
+define internal void @method() {
+  %a = alloca i128
+  store i128 20, i128* %a
+  %b = alloca i128
+  %1 = load i128* @c
+  store i128 %1, i128* %b
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @function-slot-deduce..init()
+  ret i32 0
+}

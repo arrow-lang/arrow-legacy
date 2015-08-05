@@ -26,8 +26,10 @@ bool AnalyzeType::_expand_assign(
         return false;
       }
 
-      // Mark [assign]
-      _assign[item->context].push_back({type});
+      if (item.is<code::Slot>()) {
+        // Mark [assign]
+        _assign[item.as<code::Slot>().get()].push_back({type});
+      }
     } break;
 
     Case(ast::Tuple& x) {

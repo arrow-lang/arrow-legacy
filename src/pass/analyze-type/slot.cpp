@@ -59,12 +59,12 @@ bool AnalyzeType::_expand_pattern(
       }
 
       // Mark [decl]
-      _assign[&pattern] = {};
+      _assign[item.get()] = {};
 
       // If we have an initializer ..
       if (type_initializer) {
         // Mark [assign]
-        _assign[&pattern].push_back({type_initializer});
+        _assign[item.get()].push_back({type_initializer});
       }
     } break;
 

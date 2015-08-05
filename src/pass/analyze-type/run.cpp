@@ -45,12 +45,7 @@ void AnalyzeType::run(ast::Node& x) {
     // Enumerate through each decl. and ensure that all types have been
     // annotated through context
     for (auto& ref : _assign) {
-      auto item = _scope->find(ref.first);
-
-      // Skip this if its an external slot (for now)
-      if (item.is<code::ExternSlot>()) continue;
-
-      auto slot = item.as<code::Slot>();
+      auto slot = ref.first;
 
       // If this slot already has a type; get out
       if (slot->type && !slot->type->is_unknown()) continue;
@@ -79,9 +74,9 @@ void AnalyzeType::run(ast::Node& x) {
           // Resolve the common type ..
           type = code::instersect_all(type_set);
           if (!type) {
-            Log::get().error(item->context->span,
+            Log::get().error(slot->context->span,
               "unable to infer a type for variable %s",
-              item->name.c_str());
+              slot->name.c_str());
           }
         }
 
