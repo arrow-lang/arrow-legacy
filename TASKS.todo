@@ -43,23 +43,12 @@
   ☐ Unary
   ☐ Binary
 
-  ☐ Import
+  ✔ Import @done(2015-08-04 18:30) @project([build])
     ✔ Function @done(2015-07-31 14:48) @project([build] / [function])
     ✔ Extern Function @done(2015-07-31 14:48) @project([build] / [function])
     ✔ Extern Slot @done(2015-07-31 14:48) @project([build] / [function])
     ✔ Slot (..) @done(2015-07-31 18:15) @project([build] / [function])
-    ☐ Initializer Resolution (Hard Mode)
-      ✔ Analyze module dependencies (line-174 of compiler.cpp) @done(2015-08-04 16:20) @project([build] / [function])
-      ☐ All "constant" initialization (that is exported) goes into a
-        common list (that is sorted as we go along); at the end, this
-        list is pushed into a global ".init" that is run before any module
-        initializers
-      ☐ Detect "constant" initializers that cyclically depend on another
-        "constant" initializer (eg. "(in a) let a = b.b; (in b) let b = a.a")
-        and error the fuck out
-      ✔ Sort module initializers (on dependency order) @done(2015-08-04 16:20) @project([build] / [function])
-      ✔ All module initializers (that got imported at some point) are ran @done(2015-08-04 16:20) @project([build] / [function])
-
+    ✔ Initializer Resolution (Hard Mode) @done(2015-08-04 18:29) @project([build] / [function])
 
 [...]:
   ☐ Parameter (Unpack)
