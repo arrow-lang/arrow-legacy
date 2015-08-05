@@ -35,10 +35,43 @@ void Resolve::do_unary(
 
 void Resolve::visit_identity(ast::Identity& x) {
   do_unary(x, [&, this](Ref<code::Type> type) -> Ref<code::Type> {
-    // +{int,float} => {int,float}
     if (type.is<code::TypeInteger>() ||
         type.is<code::TypeFloat>() ||
         type.is<code::TypeSizedInteger>()) {
+      return type;
+    }
+
+    return nullptr;
+  });
+}
+
+void Resolve::visit_negate(ast::Negate& x) {
+  do_unary(x, [&, this](Ref<code::Type> type) -> Ref<code::Type> {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeFloat>() ||
+        type.is<code::TypeSizedInteger>()) {
+      return type;
+    }
+
+    return nullptr;
+  });
+}
+
+void Resolve::visit_bit_not(ast::BitNot& x) {
+  do_unary(x, [&, this](Ref<code::Type> type) -> Ref<code::Type> {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeBoolean>() ||
+        type.is<code::TypeSizedInteger>()) {
+      return type;
+    }
+
+    return nullptr;
+  });
+}
+
+void Resolve::visit_not(ast::Not& x) {
+  do_unary(x, [&, this](Ref<code::Type> type) -> Ref<code::Type> {
+    if (type.is<code::TypeBoolean>()) {
       return type;
     }
 

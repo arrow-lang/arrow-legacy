@@ -49,6 +49,14 @@ class Build : public ast::Visitor {
   virtual void visit_float(ast::Float&);
   virtual void visit_tuple(ast::Tuple&);
 
+  // Unary
+  // virtual void visit_identity(ast::Identity&);
+  virtual void visit_negate(ast::Negate&);
+  virtual void visit_bit_not(ast::BitNot&);
+  virtual void visit_not(ast::Not&);
+  // virtual void visit_deref(ast::Dereference&);
+  // virtual void visit_address_of(ast::AddressOf&);
+
   // Binary
   virtual void visit_assign(ast::Assign&);
   virtual void visit_path(ast::Path&);
@@ -61,6 +69,9 @@ class Build : public ast::Visitor {
   // virtual void visit_select_branch(ast::SelectBranch&);
 
  private:
+  void do_unary(
+    ast::Unary& x, std::function<LLVMValueRef(Ref<code::Value>)> c);
+
   bool _expand_parameter_pattern(
     ast::Pattern& pattern, Ref<code::Value> value, Ref<code::Scope> scope);
 

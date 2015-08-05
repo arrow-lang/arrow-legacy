@@ -52,10 +52,10 @@ class Resolve : public ast::Visitor {
 
   // Unary
   virtual void visit_identity(ast::Identity&);
-  // virtual void visit_negate(ast::Negate&);
-  // virtual void visit_bit_not(ast::BitNot&);
+  virtual void visit_negate(ast::Negate&);
+  virtual void visit_bit_not(ast::BitNot&);
+  virtual void visit_not(ast::Not&);
   // virtual void visit_deref(ast::Dereference&);
-  // virtual void visit_not(ast::Not&);
   // virtual void visit_address_of(ast::AddressOf&);
 
   // Misc.

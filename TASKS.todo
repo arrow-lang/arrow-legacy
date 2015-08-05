@@ -39,7 +39,7 @@
   ✔ Select @done(2015-07-25 07:21) @project([build])
   ✔ Cast each branch in a select expression (that has a value) @done(2015-08-04 23:39) @project([build])
   ☐ Loop
-  ☐ Unary
+  ✔ Unary @done(2015-08-05 09:17) @project([build])
   ☐ Binary
 
   ✔ Import @done(2015-08-04 18:30) @project([build])
@@ -69,5 +69,6 @@ language-arrow:
   ☐ Fix `export/extern let x` (not pushing `x` as a variable)
   ☐ Make `;` optional
   ☐ Add "x = *" and "(x,y,z) = *" patterns
+  ☐ Add "unless/until" to control keywords
   ☐ Add shebang as a comment-type
   ☐ Escape sequences in strings
