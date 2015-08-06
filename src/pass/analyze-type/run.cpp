@@ -81,7 +81,6 @@ void AnalyzeType::run(ast::Node& x) {
           }
         }
 
-        // FIXME: Reduce the COMMON type among all types
         if (invalid) {
           if (max_null_run <= 0) {
             slot->type = new code::TypeNone();

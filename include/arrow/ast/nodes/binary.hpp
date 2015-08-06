@@ -19,40 +19,43 @@ struct Binary : Node {
 
   virtual ~Binary() noexcept;
 
+  virtual const char* punctuator() const noexcept = 0;
+
   Ref<Node> lhs;
   Ref<Node> rhs;
 };
 
-#define DEF_BINARY(Name) \
+#define DEF_BINARY(Name, P) \
   struct Name : Binary { \
     using Binary::Binary; \
     virtual ~Name() noexcept; \
+    virtual const char* punctuator() const noexcept override { return P; } \
     void accept(Visitor&) override; \
   }
 
-DEF_BINARY(Add);
-DEF_BINARY(Sub);
-DEF_BINARY(Mul);
-DEF_BINARY(Div);
-DEF_BINARY(Mod);
+DEF_BINARY(Add, "+");
+DEF_BINARY(Sub, "-");
+DEF_BINARY(Mul, "*");
+DEF_BINARY(Div, "/");
+DEF_BINARY(Mod, "%");
 
-DEF_BINARY(BitOr);
-DEF_BINARY(BitXor);
-DEF_BINARY(BitAnd);
+DEF_BINARY(BitOr, "|");
+DEF_BINARY(BitXor, "^");
+DEF_BINARY(BitAnd, "&");
 
-DEF_BINARY(EqualTo);
-DEF_BINARY(NotEqualTo);
-DEF_BINARY(GreaterThanOrEqualTo);
-DEF_BINARY(GreaterThan);
-DEF_BINARY(LessThanOrEqualTo);
-DEF_BINARY(LessThan);
+DEF_BINARY(EqualTo, "==");
+DEF_BINARY(NotEqualTo, "!=");
+DEF_BINARY(GreaterThanOrEqualTo, ">=");
+DEF_BINARY(GreaterThan, ">");
+DEF_BINARY(LessThanOrEqualTo, "<=");
+DEF_BINARY(LessThan, "<");
 
-DEF_BINARY(And);
-DEF_BINARY(Or);
+DEF_BINARY(And, "and");
+DEF_BINARY(Or, "or");
 
-DEF_BINARY(Cast);
+DEF_BINARY(Cast, "as");
 
-DEF_BINARY(Assign);
+DEF_BINARY(Assign, "=");
 
 #undef DEF_BINARY
 
