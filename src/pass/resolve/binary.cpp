@@ -22,7 +22,10 @@ void Resolve::do_binary(
   auto lhs = Resolve(_scope).run(*x.lhs);
   auto rhs = Resolve(_scope).run(*x.rhs);
   if (!lhs || !rhs) return;
-  if (lhs->is_unknown() || rhs->is_unknown()) return;
+  if (lhs->is_unknown() || rhs->is_unknown()) {
+    _stack.push_front(new code::TypeUnknown());
+    return;
+  }
 
   // Determine the resultant type
   auto result = cb(lhs, rhs);
