@@ -14,12 +14,11 @@ $ sudo apt-get install build-essential clang llvm-dev libboost-all-dev libgmp-de
 ## Build
 
 ```bash
-$ ./waf configure
-$ ./waf build -p
+$ script/build
 ```
 
 ## Test
 
 ```bash
-$ ./waf test
+$ script/test
 ```
