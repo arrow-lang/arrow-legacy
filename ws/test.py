@@ -176,22 +176,20 @@ def handle_compile(fn, binary_path, filename):
               transform_stdout=transform)
 
 
-def handle_run(fn, binary_path, filename):
-    return fn(binary_path, filename, "--run")
+def handle_run(_, binary_path, filename):
+    filename = path.relpath(filename)
+    p = Popen(
+        [binary_path, "--compile", filename], stdout=PIPE, stderr=PIPE,
+        cwd=path.join(path.dirname(__file__), ".."),
+    )
+    interpreter = Popen(["lli"], stdin=p.stdout, stdout=PIPE, stderr=PIPE)
 
-    # filename = path.relpath(filename)
-    # p = Popen(
-    #     [binary_path, filename], stdout=PIPE, stderr=PIPE,
-    #     cwd=path.join(path.dirname(__file__), ".."),
-    # )
-    #
-    # stdout, _ = interpreter.communicate()
-    # print(stdout, _)
-    #
-    # expected = get_expected(filename, "stdout")
-    # test = expected == stdout.decode('utf-8') and interpreter.returncode == 0
-    #
-    # return test
+    stdout, _ = interpreter.communicate()
+
+    expected = get_expected(filename, "stdout")
+    test = expected == stdout.decode('utf-8') and interpreter.returncode == 0
+
+    return test
 
 
 # def handle_run_fail(binary_path, filename):
