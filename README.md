@@ -5,8 +5,6 @@ Arrow
 
 ## Prerequisites
 
-### Ubuntu 14.10
-
 ```bash
 $ sudo apt-get install build-essential clang llvm-dev libboost-all-dev libgmp-dev libzip-dev
 ```
