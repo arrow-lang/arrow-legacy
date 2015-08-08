@@ -18,14 +18,8 @@ void Define::visit_module(ast::Module& x) {
   auto block = LLVMAppendBasicBlock(item->initializer, "");
   LLVMPositionBuilderAtEnd(_ctx.irb, block);
 
-  // Enter the module-scope block
-  item->scope->enter(&x);
-
   // Define any items that need forward declarations.
   Define(_ctx, item->scope).run(*x.block);
-
-  // Leave the module scope-block
-  item->scope->exit();
 
   // Move instruction ptr back to where it was (if it was somewhere)
   if (last_block) {

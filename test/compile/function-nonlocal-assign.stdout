@@ -2,13 +2,13 @@
 @box = internal global i128 0
 
 define internal void @function-nonlocal-assign..init() {
-  call void @method()
+  call void @function-nonlocal-assign.method()
   %1 = load i128* @value
   store i128 %1, i128* @box
   ret void
 }
 
-define internal void @method() {
+define internal void @function-nonlocal-assign.method() {
   store i128 20, i128* @value
   ret void
 }

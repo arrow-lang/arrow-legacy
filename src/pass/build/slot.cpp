@@ -84,9 +84,15 @@ static bool _expand_pattern(
 namespace pass {
 
 void Build::visit_slot(ast::Slot& x) {
+  // Determine if we are in function or module scope ..
+  bool local = false;
+  if (_scope->get_owner()) {
+    local = typeid(*_scope->get_owner()) == typeid(code::Function);
+  }
+
   // Check for an initializer ..
   Ref<code::Value> initializer = nullptr;
-  if (x.initializer && !util::is_static(*x.initializer)) {
+  if (x.initializer && (local || !util::is_static(*x.initializer))) {
     initializer = Build(_ctx, _scope).run_scalar(*x.initializer);
     if (!initializer) return;
 

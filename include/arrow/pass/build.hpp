@@ -58,6 +58,24 @@ class Build : public ast::Visitor {
   // virtual void visit_address_of(ast::AddressOf&);
 
   // Binary
+  virtual void visit_add(ast::Add&);
+  virtual void visit_sub(ast::Sub&);
+  virtual void visit_mul(ast::Mul&);
+  virtual void visit_div(ast::Div&);
+  virtual void visit_mod(ast::Mod&);
+  virtual void visit_eq(ast::EqualTo&);
+  virtual void visit_ne(ast::NotEqualTo&);
+  virtual void visit_lt(ast::LessThan&);
+  virtual void visit_le(ast::LessThanOrEqualTo&);
+  virtual void visit_ge(ast::GreaterThanOrEqualTo&);
+  virtual void visit_gt(ast::GreaterThan&);
+  // virtual void visit_bit_and(ast::BitAnd&);
+  // virtual void visit_bit_xor(ast::BitXor&);
+  // virtual void visit_bit_or(ast::BitOr&);
+  // virtual void visit_and(ast::And&);
+  // virtual void visit_or(ast::Or&);
+
+  // Misc.
   virtual void visit_assign(ast::Assign&);
   virtual void visit_path(ast::Path&);
 
@@ -70,7 +88,13 @@ class Build : public ast::Visitor {
 
  private:
   void do_unary(
-    ast::Unary& x, std::function<LLVMValueRef(Ref<code::Value>)> c);
+    ast::Unary& x, std::function<LLVMValueRef(Ref<code::Value>)> cb);
+
+  void do_binary(
+    ast::Binary& x,
+    bool perform_cast,
+    std::function<LLVMValueRef(
+      Ref<code::Type>, Ref<code::Value>, Ref<code::Value>)> cb);
 
   bool _expand_parameter_pattern(
     ast::Pattern& pattern, Ref<code::Value> value, Ref<code::Scope> scope);

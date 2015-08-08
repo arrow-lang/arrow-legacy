@@ -1,9 +1,9 @@
 define internal void @function-select-assign..init() {
-  call void @method()
+  call void @function-select-assign.method()
   ret void
 }
 
-define internal void @method() {
+define internal void @function-select-assign.method() {
   %a = alloca i128
   br i1 false, label %1, label %2
 

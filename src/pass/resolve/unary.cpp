@@ -18,6 +18,7 @@ void Resolve::do_unary(
   // Resolve the type of the operand expression
   auto type = Resolve(_scope).run(*x.operand);
   if (!type) return;
+  if (type->is_unknown()) return;
 
   // Determine the resultant type
   auto result = cb(type);

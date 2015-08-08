@@ -38,7 +38,7 @@ void Resolve::visit_select(ast::Select& x) {
   // If we have enough matched types ..
   if (types.size() == x.branches.size() + 1) {
     // Intersect the matched types ..
-    auto final_type = code::instersect_all(types);
+    auto final_type = code::intersect_all(types);
     if (final_type) {
       _stack.push_front(final_type);
     }

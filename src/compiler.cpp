@@ -278,7 +278,109 @@ void Compiler::compile(const std::string& name, Ref<ast::Node> node) {
   // Build a call to the top-level module initializer
   LLVMBuildCall(_ctx.irb, top->initializer, nullptr, 0, "");
 
-  // TODO(mehcode): Discover and build a call to the module main function
+  // Discover and build a call to the module main function
+  auto mod_main_item = top->scope->find("main");
+
+  Ref<code::Function> mod_main = nullptr;
+  if (mod_main_item) {
+    if (!mod_main_item.is<code::Function>()) {
+      Log::get().error(
+        mod_main_item->context->span, "'main' must be a function");
+
+      return;
+    }
+
+    mod_main = mod_main_item.as<code::Function>();
+    auto m_ctx = dynamic_cast<ast::Function*>(mod_main_item->context);
+    auto mm = mod_main->type.as<code::TypeFunction>();
+
+    if (mm->result && !(mm->result.is<code::TypeInteger>() || mm->result.is<code::TypeNone>())) {
+      Log::get().error(
+        m_ctx->result_type->span, "result of `main` must be `None` or `int`");
+    }
+
+    // Check for the correct parameter count
+    if (mm->parameters.size() > 3) {
+      Log::get().error(
+        mod_main_item->context->span,
+        "too many parameters (%d) for 'main': must be 0, 2, or 3",
+        mm->parameters.size());
+    }
+
+    if (mm->parameters.size() == 1) {
+      Log::get().error(
+        mod_main_item->context->span,
+        "only one parameter for 'main': must be 0, 2, or 3");
+    }
+
+    if (mm->parameters.size() >= 1) {
+      // TODO: Revisit when we understand `c_int`
+      if (!(mm->parameters[0]->type.is<code::TypeInteger>())) {
+        Log::get().error(
+          m_ctx->parameters[0]->span,
+          "first parameter of 'main' (argc) must be of type 'int'");
+      }
+    }
+
+    if (mm->parameters.size() >= 2) {
+      bool param_type_match = false;
+      if (mm->parameters[1]->type.is<code::TypePointer>()) {
+        if (mm->parameters[1]->type.as<code::TypePointer>()->pointee.is<code::TypeString>()) {
+          param_type_match = true;
+        }
+      }
+      if (!param_type_match) {
+        // TODO: Waiting on context to understand where this came from
+        Log::get().error(
+          m_ctx->parameters[1]->span,
+          "second parameter of 'main' (argv) must be of type '*str'");
+      }
+    }
+
+    if (mm->parameters.size() >= 3) {
+      bool param_type_match = false;
+      if (mm->parameters[2]->type.is<code::TypePointer>()) {
+        if (mm->parameters[2]->type.as<code::TypePointer>()->pointee.is<code::TypeString>()) {
+          param_type_match = true;
+        }
+      }
+      if (!param_type_match) {
+        // TODO: Waiting on context to understand where this came from
+        Log::get().error(
+          m_ctx->parameters[2]->span,
+          "third parameter of 'main' (environ) must be of type '*str'");
+      }
+    }
+  }
+
+  // Do we keep going ?
+  if (Log::get().count("error") > 0) { return; }
+
+  if (mod_main) {
+    // Collect arguments to call the module main function
+    std::vector<LLVMValueRef> main_args;
+    auto mm = mod_main->type.as<code::TypeFunction>();
+    for (unsigned idx = 0; idx < mm->parameters.size(); ++idx) {
+      auto handle = LLVMGetParam(abi_main, idx);
+      if (idx == 0) {
+        handle = LLVMBuildSExt(
+          _ctx.irb, handle, mm->parameters[idx]->type->handle(), "");
+      }
+
+      main_args.push_back(handle);
+    }
+
+    // Build a call to the module main
+    auto main_res = LLVMBuildCall(
+      _ctx.irb, mod_main->get_value(_ctx), main_args.data(), main_args.size(),
+      "");
+
+    // If the module main returns ..
+    if (mm->result && !mm->result.is<code::TypeNone>()) {
+      auto res = LLVMBuildTrunc(_ctx.irb, main_res, LLVMInt32Type(), "");
+      LLVMBuildRet(_ctx.irb, res);
+    }
+  }
 
   // If we didn't terminate (by returning the value of module main) ..
   if (!LLVMGetBasicBlockTerminator(LLVMGetLastBasicBlock(abi_main))) {

@@ -15,7 +15,7 @@ define internal void @lib..init() {
   ret void
 }
 
-define internal void @method() {
+define internal void @lib.method() {
   call void @exit(i128 10)
   ret void
 }

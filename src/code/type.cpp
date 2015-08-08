@@ -46,6 +46,14 @@ std::string TypeParameter::name() const {
   return stream.str();
 }
 
+std::string TypePointer::name() const {
+  std::stringstream stream;
+  stream << "*";
+  if (is_mutable) stream << "mutable ";
+  stream << pointee->name();
+  return stream.str();
+}
+
 std::string TypeFunction::name() const {
   std::stringstream stream;
   stream << "(";
@@ -103,6 +111,16 @@ bool TypeParameter::equals(Type& other) const {
   return type->equals(*other_p.type);
 }
 
+bool TypePointer::equals(Type& other) const {
+  // Check that we are comparing against a pointer
+  if (!Type::equals(other)) return false;
+  auto other_p = dynamic_cast<TypePointer&>(other);
+
+  // Equal if the pointee's and mutability are eqiuvalent.
+  return is_mutable == other_p.is_mutable &&
+         pointee->equals(*other_p.pointee);
+}
+
 bool TypeFunction::equals(Type& other) const {
   // Check that we are comparing against a function
   if (!Type::equals(other)) return false;
@@ -143,6 +161,10 @@ LLVMTypeRef TypeString::handle() {
   // TODO(_): Eventually we will use string /objects/ that contain the
   //          length.
   return LLVMPointerType(LLVMInt8Type(), 0);
+}
+
+LLVMTypeRef TypePointer::handle() {
+  return LLVMPointerType(pointee->handle(), 0);
 }
 
 LLVMTypeRef TypeInteger::handle() {
@@ -217,6 +239,10 @@ bool TypeFunction::is_unknown() const {
 
 bool TypeParameter::is_unknown() const {
   return type->is_unknown();
+}
+
+bool TypePointer::is_unknown() const {
+  return pointee->is_unknown();
 }
 
 // Intersect
@@ -296,7 +322,7 @@ Ref<code::Type> TypeSizedInteger::intersect(Ref<code::Type> other) const {
   return nullptr;
 }
 
-Ref<code::Type> instersect_all(const std::vector<Ref<code::Type>>& types) {
+Ref<code::Type> intersect_all(const std::vector<Ref<code::Type>>& types) {
   // If we have no types; return nil
   if (types.size() == 0) return nullptr;
 

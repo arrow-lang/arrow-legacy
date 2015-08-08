@@ -2,7 +2,7 @@ define internal void @function-nonlocal-use-no-call..init() {
   ret void
 }
 
-define internal void @method() {
+define internal void @function-nonlocal-use-no-call.method() {
   ret void
 }
 

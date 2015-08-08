@@ -2,11 +2,11 @@
 
 define internal void @function-slot-deduce..init() {
   store i128 50, i128* @c
-  call void @method()
+  call void @function-slot-deduce.method()
   ret void
 }
 
-define internal void @method() {
+define internal void @function-slot-deduce.method() {
   %a = alloca i128
   store i128 20, i128* %a
   %b = alloca i128

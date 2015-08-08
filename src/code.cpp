@@ -35,6 +35,7 @@ IMPL(TypeTuple)
 IMPL(TypeFunction)
 IMPL(TypeParameter)
 IMPL(TypeString)
+IMPL(TypePointer)
 
 IMPL(Value)
 IMPL(ValueNone)

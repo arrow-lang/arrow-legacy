@@ -38,25 +38,29 @@ static LLVMAttribute _get_attribute(Ref<code::Type> type) {
 
 LLVMValueRef ExternFunction::get_value(Compiler::Context& ctx) {
   if (!_handle) {
-    // Add the extern function decl to the module
-    auto type_handle = LLVMGetElementType(type->handle());
-    _handle = LLVMAddFunction(ctx.mod, name.c_str(), type_handle);
+    // Try to get an existing function
+    _handle = LLVMGetNamedFunction(ctx.mod, name.c_str());
+    if (!_handle) {
+      // Add the extern function decl to the module
+      auto type_handle = LLVMGetElementType(type->handle());
+      _handle = LLVMAddFunction(ctx.mod, name.c_str(), type_handle);
 
-    // Check result type and apply attribute
-    auto ftype = type.as<code::TypeFunction>();
-    auto attr = _get_attribute(ftype->result);
-    if (attr != 0) {
-      LLVMAddResultAttribute(_handle, attr);
-    }
-
-    // Iterate through parameters, check, and apply attributes
-    unsigned idx = 0;
-    for (auto& param : ftype->parameters) {
-      attr = _get_attribute(param->type);
+      // Check result type and apply attribute
+      auto ftype = type.as<code::TypeFunction>();
+      auto attr = _get_attribute(ftype->result);
       if (attr != 0) {
-        LLVMAddAttribute(LLVMGetParam(_handle, idx), attr);
+        LLVMAddResultAttribute(_handle, attr);
       }
-      idx += 1;
+
+      // Iterate through parameters, check, and apply attributes
+      unsigned idx = 0;
+      for (auto& param : ftype->parameters) {
+        attr = _get_attribute(param->type);
+        if (attr != 0) {
+          LLVMAddAttribute(LLVMGetParam(_handle, idx), attr);
+        }
+        idx += 1;
+      }
     }
   }
 

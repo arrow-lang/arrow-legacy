@@ -15,8 +15,8 @@ namespace pass {
 void Build::do_unary(
   ast::Unary& x, std::function<LLVMValueRef(Ref<code::Value>)> cb
 ) {
-  // Resolve the type of the operand expression
-  auto type = Resolve(_scope).run(*x.operand);
+  // Resolve the type of the expression
+  auto type = Resolve(_scope).run(x);
   if (!type) return;
 
   // Build the operand ..

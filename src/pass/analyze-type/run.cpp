@@ -73,7 +73,7 @@ void AnalyzeType::run(ast::Node& x) {
         Ref<code::Type> type = nullptr;
         if (!invalid) {
           // Resolve the common type ..
-          type = code::instersect_all(type_set);
+          type = code::intersect_all(type_set);
           if (!type) {
             Log::get().error(slot->context->span,
               "unable to infer a type for variable %s",

@@ -31,7 +31,7 @@ void Build::visit_select(ast::Select& x) {
     auto value = Build(_ctx, _scope).run_scalar(block);
     auto iblock = LLVMGetInsertBlock(_ctx.irb);
 
-    if (has_value && value) {
+    if (has_value && value && !value->type.is<code::TypeNone>()) {
       // Cast the value to the type analyzed result
       value = util::cast(_ctx, value, block, type, false);
       if (!value) return false;
@@ -113,7 +113,7 @@ void Build::visit_select(ast::Select& x) {
   LLVMPositionBuilderAtEnd(_ctx.irb, merge_block);
 
   // If we still have a value ..
-  if (has_value) {
+  if (has_value && values.size() > 0) {
     // Make the PHI value
     auto res = LLVMBuildPhi(_ctx.irb, type->handle(), "");
     LLVMAddIncoming(res, values.data(), value_blocks.data(), values.size());

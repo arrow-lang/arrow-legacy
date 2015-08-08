@@ -18,12 +18,13 @@ void AnalyzeType::visit_function(ast::Function& x) {
 
   bool resolve_params = false;
   Ref<code::TypeFunction> type;
-  if (!item->type) {
+  if (!item->type || item->type->is_unknown()) {
     // Attempt to resolve the type of this ..
     resolve_params = true;
     type = Resolve(_scope).run(x);
     if (type->is_unknown()) {
       _incomplete = true;
+      resolve_params = false;
     } else {
       // Place the type on the item
       item->type = type;

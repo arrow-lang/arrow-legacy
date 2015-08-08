@@ -1,7 +1,7 @@
 @const = internal constant i128 30
 
 define internal void @import-function..init() {
-  call void @method()
+  call void @lib.method()
   ret void
 }
 
@@ -9,7 +9,7 @@ define internal void @lib..init() {
   ret void
 }
 
-define internal void @method() {
+define internal void @lib.method() {
   call void @exit(i128 10)
   ret void
 }

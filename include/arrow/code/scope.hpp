@@ -95,6 +95,9 @@ class Scope {
   Scope& operator=(const Scope&) = delete;
   Scope& operator=(Scope&&) = delete;
 
+  /// Get the name of this scope.
+  std::string name() const { return _name; }
+
   /// Get the parent scope for this scope.
   Ref<Scope> parent() const { return _parent; }
 

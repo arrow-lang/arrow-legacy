@@ -181,6 +181,28 @@ struct TypeTuple : Type {
   LLVMTypeRef _handle;
 };
 
+// Pointer
+// -----------------------------------------------------------------------------
+
+struct TypePointer : Type {
+  TypePointer(Ref<code::Type> pointee, bool is_mutable)
+    : pointee(pointee), is_mutable(is_mutable) {
+  }
+
+  virtual ~TypePointer() noexcept;
+
+  virtual LLVMTypeRef handle();
+
+  virtual bool equals(Type& other) const;
+
+  virtual std::string name() const;
+
+  virtual bool is_unknown() const;
+
+  Ref<code::Type> pointee;
+  bool is_mutable;
+};
+
 // String
 // -----------------------------------------------------------------------------
 
@@ -277,7 +299,7 @@ struct Typename : Item {
   Ref<Type> type;
 };
 
-extern Ref<code::Type> instersect_all(
+extern Ref<code::Type> intersect_all(
   const std::vector<Ref<code::Type>>& types);
 
 }  // namespace code

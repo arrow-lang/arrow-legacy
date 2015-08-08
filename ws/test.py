@@ -128,7 +128,12 @@ def handle_(binary_path, filename, *args, **kwargs):
         stdout = transform_stdout(stdout)
 
     expected = get_expected(filename, "stdout")
-    test = len(expected) > 0 and expected == stdout and process.returncode == 0
+    test = True
+
+    if len(stdout) > 0:
+        test = test and (len(expected) > 0 and expected == stdout)
+
+    test = test and process.returncode == 0
 
     return test
 
@@ -172,20 +177,22 @@ def handle_compile(fn, binary_path, filename):
               transform_stdout=transform)
 
 
-# def handle_run(binary_path, filename):
-#     filename = path.relpath(filename)
-#     p = Popen(
-#         [binary_path, filename], stdout=PIPE, stderr=PIPE,
-#         cwd=path.join(path.dirname(__file__), ".."),
-#     )
-#     interpreter = Popen(["lli"], stdin=p.stdout, stdout=PIPE, stderr=PIPE)
-#
-#     stdout, _ = interpreter.communicate()
-#
-#     expected = get_expected(filename, "stdout")
-#     test = expected == stdout.decode('utf-8') and interpreter.returncode == 0
-#
-#     return test
+def handle_run(fn, binary_path, filename):
+    return fn(binary_path, filename, "--run")
+
+    # filename = path.relpath(filename)
+    # p = Popen(
+    #     [binary_path, filename], stdout=PIPE, stderr=PIPE,
+    #     cwd=path.join(path.dirname(__file__), ".."),
+    # )
+    #
+    # stdout, _ = interpreter.communicate()
+    # print(stdout, _)
+    #
+    # expected = get_expected(filename, "stdout")
+    # test = expected == stdout.decode('utf-8') and interpreter.returncode == 0
+    #
+    # return test
 
 
 # def handle_run_fail(binary_path, filename):
@@ -216,6 +223,7 @@ def run(ctx):
     run_("parse-fail", ctx, binary_path)
     run_("compile", ctx, binary_path)
     run_("compile-fail", ctx, binary_path)
+    run_("run", ctx, binary_path)
 
     print_report()
 

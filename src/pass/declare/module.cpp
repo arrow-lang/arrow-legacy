@@ -25,14 +25,8 @@ void Declare::visit_module(ast::Module& x) {
   // Set the module initializer
   item->initializer = mod_init_fn;
 
-  // Enter the module-scope block
-  item->scope->enter(&x);
-
   // Declare any items that need forward declarations.
   Declare(_ctx, item->scope).run(*x.block);
-
-  // Leave the module scope-block
-  item->scope->exit();
 }
 
 }  // namespace pass

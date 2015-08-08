@@ -14,10 +14,13 @@ void Declare::visit_function(ast::Function& x) {
   auto item = _scope->find(&x).as<code::Function>();
   if (!item) return;
 
+  // Qualify the name (to use for linkage)
+  auto qname = _scope->name() + "." + item->name;
+
   // Create the actual LLVM function
   auto type = item->type.as<code::TypeFunction>();
   auto type_handle = LLVMGetElementType(type->handle());
-  auto handle = LLVMAddFunction(_ctx.mod, item->name.c_str(), type_handle);
+  auto handle = LLVMAddFunction(_ctx.mod, qname.c_str(), type_handle);
   item->set_address(handle);
 
   // TODO(mehcode): If we're building a library and this is exported..
