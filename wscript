@@ -76,6 +76,9 @@ def configure(ctx):
         ctx.env.append_unique("CXXFLAGS", "-Wno-unused-value")
         ctx.env.append_unique("CXXFLAGS", "-Wno-unused-parameter")
 
+        ctx.env.append_unique("CXXFLAGS", "-rdynamic")
+        ctx.env.append_unique("LINKFLAGS", "-rdynamic")
+
 
 def build(ctx):
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),
