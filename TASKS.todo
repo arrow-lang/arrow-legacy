@@ -1,19 +1,12 @@
-[analyze-usage]:
-  [function]:
-    ✔ Mark non-local -use/assign @done(2015-07-24 23:43) @project([analyze-usage] / [function])
-    ✔ Check non-local use/assign validity on call @done(2015-07-24 23:43) @project([analyze-usage] / [function])
-    ✔ Parameters (**) @done(2015-07-29 10:51) @project([analyze-usage] / [function])
-    ✔ Recursion (*) @done(2015-07-29 10:13) @project([analyze-usage] / [function])
-
+[...]:
   ☐ Loop
-  ✔ Import @done(2015-07-31 14:48) @project([analyze-usage])
-
-
-[analyze-type]:
-  ✔ Scope crossing doesn't work for variable contextual deduce (*) @done(2015-08-04 23:39) @project([analyze-type])
-  ✔ CTA @done(2015-07-25 06:52) @project([analyze-type])
+  ☐ Bitwise
+  ☐ Parameter (Unpack)
+  ☐ Do not use colors on the log when piped (allow readable .stderr expected results on tests)
+  ☐ Duplicate function names in same module (error)
+  ☐ Duplicate exported slot names in same module (error)
+  ☐ Attempting to unpack a non-tuple or a tuple of the wrong size (error)
   ☐ CTA for tuples
-
 
 [check-type]:
   ☐ Assign (initializer and assign)
@@ -22,46 +15,6 @@
   ☐ Cast (explicit)
   ☐ Return
   ☐ Select (condition)
-
-
-[resolve]:
-  ✔ Function @done(2015-07-31 21:44) @project([resolve])
-  ✔ Select @done(2015-07-25 06:52) @project([resolve])
-  ✔ CTA @done(2015-07-25 06:52) @project([resolve])
-  ☐ When CTA is applied to two compatible function types; merge the assign/use pools (*****)
-
-
-[build]:
-  [function]:
-    ✔ Parameters @done(2015-07-29 10:51) @project([build] / [function])
-    ✔ Return @done(2015-07-25 06:52) @project([build] / [function])
-
-  ✔ Select @done(2015-07-25 07:21) @project([build])
-  ✔ Cast each branch in a select expression (that has a value) @done(2015-08-04 23:39) @project([build])
-  ☐ Loop
-  ✔ Unary @done(2015-08-05 09:17) @project([build])
-  ☐ Binary
-
-  ✔ Import @done(2015-08-04 18:30) @project([build])
-    ✔ Function @done(2015-07-31 14:48) @project([build] / [function])
-    ✔ Extern Function @done(2015-07-31 14:48) @project([build] / [function])
-    ✔ Extern Slot @done(2015-07-31 14:48) @project([build] / [function])
-    ✔ Slot (..) @done(2015-07-31 18:15) @project([build] / [function])
-    ✔ Initializer Resolution (Hard Mode) @done(2015-08-04 18:29) @project([build] / [function])
-
-[...]:
-  ☐ Parameter (Unpack)
-  ☐ Qualified names `x.method` (for functions and global variables)
-  ☐ Do not use colors on the log when piped (allow readable .stderr expected results on tests)
-
-
-[error-checking]:
-  ☐ Duplicate function names in same module (error)
-  ☐ Duplicate exported slot names in same module (error)
-  ☐ Attempting to unpack a non-tuple or a tuple of the wrong size (error)
-  ✔ Use/Assign before declare (should error; segfaults currently) @done(2015-08-04 14:01) @project([error-checking])
-  ✔ Relativize (from CWD) all error message filenames @done(2015-08-04 14:01) @project([error-checking])
-
 
 language-arrow:
   ☐ Add underscores (`1_3_4`) to number patterns
