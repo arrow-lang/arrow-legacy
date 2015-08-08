@@ -134,11 +134,6 @@ def handle_(binary_path, filename, *args, **kwargs):
         test = test and (len(expected) > 0 and expected == stdout)
 
     test = test and process.returncode == 0
-
-    if not test:
-        print("\n ------- \n expected:\n", expected)
-        print("\n ------- \n actual:\n", stdout)
-
     return test
 
 

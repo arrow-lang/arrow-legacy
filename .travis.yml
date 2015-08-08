@@ -20,7 +20,10 @@ install:
 before_script: ./waf configure clean build -j 2
 
 # Command to run tests
-script: ./waf test
+# script: ./waf test
+script:
+  - ./build/arrow --compile ./test/run/module-init.as
+  - ./build/arrow --run ./test/run/module-init.as
 
 # If successful; run coverage
 after_success: coveralls -r . -b build -i ./src -i ./include
