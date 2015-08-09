@@ -53,6 +53,10 @@ struct Visitor {
   virtual void visit_call(Call&);
   virtual void visit_argument(Argument&);
 
+  // Structure
+  virtual void visit_struct(Structure&) { /* LCOV_EXCL_LINE */ }
+  virtual void visit_member(Member&) { /* LCOV_EXCL_LINE */ }
+
   // Function
   virtual void visit_function(Function&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_extern_function(ExternFunction&) { /* LCOV_EXCL_LINE */ }

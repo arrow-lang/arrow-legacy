@@ -6,7 +6,10 @@
 #ifndef ARROW_AST_NODES_STRUCT_H
 #define ARROW_AST_NODES_STRUCT_H 1
 
+#include <deque>
+
 #include "arrow/ast/nodes/node.hpp"
+#include "arrow/ast/nodes/type.hpp"
 
 namespace arrow {
 namespace ast {
@@ -15,7 +18,7 @@ struct Member : Node {
   Member(
     Span span,
     std::string name_,
-    Ref<Node> type_,
+    Ref<Type> type_,
     Ref<Node> default_value_
   ) : Node(span),
       name(name_),
@@ -31,7 +34,7 @@ struct Member : Node {
   std::string name;
 
   /// The type annotation.
-  Ref<Node> type;
+  Ref<Type> type;
 
   /// The (optional) default value.
   Ref<Node> default_value;

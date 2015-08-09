@@ -38,7 +38,8 @@ Ref<ast::Node> Parser::parse() {
 bool Parser::parse_module_statement() {
   auto tok = _t.peek(0);
   if (tok->type == Token::Type::Export && (
-      _t.peek(1)->type == Token::Type::Extern)) {
+      (_t.peek(1)->type == Token::Type::Extern ||
+       _t.peek(1)->type == Token::Type::Struct))) {
     // Ignore the "export" (for now)
     tok = _t.peek(1);
   }
@@ -47,8 +48,8 @@ bool Parser::parse_module_statement() {
     case Token::Type::Import:
       return parse_import();
 
-    // case Token::Type::Struct:
-    //   return parse_struct();
+    case Token::Type::Struct:
+      return parse_struct();
 
     case Token::Type::Extern:
       return parse_extern();

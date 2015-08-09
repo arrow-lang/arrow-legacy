@@ -77,6 +77,9 @@ struct Show : Visitor {
   virtual void visit_call(Call&);
   virtual void visit_argument(Argument&);
 
+  virtual void visit_struct(Structure&);
+  virtual void visit_member(Member&);
+
   virtual void visit_slot(Slot&);
   virtual void visit_extern_slot(ExternSlot&);
 

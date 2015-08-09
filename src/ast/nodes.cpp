@@ -102,6 +102,9 @@ IMPL_ACCEPT(Tuple, tuple)
 IMPL_ACCEPT(Select, select)
 IMPL_ACCEPT(SelectBranch, select_branch)
 
+IMPL_ACCEPT(Structure, struct)
+IMPL_ACCEPT(Member, member)
+
 std::uint64_t Integer::minimum_bits() const {
   // Find the number of bits we need (at least) to store
   // this integer value
