@@ -216,6 +216,56 @@ struct TypeString : Type {
   virtual LLVMTypeRef handle();
 };
 
+// Structure
+// -----------------------------------------------------------------------------
+
+struct TypeMember : Type {
+  explicit TypeMember(std::string keyword, Ref<code::Type> type)
+    : keyword(keyword), type(type) {
+  }
+
+  virtual ~TypeMember() noexcept;
+
+  virtual LLVMTypeRef handle();
+
+  virtual bool equals(Type& other) const;
+
+  virtual std::string name() const;
+
+  virtual bool is_unknown() const;
+
+  /// Name of the member
+  std::string keyword;
+
+  /// Actual type
+  Ref<code::Type> type;
+};
+
+struct TypeStructure : Type {
+  TypeStructure(std::string name_)
+    : members(), _name(name_), _handle(nullptr) {
+  }
+
+  virtual ~TypeStructure() noexcept;
+
+  virtual LLVMTypeRef handle();
+
+  virtual bool equals(Type& other) const;
+
+  virtual std::string name() const;
+
+  virtual bool is_unknown() const;
+
+  /// Ordered sequence of members
+  std::vector<Ref<TypeMember>> members;
+
+ private:
+  std::string _name;
+
+  /// Distinct handle to this named type.
+  LLVMTypeRef _handle;
+};
+
 // Function
 // -----------------------------------------------------------------------------
 
