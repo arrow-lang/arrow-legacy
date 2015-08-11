@@ -118,6 +118,14 @@ bool Parser::parse_type() {
     if (!elem0) return false;
     node->elements.push_back(elem0);
 
+    // Check for an arrow (which would make this definitely be
+    // a function type)
+    if (_t.peek(0)->type == Token::Type::RightParenthesis &&
+        _t.peek(1)->type == Token::Type::Arrow) {
+      _t.pop();
+      return parse_type_function(node, false);
+    }
+
     // Expect a comma to follow the first element (to prove we're a tuple)
     if (!expect(Token::Type::Comma)) return false;
 

@@ -4,11 +4,6 @@
 // [ ] Integral literals should cast to <any int> as long as the type is
 //     wide enough for the literal (keep in mind negative literals)
 
-// Function:
-// [ ] Move analyze to the item (not the type)
-// [ ] Run usage/assign analysis on function assignment (to prevent "leakage")
-// [ ] Parse/Type TypeFunction annotations
-
 // Loop:
 // [ ] Loop
 // [ ] While / Until
@@ -38,9 +33,9 @@ extern def puts(s: str);
 
 let mutable name: str = "";
 
-def method() { name = "Ryan"; }
-def call(fn: () -> None) { fn(); }
+def method(a: int) -> str { return "Ryan"; }
+def call(fn: (int) -> str, a: int) { name = fn(a); }
 
-call(method);
+call(method, 30);
 
 puts(name);
