@@ -92,6 +92,8 @@ struct Show : Visitor {
   virtual void visit_type_path(TypePath&);
   virtual void visit_type_pointer(TypePointer&);
   virtual void visit_type_tuple(TypeTuple&);
+  virtual void visit_type_parameter(TypeParameter&);
+  virtual void visit_type_function(TypeFunction&);
 
   virtual void visit_tuple(Tuple&);
 

@@ -49,5 +49,31 @@ void Show::visit_type_tuple(TypeTuple& x) {
   });
 }
 
+void Show::visit_type_parameter(TypeParameter& x) {
+  do_("TypeParameter", x, [&, this] {
+    _w.Key("keyword");
+    _w.String(x.keyword.c_str());
+
+    _w.Key("type");
+    x.type->accept(*this);
+  });
+}
+
+void Show::visit_type_function(TypeFunction& x) {
+  do_("TypeFunction", x, [&, this] {
+    _w.Key("parameters");
+    _w.StartArray();
+
+    for (auto& param : x.parameters) {
+      param->accept(*this);
+    }
+
+    _w.EndArray();
+
+    _w.Key("result");
+    x.result->accept(*this);
+  });
+}
+
 }  // namespace ast
 }  // namespace arrow

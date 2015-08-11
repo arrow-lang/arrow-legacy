@@ -96,6 +96,8 @@ IMPL_ACCEPT(TypeNone, type_none)
 IMPL_ACCEPT(TypeTuple, type_tuple)
 IMPL_ACCEPT(TypePath, type_path)
 IMPL_ACCEPT(TypePointer, type_pointer)
+IMPL_ACCEPT(TypeParameter, type_parameter)
+IMPL_ACCEPT(TypeFunction, type_function)
 
 IMPL_ACCEPT(Tuple, tuple)
 

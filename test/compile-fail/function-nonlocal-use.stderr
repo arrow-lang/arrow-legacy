@@ -1,1 +1,1 @@
-[0;37mtest/compile-fail/function-nonlocal-use.as:14.1-10: [0;31merror: [1;37muse of uninitialized variable 'a'[0m
+[0;37mtest/compile-fail/function-nonlocal-use.as:14.1-10: [0;31merror: [1;37muse of possibly uninitialized variable 'a'[0m

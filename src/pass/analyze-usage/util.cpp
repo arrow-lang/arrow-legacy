@@ -32,7 +32,7 @@ void AnalyzeUsage::do_use(ast::Node& context, code::Slot& item) {
       return;
     } else if (!is_assigned) {
       Log::get().error(
-        context.span, "use of uninitialized variable '%s'",
+        context.span, "use of possibly uninitialized variable '%s'",
         item.name.c_str());
 
       return;

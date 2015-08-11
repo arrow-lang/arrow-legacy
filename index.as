@@ -34,13 +34,13 @@
 // [ ] Function parameters
 // [ ] Assignment
 
-
 extern def puts(s: str);
 
-let mutable name: str;
+let mutable name: str = "";
 
 def method() { name = "Ryan"; }
+def call(fn: () -> None) { fn(); }
 
-method();
+call(method);
 
 puts(name);

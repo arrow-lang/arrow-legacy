@@ -6,6 +6,8 @@
 #ifndef ARROW_AST_NODES_TYPE_H
 #define ARROW_AST_NODES_TYPE_H 1
 
+#include <deque>
+
 #include "arrow/ast/nodes/node.hpp"
 
 namespace arrow {
@@ -65,6 +67,32 @@ struct TypeTuple : Type {
 
   // Elements of the tuple
   std::deque<Ref<Type>> elements;
+};
+
+struct TypeParameter : Type {
+  TypeParameter(Span span, std::string keyword, Ref<Type> type)
+    : Type(span), type(type), keyword(keyword) {
+  }
+
+  virtual ~TypeParameter() noexcept;
+
+  void accept(Visitor&) override;
+
+  Ref<Type> type;
+  std::string keyword;
+};
+
+struct TypeFunction : Type {
+  explicit TypeFunction(Span span)
+    : Type(span), parameters(), result(nullptr) {
+  }
+
+  virtual ~TypeFunction() noexcept;
+
+  void accept(Visitor&) override;
+
+  std::deque<Ref<TypeParameter>> parameters;
+  Ref<Type> result;
 };
 
 }  // namespace ast
