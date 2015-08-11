@@ -17,7 +17,6 @@ Show::~Show() noexcept {
 }
 
 void Show::run(Node& node) {
-  std::printf("show_type_function\n");
   // Run the visitor over the given AST node
   Visitor::run(node);
 
