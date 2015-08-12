@@ -78,6 +78,7 @@ class Build : public ast::Visitor {
   // Misc.
   virtual void visit_assign(ast::Assign&);
   virtual void visit_path(ast::Path&);
+  virtual void visit_cast(ast::Cast&);
 
   // Call
   virtual void visit_call(ast::Call&);

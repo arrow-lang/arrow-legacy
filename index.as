@@ -1,3 +1,5 @@
+// [ ] When the RHS of an assignment or an argument expression to
+//     call evaluates to a TypeFunction; apply the use checks
 
 // Issues:
 // [ ] All integral literals should resolve to <int>
@@ -21,7 +23,8 @@
 
 // Improvements (General):
 // [ ] Bitwise (binary) operations
-// [ ] Logical operaetors (and / or)
+// [ ] Explicit Cast: as
+// [ ] Logical Combinator: and or
 // [ ] Conditional (ternary) expression
 // [ ] CTA for tuples
 
@@ -29,13 +32,4 @@
 // [ ] Function parameters
 // [ ] Assignment
 
-extern def puts(s: str);
-
-let mutable name: str = "";
-
-def method(a: int) -> str { return "Ryan"; }
-def call(fn: (int) -> str, a: int) { name = fn(a); }
-
-call(method, 30);
-
-puts(name);
+let a = 10 as float;
