@@ -61,7 +61,17 @@ void AnalyzeUsage::visit_slot(ast::Slot& x) {
   if (x.initializer) x.initializer->accept(*this);
 
   // Expand the pattern ..
-  _expand_pattern(*x.pattern, x.initializer != nullptr);
+  if (!_expand_pattern(*x.pattern, x.initializer != nullptr)) return;
+
+  if (x.initializer) {
+    // Resolve the function-type of the operand
+    auto type = Resolve(_scope).run(*x.initializer);
+    if (!type || !type.is<code::TypeFunction>()) return;
+    auto function = type.as<code::TypeFunction>();
+
+    // Realize the function
+    do_realize_function(x, *function);
+  }
 }
 
 }  // namespace pass

@@ -38,6 +38,7 @@ class AnalyzeUsage : public ast::Visitor {
 
   // Call
   virtual void visit_call(ast::Call& x);
+  virtual void visit_argument(ast::Argument& x);
 
   // Use [!]
   virtual void visit_id(ast::Identifier& x);
@@ -52,6 +53,11 @@ class AnalyzeUsage : public ast::Visitor {
 
   void _enter_block(arrow::ast::Node& x);
   void _exit_block(bool is_definite = true);
+
+  void do_realize_function(
+    ast::Node& context, code::TypeFunction& fn,
+    bool is_definite = false
+  );
 
   void do_use(ast::Node& context, code::Slot& item);
   void do_assign(

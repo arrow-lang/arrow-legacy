@@ -10,6 +10,27 @@
 namespace arrow {
 namespace pass {
 
+void AnalyzeUsage::do_realize_function(
+  ast::Node& x, code::TypeFunction& fn, bool is_definite
+) {
+  // Use: Iterate through each non-local initial-use and ensure
+  //      that the variables in question are ready-to-use now
+  // TODO(_): Should we use the span from the item use or the call?
+  for (auto& item : fn._use) {
+    do_use(x, *item);
+  }
+
+  if (is_definite) {
+    // Assign: Iterate through each non-local assign and ensure
+    //         that the variables in question are ready-to-assign (and mark
+    //         them as assigned).
+    // TODO(_): Should we use the span from the item use or the call?
+    for (auto& ref : fn._assign) {
+      do_assign(x, ref.first, ref.second);
+    }
+  }
+}
+
 void AnalyzeUsage::visit_call(ast::Call& x) {
   // Run the base method (analyze the operand and each argument)
   Visitor::visit_call(x);
@@ -20,20 +41,22 @@ void AnalyzeUsage::visit_call(ast::Call& x) {
   if (!type || !type.is<code::TypeFunction>()) return;
   auto function = type.as<code::TypeFunction>();
 
-  // Use: Iterate through each non-local initial-use and ensure
-  //      that the variables in question are ready-to-use now
-  // TODO(_): Should we use the span from the item use or the call?
-  for (auto& item : function->_use) {
-    do_use(x, *item);
-  }
+  // Realize the function
+  do_realize_function(x, *function, true);
+}
 
-  // Assign: Iterate through each non-local assign and ensure
-  //         that the variables in question are ready-to-assign (and mark
-  //         them as assigned).
-  // TODO(_): Should we use the span from the item use or the call?
-  for (auto& ref : function->_assign) {
-    do_assign(x, ref.first, ref.second);
-  }
+void AnalyzeUsage::visit_argument(ast::Argument& x) {
+  // Run the base method (analyze the argument)
+  Visitor::visit_argument(x);
+  if (Log::get().count("error") > 0) return;
+
+  // Resolve the function-type of the operand
+  auto type = Resolve(_scope).run(*x.expression);
+  if (!type || !type.is<code::TypeFunction>()) return;
+  auto function = type.as<code::TypeFunction>();
+
+  // Realize the function
+  do_realize_function(x, *function);
 }
 
 }  // namespace pass

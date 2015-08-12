@@ -73,6 +73,14 @@ void AnalyzeUsage::visit_assign(ast::Assign& x) {
 
   // Expand the assignment
   if (!_expand_assign(*x.lhs, &x)) return;
+
+  // Resolve the type of the assignment operand ..
+  auto type = Resolve(_scope).run(*x.rhs);
+  if (!type || !type.is<code::TypeFunction>()) return;
+  auto function = type.as<code::TypeFunction>();
+
+  // Realize the function
+  do_realize_function(x, *function);
 }
 
 }  // namespace pass
