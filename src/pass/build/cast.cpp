@@ -21,7 +21,7 @@ void Build::visit_cast(ast::Cast& x) {
   if (!type) return;
 
   // Cast the RHS to the type of the LHS
-  op = util::cast(_ctx, op, *x.lhs, type, false);
+  op = util::cast(_ctx, op, *x.lhs, type, true);
   if (!op) return;
 
   // Push RHS onto the stack

@@ -81,7 +81,29 @@ Ref<code::Value> cast(
     }
   }
 
-  // TODO(mehcode): Explicit cast from float to (sized) integer
+  // Explicit cast from float to (sized) integer
+  if (explicit_ && from_type.is<code::TypeFloat>() &&
+      (to_type.is<code::TypeSizedInteger>() ||
+       to_type.is<code::TypeInteger>())) {
+    bool is_signed = false;
+    if (to_type.is<code::TypeSizedInteger>()) {
+      is_signed = to_type.as<code::TypeSizedInteger>()->is_signed;
+    } else {
+      // TODO(mehcode): When we add arbitrary percision ..
+      is_signed = true;
+    }
+
+    if (is_signed) {
+      // Sign-extend
+      res = LLVMBuildFPToSI(
+        _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
+    } else {
+      // Zero-extend
+      res = LLVMBuildFPToUI(
+        _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
+    }
+  }
+
   // TODO(mehcode): Explicit cast from ptr to int and int to ptr
 
   // If we're both tuples ..

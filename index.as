@@ -32,4 +32,4 @@
 // [ ] Function parameters
 // [ ] Assignment
 
-let a = 10 as float;
+let a = 10.515 as int;
