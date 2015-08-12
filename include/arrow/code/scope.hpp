@@ -74,7 +74,7 @@ class Block {
   std::unordered_map<ast::Node*, unsigned> _items_by_ctx;
 };
 
-class Container;
+struct Container;
 
 class Scope {
  public:

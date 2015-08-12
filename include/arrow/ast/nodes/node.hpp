@@ -12,7 +12,7 @@
 namespace arrow {
 namespace ast {
 
-class Visitor;
+struct Visitor;
 
 /// Abstract base class of all AST nodes.
 // TODO: Do something and make it illegal to instantiate these.
