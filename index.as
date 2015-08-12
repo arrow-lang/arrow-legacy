@@ -23,7 +23,7 @@
 
 // Improvements (General):
 // [ ] Bitwise (binary) operations
-// [ ] Explicit Cast: as
+// [x] Explicit Cast: as
 // [ ] Logical Combinator: and or
 // [ ] Conditional (ternary) expression
 // [ ] CTA for tuples
@@ -31,5 +31,3 @@
 // language-arrow:
 // [ ] Function parameters
 // [ ] Assignment
-
-let a = 10.515 as int;
