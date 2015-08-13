@@ -31,11 +31,15 @@ Ref<code::Value> cast(
   // If the types are both sized integers ..
   // FIXME: A negative integer literal can never coerce into an
   //       unsigned integer type; this should be checked during a cast.
-  if (from_type.is<code::TypeSizedInteger>() &&
+  if ((from_type.is<code::TypeSizedInteger>() ||
+       from_type.is<code::TypeInteger>() ||
+       from_type.is<code::TypeIntegerLiteral>()) &&
       (to_type.is<code::TypeSizedInteger>() ||
        to_type.is<code::TypeInteger>())) {
-    auto from_it = from_type.as<code::TypeSizedInteger>();
     unsigned to_bits = 0;
+    unsigned from_bits = 0;
+    bool is_signed = true;
+
     if (to_type.is<code::TypeSizedInteger>()) {
       to_bits = to_type.as<code::TypeSizedInteger>()->bits;
     } else {
@@ -43,24 +47,41 @@ Ref<code::Value> cast(
       to_bits = 128;
     }
 
-    if (from_it->bits <= to_bits) {
-      if (from_it->is_signed) {
-        // Sign-extend
-        res = LLVMBuildSExt(
-          _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
-      } else {
-        // Zero-extend
-        res = LLVMBuildZExt(
+    if (from_type.is<code::TypeSizedInteger>()) {
+      from_bits = from_type.as<code::TypeSizedInteger>()->bits;
+      is_signed = from_type.as<code::TypeSizedInteger>()->is_signed;
+    } else if (from_type.is<code::TypeIntegerLiteral>()) {
+      is_signed = true;
+      explicit_ = true;
+      from_bits = 128;
+    } else {
+      // TODO(mehcode): When we add arbitrary percision ..
+      from_bits = 128;
+    }
+
+    if (explicit_ || from_type.is<code::TypeSizedInteger>()) {
+      if (from_bits <= to_bits) {
+        if (is_signed) {
+          // Sign-extend
+          res = LLVMBuildSExt(
+            _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
+        } else {
+          // Zero-extend
+          res = LLVMBuildZExt(
+            _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
+        }
+      } else if (explicit_) {
+        // Truncate
+        res = LLVMBuildTrunc(
           _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
       }
     }
   }
 
-  // TODO(mehcode): Explicit cast to truncate integers
-
   // If we're going from an integral type to a float ..
   if (to_type.is<code::TypeFloat>() &&
       (from_type.is<code::TypeSizedInteger>() ||
+       from_type.is<code::TypeIntegerLiteral>() ||
        from_type.is<code::TypeInteger>())) {
     bool from_is_signed = false;
     if (from_type.is<code::TypeSizedInteger>()) {
@@ -84,6 +105,7 @@ Ref<code::Value> cast(
   // Explicit cast from float to (sized) integer
   if (explicit_ && from_type.is<code::TypeFloat>() &&
       (to_type.is<code::TypeSizedInteger>() ||
+       to_type.is<code::TypeIntegerLiteral>() ||
        to_type.is<code::TypeInteger>())) {
     bool is_signed = false;
     if (to_type.is<code::TypeSizedInteger>()) {

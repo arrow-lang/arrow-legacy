@@ -9,6 +9,19 @@
 namespace arrow {
 namespace ast {
 
+void Show::visit_conditional(ast::Conditional& x) {
+  do_("Conditional", x, [&, this] {
+    _w.Key("condition");
+    x.condition->accept(*this);
+
+    _w.Key("lhs");
+    x.lhs->accept(*this);
+
+    _w.Key("rhs");
+    x.rhs->accept(*this);
+  });
+}
+
 void Show::visit_select_branch(SelectBranch& x) {
   do_("SelectBranch", x, [&, this] {
     _w.Key("condition");

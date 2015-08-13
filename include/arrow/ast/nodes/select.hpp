@@ -11,6 +11,20 @@
 namespace arrow {
 namespace ast {
 
+struct Conditional : Node {
+  Conditional(Span span, Ref<Node> condition, Ref<Node> lhs, Ref<Node> rhs)
+    : Node(span), condition(condition), lhs(lhs), rhs(rhs) {
+  }
+
+  virtual ~Conditional() noexcept;
+
+  void accept(Visitor&) override;
+
+  Ref<Node> condition;
+  Ref<Node> lhs;
+  Ref<Node> rhs;
+};
+
 struct SelectBranch : Node {
   SelectBranch(Span span, Ref<Node> condition, Ref<Block> block)
     : Node(span), block(block), condition(condition) {

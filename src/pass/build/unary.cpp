@@ -35,6 +35,7 @@ void Build::visit_bit_not(ast::BitNot& x) {
     LLVMValueRef res = nullptr;
     auto type = operand->type;
     if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
         type.is<code::TypeBoolean>() ||
         type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildNot(_ctx.irb, operand->get_value(_ctx), "");
@@ -49,6 +50,7 @@ void Build::visit_negate(ast::Negate& x) {
     LLVMValueRef res = nullptr;
     auto type = operand->type;
     if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
         type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildNeg(_ctx.irb, operand->get_value(_ctx), "");
     } else if (type.is<code::TypeFloat>()) {

@@ -66,7 +66,7 @@ static std::map<Token::Type, std::pair<unsigned, unsigned>> BINARY = {
   {Token::Type::Or,                      { 900,  1}},
 
   // Conditional Expression [14]
-  {Token::Type::If,                      { 800,  1}},
+  {Token::Type::If,                      { 800, -1}},
 
   // Assignment [15]
   {Token::Type::Equals,                  { 700, -1}},
@@ -276,6 +276,20 @@ int Parser::parse_binary_expression(unsigned power) {
     case Token::Type::Pipe_Equals:
       node = new ast::Assign(sp, lhs, new ast::BitOr(sp, lhs, rhs));
       break;
+
+    case Token::Type::If: {
+      // Expect `else`
+      if (!expect(Token::Type::Else)) { return -1; }
+
+      // Parse the "RHS" expression
+      auto condition = rhs;
+      if (!parse_expression()) return -1;
+      auto rhs = _stack.front();
+      _stack.pop_front();
+
+      // Build the node
+      node = new ast::Conditional(sp, condition, lhs, rhs);
+    } break;
 
     default:
       // Unreachable

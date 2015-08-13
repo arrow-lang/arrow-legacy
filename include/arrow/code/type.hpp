@@ -142,6 +142,18 @@ struct TypeInteger : Type {
   }
 };
 
+struct TypeIntegerLiteral : Type {
+  virtual ~TypeIntegerLiteral() noexcept;
+
+  virtual LLVMTypeRef handle();
+
+  virtual Ref<code::Type> intersect(Ref<code::Type> other) const;
+
+  virtual std::string name() const {
+    return "int";
+  }
+};
+
 struct TypeSizedInteger : Type {
   explicit TypeSizedInteger(unsigned bits, bool is_signed = true)
     : bits(bits), is_signed(is_signed) {

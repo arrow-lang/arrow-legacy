@@ -102,6 +102,7 @@ struct Show : Visitor {
   virtual void visit_extern_function(ExternFunction&);
   virtual void visit_return(Return&);
 
+  virtual void visit_conditional(Conditional&);
   virtual void visit_select(Select&);
   virtual void visit_select_branch(SelectBranch&);
 

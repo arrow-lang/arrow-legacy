@@ -101,6 +101,7 @@ IMPL_ACCEPT(TypeFunction, type_function)
 
 IMPL_ACCEPT(Tuple, tuple)
 
+IMPL_ACCEPT(Conditional, conditional)
 IMPL_ACCEPT(Select, select)
 IMPL_ACCEPT(SelectBranch, select_branch)
 

@@ -8,6 +8,27 @@
 namespace arrow {
 namespace pass {
 
+static Ref<code::Type> realize(Ref<code::Type> type) {
+  if (type.is<code::TypeIntegerLiteral>()) {
+    return new code::TypeInteger();
+  } else if (type.is<code::TypeTuple>()) {
+    // Look for and realize sized-integers to integers
+    // Create the initial type
+    auto tuple = type.as<code::TypeTuple>();
+    Ref<code::TypeTuple> result = new code::TypeTuple();
+
+    // Iterate through the elements; and type each
+    result->elements.reserve(tuple->elements.size());
+    for (auto& element : tuple->elements) {
+      result->elements.push_back(realize(element));
+    }
+
+    return result;
+  }
+
+  return type;
+}
+
 void AnalyzeType::run(ast::Node& x) {
   // Maximum # of times we can run and do nothing
   int max_null_run = 5;
@@ -73,6 +94,10 @@ void AnalyzeType::run(ast::Node& x) {
 
           // Mark the type
           slot->type = type;
+
+          // Ensure that integral slots always end up as `int` without
+          // an explicit type annotation
+          slot->type = realize(slot->type);
         }
       } else if (max_null_run <= 0) {
         // We're done ..

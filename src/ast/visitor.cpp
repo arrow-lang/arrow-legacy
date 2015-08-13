@@ -46,6 +46,12 @@ void Visitor::visit_select_branch(ast::SelectBranch& x) {
   x.block->accept(*this);
 }
 
+void Visitor::visit_conditional(ast::Conditional& x) {
+  x.condition->accept(*this);
+  x.lhs->accept(*this);
+  x.rhs->accept(*this);
+}
+
 // Loop
 // -----------------------------------------------------------------------------
 void Visitor::visit_loop(ast::Loop& x) {

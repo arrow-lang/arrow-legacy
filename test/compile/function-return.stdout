@@ -1,9 +1,8 @@
-@value = internal global i128 0
+@value = internal global i8 0
 
 define internal void @function-return..init() {
   %1 = call i8 @function-return.method()
-  %2 = sext i8 %1 to i128
-  store i128 %2, i128* @value
+  store i8 %1, i8* @value
   ret void
 }
 

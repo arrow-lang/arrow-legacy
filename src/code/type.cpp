@@ -172,6 +172,11 @@ LLVMTypeRef TypeInteger::handle() {
   return LLVMIntType(128);
 }
 
+LLVMTypeRef TypeIntegerLiteral::handle() {
+  // TODO(mehcode): Arbitrary percision integer type
+  return LLVMIntType(128);
+}
+
 LLVMTypeRef TypeSizedInteger::handle() {
   return LLVMIntType(bits);
 }
@@ -261,6 +266,11 @@ Ref<code::Type> TypeFloat::intersect(Ref<code::Type> other) const {
       return (new code::TypeFloat());
     }
 
+    Case(TypeIntegerLiteral& _) {
+      XTL_UNUSED(_);
+      return (new code::TypeFloat());
+    }
+
     Case(TypeSizedInteger& _) {
       XTL_UNUSED(_);
       return (new code::TypeFloat());
@@ -282,9 +292,45 @@ Ref<code::Type> TypeInteger::intersect(Ref<code::Type> other) const {
       return (new code::TypeInteger());
     }
 
+    Case(TypeIntegerLiteral& _) {
+      XTL_UNUSED(_);
+      return (new code::TypeInteger());
+    }
+
     Case(TypeSizedInteger& _) {
       XTL_UNUSED(_);
       return (new code::TypeInteger());
+    }
+  } EndMatch;
+
+  return nullptr;
+}
+
+Ref<code::Type> TypeIntegerLiteral::intersect(Ref<code::Type> other) const {
+  Match(*other) {
+    Case(TypeFloat& _) {
+      XTL_UNUSED(_);
+      return other;
+    }
+
+    Case(TypeInteger& _) {
+      XTL_UNUSED(_);
+      return other;
+    }
+
+    Case(TypeFloat& _) {
+      XTL_UNUSED(_);
+      return other;
+    }
+
+    Case(TypeIntegerLiteral& _) {
+      XTL_UNUSED(_);
+      return other;
+    }
+
+    Case(TypeSizedInteger& _) {
+      XTL_UNUSED(_);
+      return other;
     }
   } EndMatch;
 
@@ -301,6 +347,11 @@ Ref<code::Type> TypeSizedInteger::intersect(Ref<code::Type> other) const {
     Case(TypeInteger& _) {
       XTL_UNUSED(_);
       return other;
+    }
+
+    Case(TypeIntegerLiteral& _) {
+      XTL_UNUSED(_);
+      return (new code::TypeSizedInteger(bits, is_signed));
     }
 
     Case(TypeSizedInteger& x) {

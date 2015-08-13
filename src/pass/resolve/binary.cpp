@@ -47,9 +47,11 @@ void Resolve::visit_add(ast::Add& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int,float} + {int,float}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -67,8 +69,10 @@ void Resolve::visit_sub(ast::Sub& x) {
     // General match: {int,float} - {int,float}
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -84,8 +88,10 @@ void Resolve::visit_mul(ast::Mul& x) {
     // General match: {int,float} - {int,float}
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -103,9 +109,11 @@ void Resolve::visit_div(ast::Div& x) {
     // General match: {int,float} - {int,float}
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
          rhs.is<code::TypeSizedInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
       return code::intersect_all({lhs, rhs});
@@ -119,8 +127,10 @@ void Resolve::visit_mod(ast::Mod& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int} - {int}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>())) {
       // Attempt to find the "common" type (for the result)
       return code::intersect_all({lhs, rhs});
@@ -134,9 +144,11 @@ void Resolve::visit_eq(ast::EqualTo& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int,float} == {int,float}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -164,9 +176,11 @@ void Resolve::visit_ne(ast::NotEqualTo& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int,float} != {int,float}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -194,9 +208,11 @@ void Resolve::visit_lt(ast::LessThan& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int,float} < {int,float}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -224,9 +240,11 @@ void Resolve::visit_le(ast::LessThanOrEqualTo& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int,float} <= {int,float}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -254,9 +272,11 @@ void Resolve::visit_ge(ast::GreaterThanOrEqualTo& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int,float} >= {int,float}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -284,9 +304,11 @@ void Resolve::visit_gt(ast::GreaterThan& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int,float} > {int,float}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
@@ -314,8 +336,10 @@ void Resolve::visit_bit_and(ast::BitAnd& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int} & {int}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>())) {
       // Attempt to find the "common" type (for the result)
       return code::intersect_all({lhs, rhs});
@@ -339,8 +363,10 @@ void Resolve::visit_bit_xor(ast::BitXor& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int} ^ {int}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>())) {
       // Attempt to find the "common" type (for the result)
       return code::intersect_all({lhs, rhs});
@@ -364,8 +390,10 @@ void Resolve::visit_bit_or(ast::BitOr& x) {
   do_binary(x, [this](Ref<code::Type> lhs, Ref<code::Type> rhs) {
     // General match: {int} | {int}
     if ((lhs.is<code::TypeInteger>() ||
+         lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>())) {
       // Attempt to find the "common" type (for the result)
       return code::intersect_all({lhs, rhs});

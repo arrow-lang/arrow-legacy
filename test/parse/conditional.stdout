@@ -1,0 +1,42 @@
+{
+  "tag": "Module",
+  "span": "test/parse/conditional.as:1.1-42",
+  "name": "conditional",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/conditional.as:1.1-42",
+    "statements": [
+      {
+        "tag": "Slot",
+        "span": "test/parse/conditional.as:1.1-42",
+        "exported": false,
+        "pattern": {
+          "tag": "PatternIdentifier",
+          "span": "test/parse/conditional.as:1.5-10",
+          "text": "value",
+          "mutable": false
+        },
+        "type": null,
+        "initializer": {
+          "tag": "Conditional",
+          "span": "test/parse/conditional.as:1.13-30",
+          "condition": {
+            "tag": "Identifier",
+            "span": "test/parse/conditional.as:1.21-30",
+            "text": "condition"
+          },
+          "lhs": {
+            "tag": "Boolean",
+            "span": "test/parse/conditional.as:1.13-17",
+            "value": true
+          },
+          "rhs": {
+            "tag": "Boolean",
+            "span": "test/parse/conditional.as:1.36-41",
+            "value": false
+          }
+        }
+      }
+    ]
+  }
+}
