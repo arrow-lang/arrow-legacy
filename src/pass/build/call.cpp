@@ -25,7 +25,6 @@ void Build::visit_call(ast::Call& x) {
 
   // Build the functor operand ..
   auto op = Build(_ctx, _scope).run_scalar(*x.operand);
-  std::printf("op: %p\n", op.get());
   if (!op) return;
 
   // Grab the type of the function ..
