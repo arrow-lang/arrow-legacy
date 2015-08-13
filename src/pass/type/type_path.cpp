@@ -18,14 +18,12 @@ void Type::visit_type_path(ast::TypePath& x) {
     return;
   }
 
-  if (!item.is<code::Typename>()) {
-    // TODO(mehcode): Error
-    return;
-  }
-
   // Pull the referred type out of the typename (and push to the stack)
-  auto typename_ = item.as<code::Typename>();
-  _stack.push_front(typename_->type);
+  if (item.is<code::Typename>()) {
+    _stack.push_front(item.as<code::Typename>()->type);
+  } else if (item.is<code::Structure>()) {
+    _stack.push_front(item.as<code::Structure>()->type);
+  }
 }
 
 }  // namespace pass

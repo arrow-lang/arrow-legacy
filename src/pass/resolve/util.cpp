@@ -29,6 +29,9 @@ Ref<code::Type> Resolve::type_of(Ref<code::Item> item) {
   } else if (item.is<code::Parameter>()) {
     // This item -is- a function
     return item.as<code::Parameter>()->type;
+  } else if (item.is<code::Structure>()) {
+    // This item -is- a function
+    return item.as<code::Structure>()->type;
   } else {
     // TODO(_): Error?
     return nullptr;

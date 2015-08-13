@@ -21,17 +21,11 @@ class Declare : public ast::Visitor {
 
   virtual ~Declare() noexcept;
 
-  // Block
   virtual void visit_block(ast::Block&);
-
-  // Function
   virtual void visit_function(ast::Function&);
-
-  // Module
   virtual void visit_module(ast::Module&);
-
-  // Slot
   virtual void visit_slot(ast::Slot&);
+  virtual void visit_struct(ast::Structure&);
 
  private:
   bool _expand_pattern(ast::Pattern& pattern);

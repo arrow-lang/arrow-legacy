@@ -29,6 +29,7 @@ class Expose : public ast::Visitor {
   virtual void visit_extern_function(ast::ExternFunction&);
   virtual void visit_function(ast::Function&);
   virtual void visit_slot(ast::Slot&);
+  virtual void visit_struct(ast::Structure&);
 
  private:
   bool _expand_parameter_pattern(

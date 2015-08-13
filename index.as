@@ -1,6 +1,4 @@
 
-let val: byte = 30;
-
 // Loop:
 // [ ] Loop
 // [ ] While / Until
@@ -8,11 +6,12 @@ let val: byte = 30;
 // [ ] Continue
 
 // Structure:
-// [ ] Expose (name)
-// [ ] AnalyzeType: TypeStructure
-// [ ] Resolve (type_of(Member))
-// [ ] AnalyzeUsage (check member access)
-// [ ] Declare
+// [x] Expose (name)
+// [x] AnalyzeType: TypeStructure
+// [x] Resolve (type_of(Member))
+// [x] AnalyzeUsage (check member access)
+// [x] Declare
+// [ ] AnalyzeUsage (check mutability)
 // [ ] Build (path: struct.member)
 // [ ] Build (call: struct())
 
@@ -26,3 +25,11 @@ let val: byte = 30;
 // language-arrow:
 // [ ] Function parameters
 // [ ] Assignment
+
+struct A { b: *B }
+struct B { a: *A }
+
+def main() {
+  let a: A;
+  let b: B;
+}

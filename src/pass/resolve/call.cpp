@@ -11,14 +11,17 @@ namespace pass {
 void Resolve::visit_call(ast::Call& x) {
   // Resolve the function-type of the operand
   auto type = Resolve(_scope).run(*x.operand);
-  if (!type.is<code::TypeFunction>()) return;
-  auto function = type.as<code::TypeFunction>();
+  if (type.is<code::TypeFunction>()) {
+    auto function = type.as<code::TypeFunction>();
 
-  // Push the result type of the function
-  if (function->result) {
-    _stack.push_front(function->result);
-  } else {
-    _stack.push_front(new code::TypeNone());
+    // Push the result type of the function
+    if (function->result) {
+      _stack.push_front(function->result);
+    } else {
+      _stack.push_front(new code::TypeNone());
+    }
+  } else if (type.is<code::TypeStructure>()) {
+    _stack.push_front(type);
   }
 }
 

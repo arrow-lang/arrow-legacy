@@ -36,6 +36,9 @@ class AnalyzeType : public ast::Visitor {
   // Function
   virtual void visit_function(ast::Function& x);
 
+  // Structure
+  virtual void visit_struct(ast::Structure& x);
+
   // Use [!]
   // virtual void visit_id(ast::Identifier& x);
 

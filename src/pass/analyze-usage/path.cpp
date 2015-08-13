@@ -13,7 +13,7 @@ namespace pass {
 
 void AnalyzeUsage::visit_path(ast::Path& x) {
   // Run the base method (analyze the operand and each argument)
-  Visitor::visit_path(x);
+  x.operand->accept(*this);
   if (Log::get().count("error") > 0) return;
 
   // Check if we're running the `.` operator on an identifier [..]
@@ -53,7 +53,18 @@ void AnalyzeUsage::visit_path(ast::Path& x) {
   auto type = Resolve(_scope).run(*x.operand);
   if (!type) return;
 
-  // FIXME: Not implemented!
+  Match(*type) {
+    Case(code::TypeStructure& struct_) {
+      auto& members = struct_.members;
+      for (auto& mem : members) {
+        if (mem->keyword == x.member) {
+          // Found it!
+          return;
+        }
+      }
+    } break;
+  } EndMatch;
+
   Log::get().error(
     x.span, "type '%s' has no member '%s'",
     type->name().c_str(),

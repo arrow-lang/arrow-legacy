@@ -46,6 +46,13 @@ std::string TypeParameter::name() const {
   return stream.str();
 }
 
+std::string TypeMember::name() const {
+  std::stringstream stream;
+  if (keyword.size() > 0) stream << keyword << ": ";
+  stream << type->name();
+  return stream.str();
+}
+
 std::string TypePointer::name() const {
   std::stringstream stream;
   stream << "*";
@@ -140,6 +147,24 @@ bool TypeFunction::equals(Type& other) const {
   }
 
   return true;
+}
+
+bool TypeStructure::equals(Type& other) const {
+  // Check that we are comparing against a struct
+  if (!Type::equals(other)) return false;
+  auto other_st = dynamic_cast<TypeStructure&>(other);
+
+  // Only equal if we are us
+  return &other_st == this;
+}
+
+bool TypeMember::equals(Type& other) const {
+  // Check that we are comparing against a member
+  if (!Type::equals(other)) return false;
+  auto other_st = dynamic_cast<TypeMember&>(other);
+
+  // Only equal if we are us
+  return &other_st == this;
 }
 
 // Handle
@@ -239,6 +264,10 @@ bool TypeFunction::is_unknown() const {
 }
 
 bool TypeParameter::is_unknown() const {
+  return type->is_unknown();
+}
+
+bool TypeMember::is_unknown() const {
   return type->is_unknown();
 }
 

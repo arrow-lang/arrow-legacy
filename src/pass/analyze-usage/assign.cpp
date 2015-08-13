@@ -15,6 +15,11 @@ bool AnalyzeUsage::_expand_assign(
   ast::Node& lhs, ast::Assign* context
 ) {
   Match(lhs) {
+    Case(ast::Path& x) {
+      // Analyze this normally ..
+      x.accept(*this);
+    } break;
+
     Case(ast::Identifier& x) {
       // Check for a declared iztem (by-name)
       auto item = _scope->find(x.text);
@@ -68,7 +73,7 @@ bool AnalyzeUsage::_expand_assign(
 }
 
 void AnalyzeUsage::visit_assign(ast::Assign& x) {
-  // Analyze the assignment operand ..
+  // Analyze the assignment operands ..
   x.rhs->accept(*this);
 
   // Expand the assignment

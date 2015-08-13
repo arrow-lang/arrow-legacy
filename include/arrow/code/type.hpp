@@ -240,7 +240,9 @@ struct TypeMember : Type {
 
   virtual ~TypeMember() noexcept;
 
-  virtual LLVMTypeRef handle();
+  virtual LLVMTypeRef handle() {
+    return type->handle();
+  }
 
   virtual bool equals(Type& other) const;
 
@@ -257,18 +259,28 @@ struct TypeMember : Type {
 
 struct TypeStructure : Type {
   TypeStructure(std::string name_)
-    : members(), _name(name_), _handle(nullptr) {
+    : members(), _name(name_) {
   }
 
   virtual ~TypeStructure() noexcept;
 
-  virtual LLVMTypeRef handle();
+  void set_handle(LLVMTypeRef handle) {
+    _handle = handle;
+  }
+
+  virtual LLVMTypeRef handle() {
+    return _handle;
+  }
 
   virtual bool equals(Type& other) const;
 
-  virtual std::string name() const;
+  virtual std::string name() const {
+    return _name;
+  }
 
-  virtual bool is_unknown() const;
+  virtual bool is_unknown() const {
+    return false;
+  }
 
   /// Ordered sequence of members
   std::vector<Ref<TypeMember>> members;
