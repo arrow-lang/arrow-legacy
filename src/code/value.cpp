@@ -12,8 +12,15 @@ namespace code {
 // Value (Base)
 // -----------------------------------------------------------------------------
 
-LLVMValueRef Value::get_address(Compiler::Context&) {
-  if (!has_address()) return nullptr;
+LLVMValueRef Value::get_address(Compiler::Context& ctx) {
+  if (!has_address()) {
+    // Capture an R-Value as an L-Value
+    // TODO: We may want to make this behind a flag
+    auto ptr = LLVMBuildAlloca(ctx.irb, type->handle(), "");
+    LLVMBuildStore(ctx.irb, _handle, ptr);
+    _handle = ptr;
+  }
+
   return _handle;
 }
 
