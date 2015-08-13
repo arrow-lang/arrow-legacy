@@ -1,0 +1,13 @@
+@x = internal constant i8 0
+@val = internal global i8 0
+
+define internal void @slot-deduce-int..init() {
+  %1 = load i8* @x
+  store i8 %1, i8* @val
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @slot-deduce-int..init()
+  ret i32 0
+}
