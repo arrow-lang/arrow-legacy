@@ -1,4 +1,6 @@
 
+let val: byte = 30;
+
 // Loop:
 // [ ] Loop
 // [ ] While / Until

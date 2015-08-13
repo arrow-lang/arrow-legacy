@@ -120,16 +120,6 @@ struct TypeFloat : Type {
   virtual LLVMTypeRef handle();
 };
 
-struct TypeByte : Type {
-  virtual ~TypeByte() noexcept;
-
-  virtual std::string name() const {
-    return "byte";
-  }
-
-  virtual LLVMTypeRef handle();
-};
-
 struct TypeInteger : Type {
   virtual ~TypeInteger() noexcept;
 
@@ -171,6 +161,18 @@ struct TypeSizedInteger : Type {
 
   unsigned bits;
   bool is_signed;
+};
+
+struct TypeByte : TypeSizedInteger {
+  TypeByte()
+    : TypeSizedInteger(8, false) {
+  }
+
+  virtual ~TypeByte() noexcept;
+
+  virtual std::string name() const {
+    return "byte";
+  }
 };
 
 struct TypeTuple : Type {

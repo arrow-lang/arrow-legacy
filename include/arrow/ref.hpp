@@ -51,7 +51,7 @@ class Ref {
 
   template <typename U>
   bool is() const noexcept {
-    return typeid(*_d) == typeid(U);
+    return dynamic_cast<U*>(_d) != nullptr;
   }
 
   template <typename U>

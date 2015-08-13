@@ -153,10 +153,6 @@ LLVMTypeRef TypeFloat::handle() {
   return LLVMDoubleType();
 }
 
-LLVMTypeRef TypeByte::handle() {
-  return LLVMIntType(8);
-}
-
 LLVMTypeRef TypeString::handle() {
   // TODO(_): Eventually we will use string /objects/ that contain the
   //          length.
