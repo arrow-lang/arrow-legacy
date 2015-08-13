@@ -54,6 +54,8 @@ class AnalyzeUsage : public ast::Visitor {
   void _enter_block(arrow::ast::Node& x);
   void _exit_block(bool is_definite = true);
 
+  void do_path(ast::Path& x, ast::Node* in_assign = nullptr);
+
   void do_realize_function(
     ast::Node& context, code::TypeFunction& fn,
     bool is_definite = false

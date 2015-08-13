@@ -16,8 +16,14 @@ bool AnalyzeUsage::_expand_assign(
 ) {
   Match(lhs) {
     Case(ast::Path& x) {
+      if (!x.operand.is<ast::Identifier>()) {
+        // Pulling out anything else is an illegal assignment
+        Log::get().error(lhs.span, "illegal left-hand side expression");
+        return false;
+      }
+
       // Analyze this normally ..
-      x.accept(*this);
+      do_path(x, context);
     } break;
 
     Case(ast::Identifier& x) {

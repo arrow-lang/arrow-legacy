@@ -11,7 +11,7 @@
 namespace arrow {
 namespace pass {
 
-void AnalyzeUsage::visit_path(ast::Path& x) {
+void AnalyzeUsage::do_path(ast::Path& x, ast::Node* in_assign) {
   // Run the base method (analyze the operand and each argument)
   x.operand->accept(*this);
   if (Log::get().count("error") > 0) return;
@@ -53,6 +53,7 @@ void AnalyzeUsage::visit_path(ast::Path& x) {
   auto type = Resolve(_scope).run(*x.operand);
   if (!type) return;
 
+  bool found = false;
   Match(*type) {
     Case(code::TypeStructure& struct_) {
       auto& members = struct_.members;
@@ -60,16 +61,50 @@ void AnalyzeUsage::visit_path(ast::Path& x) {
       for (auto& mem : members) {
         if (mem->keyword == x.member) {
           // Found it!
-          return;
+          found = true;
+          break;
         }
       }
     } break;
   } EndMatch;
 
-  Log::get().error(
-    x.span, "type '%s' has no member '%s'",
-    type->name().c_str(),
-    x.member.c_str());
+  if (!found) {
+    Log::get().error(
+      x.span, "type '%s' has no member '%s'",
+      type->name().c_str(),
+      x.member.c_str());
+
+    return;
+  }
+
+  // Check if we allow inner assignment
+  if (in_assign && x.operand.is<ast::Identifier>()) {
+    // Lookup this identifier and check if its a module [..]
+    auto text = x.operand.as<ast::Identifier>()->text;
+    auto item = _scope->find(text);
+    bool is_mutable = true;
+    Match(*item) {
+      Case(code::Slot& slot) {
+        is_mutable = slot.is_mutable;
+      } break;
+
+      Case(code::Parameter& param) {
+        is_mutable = param.is_mutable;
+      } break;
+    } EndMatch;
+
+    if (!is_mutable) {
+      Log::get().error(
+        in_assign->span, "cannot assign to immutable member '%s'",
+        x.member.c_str());
+
+      return;
+    }
+  }
+}
+
+void AnalyzeUsage::visit_path(ast::Path& x) {
+  do_path(x);
 }
 
 }  // namespace pass
