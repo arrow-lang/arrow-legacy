@@ -1,0 +1,1 @@
+[0;37mtest/compile-fail/struct-immutable-member.as:3.1-14: [0;31merror: [1;37mcannot assign to immutable member 'value'[0m
