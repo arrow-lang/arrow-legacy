@@ -97,6 +97,11 @@ class Build : public ast::Visitor {
     std::function<LLVMValueRef(
       Ref<code::Type>, Ref<code::Value>, Ref<code::Value>)> cb);
 
+  void do_struct_ctor(
+    ast::Call& x,
+    Ref<code::Structure> item
+  );
+
   bool _expand_parameter_pattern(
     ast::Pattern& pattern, Ref<code::Value> value, Ref<code::Scope> scope);
 

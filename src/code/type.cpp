@@ -155,7 +155,7 @@ bool TypeStructure::equals(Type& other) const {
   auto other_st = dynamic_cast<TypeStructure&>(other);
 
   // Only equal if we are us
-  return &other_st == this;
+  return other_st._handle == _handle;
 }
 
 bool TypeMember::equals(Type& other) const {

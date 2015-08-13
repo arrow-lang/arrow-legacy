@@ -56,6 +56,7 @@ void AnalyzeUsage::visit_path(ast::Path& x) {
   Match(*type) {
     Case(code::TypeStructure& struct_) {
       auto& members = struct_.members;
+      // FIXME: Map
       for (auto& mem : members) {
         if (mem->keyword == x.member) {
           // Found it!

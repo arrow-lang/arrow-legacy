@@ -3,7 +3,9 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include "arrow/match.hpp"
 #include "arrow/pass/build.hpp"
+#include "arrow/pass/resolve.hpp"
 
 namespace arrow {
 namespace pass {
@@ -23,6 +25,31 @@ void Build::visit_path(ast::Path& x) {
       return;
     }
   }
+
+  // Build the type of the operand
+  auto item = Build(_ctx, _scope).run_scalar(*x.operand);
+  if (!item) return;
+
+  Match(*item->type) {
+    Case(code::TypeStructure& struct_) {
+      auto& members = struct_.members;
+      // FIXME: Map
+      unsigned idx = 0;
+      for (auto& mem : members) {
+        if (mem->keyword == x.member) {
+          // Found it!
+          auto handle = LLVMBuildStructGEP(
+            _ctx.irb, item->get_address(_ctx), idx, "");
+
+          _stack.push_front(new code::Value(handle, mem->type));
+
+          return;
+        }
+
+        idx += 1;
+      }
+    } break;
+  } EndMatch;
 }
 
 }  // namespace pass

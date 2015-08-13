@@ -3,7 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-// #include "arrow/match.hpp"
+#include "arrow/match.hpp"
 #include "arrow/pass/resolve.hpp"
 
 namespace arrow {
@@ -40,6 +40,25 @@ void Resolve::visit_path(ast::Path& x) {
       return;
     }
   }
+
+  // Resolve the type of the operand
+  auto type = Resolve(_scope).run(*x.operand);
+  if (!type) return;
+
+  Match(*type) {
+    Case(code::TypeStructure& struct_) {
+      auto& members = struct_.members;
+      // FIXME: Map
+      for (auto& mem : members) {
+        if (mem->keyword == x.member) {
+          // Found it!
+          _stack.push_front(mem->type);
+
+          return;
+        }
+      }
+    } break;
+  } EndMatch;
 }
 
 }  // namespace pass

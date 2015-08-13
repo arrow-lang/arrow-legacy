@@ -12,8 +12,8 @@
 // [x] AnalyzeUsage (check member access)
 // [x] Declare
 // [ ] AnalyzeUsage (check mutability)
-// [ ] Build (path: struct.member)
-// [ ] Build (call: struct())
+// [x] Build (path: struct.member)
+// [x] Build (call: struct())
 
 // Improvements (General):
 // [ ] Bitwise (binary) operations
@@ -21,15 +21,8 @@
 // [ ] Logical Combinator: and or
 // [ ] Conditional (ternary) expression
 // [ ] CTA for tuples
+// [ ] Keyword / Default arguments
 
 // language-arrow:
 // [ ] Function parameters
 // [ ] Assignment
-
-struct A { b: *B }
-struct B { a: *A }
-
-def main() {
-  let a: A;
-  let b: B;
-}
