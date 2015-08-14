@@ -8,7 +8,7 @@ def assert(condition: bool) {
 
 def main() {
   let val: int128 = 0;
-  let sizeof = ((0 as *type(val)) + 1) as *byte - (0 as *byte);
+  let sizeof = ((0 as *int128) + 1) as *byte - (0 as *byte);
 
   assert(sizeof == 16);
 }

@@ -1,3 +1,4 @@
+
 // <stdlib.h>
 // =============================================================================
 
@@ -57,3 +58,13 @@ export extern def realloc(ptr: *byte, new_size: int64) -> *byte;
 
 /// Deallocates previously allocated memory.
 export extern def free(ptr: *byte);
+
+// <stdio.h>
+// =============================================================================
+
+// Unformatted input/output.
+// -----------------------------------------------------------------------------
+
+/// Writes a character string to stdout.
+// TODO: export extern def puts(s: str) -> c_int;
+export extern def puts(s: str) -> int64;

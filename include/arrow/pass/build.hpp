@@ -87,6 +87,11 @@ class Build : public ast::Visitor {
   virtual void visit_select(ast::Select&);
   // virtual void visit_select_branch(ast::SelectBranch&);
 
+  // Loop
+  virtual void visit_loop(ast::Loop&);
+  virtual void visit_break(ast::Break&);
+  virtual void visit_continue(ast::Continue&);
+
  private:
   void do_unary(
     ast::Unary& x, std::function<LLVMValueRef(Ref<code::Value>)> cb);

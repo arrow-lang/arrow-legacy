@@ -12,6 +12,13 @@ namespace code {
 // -----------------------------------------------------------------------------
 
 void Slot::add_assignment(Ref<code::Block> block, bool is_definite) {
+  // Check for an existing assignment in /this/ block
+  auto test = is_assigned(block);
+  if (test && *test) {
+    // Already definitely assigned ..
+    return;
+  }
+
   _assign[block] = is_definite;
 }
 

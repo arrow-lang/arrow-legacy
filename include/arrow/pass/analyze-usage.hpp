@@ -30,6 +30,9 @@ class AnalyzeUsage : public ast::Visitor {
   // Select
   virtual void visit_select(ast::Select& x);
 
+  // Loop
+  virtual void visit_loop(ast::Loop& x);
+
   // Slot
   virtual void visit_slot(ast::Slot& x);
 

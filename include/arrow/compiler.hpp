@@ -9,6 +9,7 @@
 #include <cstdarg>
 #include <deque>
 #include <vector>
+#include <stack>
 
 #include "arrow/ref.hpp"
 #include "arrow/parser.hpp"
@@ -39,6 +40,14 @@ class Compiler {
     std::unordered_map<ast::Node*, Ref<code::Module>> modules_by_context;
     std::unordered_map<std::string, Ref<code::Module>> modules_by_pathname;
     std::deque<Ref<code::Module>> modules;
+
+    /// Stack of loops
+    struct LoopFrame {
+      LLVMBasicBlockRef condition;
+      LLVMBasicBlockRef merge;
+    };
+
+    std::stack<LoopFrame> loops;
   };
 
   Compiler(bool verify);

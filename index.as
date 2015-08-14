@@ -1,10 +1,4 @@
 
-// Loop:
-// [ ] Loop
-// [ ] While / Until
-// [ ] Break
-// [ ] Continue
-
 // Improvements (General):
 // [ ] Bitwise (binary) operations
 // [x] Explicit Cast: as
@@ -14,6 +8,7 @@
 // [ ] Keyword / Default arguments
 // [ ] Pointer arithmetic
 // [ ] Mutable parameters
+// [ ] Type alias
 
 // language-arrow:
 // [ ] Function parameters
