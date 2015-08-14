@@ -24,6 +24,11 @@ struct Value {
   virtual LLVMValueRef get_value(Compiler::Context& ctx);
 
   virtual bool has_address() const {
+    // If we're not a slot or parameter or similar but a pointer value
+    if ((typeid(*this) == typeid(Value)) && type.is<TypePointer>()) {
+      return false;
+    }
+
     auto type_handle = LLVMTypeOf(_handle);
 
     if (type.is<TypeString>()) {

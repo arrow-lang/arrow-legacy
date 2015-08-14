@@ -54,8 +54,8 @@ class Build : public ast::Visitor {
   virtual void visit_negate(ast::Negate&);
   virtual void visit_bit_not(ast::BitNot&);
   virtual void visit_not(ast::Not&);
-  // virtual void visit_deref(ast::Dereference&);
-  // virtual void visit_address_of(ast::AddressOf&);
+  virtual void visit_deref(ast::Dereference&);
+  virtual void visit_address_of(ast::AddressOf&);
 
   // Binary
   virtual void visit_add(ast::Add&);

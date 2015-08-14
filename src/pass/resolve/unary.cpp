@@ -87,5 +87,21 @@ void Resolve::visit_not(ast::Not& x) {
   });
 }
 
+void Resolve::visit_deref(ast::Dereference& x) {
+  do_unary(x, [&, this](Ref<code::Type> type) -> Ref<code::Type> {
+    if (type.is<code::TypePointer>()) {
+      return type.as<code::TypePointer>()->pointee;
+    }
+
+    return nullptr;
+  });
+}
+
+void Resolve::visit_address_of(ast::AddressOf& x) {
+  do_unary(x, [&, this](Ref<code::Type> type) -> Ref<code::Type> {
+    return new code::TypePointer(type, x.is_mutable);
+  });
+}
+
 }  // namespace pass
 }  // namespace arrow

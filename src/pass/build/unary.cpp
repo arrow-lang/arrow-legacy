@@ -73,5 +73,18 @@ void Build::visit_not(ast::Not& x) {
   });
 }
 
+void Build::visit_address_of(ast::AddressOf& x) {
+  do_unary(x, [this](Ref<code::Value> operand) {
+    return operand->get_address(_ctx);
+  });
+}
+
+void Build::visit_deref(ast::Dereference& x) {
+  do_unary(x, [this](Ref<code::Value> operand) {
+    auto res = operand->get_value(_ctx);
+    return LLVMBuildLoad(_ctx.irb, res, "");
+  });
+}
+
 }  // namespace pass
 }  // namespace arrow
