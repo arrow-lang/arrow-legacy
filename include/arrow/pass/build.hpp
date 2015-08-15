@@ -69,9 +69,9 @@ class Build : public ast::Visitor {
   virtual void visit_le(ast::LessThanOrEqualTo&);
   virtual void visit_ge(ast::GreaterThanOrEqualTo&);
   virtual void visit_gt(ast::GreaterThan&);
-  // virtual void visit_bit_and(ast::BitAnd&);
-  // virtual void visit_bit_xor(ast::BitXor&);
-  // virtual void visit_bit_or(ast::BitOr&);
+  virtual void visit_bit_and(ast::BitAnd&);
+  virtual void visit_bit_xor(ast::BitXor&);
+  virtual void visit_bit_or(ast::BitOr&);
   // virtual void visit_and(ast::And&);
   // virtual void visit_or(ast::Or&);
 
