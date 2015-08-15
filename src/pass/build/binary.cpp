@@ -168,6 +168,7 @@ void Build::visit_eq(ast::EqualTo& x) {
 
     if (type.is<code::TypeInteger>() ||
         type.is<code::TypeIntegerLiteral>() ||
+        type.is<code::TypeBoolean>() ||
         type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntEQ, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
@@ -189,6 +190,7 @@ void Build::visit_ne(ast::NotEqualTo& x) {
 
     if (type.is<code::TypeInteger>() ||
         type.is<code::TypeIntegerLiteral>() ||
+        type.is<code::TypeBoolean>() ||
         type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntNE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
@@ -208,9 +210,13 @@ void Build::visit_lt(ast::LessThan& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>() || type.is<code::TypeIntegerLiteral>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntSLT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypeBoolean>()) {
+      res = LLVMBuildICmp(
+        _ctx.irb, LLVMIntULT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
       if (type.as<code::TypeSizedInteger>()->is_signed) {
         res = LLVMBuildICmp(
@@ -235,9 +241,13 @@ void Build::visit_le(ast::LessThanOrEqualTo& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>() || type.is<code::TypeIntegerLiteral>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntSLE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypeBoolean>()) {
+      res = LLVMBuildICmp(
+        _ctx.irb, LLVMIntULE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
       if (type.as<code::TypeSizedInteger>()->is_signed) {
         res = LLVMBuildICmp(
@@ -262,9 +272,13 @@ void Build::visit_gt(ast::GreaterThan& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>() || type.is<code::TypeIntegerLiteral>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntSGT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypeBoolean>()) {
+      res = LLVMBuildICmp(
+        _ctx.irb, LLVMIntUGT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
       if (type.as<code::TypeSizedInteger>()->is_signed) {
         res = LLVMBuildICmp(
@@ -289,9 +303,13 @@ void Build::visit_ge(ast::GreaterThanOrEqualTo& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>() || type.is<code::TypeIntegerLiteral>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntSGE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypeBoolean>()) {
+      res = LLVMBuildICmp(
+        _ctx.irb, LLVMIntUGE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
       if (type.as<code::TypeSizedInteger>()->is_signed) {
         res = LLVMBuildICmp(

@@ -9,7 +9,7 @@ def assert(condition: bool) {
 def test_bool() {
   assert(true == true);
   assert(false != true);
-  assert(not true == false);
+  assert((not true) == false);
 
   assert(not (true < false));
   assert(not (true <= false));
@@ -29,7 +29,7 @@ def test_bool() {
 
   assert((false > true) | true);
   assert(true | (false > true));
-  assert(not true | true);
+  assert((not true) | true);
   assert(true | not true);
 }
 
