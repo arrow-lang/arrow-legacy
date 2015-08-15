@@ -98,6 +98,7 @@ IMPL_ACCEPT(TypePath, type_path)
 IMPL_ACCEPT(TypePointer, type_pointer)
 IMPL_ACCEPT(TypeParameter, type_parameter)
 IMPL_ACCEPT(TypeFunction, type_function)
+IMPL_ACCEPT(TypeArray, type_array)
 
 IMPL_ACCEPT(Tuple, tuple)
 

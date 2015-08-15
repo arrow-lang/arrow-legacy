@@ -69,6 +69,22 @@ struct TypeTuple : Type {
   std::deque<Ref<Type>> elements;
 };
 
+struct TypeArray : Type {
+  explicit TypeArray(Span span, Ref<Type> element, Ref<Node> size = nullptr)
+    : Type(span), element(element), size(size) {
+  }
+
+  virtual ~TypeArray() noexcept;
+
+  void accept(Visitor&) override;
+
+  // Element of the array
+  Ref<Type> element;
+
+  // Size expression for the array
+  Ref<Node> size;
+};
+
 struct TypeParameter : Type {
   TypeParameter(Span span, std::string keyword, Ref<Type> type)
     : Type(span), type(type), keyword(keyword) {

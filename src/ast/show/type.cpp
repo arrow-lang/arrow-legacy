@@ -36,6 +36,17 @@ void Show::visit_type_pointer(TypePointer& x) {
   });
 }
 
+void Show::visit_type_array(TypeArray& x) {
+  do_("TypeArray", x, [&, this] {
+    _w.Key("element");
+    x.element->accept(*this);
+
+    _w.Key("size");
+    if (x.size) x.size->accept(*this);
+    else _w.Null();
+  });
+}
+
 void Show::visit_type_tuple(TypeTuple& x) {
   do_("TypeTuple", x, [&, this] {
     _w.Key("elements");
