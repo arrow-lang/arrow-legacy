@@ -164,6 +164,9 @@ bool Parser::parse_primary_expression() {
     case Token::Type::LeftParenthesis:
       return parse_tuple();
 
+    case Token::Type::LeftBracket:
+      return parse_array();
+
     case Token::Type::If:
     case Token::Type::Unless:
       return parse_select();
@@ -220,6 +223,10 @@ bool Parser::parse_postfix_expression() {
         if (!parse_call()) { return false; }
         break;
 
+      case Token::Type::LeftBracket:
+        if (!parse_index()) { return false; }
+        break;
+
       case Token::Type::Period:
         if (!parse_path()) { return false; }
         break;
@@ -229,6 +236,31 @@ bool Parser::parse_postfix_expression() {
         break;
     }
   }
+
+  return true;
+}
+
+// Index
+// -----------------------------------------------------------------------------
+bool Parser::parse_index() {
+  // Pull the awaiting operand expression
+  auto expr = _stack.front();
+  _stack.pop_front();
+
+  // Expect `[`
+  if (!expect(Token::Type::LeftBracket)) { return false; }
+
+  // Parse the expression
+  if (!parse_expression()) { return false; }
+  auto index = _stack.front();
+  _stack.pop_front();
+
+  // Expect `]`
+  if (!expect(Token::Type::RightBracket)) { return false; }
+
+  // Declare and push the node
+  _stack.push_front(new ast::Index(
+    expr->span.extend(index->span), expr, index));
 
   return true;
 }

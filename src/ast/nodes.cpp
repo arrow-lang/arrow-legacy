@@ -34,6 +34,7 @@ IMPL_ACCEPT(Boolean, bool)
 IMPL_ACCEPT(String, str)
 IMPL_ACCEPT(Float, float)
 IMPL_ACCEPT(Integer, int)
+IMPL_ACCEPT(Array, array)
 IMPL_ACCEPT(None, none)
 
 IMPL_ACCEPT(Loop, loop)
@@ -70,6 +71,8 @@ IMPL_ACCEPT(Or, or)
 IMPL_ACCEPT(Assign, assign)
 
 IMPL_ACCEPT(Cast, cast)
+
+IMPL_ACCEPT(Index, index)
 
 IMPL_ACCEPT(Path, path)
 

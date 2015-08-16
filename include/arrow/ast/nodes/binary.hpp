@@ -57,6 +57,8 @@ DEF_BINARY(Cast, "as");
 
 DEF_BINARY(Assign, "=");
 
+DEF_BINARY(Index, "[]");
+
 #undef DEF_BINARY
 
 /// A member access operation (commonly referred to as the "dot" operator).

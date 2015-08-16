@@ -37,6 +37,7 @@ struct Show : Visitor {
   virtual void visit_int(Integer&);
   virtual void visit_float(Float&);
   virtual void visit_none(None&);
+  virtual void visit_array(Array&);
 
   virtual void visit_loop(Loop&);
   virtual void visit_break(Break&);
@@ -72,6 +73,7 @@ struct Show : Visitor {
   virtual void visit_or(Or&);
 
   virtual void visit_cast(Cast&);
+  virtual void visit_index(Index&);
   virtual void visit_path(Path&);
 
   virtual void visit_call(Call&);

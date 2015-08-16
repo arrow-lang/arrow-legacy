@@ -68,6 +68,7 @@ struct TypeOf : Node {
 #include "arrow/ast/nodes/slot.hpp"
 #include "arrow/ast/nodes/select.hpp"
 #include "arrow/ast/nodes/tuple.hpp"
+#include "arrow/ast/nodes/array.hpp"
 #include "arrow/ast/nodes/import.hpp"
 
 #endif  // ARROW_AST_NODES_H
