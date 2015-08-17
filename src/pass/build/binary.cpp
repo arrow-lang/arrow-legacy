@@ -55,6 +55,7 @@ void Build::visit_add(ast::Add& x) {
   ) {
     LLVMValueRef res = nullptr;
     if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
         type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildAdd(
         _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
@@ -73,6 +74,7 @@ void Build::visit_sub(ast::Sub& x) {
   ) {
     LLVMValueRef res = nullptr;
     if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
         type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildSub(
         _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
@@ -91,6 +93,7 @@ void Build::visit_mul(ast::Mul& x) {
   ) {
     LLVMValueRef res = nullptr;
     if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
         type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildMul(
         _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
@@ -108,7 +111,7 @@ void Build::visit_div(ast::Div& x) {
     Ref<code::Type> type, Ref<code::Value> lhs, Ref<code::Value> rhs
   ) {
     LLVMValueRef res = nullptr;
-    if (type.is<code::TypeInteger>()) {
+    if (type.is<code::TypeInteger>() || type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildSDiv(
         _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
@@ -133,7 +136,7 @@ void Build::visit_mod(ast::Mod& x) {
     Ref<code::Type> type, Ref<code::Value> lhs, Ref<code::Value> rhs
   ) {
     LLVMValueRef res = nullptr;
-    if (type.is<code::TypeInteger>()) {
+    if (type.is<code::TypeInteger>() || type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildSRem(
         _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
@@ -163,7 +166,10 @@ void Build::visit_eq(ast::EqualTo& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>() || type.is<code::TypeSizedInteger>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
+        type.is<code::TypeBoolean>() ||
+        type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntEQ, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeFloat>()) {
@@ -182,7 +188,10 @@ void Build::visit_ne(ast::NotEqualTo& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>() || type.is<code::TypeSizedInteger>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
+        type.is<code::TypeBoolean>() ||
+        type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntNE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeFloat>()) {
@@ -201,9 +210,13 @@ void Build::visit_lt(ast::LessThan& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntSLT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypeBoolean>()) {
+      res = LLVMBuildICmp(
+        _ctx.irb, LLVMIntULT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
       if (type.as<code::TypeSizedInteger>()->is_signed) {
         res = LLVMBuildICmp(
@@ -228,9 +241,13 @@ void Build::visit_le(ast::LessThanOrEqualTo& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntSLE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypeBoolean>()) {
+      res = LLVMBuildICmp(
+        _ctx.irb, LLVMIntULE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
       if (type.as<code::TypeSizedInteger>()->is_signed) {
         res = LLVMBuildICmp(
@@ -255,9 +272,13 @@ void Build::visit_gt(ast::GreaterThan& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntSGT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypeBoolean>()) {
+      res = LLVMBuildICmp(
+        _ctx.irb, LLVMIntUGT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
       if (type.as<code::TypeSizedInteger>()->is_signed) {
         res = LLVMBuildICmp(
@@ -282,9 +303,13 @@ void Build::visit_ge(ast::GreaterThanOrEqualTo& x) {
     LLVMValueRef res = nullptr;
     auto& type = lhs->type;
 
-    if (type.is<code::TypeInteger>()) {
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>()) {
       res = LLVMBuildICmp(
         _ctx.irb, LLVMIntSGE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypeBoolean>()) {
+      res = LLVMBuildICmp(
+        _ctx.irb, LLVMIntUGE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
     } else if (type.is<code::TypeSizedInteger>()) {
       if (type.as<code::TypeSizedInteger>()->is_signed) {
         res = LLVMBuildICmp(
@@ -304,6 +329,57 @@ void Build::visit_ge(ast::GreaterThanOrEqualTo& x) {
 
 // Bit-Wise
 // -----------------------------------------------------------------------------
+
+void Build::visit_bit_and(ast::BitAnd& x) {
+  do_binary(x, true, [this](
+    Ref<code::Type> type, Ref<code::Value> lhs, Ref<code::Value> rhs
+  ) {
+    LLVMValueRef res = nullptr;
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
+        type.is<code::TypeBoolean>() ||
+        type.is<code::TypeSizedInteger>()) {
+      res = LLVMBuildAnd(
+        _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    }
+
+    return res;
+  });
+}
+
+void Build::visit_bit_or(ast::BitOr& x) {
+  do_binary(x, true, [this](
+    Ref<code::Type> type, Ref<code::Value> lhs, Ref<code::Value> rhs
+  ) {
+    LLVMValueRef res = nullptr;
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
+        type.is<code::TypeBoolean>() ||
+        type.is<code::TypeSizedInteger>()) {
+      res = LLVMBuildOr(
+        _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    }
+
+    return res;
+  });
+}
+
+void Build::visit_bit_xor(ast::BitXor& x) {
+  do_binary(x, true, [this](
+    Ref<code::Type> type, Ref<code::Value> lhs, Ref<code::Value> rhs
+  ) {
+    LLVMValueRef res = nullptr;
+    if (type.is<code::TypeInteger>() ||
+        type.is<code::TypeIntegerLiteral>() ||
+        type.is<code::TypeBoolean>() ||
+        type.is<code::TypeSizedInteger>()) {
+      res = LLVMBuildXor(
+        _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    }
+
+    return res;
+  });
+}
 
 }  // namespace pass
 }  // namespace arrow

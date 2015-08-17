@@ -36,6 +36,7 @@ struct Visitor {
   virtual void visit_int(Integer&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_float(Float&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_tuple(Tuple&) { /* LCOV_EXCL_LINE */ }
+  virtual void visit_array(Array&) { /* LCOV_EXCL_LINE */ }
 
   // Import
   virtual void visit_import(Import&) { /* LCOV_EXCL_LINE */ }
@@ -93,6 +94,7 @@ struct Visitor {
   virtual void visit_bit_or(BitOr&);
   virtual void visit_and(And&);
   virtual void visit_or(Or&);
+  virtual void visit_index(Index&);
 
   // Assignment
   virtual void visit_assign(Assign&);
@@ -116,6 +118,7 @@ struct Visitor {
   virtual void visit_type_tuple(TypeTuple&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_type_parameter(TypeParameter&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_type_function(TypeFunction&) { /* LCOV_EXCL_LINE */ }
+  virtual void visit_type_array(TypeArray&) { /* LCOV_EXCL_LINE */ }
 
  private:
   void do_unary(ast::Unary& x);

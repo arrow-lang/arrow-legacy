@@ -55,6 +55,7 @@ void Show::visit_or(Or& x)           { do_binary("Or",  x); }
 
 void Show::visit_assign(Assign& x)   { do_binary("Assign", x); }
 void Show::visit_cast(Cast& x)       { do_binary("Cast", x); }
+void Show::visit_index(Index& x)     { do_binary("Index", x); }
 
 void Show::visit_path(Path& x) {
   do_("Path", x, [&, this] {
