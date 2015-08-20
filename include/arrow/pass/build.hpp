@@ -72,8 +72,8 @@ class Build : public ast::Visitor {
   virtual void visit_bit_and(ast::BitAnd&);
   virtual void visit_bit_xor(ast::BitXor&);
   virtual void visit_bit_or(ast::BitOr&);
-  // virtual void visit_and(ast::And&);
-  // virtual void visit_or(ast::Or&);
+  virtual void visit_and(ast::And&);
+  virtual void visit_or(ast::Or&);
 
   // Misc.
   virtual void visit_assign(ast::Assign&);
@@ -95,6 +95,8 @@ class Build : public ast::Visitor {
  private:
   void do_unary(
     ast::Unary& x, std::function<LLVMValueRef(Ref<code::Value>)> cb);
+
+  void do_combinator(ast::Binary& x);
 
   void do_binary(
     ast::Binary& x,

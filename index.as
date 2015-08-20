@@ -1,7 +1,7 @@
 
 // [x] Bitwise (binary) operations
 // [x] Logical comparisons for bool
-// [ ] Logical Combinator: and or
+// [x] Logical Combinator: and or
 // [ ] Conditional (ternary) expression
 
 // [.] Array

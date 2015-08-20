@@ -50,6 +50,10 @@ class AnalyzeUsage : public ast::Visitor {
   // Assign [!]
   virtual void visit_assign(ast::Assign& x);
 
+  // Combinator
+  virtual void visit_and(ast::And& x);
+  virtual void visit_or(ast::Or& x);
+
  private:
   bool _expand_pattern(ast::Pattern& pattern, bool has_initializer);
   bool _expand_assign(ast::Node& lhs, ast::Assign* context);
