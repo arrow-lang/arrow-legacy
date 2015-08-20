@@ -1,7 +1,3 @@
-#if false
-
-#end
-
 // [x] Bitwise (binary) operations
 // [x] Logical comparisons for bool
 // [x] Logical Combinator: and or
