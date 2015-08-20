@@ -19,7 +19,7 @@ static std::map<Token::Type, unsigned> UNARY = {
   {Token::Type::Asterisk,        2000},
   {Token::Type::Ampersand,       2000},
 
-  // Logical NOT [11]
+  // do_logical NOT [11]
   {Token::Type::Not,             1100},
 };
 
@@ -59,10 +59,10 @@ static std::map<Token::Type, std::pair<unsigned, unsigned>> BINARY = {
   {Token::Type::Equals_Equals,           {1200,  1}},
   {Token::Type::ExclamationMark_Equals,  {1200,  1}},
 
-  // Logical AND [12]
+  // do_logical AND [12]
   {Token::Type::And,                     {1000,  1}},
 
-  // Logical OR [13]
+  // do_logical OR [13]
   {Token::Type::Or,                      { 900,  1}},
 
   // Conditional Expression [14]

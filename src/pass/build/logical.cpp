@@ -11,7 +11,7 @@
 namespace arrow {
 namespace pass {
 
-void Build::do_combinator(ast::Binary& x) {
+void Build::do_logical(ast::Binary& x) {
   // Resolve the type of the expression
   auto type = Resolve(_scope).run(x);
   if (!type) return;
@@ -76,11 +76,11 @@ void Build::do_combinator(ast::Binary& x) {
 }
 
 void Build::visit_and(ast::And& x) {
-  do_combinator(x);
+  do_logical(x);
 }
 
 void Build::visit_or(ast::Or& x) {
-  do_combinator(x);
+  do_logical(x);
 }
 
 }  // namespace pass

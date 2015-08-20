@@ -1,6 +1,6 @@
 // [x] Bitwise (binary) operations
-// [x] Logical comparisons for bool
-// [x] Logical Combinator: and or
+// [x] do_logical comparisons for bool
+// [x] do_logical Combinator: and or
 // [ ] Conditional (ternary) expression {*}
 
 // [.] Array
@@ -13,13 +13,14 @@
 //    [ ] CTA
 
 // [.] Pointer
-//    [ ] Dereference (Set)  {*}
+//    [x] Dereference (Set)
 //    [ ] Mutability checking  {*}
 //    [ ] Arithmetic  {*}
+//    [ ] Relational (==, !=, >=, >, <=, <) {*}
 
 // [.] Tuple
-//    [ ] Cast
-//    [ ] CTA
+//    [ ] Cast {*}
+//    [ ] CTA {*}
 
 // [x] Explicit Cast: as
 // [ ] Type alias

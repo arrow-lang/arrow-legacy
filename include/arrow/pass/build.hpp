@@ -97,7 +97,7 @@ class Build : public ast::Visitor {
   void do_unary(
     ast::Unary& x, std::function<LLVMValueRef(Ref<code::Value>)> cb);
 
-  void do_combinator(ast::Binary& x);
+  void do_logical(ast::Binary& x);
 
   void do_binary(
     ast::Binary& x,

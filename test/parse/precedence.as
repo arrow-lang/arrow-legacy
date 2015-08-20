@@ -39,14 +39,14 @@ y >= x;
 // Equal to; and, not equal to [10]
 x == y;
 
-// Logical NOT [11]
+// do_logical NOT [11]
 not x == y;
 not y > x;
 
-// Logical AND [12]
+// do_logical AND [12]
 not x < y and false;
 
-// Logical OR [13]
+// do_logical OR [13]
 not x < y or false;
 y > x or x < y and y > 1;
 

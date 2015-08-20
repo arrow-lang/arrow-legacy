@@ -27,7 +27,7 @@ struct Block : Node {
   std::deque<Ref<Node>> statements;
 };
 
-/// Represents a logical, named module (could be a top-level module that
+/// Represents a do_logical, named module (could be a top-level module that
 /// would be the file or a sub-module acting as a namespace).
 struct Module : Node {
   Module(Span span, std::string name) : Node(span), name(name), block(nullptr) {

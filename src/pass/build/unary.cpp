@@ -81,8 +81,7 @@ void Build::visit_address_of(ast::AddressOf& x) {
 
 void Build::visit_deref(ast::Dereference& x) {
   do_unary(x, [this](Ref<code::Value> operand) {
-    auto res = operand->get_value(_ctx);
-    return LLVMBuildLoad(_ctx.irb, res, "");
+    return operand->get_value(_ctx);
   });
 }
 
