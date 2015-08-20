@@ -48,6 +48,7 @@ class Build : public ast::Visitor {
   virtual void visit_int(ast::Integer&);
   virtual void visit_float(ast::Float&);
   virtual void visit_tuple(ast::Tuple&);
+  virtual void visit_array(ast::Array&);
 
   // Unary
   // virtual void visit_identity(ast::Identity&);

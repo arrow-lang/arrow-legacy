@@ -122,5 +122,15 @@ std::uint64_t Integer::minimum_bits() const {
   return size;
 }
 
+std::uint64_t Integer::value() const {
+  // Find the number of bits we need (at least) to store
+  // this integer value
+  mpz_t value;
+  mpz_init_set_str(value, text.c_str(), 10);
+  auto val = mpz_get_ui(value);
+  mpz_clear(value);
+  return val;
+}
+
 }  // namespace ast
 }  // namespace arrow

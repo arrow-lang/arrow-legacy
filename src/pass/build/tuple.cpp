@@ -10,7 +10,7 @@ namespace arrow {
 namespace pass {
 
 void Build::visit_tuple(ast::Tuple& x) {
-  // Resolve the type of the literal boolean: `bool`
+  // Resolve the type of the literal
   auto type = Resolve(_scope).run(x);
   if (!type) return;
 

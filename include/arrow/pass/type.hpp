@@ -32,6 +32,7 @@ class Type : public ast::Visitor {
   virtual void visit_type_pointer(ast::TypePointer&);
   virtual void visit_type_parameter(ast::TypeParameter&);
   virtual void visit_type_function(ast::TypeFunction&);
+  virtual void visit_type_array(ast::TypeArray&);
 
  private:
   // The scope to emplace the exposed items into.

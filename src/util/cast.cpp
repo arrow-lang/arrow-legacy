@@ -150,6 +150,23 @@ Ref<code::Value> cast(
     }
   }
 
+  // If we're both arrays ..
+  // TODO: Array casting..
+  if (from_type.is<code::TypeArray>() && to_type.is<code::TypeArray>()) {
+    auto from_t = from_type.as<code::TypeArray>();
+    auto to_t = to_type.as<code::TypeArray>();
+
+    // Of the same length ..
+    if (from_t->size == to_t->size) {
+      // If the from element is an integer literal and the to element
+      // is an integer ..
+      if (from_t->element.is<code::TypeIntegerLiteral>() &&
+          to_t->element.is<code::TypeInteger>()) {
+        return value;
+      }
+    }
+  }
+
   // If we didn't manage to cast the expression
   if (!res) {
     // FIXME: Get location from AST

@@ -61,6 +61,15 @@ std::string TypePointer::name() const {
   return stream.str();
 }
 
+std::string TypeArray::name() const {
+  std::stringstream stream;
+  stream << element->name();
+  stream << "[";
+  stream << size;
+  stream << "]";
+  return stream.str();
+}
+
 std::string TypeFunction::name() const {
   std::stringstream stream;
   stream << "(";
@@ -128,6 +137,16 @@ bool TypePointer::equals(Type& other) const {
          pointee->equals(*other_p.pointee);
 }
 
+bool TypeArray::equals(Type& other) const {
+  // Check that we are comparing against an array
+  if (!Type::equals(other)) return false;
+  auto other_a = dynamic_cast<TypeArray&>(other);
+
+  // Equal if the pointee's and mutability are eqiuvalent.
+  return size == other_a.size &&
+         element->equals(*other_a.element);
+}
+
 bool TypeFunction::equals(Type& other) const {
   // Check that we are comparing against a function
   if (!Type::equals(other)) return false;
@@ -186,6 +205,10 @@ LLVMTypeRef TypeString::handle() {
 
 LLVMTypeRef TypePointer::handle() {
   return LLVMPointerType(pointee->handle(), 0);
+}
+
+LLVMTypeRef TypeArray::handle() {
+  return LLVMArrayType(element->handle(), size);
 }
 
 LLVMTypeRef TypeInteger::handle() {
@@ -273,6 +296,10 @@ bool TypeMember::is_unknown() const {
 
 bool TypePointer::is_unknown() const {
   return pointee->is_unknown();
+}
+
+bool TypeArray::is_unknown() const {
+  return element->is_unknown();
 }
 
 // Intersect

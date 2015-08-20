@@ -40,6 +40,7 @@ IMPL(TypeString)
 IMPL(TypePointer)
 IMPL(TypeStructure)
 IMPL(TypeMember)
+IMPL(TypeArray)
 
 IMPL(Value)
 IMPL(ValueNone)

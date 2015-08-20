@@ -217,6 +217,28 @@ struct TypePointer : Type {
   bool is_mutable;
 };
 
+// Array
+// -----------------------------------------------------------------------------
+
+struct TypeArray : Type {
+  TypeArray(Ref<code::Type> element, unsigned size)
+    : element(element), size(size) {
+  }
+
+  virtual ~TypeArray() noexcept;
+
+  virtual LLVMTypeRef handle();
+
+  virtual bool equals(Type& other) const;
+
+  virtual std::string name() const;
+
+  virtual bool is_unknown() const;
+
+  Ref<code::Type> element;
+  unsigned size;
+};
+
 // String
 // -----------------------------------------------------------------------------
 
