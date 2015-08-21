@@ -78,13 +78,17 @@ void AnalyzeUsage::do_path(ast::Path& x, ast::Node* in_assign) {
   }
 
   // Check if we allow inner assignment
+  bool is_mutable = false;
   if (in_assign && x.operand.is<ast::Identifier>()) {
     // Lookup this identifier and check if its a module [..]
     auto text = x.operand.as<ast::Identifier>()->text;
     auto item = _scope->find(text);
-    bool is_mutable = true;
     Match(*item) {
       Case(code::Slot& slot) {
+        is_mutable = slot.is_mutable;
+      } break;
+
+      Case(code::ExternSlot& slot) {
         is_mutable = slot.is_mutable;
       } break;
 
@@ -92,14 +96,14 @@ void AnalyzeUsage::do_path(ast::Path& x, ast::Node* in_assign) {
         is_mutable = param.is_mutable;
       } break;
     } EndMatch;
+  }
 
-    if (!is_mutable) {
-      Log::get().error(
-        in_assign->span, "cannot assign to immutable member '%s'",
-        x.member.c_str());
+  if (in_assign && !is_mutable) {
+    Log::get().error(
+      in_assign->span, "cannot assign to immutable member '%s'",
+      x.member.c_str());
 
-      return;
-    }
+    return;
   }
 }
 

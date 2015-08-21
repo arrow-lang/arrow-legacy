@@ -444,5 +444,19 @@ Ref<code::Type> intersect_all(const std::vector<Ref<code::Type>>& types) {
   return result;
 }
 
+
+// Util
+// -----------------------------------------------------------------------------
+
+Ref<code::TypeMember> TypeStructure::find_member(const std::string& name) {
+  for (auto& mem : members) {
+    if (mem->keyword == name) {
+      return mem;
+    }
+  }
+
+  return nullptr;
+}
+
 }  // namespace code
 }  // namespace arrow

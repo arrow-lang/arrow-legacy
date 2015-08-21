@@ -26,6 +26,19 @@ bool AnalyzeUsage::_expand_assign(
       do_path(x, context);
     } break;
 
+    Case(ast::Dereference& x) {
+      // Resolve the operand type
+      auto type = Resolve(_scope).run(*x.operand);
+
+      // Check that this is a mutable pointer
+      if (type.is<code::TypePointer>()) {
+        if (!type.as<code::TypePointer>()->is_mutable) {
+          Log::get().error(lhs.span, "assignment of immutable address");
+          return false;
+        }
+      }
+    } break;
+
     Case(ast::Identifier& x) {
       // Check for a declared iztem (by-name)
       auto item = _scope->find(x.text);

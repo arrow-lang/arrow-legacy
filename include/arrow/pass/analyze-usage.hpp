@@ -54,6 +54,9 @@ class AnalyzeUsage : public ast::Visitor {
   virtual void visit_and(ast::And& x);
   virtual void visit_or(ast::Or& x);
 
+  // Pointer
+  virtual void visit_address_of(ast::AddressOf& x);
+
  private:
   bool _expand_pattern(ast::Pattern& pattern, bool has_initializer);
   bool _expand_assign(ast::Node& lhs, ast::Assign* context);

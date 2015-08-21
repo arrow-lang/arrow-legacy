@@ -304,6 +304,8 @@ struct TypeStructure : Type {
     return false;
   }
 
+  virtual Ref<TypeMember> find_member(const std::string& name);
+
   /// Ordered sequence of members
   std::vector<Ref<TypeMember>> members;
 
