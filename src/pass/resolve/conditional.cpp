@@ -13,7 +13,10 @@ void Resolve::visit_conditional(ast::Conditional& x) {
   auto lhs_type = Resolve(_scope).run(*x.lhs);
   auto rhs_type = Resolve(_scope).run(*x.rhs);
   if (!lhs_type || !rhs_type) return;
-  if (lhs_type->is_unknown() || rhs_type->is_unknown()) return;
+  if (lhs_type->is_unknown() || rhs_type->is_unknown()) {
+    _stack.push_front(new code::TypeUnknown());
+    return;
+  }
 
   // Intersect the matched types ..
   auto final_type = code::intersect_all({lhs_type, rhs_type});

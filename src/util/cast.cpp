@@ -152,6 +152,15 @@ Ref<code::Value> cast(
       _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
   }
 
+  // Implicit cast from *mutable T to *T
+  if (to_type.is<code::TypePointer>() && from_type.is<code::TypePointer>()) {
+    auto from_t = from_type.as<code::TypePointer>();
+    auto to_t = to_type.as<code::TypePointer>();
+    if (from_t->pointee->equals(*to_t->pointee)) {
+      res = value->get_value(_ctx);
+    }
+  }
+
   // If we're both tuples ..
   if (from_type.is<code::TypeTuple>() && to_type.is<code::TypeTuple>()) {
     auto from_t = from_type.as<code::TypeTuple>();

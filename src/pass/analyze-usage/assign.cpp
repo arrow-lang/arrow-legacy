@@ -56,6 +56,16 @@ bool AnalyzeUsage::_expand_assign(
           do_assign(lhs, item.as<code::Slot>().get(), true);
         } break;
 
+        Case(code::Parameter& param)  {
+          if (!param.is_mutable) {
+            Log::get().error(
+              lhs.span, "assignment of immutable parameter `%s`",
+              x.text.c_str());
+
+            return false;
+          }
+        } break;
+
         Case(code::ExternSlot& slot) {
           if (!slot.is_mutable) {
             Log::get().error(

@@ -21,9 +21,20 @@
 // [ ] Type alias
 // [ ] Fold (run after analyze-usage but before analyze-module)
 
-// [ ] Call
+// [ ] Call {**}
 //    [ ] Mutable parameters
 //    [ ] C ABI parameters
 //    [ ] Aggregate by-const-reference (struct, array, tuple, etc.)
 //    [ ] Default arguments
 //    [ ] Keyword arguments
+
+def method(mutable value: int) {
+  value = 10;
+}
+
+def main() -> int {
+  let value = 45;
+  method(value);
+
+  return value;
+}

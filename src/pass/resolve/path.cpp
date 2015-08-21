@@ -10,10 +10,6 @@ namespace arrow {
 namespace pass {
 
 void Resolve::visit_path(ast::Path& x) {
-  // Run the base method (analyze the operand and each argument)
-  Visitor::visit_path(x);
-  if (Log::get().count("error") > 0) return;
-
   // Check if we're running the `.` operator on an identifier [..]
   if (x.operand.is<ast::Identifier>()) {
     // Lookup this identifier and check if its a module [..]
