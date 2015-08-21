@@ -203,6 +203,13 @@ void Build::visit_eq(ast::EqualTo& x) {
     } else if (type.is<code::TypeFloat>()) {
       res = LLVMBuildFCmp(
         _ctx.irb, LLVMRealOEQ, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypePointer>()) {
+      // TODO: Need to use a intptr type
+      auto lhs_han = LLVMBuildPtrToInt(_ctx.irb, lhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      auto rhs_han = LLVMBuildPtrToInt(_ctx.irb, rhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      res = LLVMBuildICmp(_ctx.irb, LLVMIntEQ, lhs_han, rhs_han, "");
     }
 
     return res;
@@ -225,6 +232,13 @@ void Build::visit_ne(ast::NotEqualTo& x) {
     } else if (type.is<code::TypeFloat>()) {
       res = LLVMBuildFCmp(
         _ctx.irb, LLVMRealONE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypePointer>()) {
+      // TODO: Need to use a intptr type
+      auto lhs_han = LLVMBuildPtrToInt(_ctx.irb, lhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      auto rhs_han = LLVMBuildPtrToInt(_ctx.irb, rhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      res = LLVMBuildICmp(_ctx.irb, LLVMIntNE, lhs_han, rhs_han, "");
     }
 
     return res;
@@ -256,6 +270,13 @@ void Build::visit_lt(ast::LessThan& x) {
     } else if (type.is<code::TypeFloat>()) {
       res = LLVMBuildFCmp(
         _ctx.irb, LLVMRealOLT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypePointer>()) {
+      // TODO: Need to use a intptr type
+      auto lhs_han = LLVMBuildPtrToInt(_ctx.irb, lhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      auto rhs_han = LLVMBuildPtrToInt(_ctx.irb, rhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      res = LLVMBuildICmp(_ctx.irb, LLVMIntULT, lhs_han, rhs_han, "");
     }
 
     return res;
@@ -287,6 +308,13 @@ void Build::visit_le(ast::LessThanOrEqualTo& x) {
     } else if (type.is<code::TypeFloat>()) {
       res = LLVMBuildFCmp(
         _ctx.irb, LLVMRealOLE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypePointer>()) {
+      // TODO: Need to use a intptr type
+      auto lhs_han = LLVMBuildPtrToInt(_ctx.irb, lhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      auto rhs_han = LLVMBuildPtrToInt(_ctx.irb, rhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      res = LLVMBuildICmp(_ctx.irb, LLVMIntULE, lhs_han, rhs_han, "");
     }
 
     return res;
@@ -318,6 +346,13 @@ void Build::visit_gt(ast::GreaterThan& x) {
     } else if (type.is<code::TypeFloat>()) {
       res = LLVMBuildFCmp(
         _ctx.irb, LLVMRealOGT, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypePointer>()) {
+      // TODO: Need to use a intptr type
+      auto lhs_han = LLVMBuildPtrToInt(_ctx.irb, lhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      auto rhs_han = LLVMBuildPtrToInt(_ctx.irb, rhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      res = LLVMBuildICmp(_ctx.irb, LLVMIntUGT, lhs_han, rhs_han, "");
     }
 
     return res;
@@ -349,6 +384,13 @@ void Build::visit_ge(ast::GreaterThanOrEqualTo& x) {
     } else if (type.is<code::TypeFloat>()) {
       res = LLVMBuildFCmp(
         _ctx.irb, LLVMRealOGE, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypePointer>()) {
+      // TODO: Need to use a intptr type
+      auto lhs_han = LLVMBuildPtrToInt(_ctx.irb, lhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      auto rhs_han = LLVMBuildPtrToInt(_ctx.irb, rhs->get_value(_ctx),
+        LLVMIntType(64), "");
+      res = LLVMBuildICmp(_ctx.irb, LLVMIntUGE, lhs_han, rhs_han, "");
     }
 
     return res;

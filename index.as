@@ -13,11 +13,11 @@
 //    [ ] CTA
 //    [ ] Omit size `[_]`
 
-// [.] Pointer
+// [x] Pointer
 //    [x] Dereference (Set)
 //    [x] Mutability checking
 //    [x] Arithmetic
-//    [ ] Relational (==, !=, >=, >, <=, <) {*}
+//    [x] Relational (==, !=, >=, >, <=, <) {*}
 
 // [.] Tuple
 //    [ ] Cast {*}

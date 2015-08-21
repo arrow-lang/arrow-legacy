@@ -190,8 +190,10 @@ void Resolve::visit_eq(ast::EqualTo& x) {
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypePointer>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypePointer>() ||
          rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
@@ -222,8 +224,10 @@ void Resolve::visit_ne(ast::NotEqualTo& x) {
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypePointer>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypePointer>() ||
          rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
@@ -254,8 +258,10 @@ void Resolve::visit_lt(ast::LessThan& x) {
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypePointer>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypePointer>() ||
          rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
@@ -286,8 +292,10 @@ void Resolve::visit_le(ast::LessThanOrEqualTo& x) {
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypePointer>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypePointer>() ||
          rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
@@ -318,8 +326,10 @@ void Resolve::visit_ge(ast::GreaterThanOrEqualTo& x) {
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypePointer>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypePointer>() ||
          rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
@@ -350,8 +360,10 @@ void Resolve::visit_gt(ast::GreaterThan& x) {
     if ((lhs.is<code::TypeInteger>() ||
          lhs.is<code::TypeIntegerLiteral>() ||
          lhs.is<code::TypeSizedInteger>() ||
+         lhs.is<code::TypePointer>() ||
          lhs.is<code::TypeFloat>()) && (
          rhs.is<code::TypeInteger>() ||
+         rhs.is<code::TypePointer>() ||
          rhs.is<code::TypeIntegerLiteral>() ||
          rhs.is<code::TypeSizedInteger>() ||
          rhs.is<code::TypeFloat>())) {
