@@ -10,6 +10,27 @@
 namespace arrow {
 namespace pass {
 
+static Ref<code::Item> get_item(Ref<code::Scope>& _scope, ast::Node& node) {
+  Match(node) {
+    Case(ast::Identifier& ident) {
+      auto item = _scope->find(ident.text);
+      return item;
+    } break;
+
+    Case(ast::Path& path) {
+      auto item = get_item(_scope, *path.operand);
+      Match(*item) {
+        Case(code::Import& imp) {
+          auto& member = imp.module->items[path.member];
+          return member;
+        } break;
+      } EndMatch;
+    } break;
+  } EndMatch;
+
+  return nullptr;
+}
+
 static bool check_item(ast::Node& context, code::Item& item) {
   Match(item) {
     Case(code::Slot& slot) {
@@ -49,10 +70,6 @@ static bool check_item(ast::Node& context, code::Item& item) {
   return false;
 }
 
-// TODO: Doesn't handle nested paths; what we should do here is
-//       create a way to get an item from an operand (whether that item
-//       is a path or identifier)
-
 void AnalyzeUsage::visit_address_of(ast::AddressOf& x) {
   // Visit this normally (check for unresolved)
   Visitor::visit_address_of(x);
@@ -63,63 +80,53 @@ void AnalyzeUsage::visit_address_of(ast::AddressOf& x) {
   if (x.is_mutable) {
     Match(*x.operand) {
       Case(ast::Path& path) {
-        Match(*path.operand) {
-          Case(ast::Identifier& ident) {
-            auto item = _scope->find(ident.text);
-            Match(*item) {
-              Case(code::Import& imp) {
-                auto& member = imp.module->items[path.member];
-                if (check_item(*x.operand, *member)) return;
+        auto item = get_item(_scope, path);
+        if (item) {
+          if (check_item(*x.operand, *item)) return;
+        } else {
+          auto op_item = get_item(_scope, *path.operand);
+          if (op_item) {
+            // Resolve the type of the operand
+            auto op_type = Resolve(_scope).run(*path.operand);
+            if (!op_type) return;
+
+            Match(*op_type) {
+              Case(code::TypeStructure& struct_) {
+                auto mem = struct_.find_member(path.member);
+                auto is_mutable = false;
+                Match(*op_item) {
+                  Case(code::Slot& slot) {
+                    is_mutable = slot.is_mutable;
+                  } break;
+
+                  Case(code::ExternSlot& slot) {
+                    is_mutable = slot.is_mutable;
+                  } break;
+
+                  Case(code::Parameter& param) {
+                    is_mutable = param.is_mutable;
+                  } break;
+                } EndMatch;
+
+                if (!is_mutable) {
+                  Log::get().error(
+                    x.operand->span,
+                    "cannot take a mutable address of "
+                    "the immutable member '%s'",
+                    path.member.c_str());
+
+                  return;
+                } else {
+                  return;
+                }
               } break;
             } EndMatch;
-          } break;
-        } EndMatch;
-
-        // Resolve the type of the operand
-        auto op_type = Resolve(_scope).run(*path.operand);
-        if (!op_type) return;
-
-        Match(*op_type) {
-          Case(code::TypeStructure& struct_) {
-            auto mem = struct_.find_member(path.member);
-
-            auto is_mutable = false;
-            if (path.operand.is<ast::Identifier>()) {
-              // Lookup this identifier and check if its a module [..]
-              auto text = path.operand.as<ast::Identifier>()->text;
-              auto item = _scope->find(text);
-              Match(*item) {
-                Case(code::Slot& slot) {
-                  is_mutable = slot.is_mutable;
-                } break;
-
-                Case(code::ExternSlot& slot) {
-                  is_mutable = slot.is_mutable;
-                } break;
-
-                Case(code::Parameter& param) {
-                  is_mutable = param.is_mutable;
-                } break;
-              } EndMatch;
-            }
-
-            if (!is_mutable) {
-              Log::get().error(
-                x.operand->span,
-                "cannot take a mutable address of "
-                "the immutable member '%s'",
-                path.member.c_str());
-
-              return;
-            } else {
-              return;
-            }
-          } break;
-        } EndMatch;
+          }
+        }
       } break;
 
       Case(ast::Identifier& ident) {
-        auto item = _scope->find(ident.text);
+        auto item = get_item(_scope, ident);
         if (!item) return;
         if (check_item(*x.operand, *item)) return;
       } break;
