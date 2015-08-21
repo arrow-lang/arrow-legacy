@@ -35,7 +35,7 @@ void Type::visit_type_parameter(ast::TypeParameter& x) {
   auto type = Type(_scope).run(*x.type);
   if (!type) return;
 
-  _stack.push_front(new code::TypeParameter(x.keyword, type));
+  _stack.push_front(new code::TypeParameter(x.keyword, type, x.is_mutable));
 }
 
 }  // namespace pass

@@ -27,6 +27,24 @@ struct Parameter : Item, Value {
     _handle = handle;
   }
 
+  virtual LLVMValueRef get_address(Compiler::Context& ctx) {
+    auto res = Value::get_address(ctx);
+    if (is_mutable) {
+      res = LLVMBuildLoad(ctx.irb, res, "");
+    }
+
+    return res;
+  }
+
+  virtual LLVMValueRef get_value(Compiler::Context& ctx) {
+    auto res = Value::get_value(ctx);
+    if (is_mutable) {
+      res = LLVMBuildLoad(ctx.irb, res, "");
+    }
+
+    return res;
+  }
+
   virtual bool has_address() const {
     return true;
   }

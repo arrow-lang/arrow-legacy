@@ -42,15 +42,24 @@ void Build::visit_call(ast::Call& x) {
     auto arg = Build(_ctx, _scope).run_scalar(*arg_node->expression);
     if (!arg) return;
 
-    // Cast the argument to the appropriate type
-    arg = util::cast(
-      _ctx, arg, *arg_node->expression,
-      type->parameters.at(arg_index)->type, false);
+    LLVMValueRef arg_value = nullptr;
 
-    if (!arg) return;
+    if (type->parameters.at(arg_index)->is_mutable) {
+      // Use the address
+      arg_value = arg->get_address(_ctx);
+    } else {
+      // Cast the argument to the appropriate type
+      arg = util::cast(
+        _ctx, arg, *arg_node->expression,
+        type->parameters.at(arg_index)->type, false);
+
+      if (!arg) return;
+
+      arg_value = arg->get_value(_ctx);
+    }
 
     // Add it to the positional arguments
-    arguments.push_back(arg->get_value(_ctx));
+    arguments.push_back(arg_value);
     arg_index += 1;
   }
 

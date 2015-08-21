@@ -86,8 +86,8 @@ struct TypeArray : Type {
 };
 
 struct TypeParameter : Type {
-  TypeParameter(Span span, std::string keyword, Ref<Type> type)
-    : Type(span), type(type), keyword(keyword) {
+  TypeParameter(Span span, std::string keyword, Ref<Type> type, bool is_mutable)
+    : Type(span), type(type), keyword(keyword), is_mutable(is_mutable) {
   }
 
   virtual ~TypeParameter() noexcept;
@@ -96,6 +96,7 @@ struct TypeParameter : Type {
 
   Ref<Type> type;
   std::string keyword;
+  bool is_mutable;
 };
 
 struct TypeFunction : Type {

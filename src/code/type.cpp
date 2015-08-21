@@ -245,12 +245,17 @@ LLVMTypeRef TypeFunction::handle() {
     // Prepare the parameter type vector
     std::vector<LLVMTypeRef> parameter_handles;
     for (auto& param : parameters) {
-      parameter_handles.push_back(param->type->handle());
+      auto param_type_handle = param->type->handle();
+
+      if (abi == Abi::Native && param->is_mutable) {
+        param_type_handle = LLVMPointerType(param_type_handle, 0);
+      }
+
+      parameter_handles.push_back(param_type_handle);
     }
 
     // Prepare the result type
     auto result_handle = result->handle();
-
 
     // Construct the LLVM type
     _handle = LLVMFunctionType(
@@ -262,6 +267,10 @@ LLVMTypeRef TypeFunction::handle() {
 }
 
 LLVMTypeRef TypeParameter::handle() {
+  if (is_mutable) {
+    return LLVMPointerType(type->handle(), 0);
+  }
+
   return type->handle();
 }
 

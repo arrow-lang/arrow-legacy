@@ -239,18 +239,29 @@ bool Parser::parse_type_function(Ref<ast::TypeTuple> initial, bool in_params) {
     node->parameters.push_back(new ast::TypeParameter(
       elem->span,
       "",
-      elem
+      elem,
+      false
     ));
   }
 
   if (in_params) {
     // Iterate and parse each parameter in the sequence
     if (!do_sequence(Token::Type::RightParenthesis, [&, this]() {
-      // Check for `IDENTIFIER ":"` to allow for the keyword
+      // Check for `[MUTABLE] IDENTIFIER ":"` to allow for the keyword
       auto begin = _t.peek(0)->span;
       std::string keyword = "";
-      if (_t.peek(0)->type == Token::Type::Identifier &&
-          _t.peek(1)->type == Token::Type::Colon) {
+      bool is_mutable = false;
+      if ((_t.peek(0)->type == Token::Type::Identifier &&
+           _t.peek(1)->type == Token::Type::Colon) || (
+           _t.peek(0)->type == Token::Type::Mutable &&
+           _t.peek(1)->type == Token::Type::Identifier &&
+           _t.peek(2)->type == Token::Type::Colon)) {
+
+        if (_t.peek(0)->type == Token::Type::Mutable) {
+          _t.pop();
+          is_mutable = true;
+        }
+
         auto id = expect<ast::Identifier>(&Parser::parse_identifier);
         keyword = id->text;
         _t.pop(); // ":"
@@ -264,7 +275,8 @@ bool Parser::parse_type_function(Ref<ast::TypeTuple> initial, bool in_params) {
       node->parameters.push_back(new ast::TypeParameter(
         begin.extend(type->span),
         keyword,
-        type
+        type,
+        is_mutable
       ));
 
       return true;

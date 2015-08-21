@@ -62,9 +62,11 @@ void Resolve::visit_parameter(ast::Parameter& x) {
   // Infer the name from the parameter pattern
   // A parameter only has a name if its an identifier pattern
   std::string name;
+  bool is_mutable = false;
   Match(*x.pattern) {
     Case(const ast::PatternIdentifier& id) {
       name = id.text;
+      is_mutable = id.is_mutable;
     } break;
 
     Otherwise() {
@@ -74,7 +76,7 @@ void Resolve::visit_parameter(ast::Parameter& x) {
   } EndMatch;
 
   // Create and push the type
-  _stack.push_front(new code::TypeParameter(name, type));
+  _stack.push_front(new code::TypeParameter(name, type, is_mutable));
 }
 
 }  // namespace pass

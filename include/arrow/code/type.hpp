@@ -320,8 +320,9 @@ struct TypeStructure : Type {
 // -----------------------------------------------------------------------------
 
 struct TypeParameter : Type {
-  explicit TypeParameter(std::string keyword, Ref<code::Type> type)
-    : keyword(keyword), type(type) {
+  explicit TypeParameter(std::string keyword, Ref<code::Type> type,
+                         bool is_mutable)
+    : keyword(keyword), type(type), is_mutable(is_mutable) {
   }
 
   virtual ~TypeParameter() noexcept;
@@ -339,6 +340,8 @@ struct TypeParameter : Type {
 
   /// Actual type
   Ref<code::Type> type;
+
+  bool is_mutable;
 };
 
 struct TypeFunction : Type {

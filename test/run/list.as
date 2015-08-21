@@ -1,8 +1,10 @@
-import libc from "./lib/libc";
+// import libc from "./lib/libc";
+export extern def abort();
+export extern def realloc(ptr: *byte, new_size: int64) -> *mutable byte;
 
 def assert(condition: bool) {
   unless condition {
-    libc.abort();
+    abort();
   }
 }
 
@@ -30,7 +32,7 @@ def list_reserve(mutable self: List, capacity: int) {
 
   // Reallocate memory to the new requested capacity.
   let element_size = ((0 as *int) + 1) as *byte - (0 as *byte);
-  self._elements = libc.realloc(
+  self._elements = realloc(
     self._elements as *mutable byte,
     (self._capacity * element_size) as int64) as *mutable int;
 }
