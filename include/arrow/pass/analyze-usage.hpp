@@ -29,6 +29,7 @@ class AnalyzeUsage : public ast::Visitor {
 
   // Select
   virtual void visit_select(ast::Select& x);
+  virtual void visit_conditional(ast::Conditional& x);
 
   // Loop
   virtual void visit_loop(ast::Loop& x);

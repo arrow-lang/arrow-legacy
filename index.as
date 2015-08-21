@@ -1,7 +1,7 @@
 // [x] Bitwise (binary) operations
 // [x] do_logical comparisons for bool
 // [x] do_logical Combinator: and or
-// [ ] Conditional (ternary) expression {*}
+// [x] Conditional (ternary) expression
 
 // [.] Array
 //    [x] Parse
@@ -9,19 +9,13 @@
 //    [x] Build/Resolve literal
 //    [ ] Index (Get)
 //    [ ] Index (Set)
-//    [ ] Cast
-//    [ ] CTA
 //    [ ] Omit size `[_]`
 
 // [x] Pointer
 //    [x] Dereference (Set)
 //    [x] Mutability checking
 //    [x] Arithmetic
-//    [x] Relational (==, !=, >=, >, <=, <) {*}
-
-// [.] Tuple
-//    [ ] Cast {*}
-//    [ ] CTA {*}
+//    [x] Relational (==, !=, >=, >, <=, <)
 
 // [x] Explicit Cast: as
 // [ ] Type alias

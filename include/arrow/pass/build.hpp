@@ -86,7 +86,7 @@ class Build : public ast::Visitor {
 
   // Select
   virtual void visit_select(ast::Select&);
-  // virtual void visit_select_branch(ast::SelectBranch&);
+  virtual void visit_conditional(ast::Conditional&);
 
   // Loop
   virtual void visit_loop(ast::Loop&);

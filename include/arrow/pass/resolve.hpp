@@ -50,6 +50,7 @@ class Resolve : public ast::Visitor {
   // Select
   virtual void visit_select(ast::Select&);
   virtual void visit_select_branch(ast::SelectBranch&);
+  virtual void visit_conditional(ast::Conditional&);
 
   // Unary
   virtual void visit_identity(ast::Identity&);
