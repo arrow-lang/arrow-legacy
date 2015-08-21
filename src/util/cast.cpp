@@ -126,7 +126,31 @@ Ref<code::Value> cast(
     }
   }
 
-  // TODO(mehcode): Explicit cast from ptr to int and int to ptr
+  // Explicit cast from ptr to int
+  if (explicit_ && from_type.is<code::TypePointer>() &&
+      (to_type.is<code::TypeSizedInteger>() ||
+       to_type.is<code::TypeIntegerLiteral>() ||
+       to_type.is<code::TypeInteger>())) {
+    res = LLVMBuildPtrToInt(
+      _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
+  }
+
+  // Explicit cast from int to ptr
+  if (explicit_ && to_type.is<code::TypePointer>() &&
+      (from_type.is<code::TypeSizedInteger>() ||
+       from_type.is<code::TypeIntegerLiteral>() ||
+       from_type.is<code::TypeInteger>())) {
+    res = LLVMBuildIntToPtr(
+      _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
+  }
+
+  // Explicit cast from ptr to ptr
+  if (explicit_ &&
+      to_type.is<code::TypePointer>() &&
+      from_type.is<code::TypePointer>()) {
+    res = LLVMBuildBitCast(
+      _ctx.irb, value->get_value(_ctx), to_type->handle(), "");
+  }
 
   // If we're both tuples ..
   if (from_type.is<code::TypeTuple>() && to_type.is<code::TypeTuple>()) {

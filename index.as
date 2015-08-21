@@ -15,8 +15,8 @@
 
 // [.] Pointer
 //    [x] Dereference (Set)
-//    [x] Mutability checking  {*}
-//    [ ] Arithmetic  {*}
+//    [x] Mutability checking
+//    [x] Arithmetic
 //    [ ] Relational (==, !=, >=, >, <=, <) {*}
 
 // [.] Tuple

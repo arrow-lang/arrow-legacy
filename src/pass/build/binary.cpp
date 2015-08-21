@@ -31,11 +31,11 @@ void Build::do_binary(
   if (perform_cast) {
     // Cast the operands to the "common" type (not the resultant type)
     auto common_type = code::intersect_all({lhs->type, rhs->type});
-    if (!common_type) return;
-
-    lhs = util::cast(_ctx, lhs, *x.lhs, common_type, false);
-    rhs = util::cast(_ctx, rhs, *x.rhs, common_type, false);
-    if (!lhs || !rhs) return;
+    if (common_type) {
+      lhs = util::cast(_ctx, lhs, *x.lhs, common_type, false);
+      rhs = util::cast(_ctx, rhs, *x.rhs, common_type, false);
+      if (!lhs || !rhs) return;
+    }
   }
 
   // Perform the operation
@@ -62,6 +62,14 @@ void Build::visit_add(ast::Add& x) {
     } else if (type.is<code::TypeFloat>()) {
       res = LLVMBuildFAdd(
         _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypePointer>() &&
+               lhs->type.is<code::TypePointer>()) {
+      auto index = rhs->get_value(_ctx);
+      res = LLVMBuildGEP(_ctx.irb, lhs->get_value(_ctx), &index, 1, "");
+    } else if (type.is<code::TypePointer>() &&
+               rhs->type.is<code::TypePointer>()) {
+      auto index = lhs->get_value(_ctx);
+      res = LLVMBuildGEP(_ctx.irb, rhs->get_value(_ctx), &index, 1, "");
     }
 
     return res;
@@ -73,7 +81,22 @@ void Build::visit_sub(ast::Sub& x) {
     Ref<code::Type> type, Ref<code::Value> lhs, Ref<code::Value> rhs
   ) {
     LLVMValueRef res = nullptr;
-    if (type.is<code::TypeInteger>() ||
+    if (type.is<code::TypeSizedInteger>() && lhs->type.is<code::TypePointer>()) {
+      // Run PTR-to-INT on both of the pointers
+      auto lhs_han = LLVMBuildPtrToInt(
+        _ctx.irb, lhs->get_value(_ctx), type->handle(), "");
+      auto rhs_han = LLVMBuildPtrToInt(
+        _ctx.irb, rhs->get_value(_ctx), type->handle(), "");
+
+      // Find the length.
+      res = LLVMBuildSub(_ctx.irb, lhs_han, rhs_han, "");
+
+      // Get the size (in bytes) of the underlying type.
+      auto size_of = LLVMSizeOf(lhs->type.as<code::TypePointer>()->pointee->handle());
+
+      // Perform an integral division to find the -number- of elements.
+      res = LLVMBuildExactSDiv(_ctx.irb, res, size_of, "");
+    } else if (type.is<code::TypeInteger>() ||
         type.is<code::TypeIntegerLiteral>() ||
         type.is<code::TypeSizedInteger>()) {
       res = LLVMBuildSub(
@@ -81,6 +104,11 @@ void Build::visit_sub(ast::Sub& x) {
     } else if (type.is<code::TypeFloat>()) {
       res = LLVMBuildFSub(
         _ctx.irb, lhs->get_value(_ctx), rhs->get_value(_ctx), "");
+    } else if (type.is<code::TypePointer>() &&
+               lhs->type.is<code::TypePointer>()) {
+      auto index = LLVMBuildNeg(_ctx.irb, rhs->get_value(_ctx), "");
+      res = LLVMBuildGEP(
+        _ctx.irb, lhs->get_value(_ctx), &index, 1, "");
     }
 
     return res;

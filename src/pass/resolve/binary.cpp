@@ -58,6 +58,30 @@ void Resolve::visit_add(ast::Add& x) {
       return code::intersect_all({lhs, rhs});
     }
 
+    // pointer + {int}
+    if (
+      lhs.is<code::TypePointer>() &&
+      (
+        rhs.is<code::TypeInteger>() ||
+        rhs.is<code::TypeIntegerLiteral>() ||
+        rhs.is<code::TypeSizedInteger>()
+      )
+    ) {
+      return lhs;
+    }
+
+    // {int} + pointer
+    if (
+      rhs.is<code::TypePointer>() &&
+      (
+        lhs.is<code::TypeInteger>() ||
+        lhs.is<code::TypeIntegerLiteral>() ||
+        lhs.is<code::TypeSizedInteger>()
+      )
+    ) {
+      return rhs;
+    }
+
     // TODO: string + string
 
     return Ref<code::Type>(nullptr);
@@ -77,6 +101,26 @@ void Resolve::visit_sub(ast::Sub& x) {
          rhs.is<code::TypeFloat>())) {
       // Attempt to find the "common" type (for the result)
       return code::intersect_all({lhs, rhs});
+    }
+
+    // pointer - {int}
+    if (
+      lhs.is<code::TypePointer>() &&
+      (
+        rhs.is<code::TypeInteger>() ||
+        rhs.is<code::TypeIntegerLiteral>() ||
+        rhs.is<code::TypeSizedInteger>()
+      )
+    ) {
+      return lhs;
+    }
+
+    // pointer - pointer
+    if (lhs.is<code::TypePointer>() && rhs.is<code::TypePointer>()) {
+      if (lhs->equals(*rhs)) {
+        // TODO: Determine an `intptr` type
+        return Ref<code::Type>(new code::TypeSizedInteger(64, false));
+      }
     }
 
     return Ref<code::Type>(nullptr);

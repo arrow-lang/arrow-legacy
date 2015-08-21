@@ -45,16 +45,16 @@ export extern def getenv(name: str) -> str;
 
 /// Allocates memory.
 // TODO: export extern def malloc(size: size_t) -> *byte;
-export extern def malloc(size: int64) -> *byte;
+export extern def malloc(size: int64) -> *mutable byte;
 
 /// Allocates memory for an array of num objects of size size and
 // initializes it to all bits zero.
 // TODO: export extern def calloc(num: size_t, size: size_t) -> *byte;
-export extern def calloc(num: int64, size: int64) -> *byte;
+export extern def calloc(num: int64, size: int64) -> *mutable byte;
 
 /// Reallocates the given area of memory.
 // TODO: export extern def realloc(new_size: size_t) -> *byte;
-export extern def realloc(ptr: *byte, new_size: int64) -> *byte;
+export extern def realloc(ptr: *byte, new_size: int64) -> *mutable byte;
 
 /// Deallocates previously allocated memory.
 export extern def free(ptr: *byte);
