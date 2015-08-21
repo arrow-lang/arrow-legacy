@@ -11,6 +11,7 @@
 //    [ ] Index (Set)
 //    [ ] Cast
 //    [ ] CTA
+//    [ ] Omit size `[_]`
 
 // [.] Pointer
 //    [x] Dereference (Set)
