@@ -4,6 +4,7 @@
 // See accompanying file LICENSE
 
 #include "arrow/match.hpp"
+#include "arrow/util.hpp"
 #include "arrow/pass/resolve.hpp"
 
 namespace arrow {
@@ -28,7 +29,7 @@ void Resolve::visit_path(ast::Path& x) {
         return;
       }
 
-      auto type = type_of(member->second);
+      auto type = util::type_of(member->second);
       if (type) {
         _stack.push_front(type);
       }

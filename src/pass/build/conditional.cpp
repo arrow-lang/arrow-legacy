@@ -39,6 +39,10 @@ void Build::visit_conditional(ast::Conditional& x) {
   auto lhs = Build(_ctx, _scope).run_scalar(*x.lhs);
   if (!lhs) return;
 
+  // Cast the LHS to the target type
+  lhs = util::cast(_ctx, lhs, *x.lhs, type, false);
+  if (!lhs) return;
+
   // Create a branch to the `merge` block.
   LLVMBuildBr(_ctx.irb, merge_b);
 
@@ -51,6 +55,10 @@ void Build::visit_conditional(ast::Conditional& x) {
 
   // Build the RHS
   auto rhs = Build(_ctx, _scope).run_scalar(*x.rhs);
+  if (!rhs) return;
+
+  // Cast the LHS to the target type
+  rhs = util::cast(_ctx, rhs, *x.rhs, type, false);
   if (!rhs) return;
 
   // Create a branch to the `merge` block.

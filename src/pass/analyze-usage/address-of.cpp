@@ -4,32 +4,12 @@
 // See accompanying file LICENSE
 
 #include "arrow/match.hpp"
+#include "arrow/util.hpp"
 #include "arrow/pass/resolve.hpp"
 #include "arrow/pass/analyze-usage.hpp"
 
 namespace arrow {
 namespace pass {
-
-static Ref<code::Item> get_item(Ref<code::Scope>& _scope, ast::Node& node) {
-  Match(node) {
-    Case(ast::Identifier& ident) {
-      auto item = _scope->find(ident.text);
-      return item;
-    } break;
-
-    Case(ast::Path& path) {
-      auto item = get_item(_scope, *path.operand);
-      Match(*item) {
-        Case(code::Import& imp) {
-          auto& member = imp.module->items[path.member];
-          return member;
-        } break;
-      } EndMatch;
-    } break;
-  } EndMatch;
-
-  return nullptr;
-}
 
 static bool check_item(ast::Node& context, code::Item& item) {
   Match(item) {
@@ -80,11 +60,11 @@ void AnalyzeUsage::visit_address_of(ast::AddressOf& x) {
   if (x.is_mutable) {
     Match(*x.operand) {
       Case(ast::Path& path) {
-        auto item = get_item(_scope, path);
+        auto item = util::get_item(_scope, path);
         if (item) {
           if (check_item(*x.operand, *item)) return;
         } else {
-          auto op_item = get_item(_scope, *path.operand);
+          auto op_item = util::get_item(_scope, *path.operand);
           if (op_item) {
             // Resolve the type of the operand
             auto op_type = Resolve(_scope).run(*path.operand);
@@ -126,7 +106,7 @@ void AnalyzeUsage::visit_address_of(ast::AddressOf& x) {
       } break;
 
       Case(ast::Identifier& ident) {
-        auto item = get_item(_scope, ident);
+        auto item = util::get_item(_scope, ident);
         if (!item) return;
         if (check_item(*x.operand, *item)) return;
       } break;

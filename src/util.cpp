@@ -3,13 +3,34 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include "arrow/util.hpp"
 #include "arrow/match.hpp"
-#include "arrow/pass/resolve.hpp"
 
 namespace arrow {
-namespace pass {
+namespace util {
 
-Ref<code::Type> Resolve::type_of(Ref<code::Item> item) {
+Ref<code::Item> get_item(Ref<code::Scope>& _scope, ast::Node& node) {
+  Match(node) {
+    Case(ast::Identifier& ident) {
+      auto item = _scope->find(ident.text);
+      return item;
+    } break;
+
+    Case(ast::Path& path) {
+      auto item = get_item(_scope, *path.operand);
+      Match(*item) {
+        Case(code::Import& imp) {
+          auto& member = imp.module->items[path.member];
+          return member;
+        } break;
+      } EndMatch;
+    } break;
+  } EndMatch;
+
+  return nullptr;
+}
+
+Ref<code::Type> type_of(Ref<code::Item> item) {
   if (item.is<code::Slot>()) {
     // This item -is- a slot
     auto type = item.as<code::Slot>()->type;
@@ -38,5 +59,5 @@ Ref<code::Type> Resolve::type_of(Ref<code::Item> item) {
   }
 }
 
-}  // namespace pass
+}  // namespace util
 }  // namespace arrow

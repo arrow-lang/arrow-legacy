@@ -34,6 +34,12 @@ Ref<code::Value> cast(
   Ref<code::Value> value, ast::Node& node, Ref<code::Type> to_type,
   bool explicit_ = false);
 
+/// Lookup an item from an identifier or path.
+extern Ref<code::Item> get_item(Ref<code::Scope>& _scope, ast::Node& node);
+
+// Get the type from an item
+extern Ref<code::Type> type_of(Ref<code::Item> item);
+
 }  // namespace util
 }  // namespace arrow
 

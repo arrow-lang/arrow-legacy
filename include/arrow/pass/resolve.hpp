@@ -92,8 +92,6 @@ class Resolve : public ast::Visitor {
     ast::Binary& x,
     std::function<Ref<code::Type>(Ref<code::Type>, Ref<code::Type>)> c);
 
-  Ref<code::Type> type_of(Ref<code::Item> item);
-
   // The scope to emplace the exposed items into.
   Ref<code::Scope> _scope;
 
