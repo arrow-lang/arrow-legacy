@@ -16,7 +16,7 @@ bool AnalyzeUsage::_expand_assign(
 ) {
   Match(lhs) {
     Case(ast::Path& x) {
-      if (!x.operand.is<ast::Identifier>()) {
+      if (!(x.operand.is<ast::Identifier>() || x.operand.is<ast::Path>())) {
         // Pulling out anything else is an illegal assignment
         Log::get().error(lhs.span, "illegal left-hand side expression");
         return false;
