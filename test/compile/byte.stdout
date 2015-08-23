@@ -1,0 +1,35 @@
+@a = internal global i8 10
+@b = internal global i8 10
+@ptr_a = internal global i8* null
+@ptr_b = internal global i8* null
+@arr_a = internal global [1 x i8] zeroinitializer
+@arr_b = internal global [1 x i8] zeroinitializer
+
+define internal void @byte..init() {
+  %1 = load i8* @a
+  store i8 %1, i8* @b
+  %2 = load i8* @b
+  store i8 %2, i8* @a
+  store i8* @a, i8** @ptr_a
+  store i8* @b, i8** @ptr_b
+  %3 = load i8** @ptr_b
+  store i8* %3, i8** @ptr_a
+  %4 = load i8** @ptr_a
+  store i8* %4, i8** @ptr_b
+  %5 = load i8* @a
+  %6 = insertvalue [1 x i8] undef, i8 %5, 0
+  store [1 x i8] %6, [1 x i8]* @arr_a
+  %7 = load i8* @b
+  %8 = insertvalue [1 x i8] undef, i8 %7, 0
+  store [1 x i8] %8, [1 x i8]* @arr_b
+  %9 = load [1 x i8]* @arr_b
+  store [1 x i8] %9, [1 x i8]* @arr_a
+  %10 = load [1 x i8]* @arr_a
+  store [1 x i8] %10, [1 x i8]* @arr_b
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @byte..init()
+  ret i32 0
+}

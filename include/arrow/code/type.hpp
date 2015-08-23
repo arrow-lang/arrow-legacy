@@ -168,6 +168,8 @@ struct TypeByte : TypeSizedInteger {
     : TypeSizedInteger(8, false) {
   }
 
+  virtual bool equals(Type& other) const;
+
   virtual ~TypeByte() noexcept;
 
   virtual std::string name() const {
