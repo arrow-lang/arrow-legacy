@@ -59,6 +59,19 @@ export extern def realloc(ptr: *byte, new_size: int64) -> *mutable byte;
 /// Deallocates previously allocated memory.
 export extern def free(ptr: *byte);
 
+// <string.h>
+// =============================================================================
+
+// Character array manipulation
+// -----------------------------------------------------------------------------
+
+/// Converts the value ch to unsigned char and copies it into each of the
+/// first count characters of the object pointed to by dest.
+// TODO: export extern def memset(
+//   dest: *mutable byte, ch: c_int, count: size_t) -> *mutable byte;
+export extern def memset(
+  dest: *mutable byte, ch: int64, count: uint64) -> *mutable byte;
+
 // <stdio.h>
 // =============================================================================
 
@@ -127,6 +140,11 @@ export extern def puts(s: str) -> int64;
 // File positioning
 // -----------------------------------------------------------------------------
 
-// Moves the file position indicator to a specific location in a file.
+/// Returns the current value of the file position indicator for the
+/// file stream.
+// TODO: export extern def ftell(stream: *FILE) -> c_long;
+export extern def ftell(stream: *FILE) -> int128;
+
+/// Moves the file position indicator to a specific location in a file.
 // TODO: export extern def fseek(stream: *FILE, offset: c_long, whence: c_int) -> c_int;
 export extern def fseek(stream: *FILE, offset: int128, whence: int64) -> int64;
