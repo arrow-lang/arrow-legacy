@@ -168,6 +168,8 @@ struct TypeByte : TypeSizedInteger {
     : TypeSizedInteger(8, false) {
   }
 
+  virtual bool equals(Type& other) const;
+
   virtual ~TypeByte() noexcept;
 
   virtual std::string name() const {
@@ -282,13 +284,12 @@ struct TypeMember : Type {
 struct TypeStructure : Type {
   TypeStructure(std::string name_)
     : members(), _name(name_) {
+    // Initialize the named structure handle
+    _handle = LLVMStructCreateNamed(
+      LLVMGetGlobalContext(), _name.c_str());
   }
 
   virtual ~TypeStructure() noexcept;
-
-  void set_handle(LLVMTypeRef handle) {
-    _handle = handle;
-  }
 
   virtual LLVMTypeRef handle() {
     return _handle;

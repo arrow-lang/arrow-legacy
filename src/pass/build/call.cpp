@@ -12,9 +12,9 @@ namespace pass {
 
 void Build::visit_call(ast::Call& x) {
   // Determine if we are a constructor (struct type) or a function
-  if (x.operand.is<ast::Identifier>()) {
-    auto id = x.operand.as<ast::Identifier>();
-    auto item = _scope->find(id->text);
+  if (x.operand.is<ast::Identifier>() ||
+      x.operand.is<ast::Path>()) {
+    auto item = util::get_item(_scope, *x.operand);
     if (item && item.is<code::Structure>()) {
       return do_struct_ctor(x, item);
     }

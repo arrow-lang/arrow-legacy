@@ -3,6 +3,7 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
+#include "arrow/util.hpp"
 #include "arrow/pass/resolve.hpp"
 
 namespace arrow {
@@ -18,7 +19,7 @@ void Resolve::visit_id(ast::Identifier& x) {
   }
 
   // Determine the type of said item
-  auto type = type_of(item);
+  auto type = util::type_of(item);
   if (type) {
     _stack.push_front(type);
   }

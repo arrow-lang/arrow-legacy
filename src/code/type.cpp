@@ -91,12 +91,30 @@ std::string TypeFunction::name() const {
 // -----------------------------------------------------------------------------
 
 bool TypeSizedInteger::equals(Type& other) const {
+  // Check if we are comparing against a byte
+  if (typeid(other) == typeid(code::TypeByte)) {
+    return bits == 8 && !is_signed;
+  }
+
   // Check that we are comparing against a sized-integer
   if (!Type::equals(other)) return false;
   auto other_si = dynamic_cast<TypeSizedInteger&>(other);
 
   // Equal if 'bits' and 'signed' is equal
   return bits == other_si.bits && is_signed == other_si.is_signed;
+}
+
+bool TypeByte::equals(Type& other) const {
+  // Check if we are comparing against a sized-integer
+  if (typeid(other) == typeid(code::TypeSizedInteger)) {
+    auto other_si = dynamic_cast<TypeSizedInteger&>(other);
+    return other_si.bits == 8 && !other_si.is_signed;
+  }
+
+  // Check that we are comparing against a byte
+  if (!Type::equals(other)) return false;
+
+  return true;
 }
 
 bool TypeTuple::equals(Type& other) const {

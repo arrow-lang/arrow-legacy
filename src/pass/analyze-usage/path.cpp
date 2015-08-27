@@ -16,7 +16,7 @@ void AnalyzeUsage::do_path(ast::Path& x, ast::Node* in_assign) {
   x.operand->accept(*this);
   if (Log::get().count("error") > 0) return;
 
-  // Check if we're running the `.` operator on an identifier [..]
+  // Check if we're running the `.` operator on an identifier/path [..]
   if (x.operand.is<ast::Identifier>()) {
     // Lookup this identifier and check if its a module [..]
     auto text = x.operand.as<ast::Identifier>()->text;
@@ -79,10 +79,25 @@ void AnalyzeUsage::do_path(ast::Path& x, ast::Node* in_assign) {
 
   // Check if we allow inner assignment
   bool is_mutable = false;
-  if (in_assign && x.operand.is<ast::Identifier>()) {
+  if (in_assign && (
+      x.operand.is<ast::Identifier>() || x.operand.is<ast::Path>())) {
     // Lookup this identifier and check if its a module [..]
-    auto text = x.operand.as<ast::Identifier>()->text;
-    auto item = _scope->find(text);
+    Ref<code::Item> item = nullptr;
+    if (x.operand.is<ast::Identifier>()) {
+      item = _scope->find(x.operand.as<ast::Identifier>()->text);
+    } else if (x.operand.is<ast::Path>()) {
+      auto op = x.operand;
+      item = util::get_item(_scope, *op);
+      while (item == nullptr && op.is<ast::Path>()) {
+        op = op.as<ast::Path>()->operand;
+        auto op = x.operand;
+      }
+      if (item == nullptr) {
+        // TODO: Error?
+        return;
+      }
+    }
+
     Match(*item) {
       Case(code::Slot& slot) {
         is_mutable = slot.is_mutable;

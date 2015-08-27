@@ -1,0 +1,21 @@
+%Box = type { i128 }
+
+@value = internal global %Box zeroinitializer
+@value_ex = internal global %Box zeroinitializer
+
+define internal void @import-struct..init() {
+  store %Box { i128 10 }, %Box* @value
+  %1 = load %Box* @value
+  store %Box %1, %Box* @value_ex
+  ret void
+}
+
+define internal void @lib-struct..init() {
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @lib-struct..init()
+  call void @import-struct..init()
+  ret i32 0
+}
