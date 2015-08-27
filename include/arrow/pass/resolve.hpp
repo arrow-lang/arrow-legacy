@@ -83,6 +83,7 @@ class Resolve : public ast::Visitor {
   virtual void visit_path(ast::Path&);
   virtual void visit_assign(ast::Assign&);
   virtual void visit_cast(ast::Cast&);
+  virtual void visit_index(ast::Index&);
 
  private:
   void do_unary(

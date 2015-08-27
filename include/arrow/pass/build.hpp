@@ -75,6 +75,7 @@ class Build : public ast::Visitor {
   virtual void visit_bit_or(ast::BitOr&);
   virtual void visit_and(ast::And&);
   virtual void visit_or(ast::Or&);
+  virtual void visit_index(ast::Index&);
 
   // Misc.
   virtual void visit_assign(ast::Assign&);

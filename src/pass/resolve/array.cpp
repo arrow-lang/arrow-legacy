@@ -31,5 +31,27 @@ void Resolve::visit_array(ast::Array& x) {
   _stack.push_front(new code::TypeArray(final_type, x.elements.size()));
 }
 
+void Resolve::visit_index(ast::Index& x) {
+  // Resolve the type of the LHS
+  auto lhs = Resolve(_scope).run(*x.lhs);
+  if (!lhs) return;
+  if (lhs->is_unknown()) {
+    _stack.push_front(new code::TypeUnknown());
+    return;
+  }
+
+  // Check if we are an array
+  if (!lhs.is<code::TypeArray>()) {
+    Log::get().error(
+      x.span, "cannot apply operator `[]` to type '%s'",
+      lhs->name().c_str());
+
+    return;
+  }
+
+  // Push the element type of the array
+  _stack.push_front(lhs.as<code::TypeArray>()->element);
+}
+
 }  // namespace pass
 }  // namespace arrow

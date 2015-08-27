@@ -49,5 +49,28 @@ void Build::visit_array(ast::Array& x) {
   _stack.push_front(new code::Value(res, type));
 }
 
+void Build::visit_index(ast::Index& x) {
+  // Resolve the type of the expression
+  auto type = Resolve(_scope).run(x);
+  if (!type) return;
+
+  // Build each operand ..
+  auto lhs = Build(_ctx, _scope).run_scalar(*x.lhs);
+  auto rhs = Build(_ctx, _scope).run_scalar(*x.rhs);
+  if (!lhs || !rhs) return;
+
+  // Build a GEP of the LHS to the RHS (index)
+  auto index = rhs->get_value(_ctx);
+
+  auto ptr = LLVMBuildBitCast(
+    _ctx.irb, lhs->get_address(_ctx),
+    LLVMPointerType(type->handle(), 0),
+    "");
+
+  auto res = LLVMBuildGEP(_ctx.irb, ptr, &index, 1, "");
+
+  _stack.push_front(new code::Value(res, type));
+}
+
 }  // namespace pass
 }  // namespace arrow
