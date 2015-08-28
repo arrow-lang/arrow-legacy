@@ -82,8 +82,10 @@ def configure(ctx):
 
 def build(ctx):
     start_dir = ctx.path.find_dir("lib")
-    ctx.install_files("${PREFIX}/lib/arrow", start_dir.ant_glob('**/*.as'),
-                cwd=start_dir, relative_trick=True)
+    ctx.install_files(
+        "${PREFIX}/lib/arrow", start_dir.ant_glob('**/*.as'),
+        cwd=start_dir,
+        relative_trick=True)
 
     ctx.program(source=ctx.path.ant_glob("src/**/*.cpp"),
                 includes=[
