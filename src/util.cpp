@@ -59,5 +59,23 @@ Ref<code::Type> type_of(Ref<code::Item> item) {
   }
 }
 
+bool is_mutable(code::Item& item) {
+  Match(item) {
+    Case(code::Slot& slot) {
+      return slot.is_mutable;
+    }
+
+    Case(code::ExternSlot& slot) {
+      return slot.is_mutable;
+    }
+
+    Case(code::Parameter& param) {
+      return param.is_mutable;
+    }
+  } EndMatch;
+
+  return false;
+}
+
 }  // namespace util
 }  // namespace arrow

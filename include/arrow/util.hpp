@@ -37,6 +37,9 @@ Ref<code::Value> cast(
 /// Lookup an item from an identifier or path.
 extern Ref<code::Item> get_item(Ref<code::Scope>& _scope, ast::Node& node);
 
+/// Check if an item is mutable.
+extern bool is_mutable(code::Item& item);
+
 // Get the type from an item
 extern Ref<code::Type> type_of(Ref<code::Item> item);
 

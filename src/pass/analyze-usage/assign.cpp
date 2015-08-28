@@ -4,6 +4,7 @@
 // See accompanying file LICENSE
 
 #include "arrow/match.hpp"
+#include "arrow/util.hpp"
 #include "arrow/pass/analyze-usage.hpp"
 #include "arrow/pass/resolve.hpp"
 #include "arrow/pass/type.hpp"
@@ -24,6 +25,26 @@ bool AnalyzeUsage::_expand_assign(
 
       // Analyze this normally ..
       do_path(x, context);
+    } break;
+
+    Case(ast::Index& x) {
+      if (!(x.lhs.is<ast::Identifier>() || x.lhs.is<ast::Path>())) {
+        // Pulling out anything else is an illegal assignment
+        Log::get().error(lhs.span, "illegal left-hand side expression");
+        return false;
+      }
+
+      auto item = util::get_item(_scope, *x.lhs);
+      bool is_mutable = false;
+
+      if (item) {
+        is_mutable = util::is_mutable(*item);
+      }
+
+      if (!is_mutable) {
+        Log::get().error(lhs.span, "illegal left-hand side expression");
+        return false;
+      }
     } break;
 
     Case(ast::Dereference& x) {
