@@ -1,7 +1,8 @@
+#!/usr/bin/env arrow
 // Implementation of `usr/bin/env` in arrow
 let nil = 0 as *int8;
 extern def puts(s: str);
-def main(argc: int32, argv: *str, environ: *str) {
+def main(argc: int, argv: *str, environ: *str) {
   let mutable index = 0;
   while *((environ + index) as **int8) != nil {
     puts(*(environ + index));
