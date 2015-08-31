@@ -1,11 +1,20 @@
-// [.] Array
-//    [x] Parse
-//    [x] Type
-//    [x] Build/Resolve literal
-//    [x] Index (Get)
-//    [x] Index (Set)
-//    [ ] Mutability checking for index (set)
-//    [ ] Omit size `[_]`
+// Sept. 4:
+//    - Finish "Call", "Type Alias" (basic), and "Fold"
+//    - Test build/install on:
+//        > Linux (amd64)
+//        > Linux (x86)
+//        > Linux (ARM)
+//        > Windows 7 (x86)
+//        > Windows 7 (amd64)
+//        > Windows 8 (amd64)
+//        > Windows 10 (amd64)
+//        > Mac OSX [whatever is latest]
+//    - Finish varidac for extern-c
+//    - Instance/Attached methods
+//    - Basic IO (simple libc wrapper)
+//    - prelude (and assert)
+
+// ------------
 
 // [x] Explicit Cast: as
 // [ ] Type alias
@@ -14,23 +23,38 @@
 // [-] Call
 //    [x] Mutable parameters
 //    [ ] Check for mutable parameters (to ensure captured arg is mutable) {*}
-//    [ ] C ABI parameters
 //    [ ] Aggregate by-const-reference (struct, array, tuple, etc.) {*}
 //    [ ] Default arguments {*}
 //    [ ] Keyword arguments {*}
 
 // [ ] Instance/Attached methods (implement)
 // [ ] Destructors (RIIA)
+// [ ] Traits
 // [ ] Generics
 //    [ ] Generic structs
 //    [ ] Generic implement (which creates generic functions)
 
-// [ ] Command line arguments to script
+// [ ] Varidac for extern "C" functions {*}
 
-// TODO(arrow): Varidac for extern "C" functions {*}
+// [ ] Intrinsics (requires deciding on overloaded functions)
+//    [ ] pow
+//    [ ] cos/sin/tan
+//    [ ] shift/bswap
 
-// TODO(arrow):
-//    Absolute module imports that resolve from an installation
-//    folder (eg. so we can do `import libc from "libc"`)
+// Discuss:
+// [ ] Overloaded functions (yes/no)
+//      - pow(float, int) vs pow(float, float)
+// [ ] Member functions or "free" functions
+//      - math.pow(3.12, 1) vs (3.12).pow(1)
+//      - math.sqrt(3.5) vs (3.5).sqrt()
+//      - math.is_finite(4.12) vs (4.12).is_finite()
 
-// [ ] Export modules (through `use X = mod` or `export X from ".."`)
+// Libraries:
+// [ ] math
+// [ ] random
+// [ ] string
+// [ ] bits
+// [ ] time / calendar / date / datetime / chrono
+// [ ] platform
+// [ ] signal
+// [ ] io

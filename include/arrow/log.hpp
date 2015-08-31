@@ -6,6 +6,10 @@
 #ifndef ARROW_LOG_H
 #define ARROW_LOG_H 1
 
+// NOTE: Set this to 1 to enable trace logs
+// TODO: Make this a runtime option `-l trace` or `--verbose` (or something)
+#define LOG_TRACE 0
+
 #include <cstdarg>
 #include <string>
 #include <map>
@@ -45,7 +49,7 @@ class Log {
 
   void info(const char* format, va_list arguments);
   void info(Span, const char* format, va_list arguments);
-  
+
   void trace(const char* format, va_list arguments);
   void trace(Span, const char* format, va_list arguments);
 

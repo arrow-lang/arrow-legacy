@@ -26,7 +26,9 @@ void Visitor::visit_block(ast::Block& x) {
 // Return
 // -----------------------------------------------------------------------------
 void Visitor::visit_return(ast::Return& x) {
-  x.expression->accept(*this);
+  if (x.expression) {
+    x.expression->accept(*this);
+  }
 }
 
 // Select
