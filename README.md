@@ -1,6 +1,6 @@
 Arrow
 =====
-[![Build Status](https://travis-ci.org/arrowlang/arrow.svg?branch=master)](https://travis-ci.org/arrowlang/arrow)
+[![Build Status](https://travis-ci.org/arrow-lang/arrow.svg?branch=master)](https://travis-ci.org/arrowlang/arrow)
 [![Coverage Status](https://coveralls.io/repos/arrowlang/arrow/badge.svg?branch=master)](https://coveralls.io/r/arrowlang/arrow?branch=master)
 
 **Arrow** is a fast (as or faster than C) general-purpose programming language. It does not employ a garbage collector and has minimal runtime overhead.
