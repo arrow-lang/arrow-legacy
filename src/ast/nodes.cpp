@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <gmp.h>
 
+#include <cxxabi.h>
+
 #include "arrow/ast.hpp"
 
 #define IMPL(N) \
@@ -14,7 +16,15 @@
 
 #define IMPL_ACCEPT(N, T) \
   IMPL(N) \
-  void N::accept(Visitor& v) { v.visit_##T(*this); }
+  void N::accept(Visitor& v) { \
+    char* this_name = abi::__cxa_demangle(typeid(*this).name(), 0, 0, nullptr); \
+    char* that_name = abi::__cxa_demangle(typeid(v).name(), 0, 0, nullptr); \
+    Log::get().trace("[>] visit \x1b[0;33m%s\x1b[1;37m for \x1b[0;33m%s\x1b[1;37m", this_name, that_name); \
+    v.visit_##T(*this); \
+    Log::get().trace("[<] visit \x1b[0;33m%s\x1b[1;37m for \x1b[0;33m%s\x1b[1;37m", this_name, that_name); \
+    free(this_name); \
+    free(that_name); \
+  }
 
 namespace arrow {
 namespace ast {

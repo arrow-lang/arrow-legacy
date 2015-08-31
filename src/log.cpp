@@ -125,6 +125,8 @@ void Log::trace(arrow::Span span, const char* format, ...) {
 }
 
 void Log::trace(const char* format, va_list arguments) {
+  if (!LOG_TRACE) return;
+
   std::fprintf(stderr, "\x1b[0;37m%s", "arrow: ");
   std::fprintf(stderr, "\x1b[1;30m%s\x1b[1;37m", "trace: ");
   std::vfprintf(stderr, format, arguments);
@@ -132,6 +134,8 @@ void Log::trace(const char* format, va_list arguments) {
 }
 
 void Log::trace(arrow::Span span, const char* format, va_list arguments) {
+  if (!LOG_TRACE) return;
+
   std::fprintf(stderr, "\x1b[0;37m%s%s", span.to_string().c_str(), ": ");
   std::fprintf(stderr, "\x1b[1;30m%s\x1b[1;37m", "trace: ");
   std::vfprintf(stderr, format, arguments);

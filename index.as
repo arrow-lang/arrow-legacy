@@ -11,8 +11,6 @@
 //        > Mac OSX [whatever is latest]
 //    - Finish varidac for extern-c
 //    - Instance/Attached methods
-//    - Destructors
-//    - Strings
 //    - Basic IO (simple libc wrapper)
 //    - prelude (and assert)
 
