@@ -43,6 +43,39 @@ void AnalyzeUsage::visit_call(ast::Call& x) {
 
   // Realize the function
   do_realize_function(x, *function, true);
+
+  // Check the call arguments to ensure that we have enough, etc.
+  unsigned positional_index = 0;
+
+  for (auto& argument : x.arguments) {
+    if (argument->name.size() > 0) {
+      // Look up parameter
+      auto param = function->find_parameter(argument->name);
+      if (!param) {
+        Log::get().error(
+          argument->span,
+          "'%s' is an invalid keyword argument for this function",
+          argument->name.c_str());
+
+        return;
+      }
+
+      // Check mutability
+      if (param->is_mutable) {
+        _require_mutable(*argument->expression);
+      }
+    } else {
+      // Insert argument positionally
+      if (positional_index < function->parameters.size()) {
+        // Check mutability
+        if (function->parameters[positional_index]->is_mutable) {
+          _require_mutable(*argument->expression);
+        }
+      }
+
+      positional_index += 1;
+    }
+  }
 }
 
 void AnalyzeUsage::visit_argument(ast::Argument& x) {

@@ -367,6 +367,8 @@ struct TypeFunction : Type {
 
   virtual bool is_unknown() const;
 
+  virtual Ref<TypeParameter> find_parameter(const std::string& name);
+
   /// Ordered sequence of parameter types
   std::vector<Ref<code::TypeParameter>> parameters;
 

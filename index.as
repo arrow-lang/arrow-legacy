@@ -16,45 +16,43 @@
 
 // ------------
 
-// [x] Explicit Cast: as
 // [ ] Type alias
 // [ ] Fold (run after analyze-usage but before analyze-module)
 
-// [-] Call
+// [-] Call {*}
 //    [x] Mutable parameters
-//    [ ] Check for mutable parameters (to ensure captured arg is mutable) {*}
+//    [x] Check for mutable parameters (to ensure captured arg is mutable)
+//    [x] Check for invalid keyword parameters
+//    [ ] Check for missing parameters {*}
+//    [ ] Check for too many parameters {*}
 //    [ ] Aggregate by-const-reference (struct, array, tuple, etc.) {*}
 //    [ ] Default arguments {*}
 //    [ ] Keyword arguments {*}
 
-// [ ] Instance/Attached methods (implement)
-// [ ] Destructors (RIIA)
-// [ ] Traits
-// [ ] Generics
-//    [ ] Generic structs
-//    [ ] Generic implement (which creates generic functions)
-
 // [ ] Varidac for extern "C" functions {*}
 
-// [ ] Intrinsics (requires deciding on overloaded functions)
-//    [ ] pow
-//    [ ] cos/sin/tan
-//    [ ] shift/bswap
+// ------------
 
-// Discuss:
-// [ ] Overloaded functions (yes/no)
-//      - pow(float, int) vs pow(float, float)
-// [ ] Member functions or "free" functions
-//      - math.pow(3.12, 1) vs (3.12).pow(1)
-//      - math.sqrt(3.5) vs (3.5).sqrt()
-//      - math.is_finite(4.12) vs (4.12).is_finite()
+// // NOTE: This is how the std will request an intrinsic (read: builtin) function
+// //       from the compiler.
+// extern "intrinsic" def __cos_f32(value: float32) -> float32;
+//
+// trait Trignometry {
+//   def cos(self) -> Self;
+//   def sin(self) -> Self;
+//   def tan(self) -> Self;
+// }
+//
+// implement Trignometry for float32 {
+//   def cos(self) -> Self {
+//     return __cos_f32(self);
+//   }
+// }
+//
+// // NOTE: `-> type(..)` isn't needed as return types are auto-resolved but
+// //       just showing for completeness
+// def cos(value: Trignometry) -> type(value.cos()) {
+//   return value.cos();
+// }
 
-// Libraries:
-// [ ] math
-// [ ] random
-// [ ] string
-// [ ] bits
-// [ ] time / calendar / date / datetime / chrono
-// [ ] platform
-// [ ] signal
-// [ ] io
+// ------------

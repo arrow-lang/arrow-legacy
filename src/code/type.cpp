@@ -485,5 +485,15 @@ Ref<code::TypeMember> TypeStructure::find_member(const std::string& name) {
   return nullptr;
 }
 
+Ref<code::TypeParameter> TypeFunction::find_parameter(const std::string& name) {
+  for (auto& param : parameters) {
+    if (param->keyword == name) {
+      return param;
+    }
+  }
+
+  return nullptr;
+}
+
 }  // namespace code
 }  // namespace arrow
