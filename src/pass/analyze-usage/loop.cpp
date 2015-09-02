@@ -28,7 +28,7 @@ void AnalyzeUsage::visit_loop(ast::Loop& x) {
   }
 
   // Enter the <anonymous> scope block
-  _enter_block(x);
+  _enter_block(*x.block);
 
   // Run the base method (which iterates over the statements) [x2]
   Visitor::visit_block(*x.block);
