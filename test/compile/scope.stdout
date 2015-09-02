@@ -1,0 +1,38 @@
+define internal void @scope..init() {
+  ret void
+}
+
+define internal void @scope.main() {
+  br i1 false, label %1, label %4
+
+; <label>:1                                       ; preds = %0
+  %index = alloca i128
+  store i128 10, i128* %index
+  %2 = load i128* %index
+  %3 = add i128 %2, 10
+  store i128 %3, i128* %index
+  br label %4
+
+; <label>:4                                       ; preds = %1, %0
+  br label %5
+
+; <label>:5                                       ; preds = %6, %4
+  br i1 true, label %6, label %9
+
+; <label>:6                                       ; preds = %5
+  %counter = alloca i128
+  store i128 20, i128* %counter
+  %7 = load i128* %counter
+  %8 = sub i128 %7, 1
+  store i128 %8, i128* %counter
+  br label %5
+
+; <label>:9                                       ; preds = %5
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @scope..init()
+  call void @scope.main()
+  ret i32 0
+}
