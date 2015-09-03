@@ -68,12 +68,22 @@ void Build::visit_loop(ast::Loop& x) {
   _ctx.loops.pop();
 }
 
-void Build::visit_break(ast::Break&) {
+void Build::visit_break(ast::Break& x) {
+  if (_ctx.loops.size() == 0) {
+    Log::get().error(x.span, "`break` outside loop");
+    return;
+  }
+
   auto cur = _ctx.loops.top();
   LLVMBuildBr(_ctx.irb, cur.merge);
 }
 
-void Build::visit_continue(ast::Continue&) {
+void Build::visit_continue(ast::Continue& x) {
+  if (_ctx.loops.size() == 0) {
+    Log::get().error(x.span, "`continue` outside loop");
+    return;
+  }
+
   auto cur = _ctx.loops.top();
   LLVMBuildBr(_ctx.irb, cur.condition);
 }
