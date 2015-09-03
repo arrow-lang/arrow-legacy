@@ -6,12 +6,12 @@ define internal void @select-return.method(i1) {
   %2 = alloca i1
   store i1 %0, i1* %2
   %3 = load i1* %2
-  br i1 %3, label %4, label %5
+  br i1 %3, label %select-then, label %select-next
 
-; <label>:4                                       ; preds = %1
+select-then:                                      ; preds = %1
   ret void
 
-; <label>:5                                       ; preds = %1
+select-next:                                      ; preds = %1
   ret void
 }
 

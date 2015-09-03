@@ -1,0 +1,40 @@
+define internal void @while-condition-branch..init() {
+  ret void
+}
+
+define internal void @while-condition-branch.main() {
+  %x = alloca i128
+  store i128 10, i128* %x
+  %y = alloca i128
+  store i128 20, i128* %y
+  br label %loop-cond
+
+loop-cond:                                        ; preds = %0
+  %1 = load i128* %x
+  %2 = icmp slt i128 %1, 20
+  br i1 %2, label %logical-then, label %logical-else
+
+logical-then:                                     ; preds = %loop-cond
+  %3 = load i128* %y
+  %4 = icmp sgt i128 %3, 10
+  br label %logical-merge
+
+logical-else:                                     ; preds = %loop-cond
+  br label %logical-merge
+
+logical-merge:                                    ; preds = %logical-else, %logical-then
+  %5 = phi i1 [ %4, %logical-then ], [ false, %logical-else ]
+  br i1 %5, label %loop-body, label %loop-merge
+
+loop-body:                                        ; preds = %logical-merge
+  br label %loop-merge
+
+loop-merge:                                       ; preds = %loop-body, %logical-merge
+  ret void
+}
+
+define i32 @main(i32, i8**, i8**) {
+  call void @while-condition-branch..init()
+  call void @while-condition-branch.main()
+  ret i32 0
+}

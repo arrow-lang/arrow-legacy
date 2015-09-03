@@ -58,8 +58,8 @@ void Build::visit_select(ast::Select& x) {
     if (!cond) return;
 
     // Create the THEN and NEXT LLVM blocks
-    auto then_block = LLVMAppendBasicBlock(current_fn, "");
-    auto next_block = LLVMAppendBasicBlock(current_fn, "");
+    auto then_block = LLVMAppendBasicBlock(current_fn, "select-then");
+    auto next_block = LLVMAppendBasicBlock(current_fn, "select-next");
 
     // Build the conditional branch
     LLVMBuildCondBr(_ctx.irb, cond->get_value(_ctx), then_block, next_block);
@@ -84,7 +84,7 @@ void Build::visit_select(ast::Select& x) {
     do_select_branch(*x.else_block);
 
     // Create the final "merge" block
-    merge_block = LLVMAppendBasicBlock(current_fn, "");
+    merge_block = LLVMAppendBasicBlock(current_fn, "select-merge");
   } else {
     // Use the elided "else" block as the "merge" block
     merge_block = LLVMGetLastBasicBlock(current_fn);

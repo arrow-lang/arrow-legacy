@@ -23,9 +23,9 @@ void Build::visit_loop(ast::Loop& x) {
   // If we have a condition ..
   if (x.condition) {
     // Create condition and merge blocks
-    cond_block = LLVMAppendBasicBlock(current_fn, "");
-    loop_block = LLVMAppendBasicBlock(current_fn, "");
-    merge_block = LLVMAppendBasicBlock(current_fn, "");
+    cond_block = LLVMAppendBasicBlock(current_fn, "loop-cond");
+    loop_block = LLVMAppendBasicBlock(current_fn, "loop-body");
+    merge_block = LLVMAppendBasicBlock(current_fn, "loop-merge");
 
     // Build the condition expression
     LLVMPositionBuilderAtEnd(_ctx.irb, cond_block);
@@ -36,8 +36,8 @@ void Build::visit_loop(ast::Loop& x) {
     LLVMBuildCondBr(_ctx.irb, cond->get_value(_ctx), loop_block, merge_block);
 
   } else {
-    loop_block = LLVMAppendBasicBlock(current_fn, "");
-    merge_block = LLVMAppendBasicBlock(current_fn, "");
+    loop_block = LLVMAppendBasicBlock(current_fn, "loop-body");
+    merge_block = LLVMAppendBasicBlock(current_fn, "loop-merge");
     cond_block = loop_block;
   }
 
@@ -45,6 +45,7 @@ void Build::visit_loop(ast::Loop& x) {
   _ctx.loops.push({cond_block,  merge_block});
 
   // Create the un-conditional jump to the "condition"
+  LLVMMoveBasicBlockAfter(cond_block, current_block);
   LLVMPositionBuilderAtEnd(_ctx.irb, current_block);
   LLVMBuildBr(_ctx.irb, cond_block);
 

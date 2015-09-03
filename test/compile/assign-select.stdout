@@ -1,17 +1,17 @@
 @value = internal global double 0.000000e+00
 
 define internal void @assign-select..init() {
-  br i1 false, label %1, label %2
+  br i1 false, label %select-then, label %select-next
 
-; <label>:1                                       ; preds = %0
-  br label %3
+select-then:                                      ; preds = %0
+  br label %select-merge
 
-; <label>:2                                       ; preds = %0
-  br label %3
+select-next:                                      ; preds = %0
+  br label %select-merge
 
-; <label>:3                                       ; preds = %2, %1
-  %4 = phi double [ 4.120000e+00, %1 ], [ 5.600000e+01, %2 ]
-  store double %4, double* @value
+select-merge:                                     ; preds = %select-next, %select-then
+  %1 = phi double [ 4.120000e+00, %select-then ], [ 5.600000e+01, %select-next ]
+  store double %1, double* @value
   ret void
 }
 

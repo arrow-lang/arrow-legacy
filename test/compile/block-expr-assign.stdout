@@ -5,14 +5,14 @@ define internal void @block-expr-assign..init() {
   store i128 20, i128* @a
   %1 = load i128* @a
   %2 = icmp sgt i128 %1, 50
-  br i1 %2, label %3, label %4
+  br i1 %2, label %select-then, label %select-next
 
-; <label>:3                                       ; preds = %0
-  br label %4
+select-then:                                      ; preds = %0
+  br label %select-next
 
-; <label>:4                                       ; preds = %3, %0
-  %5 = load i128* @a
-  store i128 %5, i128* @b
+select-next:                                      ; preds = %select-then, %0
+  %3 = load i128* @a
+  store i128 %3, i128* @b
   ret void
 }
 

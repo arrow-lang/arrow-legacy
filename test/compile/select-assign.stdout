@@ -2,38 +2,38 @@
 @b = internal global i128 0
 
 define internal void @select-assign..init() {
-  br i1 false, label %1, label %2
+  br i1 false, label %select-then, label %select-next
 
-; <label>:1                                       ; preds = %0
+select-then:                                      ; preds = %0
   store i128 34, i128* @a
-  br label %9
+  br label %select-merge5
 
-; <label>:2                                       ; preds = %0
-  br i1 true, label %3, label %8
+select-next:                                      ; preds = %0
+  br i1 true, label %select-then1, label %select-next2
 
-; <label>:3                                       ; preds = %2
-  br i1 false, label %4, label %5
+select-then1:                                     ; preds = %select-next
+  br i1 false, label %select-then3, label %select-next4
 
-; <label>:4                                       ; preds = %3
+select-then3:                                     ; preds = %select-then1
   store i128 30, i128* @a
-  br label %6
+  br label %select-merge
 
-; <label>:5                                       ; preds = %3
+select-next4:                                     ; preds = %select-then1
   store i128 30, i128* @a
-  br label %6
+  br label %select-merge
 
-; <label>:6                                       ; preds = %5, %4
-  %7 = phi i128 [ 30, %4 ], [ 30, %5 ]
-  br label %9
+select-merge:                                     ; preds = %select-next4, %select-then3
+  %1 = phi i128 [ 30, %select-then3 ], [ 30, %select-next4 ]
+  br label %select-merge5
 
-; <label>:8                                       ; preds = %2
+select-next2:                                     ; preds = %select-next
   store i128 50, i128* @a
-  br label %9
+  br label %select-merge5
 
-; <label>:9                                       ; preds = %8, %6, %1
-  %10 = phi i128 [ 34, %1 ], [ %7, %6 ], [ 50, %8 ]
-  %11 = load i128* @a
-  store i128 %11, i128* @b
+select-merge5:                                    ; preds = %select-next2, %select-merge, %select-then
+  %2 = phi i128 [ 34, %select-then ], [ %1, %select-merge ], [ 50, %select-next2 ]
+  %3 = load i128* @a
+  store i128 %3, i128* @b
   ret void
 }
 

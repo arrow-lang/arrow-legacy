@@ -25,9 +25,12 @@ void Build::do_logical(ast::Binary& x) {
   if (!lhs) return;
 
   // Create the three neccessary basic blocks: then, else, merge.
-  auto then_b = LLVMAppendBasicBlock(current_fn, "");
-  auto else_b = LLVMAppendBasicBlock(current_fn, "");
-  auto merge_b = LLVMAppendBasicBlock(current_fn, "");
+  auto then_b = LLVMAppendBasicBlock(current_fn, "logical-then");
+  auto else_b = LLVMAppendBasicBlock(current_fn, "logical-else");
+  auto merge_b = LLVMAppendBasicBlock(current_fn, "logical-merge");
+  LLVMMoveBasicBlockAfter(then_b, current_block);
+  LLVMMoveBasicBlockAfter(else_b, then_b);
+  LLVMMoveBasicBlockAfter(merge_b, else_b);
 
   // Create the conditional branch.
   auto is_and = typeid(x) == typeid(ast::And);
