@@ -1,21 +1,3 @@
-// Sept. 4:
-//    - Finish "Call", "Type Alias" (basic), and "Fold"
-//    - Test build/install on:
-//        > Linux (amd64)
-//        > Linux (x86)
-//        > Linux (ARM)
-//        > Windows 7 (x86)
-//        > Windows 7 (amd64)
-//        > Windows 8 (amd64)
-//        > Windows 10 (amd64)
-//        > Mac OSX [whatever is latest]
-//    - Finish varidac for extern-c
-//    - Instance/Attached methods
-//    - Basic IO (simple libc wrapper)
-//    - prelude (and assert)
-
-// ------------
-
 // [ ] Type alias
 // [ ] Fold (run after analyze-usage but before analyze-module)
 
@@ -29,13 +11,59 @@
 //    [ ] Default arguments {*}
 //    [ ] Keyword arguments {*}
 
-// [ ] Varidac for extern "C" functions {*}
+// [ ] Varidac for extern "C" functions
+
+// [ ] Error: And/Or inside of if and while
+// [ ] Check break/continue when not in a loop
+
+// [ ] Intrinsic
+// NOTE: This is how the std will request an intrinsic (read: builtin) function
+//       from the compiler.
+// extern "intrinsic" def __cos_f32(value: float32) -> float32;
+//    [ ] Parse (add ABI string)
+//    [ ] Build/Expose/etc.
+//        [ ] shl
+//        [ ] lshr
+//        [ ] ashr
+//        [ ] sqrt
+//        [ ] pow
+//        [ ] powi
+//        [ ] sin
+//        [ ] cos
+//        [ ] exp
+//        [ ] exp2
+//        [ ] log
+//        [ ] log10
+//        [ ] log2
+//        [ ] fabs
+//        [ ] fmin
+//        [ ] fmax
+//        [ ] floor
+//        [ ] ceil
+//        [ ] round
+//        [ ] bswap
+//        [ ] ctpop
+//        [ ] ctlz
+//        [ ] cttz
+
+// [ ] Traits
+//    [ ] Parse
+
+// [ ] Implement (Attached functions)
+//    [ ] Parse
+//    [ ] Build/Expose/etc.
+
+// [ ] Implement (Instance methods)
+//    [ ] Parse
+//    [ ] Build/Expose/etc.
+
+// [ ] Implement (Trait methods)
+//    [ ] Parse
+//    [ ] Build/Expose/etc.
+
 
 // ------------
 
-// // NOTE: This is how the std will request an intrinsic (read: builtin) function
-// //       from the compiler.
-// extern "intrinsic" def __cos_f32(value: float32) -> float32;
 //
 // trait Trignometry {
 //   def cos(self) -> Self;
