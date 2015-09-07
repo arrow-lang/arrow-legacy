@@ -89,6 +89,7 @@ class Parser {
   bool parse_tuple();
   bool parse_array();
   bool parse_index();
+  bool parse_alias();
   bool parse_type_function(Ref<ast::TypeTuple> initial, bool in_params = true);
 
   Tokenizer _t;

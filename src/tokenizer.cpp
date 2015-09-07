@@ -82,6 +82,7 @@ static std::unordered_map<std::string, arrow::Token::Type> keywords = {
   {"as",        arrow::Token::Type::As          },
   {"struct",    arrow::Token::Type::Struct      },
   {"_",         arrow::Token::Type::Underscore  },
+  {"use",       arrow::Token::Type::Use         },
 };
 
 // Punctuators

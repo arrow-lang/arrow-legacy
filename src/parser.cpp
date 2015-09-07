@@ -39,6 +39,7 @@ bool Parser::parse_module_statement() {
   auto tok = _t.peek(0);
   if (tok->type == Token::Type::Export && (
       (_t.peek(1)->type == Token::Type::Extern ||
+       _t.peek(1)->type == Token::Type::Use ||
        _t.peek(1)->type == Token::Type::Struct))) {
     // Ignore the "export" (for now)
     tok = _t.peek(1);
@@ -50,6 +51,9 @@ bool Parser::parse_module_statement() {
 
     case Token::Type::Struct:
       return parse_struct();
+
+    case Token::Type::Use:
+      return parse_alias();
 
     case Token::Type::Extern:
       return parse_extern();
@@ -372,6 +376,51 @@ bool Parser::parse_import() {
     initial_tok->span.extend(last_tok->span),
     name,
     source
+  ));
+
+  return true;
+}
+
+// Alias
+// -----------------------------------------------------------------------------
+// alias = ["export"] "use" IDENTIFIER "=" type ;
+// -----------------------------------------------------------------------------
+bool Parser::parse_alias() {
+  // Check for "export"
+  Ref<Token> initial_tok = nullptr;
+  bool exported = false;
+  if (_t.peek()->type == Token::Type::Export) {
+    exported = true;
+    initial_tok = _t.pop();
+  }
+
+  // Expect `use`
+  auto tok = expect(Token::Type::Use);
+  if (!tok) return false;
+  if (!initial_tok) initial_tok = tok;
+
+  // Parse the identifier
+  auto id = expect<ast::Identifier>(&Parser::parse_identifier);
+  if (!id) return false;
+  auto name = id->text;
+
+  // Expect `=`
+  if (!expect(Token::Type::Equals)) return false;
+
+  // Expect type
+  auto type = expect(&Parser::parse_type);
+  if (!type) return false;
+
+  // Expect `;`
+  auto last_tok = expect(Token::Type::Semicolon);
+  if (!last_tok) return false;
+
+  // Declare and push the node
+  _stack.push_front(new ast::Alias(
+    initial_tok->span.extend(last_tok->span),
+    exported,
+    name,
+    type
   ));
 
   return true;

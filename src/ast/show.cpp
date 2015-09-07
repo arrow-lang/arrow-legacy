@@ -72,5 +72,18 @@ void Show::visit_block(Block& x) {
   _w.EndObject();
 }
 
+void Show::visit_alias(Alias& x) {
+  do_("Alias", x, [&, this] {
+    _w.Key("name");
+    _w.String(x.name.c_str());
+
+    _w.Key("exported");
+    _w.Bool(x.exported);
+
+    _w.Key("type");
+    x.type->accept(*this);
+  });
+}
+
 }  // namespace ast
 }  // namespace arrow

@@ -119,6 +119,10 @@ struct Visitor {
   virtual void visit_type_parameter(TypeParameter&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_type_function(TypeFunction&) { /* LCOV_EXCL_LINE */ }
   virtual void visit_type_array(TypeArray&) { /* LCOV_EXCL_LINE */ }
+  virtual void visit_type_of(TypeOf&) { /* LCOV_EXCL_LINE */ }
+
+  // Alias
+  virtual void visit_alias(Alias&) { /* LCOV_EXCL_LINE */ }
 
  private:
   void do_unary(ast::Unary& x);

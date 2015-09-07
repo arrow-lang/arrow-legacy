@@ -3,7 +3,6 @@
 
 // [-] Call
 //    [ ] Aggregate by-const-reference (struct, array, tuple, etc.)
-//    [ ] Default arguments
 
 // [ ] Varidac for extern "C" functions
 

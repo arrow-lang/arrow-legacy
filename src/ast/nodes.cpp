@@ -112,6 +112,7 @@ IMPL_ACCEPT(TypePointer, type_pointer)
 IMPL_ACCEPT(TypeParameter, type_parameter)
 IMPL_ACCEPT(TypeFunction, type_function)
 IMPL_ACCEPT(TypeArray, type_array)
+IMPL_ACCEPT(TypeOf, type_of)
 
 IMPL_ACCEPT(Tuple, tuple)
 
@@ -121,6 +122,8 @@ IMPL_ACCEPT(SelectBranch, select_branch)
 
 IMPL_ACCEPT(Structure, struct)
 IMPL_ACCEPT(Member, member)
+
+IMPL_ACCEPT(Alias, alias)
 
 std::uint64_t Integer::minimum_bits() const {
   // Find the number of bits we need (at least) to store

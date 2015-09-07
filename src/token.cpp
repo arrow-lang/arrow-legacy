@@ -48,6 +48,7 @@ static std::map<Token::Type, const char*> token_str_map = {
   {Token::Type::As,                "`as`"},
   {Token::Type::Struct,            "`struct`"},
   {Token::Type::Underscore,        "`_`"},
+  {Token::Type::Use,               "`use`"},
 
   /// Punctuators (1-character)
   {Token::Type::Plus,              "`+`"},
@@ -211,6 +212,7 @@ std::string KeywordToken::to_string() const noexcept {
     case Type::As:         return "keyword: as";
     case Type::Struct:     return "keyword: struct";
     case Type::Underscore: return "keyword: _";
+    case Type::Use:        return "keyword: use";
     default:
       // unreachable
       return "";

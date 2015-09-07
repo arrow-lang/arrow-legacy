@@ -60,6 +60,31 @@ bool Parser::parse_type() {
       return true;
     }
 
+    // Check for a `type(..)` to indicate a typeOf
+    if (tok->type == Token::Type::TypeOf) {
+      auto span = tok->span;
+      _t.pop();
+
+      // Expect a `(`
+      if (!expect(Token::Type::LeftParenthesis)) return false;
+
+      // Parse an expression
+      if (!parse_expression()) return false;
+      auto expr = _stack.front();
+      _stack.pop_front();
+
+      // Expect a `)`
+      auto last_tok = expect(Token::Type::RightParenthesis);
+      if (!last_tok) return false;
+
+      _stack.push_front(new ast::TypeOf(
+        span.extend(last_tok->span),
+        expr
+      ));
+
+      return true;
+    }
+
     // Check for a `*` to indicate a pointer type
     if (tok->type == Token::Type::Asterisk) {
       _t.pop();

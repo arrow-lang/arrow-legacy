@@ -97,6 +97,7 @@ struct Show : Visitor {
   virtual void visit_type_parameter(TypeParameter&);
   virtual void visit_type_function(TypeFunction&);
   virtual void visit_type_array(TypeArray&);
+  virtual void visit_type_of(TypeOf&);
 
   virtual void visit_tuple(Tuple&);
 
@@ -108,6 +109,8 @@ struct Show : Visitor {
   virtual void visit_conditional(Conditional&);
   virtual void visit_select(Select&);
   virtual void visit_select_branch(SelectBranch&);
+
+  virtual void visit_alias(Alias&);
 
  private:
   void do_(const char* name, Node& x);

@@ -57,6 +57,7 @@ struct Token {
     As,         // as
     Struct,     // struct
     Underscore, // _
+    Use,        // use
 
     /// Keywords (reserved)
     // For,        // for
@@ -71,7 +72,6 @@ struct Token {
     // Super,      // super
     // Trait,      // trait
     // Unsafe,     // unsafe
-    // Use,        // use
     // Where,      // where
     // Yield,      // yield
     // Default,    // default

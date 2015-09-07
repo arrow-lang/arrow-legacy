@@ -41,19 +41,6 @@ struct Module : Node {
   Ref<Block> block;
 };
 
-/// TypeOf expression.
-struct TypeOf : Node {
-  TypeOf(Span span, Ref<Node> expression)
-    : Node(span), expression(expression) {
-  }
-
-  virtual ~TypeOf() noexcept;
-
-  void accept(Visitor&) override;
-
-  Ref<Node> expression;
-};
-
 }  // namespace ast
 }  // namespace arrow
 
@@ -70,5 +57,6 @@ struct TypeOf : Node {
 #include "arrow/ast/nodes/tuple.hpp"
 #include "arrow/ast/nodes/array.hpp"
 #include "arrow/ast/nodes/import.hpp"
+#include "arrow/ast/nodes/alias.hpp"
 
 #endif  // ARROW_AST_NODES_H

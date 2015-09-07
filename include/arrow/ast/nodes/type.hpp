@@ -19,6 +19,18 @@ struct Type : Node {
   virtual ~Type() noexcept;
 };
 
+struct TypeOf : Type {
+  TypeOf(Span span, Ref<Node> expression)
+    : Type(span), expression(expression) {
+  }
+
+  virtual ~TypeOf() noexcept;
+
+  void accept(Visitor&) override;
+
+  Ref<Node> expression;
+};
+
 struct TypeNone : Type {
   using Type::Type;
 

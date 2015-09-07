@@ -36,6 +36,13 @@ void Show::visit_type_pointer(TypePointer& x) {
   });
 }
 
+void Show::visit_type_of(TypeOf& x) {
+  do_("TypeOf", x, [&, this] {
+    _w.Key("expression");
+    x.expression->accept(*this);
+  });
+}
+
 void Show::visit_type_array(TypeArray& x) {
   do_("TypeArray", x, [&, this] {
     _w.Key("element");

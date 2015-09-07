@@ -1,0 +1,71 @@
+{
+  "tag": "Module",
+  "span": "test/parse/use.as:1.1-4.28",
+  "name": "use",
+  "block": {
+    "tag": "Block",
+    "span": "test/parse/use.as:1.1-4.28",
+    "statements": [
+      {
+        "tag": "Alias",
+        "span": "test/parse/use.as:2.1-19",
+        "name": "c_int",
+        "exported": false,
+        "type": {
+          "tag": "TypePath",
+          "span": "test/parse/use.as:2.13-18",
+          "segments": [
+            "int64"
+          ]
+        }
+      },
+      {
+        "tag": "Alias",
+        "span": "test/parse/use.as:3.1-39",
+        "name": "new_name",
+        "exported": true,
+        "type": {
+          "tag": "TypePath",
+          "span": "test/parse/use.as:3.23-38",
+          "segments": [
+            "some_identifier"
+          ]
+        }
+      },
+      {
+        "tag": "Alias",
+        "span": "test/parse/use.as:4.1-28",
+        "name": "intptr",
+        "exported": false,
+        "type": {
+          "tag": "TypeOf",
+          "span": "test/parse/use.as:4.14-27",
+          "expression": {
+            "tag": "Sub",
+            "span": "test/parse/use.as:4.19-26",
+            "lhs": {
+              "tag": "AddressOf",
+              "span": "test/parse/use.as:4.19-21",
+              "mutable": false,
+              "operand": {
+                "tag": "Integer",
+                "span": "test/parse/use.as:4.20-21",
+                "text": "0"
+              }
+            },
+            "rhs": {
+              "tag": "AddressOf",
+              "span": "test/parse/use.as:4.24-26",
+              "mutable": false,
+              "operand": {
+                "tag": "Integer",
+                "span": "test/parse/use.as:4.25-26",
+                "text": "0"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
