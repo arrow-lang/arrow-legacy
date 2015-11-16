@@ -3,8 +3,8 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#include "arrow/match.hpp"
 #include "arrow/code/function.hpp"
+#include "arrow/match.hpp"
 
 namespace arrow {
 namespace code {

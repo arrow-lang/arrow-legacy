@@ -6,12 +6,12 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 
-#include "arrow/match.hpp"
 #include "arrow/util.hpp"
 #include "arrow/parser.hpp"
 #include "arrow/pass/expose.hpp"
 #include "arrow/pass/type.hpp"
 #include "arrow/pass/resolve.hpp"
+#include "arrow/match.hpp"
 
 namespace fs = boost::filesystem;
 

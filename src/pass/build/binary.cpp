@@ -5,10 +5,10 @@
 
 #include <sstream>
 
-#include "arrow/match.hpp"
 #include "arrow/pass/resolve.hpp"
 #include "arrow/pass/build.hpp"
 #include "arrow/util.hpp"
+#include "arrow/match.hpp"
 
 namespace arrow {
 namespace pass {

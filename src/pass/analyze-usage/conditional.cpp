@@ -5,8 +5,8 @@
 
 #include <algorithm>
 
-#include "arrow/match.hpp"
 #include "arrow/pass/analyze-usage.hpp"
+#include "arrow/match.hpp"
 
 namespace arrow {
 namespace pass {

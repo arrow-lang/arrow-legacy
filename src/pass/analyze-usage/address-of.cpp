@@ -3,10 +3,10 @@
 // Distributed under the MIT License
 // See accompanying file LICENSE
 
-#include "arrow/match.hpp"
 #include "arrow/util.hpp"
 #include "arrow/pass/resolve.hpp"
 #include "arrow/pass/analyze-usage.hpp"
+#include "arrow/match.hpp"
 
 namespace arrow {
 namespace pass {

@@ -4,8 +4,8 @@
 // See accompanying file LICENSE
 
 #include <sstream>
-#include "arrow/match.hpp"
 #include "arrow/code/type.hpp"
+#include "arrow/match.hpp"
 
 namespace arrow {
 namespace code {

@@ -5,9 +5,9 @@
 
 #include <sstream>
 
-#include "arrow/match.hpp"
 #include "arrow/log.hpp"
 #include "arrow/pass/resolve.hpp"
+#include "arrow/match.hpp"
 
 namespace arrow {
 namespace pass {
