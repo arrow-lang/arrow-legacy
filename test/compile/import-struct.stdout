@@ -5,7 +5,7 @@
 
 define internal void @import-struct..init() {
   store %Box { i128 10 }, %Box* @value
-  %1 = load %Box* @value
+  %1 = load %Box, %Box* @value
   store %Box %1, %Box* @value_ex
   ret void
 }

@@ -7,23 +7,23 @@
 
 define internal void @struct-nested..init() {
   store %Container { %Box { i128 20 } }, %Container* @cont_a
-  %1 = load %Box* getelementptr inbounds (%Container* @cont_a, i32 0, i32 0)
+  %1 = load %Box, %Box* getelementptr inbounds (%Container, %Container* @cont_a, i32 0, i32 0)
   %2 = insertvalue %Container undef, %Box %1, 0
   store %Container %2, %Container* @cont_b
-  %3 = load i128* getelementptr inbounds (%Container* @cont_a, i32 0, i32 0, i32 0)
+  %3 = load i128, i128* getelementptr inbounds (%Container, %Container* @cont_a, i32 0, i32 0, i32 0)
   %4 = insertvalue %Box undef, i128 %3, 0
   %5 = insertvalue %Container undef, %Box %4, 0
   store %Container %5, %Container* @cont_c
-  %6 = load %Box* getelementptr inbounds (%Container* @cont_b, i32 0, i32 0)
-  store %Box %6, %Box* getelementptr inbounds (%Container* @cont_a, i32 0, i32 0)
-  store i128 30, i128* getelementptr inbounds (%Container* @cont_b, i32 0, i32 0, i32 0)
-  %7 = load i128* getelementptr inbounds (%Container* @cont_b, i32 0, i32 0, i32 0)
-  store i128 %7, i128* getelementptr inbounds (%Container* @cont_a, i32 0, i32 0, i32 0)
+  %6 = load %Box, %Box* getelementptr inbounds (%Container, %Container* @cont_b, i32 0, i32 0)
+  store %Box %6, %Box* getelementptr inbounds (%Container, %Container* @cont_a, i32 0, i32 0)
+  store i128 30, i128* getelementptr inbounds (%Container, %Container* @cont_b, i32 0, i32 0, i32 0)
+  %7 = load i128, i128* getelementptr inbounds (%Container, %Container* @cont_b, i32 0, i32 0, i32 0)
+  store i128 %7, i128* getelementptr inbounds (%Container, %Container* @cont_a, i32 0, i32 0, i32 0)
   ret void
 }
 
 define internal i128 @struct-nested.main() {
-  %1 = load i128* getelementptr inbounds (%Container* @cont_a, i32 0, i32 0, i32 0)
+  %1 = load i128, i128* getelementptr inbounds (%Container, %Container* @cont_a, i32 0, i32 0, i32 0)
   ret i128 %1
 }
 

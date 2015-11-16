@@ -4,7 +4,7 @@
 @g = internal global double 0.000000e+00
 
 define internal void @slot-unpack-deduce..init() {
-  %1 = load double* @b
+  %1 = load double, double* @b
   store double %1, double* @g
   ret void
 }

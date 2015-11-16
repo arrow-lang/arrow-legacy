@@ -10,7 +10,7 @@ define internal void @function-slot-deduce.method() {
   %a = alloca i128
   store i128 20, i128* %a
   %b = alloca i128
-  %1 = load i128* @c
+  %1 = load i128, i128* @c
   store i128 %1, i128* %b
   ret void
 }

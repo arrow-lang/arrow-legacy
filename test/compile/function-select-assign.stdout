@@ -36,9 +36,9 @@ select-next2:                                     ; preds = %select-next
 select-merge5:                                    ; preds = %select-next2, %select-merge, %select-then
   %2 = phi i128 [ 34, %select-then ], [ %1, %select-merge ], [ 40, %select-next2 ]
   %b = alloca i128
-  %3 = load i128* %a
+  %3 = load i128, i128* %a
   store i128 %3, i128* %b
-  %4 = load i128* %b
+  %4 = load i128, i128* %b
   call void @exit(i128 %4)
   ret void
 }

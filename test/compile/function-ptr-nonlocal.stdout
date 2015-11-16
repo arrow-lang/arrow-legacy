@@ -4,9 +4,9 @@
 
 define internal void @function-ptr-nonlocal..init() {
   store void ()* @function-ptr-nonlocal.methodA, void ()** @fn
-  %1 = load void ()** @fn
+  %1 = load void ()*, void ()** @fn
   call void %1()
-  %2 = load i128* @a
+  %2 = load i128, i128* @a
   store i128 %2, i128* @b
   ret void
 }

@@ -3,7 +3,7 @@
 
 define internal void @function-nonlocal-assign..init() {
   call void @function-nonlocal-assign.method()
-  %1 = load i128* @value
+  %1 = load i128, i128* @value
   store i128 %1, i128* @box
   ret void
 }

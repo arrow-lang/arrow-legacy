@@ -10,12 +10,12 @@ define internal void @while-condition-branch.main() {
   br label %loop-cond
 
 loop-cond:                                        ; preds = %0
-  %1 = load i128* %x
+  %1 = load i128, i128* %x
   %2 = icmp slt i128 %1, 20
   br i1 %2, label %logical-then, label %logical-else
 
 logical-then:                                     ; preds = %loop-cond
-  %3 = load i128* %y
+  %3 = load i128, i128* %y
   %4 = icmp sgt i128 %3, 10
   br label %logical-merge
 

@@ -2,9 +2,9 @@
 @const = internal constant i128 30
 
 define internal void @import-slot..init() {
-  %1 = load i128* @const
+  %1 = load i128, i128* @const
   store i128 %1, i128* @a
-  %2 = load i128* @a
+  %2 = load i128, i128* @a
   call void @exit(i128 %2)
   ret void
 }

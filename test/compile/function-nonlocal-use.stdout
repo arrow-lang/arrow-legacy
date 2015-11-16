@@ -1,17 +1,17 @@
 @value = internal global i128 0
-@value1 = internal global i128 0
+@value.1 = internal global i128 0
 
 define internal void @function-nonlocal-use..init() {
   store i128 20, i128* @value
   %1 = call i128 @function-nonlocal-use.get()
-  store i128 %1, i128* @value1
-  %2 = load i128* @value1
+  store i128 %1, i128* @value.1
+  %2 = load i128, i128* @value.1
   call void @exit(i128 %2)
   ret void
 }
 
 define internal i128 @function-nonlocal-use.get() {
-  %1 = load i128* @value
+  %1 = load i128, i128* @value
   ret i128 %1
 }
 

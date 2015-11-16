@@ -7,7 +7,7 @@ define internal void @function-param..init() {
 define internal i128 @function-param.do(i128) {
   %2 = alloca i128
   store i128 %0, i128* %2
-  %3 = load i128* %2
+  %3 = load i128, i128* %2
   ret i128 %3
 }
 

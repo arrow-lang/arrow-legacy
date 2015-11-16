@@ -8,7 +8,7 @@ define internal void @scope.main() {
 select-then:                                      ; preds = %0
   %index = alloca i128
   store i128 10, i128* %index
-  %1 = load i128* %index
+  %1 = load i128, i128* %index
   %2 = add i128 %1, 10
   store i128 %2, i128* %index
   br label %select-next
@@ -22,7 +22,7 @@ loop-cond:                                        ; preds = %loop-body, %select-
 loop-body:                                        ; preds = %loop-cond
   %counter = alloca i128
   store i128 20, i128* %counter
-  %3 = load i128* %counter
+  %3 = load i128, i128* %counter
   %4 = sub i128 %3, 1
   store i128 %4, i128* %counter
   br label %loop-cond

@@ -3,7 +3,7 @@
 
 define internal void @function-nonlocal-assign-out-of-order..init() {
   call void @function-nonlocal-assign-out-of-order.methodA()
-  %1 = load i128* @a
+  %1 = load i128, i128* @a
   store i128 %1, i128* @b
   ret void
 }

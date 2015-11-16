@@ -5,7 +5,7 @@ define internal void @select-return..init() {
 define internal void @select-return.method(i1) {
   %2 = alloca i1
   store i1 %0, i1* %2
-  %3 = load i1* %2
+  %3 = load i1, i1* %2
   br i1 %3, label %select-then, label %select-next
 
 select-then:                                      ; preds = %1
