@@ -1,8 +1,0 @@
-define internal void @slot-none..init() {
-  ret void
-}
-
-define i32 @main(i32, i8**, i8**) {
-  call void @slot-none..init()
-  ret i32 0
-}

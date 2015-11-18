@@ -1,1 +1,0 @@
-[0;37mtest/compile-fail/block-expr-assign-possible.as:7.9-10: [0;31merror: [1;37muse of possibly uninitialized variable 'a'[0m

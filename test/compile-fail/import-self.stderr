@@ -1,1 +1,0 @@
-[0;37mtest/compile-fail/import-self.as:1.1-41: [0;31merror: [1;37mmodule cannot import itself[0m

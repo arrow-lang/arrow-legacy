@@ -1,2 +1,0 @@
-[0;37mtest/compile-fail/array-index-immutable.as:2.1-6: [0;31merror: [1;37millegal left-hand side expression[0m
-[0;37mtest/compile-fail/array-index-immutable.as:3.1-9: [0;31merror: [1;37millegal left-hand side expression[0m

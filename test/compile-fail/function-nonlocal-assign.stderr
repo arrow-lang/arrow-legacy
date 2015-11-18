@@ -1,1 +1,0 @@
-[0;37mtest/compile-fail/function-nonlocal-assign.as:4.3-4: [0;31merror: [1;37mcannot assign immutable non-local variable `a`[0m

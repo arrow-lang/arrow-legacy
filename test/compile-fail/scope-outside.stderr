@@ -1,1 +1,0 @@
-[0;37mtest/compile-fail/scope-outside.as:7.9-10: [0;31merror: [1;37muse of unresolved name 'b'[0m

@@ -1,2 +1,0 @@
-[0;37mtest/parse-fail/call-positional-after-keyword.as:1.16-18: [0;31merror: [1;37mnon-keyword argument after keyword argument[0m
-[0;37mtest/parse-fail/call-positional-after-keyword.as:1.19-20: [0;31merror: [1;37mexpected an expression; found `;`[0m
