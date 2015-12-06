@@ -30,8 +30,8 @@ When such a string enclosed in double-quotes (`"`) occurs inside the grammar, it
 # 3.1. Input format
 
 An input file is interpreted as a sequence of Unicode code points
-encoded in UTF-8. Most grammar productions are defined in terms of
-printable ASCII-range code points.
+encoded in UTF-8 (normalized before analysis using [NFKC](http://www.unicode.org/reports/tr15/)).
+Most grammar productions are defined in terms of printable ASCII-range code points.
 
 # 3.2. Comments
 
@@ -101,4 +101,5 @@ ranges specified:
 ```
 ```
 
-A punctuator is a symbol that has independent syntactic and semantic significance.
+A punctuator is a symbol that has independent syntactic and semantic
+significance.

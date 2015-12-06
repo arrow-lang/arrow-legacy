@@ -11,7 +11,9 @@ def main(argc: int, argv: *str) -> int {
   if (argc > 1) {
     let cmd = *(argv + idx);
 
-    if string.eq(cmd, "--help") or string.eq(cmd, "-h") or string.eq(cmd, "-?") {
+    if (string.eq(cmd, "--help") or
+        string.eq(cmd, "-h") or
+        string.eq(cmd, "-?")) {
       command = command_help;
     } else if string.eq(cmd, "--read") {
       command = command_read;
